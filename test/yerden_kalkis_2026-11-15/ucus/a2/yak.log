@@ -1,0 +1,67 @@
+11:52:56  [uav1] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+11:52:57  [uav1] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+11:52:57  [uav1] FW_AIRSPD_TRIM = 14.0 (zaten ayarlı)
+11:52:57  [uav1] NAV_DLL_ACT = 0 (zaten ayarlı)
+11:52:57  [uav1] RWTO_MAX_THR: 0.8500000238418579 → 0.8500000238418579
+11:52:57  [uav1] FW_TKO_PITCH_MIN = 20.0 (zaten ayarlı)
+11:52:57  [uav1] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+11:52:57  [uav1] FW_T_SINK_R_SP = 4.0 (zaten ayarlı)
+11:52:57  [uav1] FW_T_SINK_MAX = 5.0 (zaten ayarlı)
+11:52:57  [uav1] FW_LND_USETER = 0 (zaten ayarlı)
+11:52:57  [uav1] MIS_TKO_LAND_REQ = 0 (zaten ayarlı)
+11:52:57  uav1 yerde hazır bekleniyor (arm=False, yerde=None)
+11:52:57  uav1 ÜSTE HAZIR: yerde, disarmed, yerel (0.0, -0.0); üs uav0 çerçevesinde (200, -950), pist yönü 90°; rota 84°
+11:52:57  hedefsiz plan: {'uygun': True, 'giris': 'yer', 'yon_deg': 90.0, 'C': [0.0, 340.0], 'yer': {'pist_yonu_deg': 90.0, 'kalkis_mesafe_m': 120.0, 'kalkis_irtifa_m': 25.0, 'inis': {'inis_yonu_deg': 90.0, 'Td': [-0.0, -50.0], 'G': [-0.0, -400.0], 'Lc': [-80.0, -400.0], 'yaricap': 80.0, 'giris_irtifa_m': 25.0, 'yaklasma_m': 350.0, 'suzulme_deg': 4.09}}, 'donus': {'rota': [(0.0, 340.0), (-80.0, -400.0)], 'uzunluk_m': 744.3, 'en_kucuk_m': 314.3}, 'en_kucuk_aciklik_m': {'ev': 354.6, 'depo': 429.1, 'direk_B': 439.3}}
+11:52:57  iniş görevi yükleme: ✔ (MISSION_ACK tip 0)
+11:52:57  [uav1] MIS_TAKEOFF_ALT: 120.0 → 25.0
+11:52:59  MIS_TAKEOFF_ALT = 25 m doğrulandı (1.5 sn bekleme sonrası)
+11:52:59  [uav1] MIS_TAKEOFF_ALT = 25.0 (zaten ayarlı)
+11:52:59  [uav1] PX4 [sev 6]: Armed by external command	
+11:52:59  [uav1] Deneme 1: NAV_TAKEOFF → MAV_RESULT_ACCEPTED, ARM → MAV_RESULT_ACCEPTED
+11:52:59  KALKIŞ komutu kabul edildi (arm + Takeoff, MIS_TAKEOFF_ALT 25 m; 1.8 sn)
+11:52:59  kalkış: irtifa  -0.0 m  yer_hızı  0.0 m/s  üsten     0 m  arm=True  yerde=True
+11:52:59  [uav1] PX4 [sev 6]: Using default takeoff altitude: 25.0 m	
+11:53:01  kalkış: irtifa  -0.0 m  yer_hızı  1.2 m/s  üsten     0 m  arm=True  yerde=True
+11:53:03  [uav1] PX4 [sev 6]: Takeoff detected	
+11:53:03  kalkış: irtifa  -0.2 m  yer_hızı 14.8 m/s  üsten    17 m  arm=True  yerde=False
+11:53:04  TEKER KESME: komuttan 6.4 sn sonra, yer koşusu 27 m, yer hızı 18.7 m/s
+11:53:05  kalkış: irtifa  18.7 m  yer_hızı 27.5 m/s  üsten    57 m  arm=True  yerde=False
+11:53:05  KALKIŞ İRTİFASI geçildi: 24.2 m, üsten yatay 72 m, komuttan 8.3 sn, yer hızı 31.3 m/s, rota 83°
+11:53:06  OFFBOARD ✔: irtifa 29.3 m, üsten 88 m; pist doğrultusunda 60 m'ye tırmanış
+11:53:06  tırmanış: irtifa  29.4 m  üsten    88 m  yanal  -5.1 m  yer_hızı 28.5
+11:53:08  tırmanış: irtifa  35.9 m  üsten   135 m  yanal  -5.6 m  yer_hızı 21.3
+11:53:10  tırmanış: irtifa  43.8 m  üsten   172 m  yanal  -1.4 m  yer_hızı 16.3
+11:53:12  tırmanış: irtifa  51.1 m  üsten   201 m  yanal  +0.3 m  yer_hızı 13.7
+11:53:14  tırmanış: irtifa  54.1 m  üsten   227 m  yanal  +0.7 m  yer_hızı 13.1
+11:53:15  DÖNÜŞ bacağı 1/1: (0, 340) → (-80, -400), yön 264°, 744 m, irtifa 60 m
+11:53:16  dönüş: bacak 1  s=    93/744 m  x=  +9.4 m  rota hatası=-174.4°  irtifa= 55.0 m
+11:53:20  dönüş: bacak 1  s=    95/744 m  x= -30.2 m  rota hatası= +12.8°  irtifa= 55.3 m
+11:53:25  dönüş: bacak 1  s=   158/744 m  x=  -2.4 m  rota hatası=  +8.8°  irtifa= 58.9 m
+11:53:30  dönüş: bacak 1  s=   226/744 m  x=  -1.2 m  rota hatası=  +0.3°  irtifa= 58.4 m
+11:53:35  dönüş: bacak 1  s=   295/744 m  x=  -1.2 m  rota hatası=  +1.1°  irtifa= 58.6 m
+11:53:40  dönüş: bacak 1  s=   365/744 m  x=  -0.7 m  rota hatası=  +1.0°  irtifa= 58.8 m
+11:53:45  dönüş: bacak 1  s=   435/744 m  x=  -0.2 m  rota hatası=  +0.5°  irtifa= 58.9 m
+11:53:50  GÖREV DEVRİ: iniş orbitine 250 m; AUTO_MISSION isteniyor (LOITER_TO_ALT (-80, -400) R 80 → 25 m → LAND (-0, -50), iniş yönü 90°)
+11:53:50  [uav1] PX4 [sev 6]: Executing Mission	
+11:53:50  AUTO_MISSION ✔ — iniş deseni PX4'te
+11:53:50  iniş: nav=AUTO_MISSION  (   -53,   -152)  irtifa= 59.2 m  yer_hızı=13.8  vz=+0.0  Td'ye   115 m
+11:53:55  iniş: nav=AUTO_MISSION  (   -61,   -223)  irtifa= 48.9 m  yer_hızı=15.1  vz=-2.5  Td'ye   183 m
+11:54:00  iniş: nav=AUTO_MISSION  (   -87,   -296)  irtifa= 35.2 m  yer_hızı=16.1  vz=-1.7  Td'ye   261 m
+11:54:05  iniş: nav=AUTO_MISSION  (  -140,   -349)  irtifa= 29.6 m  yer_hızı=14.3  vz=-1.0  Td'ye   330 m
+11:54:10  iniş: nav=AUTO_MISSION  (  -158,   -417)  irtifa= 26.1 m  yer_hızı=14.5  vz=-0.4  Td'ye   399 m
+11:54:15  iniş: nav=AUTO_MISSION  (  -116,   -472)  irtifa= 25.4 m  yer_hızı=14.3  vz=-0.1  Td'ye   438 m
+11:54:20  iniş: nav=AUTO_MISSION  (   -48,   -474)  irtifa= 25.7 m  yer_hızı=14.2  vz=-0.0  Td'ye   427 m
+11:54:25  iniş: nav=AUTO_MISSION  (    -3,   -422)  irtifa= 25.4 m  yer_hızı=14.3  vz=-0.2  Td'ye   372 m
+11:54:30  iniş: nav=AUTO_MISSION  (    -1,   -353)  irtifa= 23.7 m  yer_hızı=12.7  vz=-0.5  Td'ye   303 m
+11:54:35  iniş: nav=AUTO_MISSION  (    -1,   -291)  irtifa= 20.3 m  yer_hızı=11.9  vz=-0.8  Td'ye   241 m
+11:54:40  iniş: nav=AUTO_MISSION  (    -1,   -232)  irtifa= 16.5 m  yer_hızı=11.7  vz=-0.8  Td'ye   182 m
+11:54:45  iniş: nav=AUTO_MISSION  (    -1,   -173)  irtifa= 12.6 m  yer_hızı=11.6  vz=-0.8  Td'ye   123 m
+11:54:50  iniş: nav=AUTO_MISSION  (    -1,   -116)  irtifa=  8.7 m  yer_hızı=11.6  vz=-0.8  Td'ye    66 m
+11:54:55  iniş: nav=AUTO_MISSION  (    -1,    -59)  irtifa=  4.6 m  yer_hızı=11.6  vz=-0.9  Td'ye     9 m
+11:55:00  iniş: nav=AUTO_MISSION  (    -0,     -1)  irtifa=  0.2 m  yer_hızı=11.6  vz=-0.6  Td'ye    49 m
+11:55:04  YER ALGILANDI: Td'ye göre boyuna +63.8 m, yanal +0.1 m; yer hızı 0.3 m/s
+11:55:04  [uav1] PX4 [sev 6]: Landing detected	
+11:55:04  [uav1] PX4 [sev 6]: Mission finished, landed	
+11:55:05  iniş: nav=AUTO_MISSION  (    -0,     14)  irtifa= -0.1 m  yer_hızı= 0.3  vz=-0.1  Td'ye    64 m
+11:55:06  DISARM ✔ (yer algılamadan 2.0 sn sonra); son konum (-0, 14), üsse 14 m
+11:55:06  [uav1] PX4 [sev 6]: Disarmed by landing	

@@ -1,0 +1,24 @@
+qr_pass çıkış: 0
+qr_watch çıkış: 0
+13:10:48  [geçiş 4] hedef (-60, -60), ψ=210°, irtifa 60 m, V 15 m/s, bias +9.5 m; hizalama Hold merkezi H=(543, 196); uçak (-248, -68, 62 m)
+13:10:48  DO_REPOSITION → ara nokta (246, -43), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 49 m, koridor serbest
+13:11:27  DO_REPOSITION → H (543, 196), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 52 m, koridor serbest
+13:12:25  DO_SET_MODE → OFFBOARD (deneme 1): s=-671 m, x=+2.9 m, rota hatası=-15.0°
+13:12:25  OFFBOARD ✔ (56 sn hizalama): s=-670 m, x=+2.8 m, irtifa=61.2 m, nav_state=AUTO_LOITER
+13:13:24  HEDEF ÜSTÜ: yanal +9.35 m, dikey +1.00 m, yer hızı 14.4 m/s, hava hızı 14.0 m/s
+13:13:37  Hold: ✔ (DO_SET_MODE kabul, nav_state=AUTO_LOITER; akış mod değişene kadar sürdü) — nav_state değişimleri: OFFBOARD → AUTO_LOITER
+13:13:37  ÖZET geçiş 4: hedef üstü {'x_m': 9.35, 'dikey_m': 1.0, 'yer_hizi': 14.45, 'hava_hizi': 13.98}; s∈[−400, +150] {'ornek': 2396, 'x_ort': 9.28, 'x_std': 0.05, 'x_maks_abs': 9.39, 'x_min_abs': 9.17, 'dikey_ort': 0.9
+--- izleyici
+13:10:40  izleme: hedef irtifa 60 ± 15 m, RTF ≥ 0.7, gz RSS ≤ 4096 MB, STATUSTEXT /home/yusuf22_04/iha_sim_v2/test/qr_kadraj_2026-10-31/mavlink.log; abort → orbit_abort 0
+13:12:25  OFFBOARD — kurallar devrede
+13:13:39  Geçiş bitti (done-file var), mod=AUTO — 10 sn nav_state + STATUSTEXT izleniyor
+13:13:49  Geçiş normal bitti — Hold nav_state ile doğrulandı (0.5 sn); nav_state değişimleri: 13:10:40 AUTO_LOITER → 13:12:26 OFFBOARD → 13:13:37 AUTO_LOITER
+13:13:49  ÖZET: OFFBOARD süresi 77 sn, en düşük RTF(5 sn) 0.799, en yüksek gz RSS 655 MB, çıkış kodu 0
+--- STATUSTEXT (mavlink)
+13:04:37  [uav0] PX4 [sev 6]: Armed by external command	
+13:04:37  [uav0] PX4 [sev 6]: Using default takeoff altitude: 100.0 m	
+13:04:40  [uav0] PX4 [sev 6]: Takeoff detected	
+--- kaydedici / online
+12:38:23  KAYIT BAŞLADI: geçiş 2, s=-250 m, hedefe yatay 250 m
+12:38:54  KAYIT BİTTİ: geçiş 2, 239 kare, 0 düşen, s=+100 m, 31.4 sn, disk toplam 17 MB
+26

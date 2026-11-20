@@ -1,0 +1,11 @@
+13:47:19  izleme: hedef irtifa 60 ± 15 m, RTF ≥ 0.7, gz RSS ≤ 4096 MB, STATUSTEXT /home/yusuf22_04/iha_sim_v2/test/qr_pencere_2026-10-31/mavlink.log; abort → orbit_abort 0
+13:48:56  OFFBOARD — kurallar devrede
+13:48:56  t=    0 sn mod=OFFBOARD irtifa=  60.6 m yer_hızı= 14.7 m/s RTF=0.908 gz=648 MB
+13:49:01  t=    5 sn mod=OFFBOARD irtifa=  61.4 m yer_hızı= 14.2 m/s RTF=0.887 gz=648 MB
+13:49:06  t=   10 sn mod=OFFBOARD irtifa=  61.7 m yer_hızı= 14.2 m/s RTF=0.867 gz=648 MB
+13:49:11  t=   15 sn mod=OFFBOARD irtifa=  61.4 m yer_hızı= 14.4 m/s RTF=0.830 gz=648 MB
+13:49:16  t=   20 sn mod=OFFBOARD irtifa=  61.3 m yer_hızı= 14.5 m/s RTF=0.719 gz=648 MB
+13:49:17  ABORT: RTF 0.699 < 0.7 | mod=OFFBOARD irtifa=61.2 m yer_hızı=14.5 m/s RTF=0.699 gz=648 MB
+[uav0] ACK + AUTO ama Hold değil: nav_state okunamadı — Hold yeniden gönderiliyor
+[uav0] HOLD ✔ (DO_SET_MODE kabul, mod=AUTO, NAV 4 AUTO_LOITER niyet=4 (AUTO_LOITER) arm=2 duvar=1793443765.565)
+13:49:25  ÖZET: OFFBOARD süresi 27 sn, en düşük RTF(5 sn) 0.699, en yüksek gz RSS 648 MB, çıkış kodu 2

@@ -1,0 +1,28 @@
+=== T | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_hw/T | gz ek argüman: 'yok' | 17:49:53 ===
+free -m (başlangıç): kullanılan 872 MB, kullanılabilir 14029 MB
+GZ_SIM_SERVER_CONFIG_PATH=/home/yusuf22_04/iha_sim_v2/server_nogst.config
+sunucu PID 14274; yüklü görüntü motoru: ['libgz-rendering8-ogre2.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      555    nan    nan
+   15      555    149  1.000
+   30      555    149  1.000
+   45      555    146  1.000
+   60      556    147  1.000
+ÖZET başlangıç_RSS=555 bitiş_RSS=556 artış=1_MB/dk CPU=148% RTF=1.000 süre=60_sn
+KAMERA advanced_plane_0: 13.0 Hz
+KAMERA advanced_plane_1: 13.0 Hz
+free -m (bitiş): kullanılan 878 MB, kullanılabilir 14023 MB; kalan süreç: 0
+=== W | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_hw/W | gz ek argüman: 'yok' | 17:51:47 ===
+free -m (başlangıç): kullanılan 879 MB, kullanılabilir 14022 MB
+GZ_SIM_SERVER_CONFIG_PATH=/home/yusuf22_04/iha_sim_v2/server_nogst.config
+sunucu PID 15817; yüklü görüntü motoru: ['libgz-rendering8-ogre2.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      555    nan    nan
+   15      555    136  1.000
+   30      555    136  1.000
+   45      555    136  1.000
+   60      556    137  1.000
+ÖZET başlangıç_RSS=555 bitiş_RSS=556 artış=1_MB/dk CPU=136% RTF=1.000 süre=60_sn
+KAMERA advanced_plane_0: 12.5 Hz
+KAMERA advanced_plane_1: 12.4 Hz
+free -m (bitiş): kullanılan 961 MB, kullanılabilir 13939 MB; kalan süreç: 0

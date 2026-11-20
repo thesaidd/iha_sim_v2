@@ -1,0 +1,117 @@
+#!/bin/bash
+# Tüm süreçleri arka planda başlatır, logları /tmp/ altına yazar
+# Kullanım: launch_all.sh        → başlat
+#           launch_all.sh stop   → hepsini durdur
+
+PX4_DIR=~/PX4-Autopilot
+PGID_FILE=/tmp/iha_sim.pgids
+LOG_MAX_BYTES=$((5 * 1024 * 1024))   # Log başına sınır; aşınca .1'e döner (tek yedek)
+
+# stdin'i dosyaya yazar, LOG_MAX_BYTES aşılınca dosyayı .1'e taşır.
+# read -n 4096: satır sonu gelmeyen akış (ör. pxh> istemi) belleği şişirmesin.
+limit_log() {
+    local file="$1" n=0 line
+    : > "$file"
+    while IFS= read -r -n 4096 line || [[ -n $line ]]; do
+        printf '%s\n' "$line" >> "$file"
+        if (( ++n % 100 == 0 )) && (( $(stat -c %s "$file") > LOG_MAX_BYTES )); then
+            mv -f "$file" "$file.1"
+        fi
+    done
+}
+export -f limit_log
+export LOG_MAX_BYTES
+
+# Komutu yeni bir süreç grubunda başlatır; grup kimliği stop için kaydedilir.
+start_bg() {
+    setsid bash -c "$1" < /dev/null > /dev/null 2>&1 &
+    echo $! >> "$PGID_FILE"
+}
+
+stop_all() {
+    if [[ -f $PGID_FILE ]]; then
+        while read -r pgid; do kill -- "-$pgid" 2>/dev/null; done < "$PGID_FILE"
+        rm -f "$PGID_FILE"
+    fi
+    # Bu script dışında başlatılmış kalıntılar
+    pkill -x px4 2>/dev/null
+    pkill -x MicroXRCEAgent 2>/dev/null
+    pkill -f "gz sim" 2>/dev/null
+    # Bellek baskısı altındaki gz sunucusu SIGTERM'e geç yanıt verebilir; 15 sn bekle, sonra zorla.
+    for _ in {1..15}; do
+        pgrep -x px4 > /dev/null || pgrep -f "gz sim" > /dev/null || pgrep -x MicroXRCEAgent > /dev/null || return 0
+        sleep 1
+    done
+    pkill -9 -x px4 2>/dev/null
+    pkill -9 -x MicroXRCEAgent 2>/dev/null
+    pkill -9 -f "gz sim" 2>/dev/null
+    sleep 1
+}
+
+# Log'da (veya döndürülmüş yedeğinde) desen çıkana kadar en fazla $3 sn bekler.
+wait_for() {
+    local file="$1" pattern="$2" timeout="$3" t=0
+    until grep -qs "$pattern" "$file" "$file.1"; do
+        (( t++ >= timeout )) && return 1
+        sleep 1
+    done
+}
+
+stop_all
+if [[ $1 == stop ]]; then
+    echo "Tüm süreçler durduruldu."
+    exit 0
+fi
+rm -f /tmp/{dds,px4_0,px4_1}.log{,.1}
+
+echo "[1/3] DDS Agent başlatılıyor..."
+start_bg "MicroXRCEAgent udp4 -p 8888 2>&1 | limit_log /tmp/dds.log"
+sleep 3
+
+echo "[2/3] PX4 instance 0 başlatılıyor (HEADLESS)..."
+# make üzerinden başlayan PX4 -d alamaz; tail stdin'i açık tutar, pxh> EOF'ta dönmez.
+start_bg "cd $PX4_DIR && tail -f /dev/null | env PX4_GZ_WORLD=default PX4_GZ_POSE='0,0,0.5,0,0,0' PX4_SYS_AUTOSTART=4008 HEADLESS=1 make px4_sitl gz_advanced_plane 2>&1 | limit_log /tmp/px4_0.log"
+wait_for /tmp/px4_0.log "Startup script returned successfully" 120 \
+    || echo "  UYARI: PX4-0 120 sn içinde başlangıç betiğini bitirmedi"
+
+echo "[3/3] PX4 instance 1 başlatılıyor (daemon, -d)..."
+start_bg "cd $PX4_DIR && env PX4_GZ_WORLD=default PX4_GZ_POSE='-15,15,0.5,0,0,0' PX4_SYS_AUTOSTART=4008 ./build/px4_sitl_default/bin/px4 -d -i 1 2>&1 | limit_log /tmp/px4_1.log"
+wait_for /tmp/px4_1.log "Startup script returned successfully" 60 \
+    || echo "  UYARI: PX4-1 60 sn içinde başlangıç betiğini bitirmedi"
+
+echo "Kontrol ediliyor..."
+# "Ready for takeoff" QGC bağlanmadan gelmez (No connection to the GCS); burada
+# başlangıç betiğinin bittiği ve DDS topic'lerinin ROS 2'de göründüğü doğrulanır.
+status=0
+for i in 0 1; do
+    if grep -qs "Startup script returned successfully" /tmp/px4_$i.log /tmp/px4_$i.log.1; then
+        echo "  PX4-$i: başlangıç betiği tamamlandı"
+    else
+        echo "  PX4-$i: başlangıç betiği TAMAMLANMADI"
+        status=1
+    fi
+done
+
+source /opt/ros/humble/setup.bash
+source ~/ros2_ws/install/setup.bash
+# Başlangıç betiği DDS istemcisi topic'leri açmadan biter; 60 sn'ye kadar tekrar dene.
+for ns in /fmu/out/ /px4_1/fmu/out/; do
+    count=0
+    for attempt in {1..6}; do
+        count=$(ros2 topic list --no-daemon --spin-time 5 2>/dev/null | grep -c "^$ns")
+        (( count > 0 )) && break
+        sleep 5
+    done
+    if (( count > 0 )); then
+        echo "  $ns: $count topic görünüyor"
+    else
+        echo "  $ns: topic YOK"
+        status=1
+    fi
+done
+
+echo ""
+echo "Log dosyaları: /tmp/dds.log | /tmp/px4_0.log | /tmp/px4_1.log  (sınır: $((LOG_MAX_BYTES / 1024 / 1024)) MB, yedek .1)"
+echo "Durdurmak için: $0 stop"
+echo "Sonraki adım: QGC'yi kendin aç, kalkış yap, sonra orbit node'u başlat."
+exit $status

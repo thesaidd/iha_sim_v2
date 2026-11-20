@@ -1,0 +1,57 @@
+# İHA Sim V2
+
+TÜBİTAK kapsamında İHA tespit/takip sistemi. Hedef: simülasyonda iki sabit kanatlı İHA'yı birlikte uçurmak ve aralarında tespit/takip sistemini test etmek.
+
+## Yığın (Ubuntu 22.04, WSL2)
+- ROS 2 Humble, Gazebo Sim 8 (Harmonic), PX4 SITL (`~/PX4-Autopilot`, v1.17.0-alpha1), MicroXRCE-DDS Agent
+- `px4_msgs` çalışma alanı: `~/ros2_ws` (`source ~/ros2_ws/install/setup.bash`)
+- Model: `advanced_plane` (sabit kanat, 640x480 30 Hz kamera). MAVROS/ArduPilot kullanılmıyor.
+- Python: ultralytics (YOLO11), opencv + contrib, torch
+
+## Klasörler
+- `~/iha_sim_v2/` — V2, **aktif** (orbit görevi, telemetri monitörü, `v2_proje_gunlugu.md`)
+- `~/iha_tespit_sim/` — Git deposu. `detection_core/` (YOLO, tracker, Kalman), `yolo11m-uav.pt`. V1 swarm kodu **arşiv/deprecated**.
+- Yedek dalı: `yedek/2026-10-25-v1-v2-calisma` (iha_tespit_sim)
+
+## Simülasyonu başlatma (ayrı terminaller, sırayla)
+```
+MicroXRCEAgent udp4 -p 8888
+cd ~/PX4-Autopilot && PX4_GZ_WORLD=default PX4_GZ_MODEL_POSE="0,0,0.5,0,0,0" PX4_SYS_AUTOSTART=4008 make px4_sitl gz_advanced_plane
+cd ~/PX4-Autopilot && PX4_GZ_WORLD=default PX4_GZ_MODEL_POSE="-15,15,0.5,0,0,0" PX4_SYS_AUTOSTART=4008 instance=1 ./build/px4_sitl_default/bin/px4 -i 1
+source ~/ros2_ws/install/setup.bash && python3 v2_telemetry_monitor.py
+source ~/ros2_ws/install/setup.bash && python3 v2_orbit_mission.py --ros-args -p uav_id:=0   # ve :=1
+```
+Kalkış QGroundControl'den manuel; görev düğümü uçak 40 m'ye ulaşınca Offboard'u devralır.
+
+## Çoklu araç kuralları
+- uav0: topic öneki `/fmu`, SysID 1. uav1: `/px4_1/fmu`, SysID 2 (`target_system = uav_id + 1`).
+- Okuma topic'leri sürüm ekli: `vehicle_status_v2`, `vehicle_local_position_v1`.
+- PX4 çıkış topic'leri için QoS: BEST_EFFORT + VOLATILE. Komut yayıncıları: TRANSIENT_LOCAL.
+- Orbit: R=100 m, V=15 m/s, uav1 faz farkı π.
+
+## Kurallar
+- Mimari: yalnızca standart Offboard + TrajectorySetpoint. L1/TECS/APF/Pure Pursuit **yasak** (V1'de sorun çıkardı).
+- Kamera köprüsü: Gazebo → ROS için `ros_gz_bridge`; şu an yalnızca tek `/camera/image` var, uav1 için yok. Topic adları (`/camera/image` vs `/uav0/camera`) tutarsız, hizalanacak.
+- Gizli bilgileri (token, `.ssh`, `.aws`) asla dosyaya/commit'e yazma.
+- Simülasyon süreçlerini kullanıcı onayı olmadan başlatma/durdurma. PX4 `Tools/simulation/gz` elle değiştirilmiş; PX4'ü güncelleme/reset yapma.
+- Her oturum sonunda `v2_proje_gunlugu.md` başına (üste) kayıt ekle.
+
+## Bilinen durum (2026-10-29)
+- Günlük başlatma: `~/iha_sim_v2/launch_all.sh` (kamerasız model, QGC'siz). `CAM=1` kameralı modeli açar; `start_sim.sh` ve yukarıdaki `make` komutları da kameralıdır.
+- **Kamera sızıntısı:** Kameralı `advanced_plane` ile gz sim sunucusu ~650 MB/30 sn bellek sızdırır (QGC'den bağımsız). Kamerasız kopya: `~/iha_sim_v2/gz_models_nocam/` (478 MB'ta sabit). Orijinal `model.sdf`'e dokunma; yedeği `~/iha_sim_v2/yedek/`.
+- **Spawn konumu:** Değişken `PX4_GZ_MODEL_POSE`; `PX4_GZ_POSE` PX4 tarafından okunmaz. Havada doğurma işe yaramaz (sabit kanat hızsız düşer).
+- **QGC'siz kalkış:** `mavlink_takeoff.py` (pymavlink, uav0 udp 14540) GCS kalp atışı gönderir, `MIS_TAKEOFF_ALT` ayarlar, arm + takeoff. Uçuşta kalp atışı kesilirse `NAV_DLL_ACT=2` → Return.
+- **Açık sorun — hava hızı:** Kalkıştan ~20 sn sonra "Airspeed sensor failure detected". Neden: PX4 gz `AirSpeed` eklentisi sıcaklık göndermiyor (0 K) → `vehicle_air_data.ambient_temperature` −60 °C → TAS %14 düşük → yenilik kontrolü tetikleniyor. `ASPD_FS_T_START=-1` → hava hızı kalıcı `nan`.
+  - **Geçici önlem — YALNIZCA SİMÜLASYON, gerçek donanıma TAŞINMAYACAK:** `ASPD_DO_CHECKS=0` (hava hızı doğrulama kontrolleri kapalı). Tek yer: `mavlink_takeoff.py` içindeki `SIM_ONLY_PARAMS`; her çalıştırmada iki araca da yazılır, SITL `rootfs/<i>/parameters.bson`'a kaydeder. Geri alma: `python3 mavlink_takeoff.py --uav 0 1 --revert-sim-params` (→ 7). Uçuşta hava hızı zaten geçersiz olmuşsa etkisi bir sonraki PX4 açılışında görülür.
+  - **Açık iş — gerçek düzeltme:** `PX4-Autopilot/src/modules/simulation/gz_plugins/airspeed/AirSpeed.cpp` mesaja sıcaklık yazmalı (`temperature_local` hesaplanıyor ama gönderilmiyor); `src/modules/simulation/gz_bridge/GZBridge.cpp` 0 K'yi geçerli sıcaklık saymamalı. Düzeltme sonrası `ASPD_DO_CHECKS` 7'ye döndürülmeli.
+- **Kalp atışı uyarısı:** uav0 havadayken `mavlink_takeoff.py` durdurulmamalı; ~10 sn kesinti `NAV_DLL_ACT=2` ile RTL'yi tetikliyor ve bağlantı geri gelse de iptal olmuyor (2026-10-29'da yaşandı).
+- Kalkışta hız 57 m/s'ye çıkıyor (`FW_AIRSPD_MAX=20`); incelenmedi.
+- **Açık sorun — px4_msgs uyumsuz:** `~/ros2_ws/src/px4_msgs` PX4 derlemesinden yeni; `VehicleStatus` v3 ↔ PX4 v2 → `vehicle_status_v2` ROS'a ulaşmaz ("payload size 88 > 87" hatası). Mod/arm için `vehicle_control_mode` kullan. Gerçek düzeltme: px4_msgs'i PX4 `msg/` ile eşleyip yeniden derlemek.
+- Orbit: `v2_orbit_mission.py` (parametreli, Offboard yeniden deneme, çıkışta yeniden girmez), acil durum `~/iha_sim_v2/orbit_abort [uav_id]`, test `orbit_watch.py`. TrajectorySetpoint'te kullanılmayan alanlar NaN olmalı (ROS varsayılanı 0 = PX4'te geçerli değer).
+- Arka plan süreç başlatırken `cd … && setsid cmd &` zinciri `$!`'a alt kabuğu yazar; `/tmp/iha_sim.pgids`'e gerçek PID'i yaz. `pgrep -f`/`pkill -f` desenleri kendi komut satırıyla eşleşip kabuğu öldürebilir.
+- Eski açık sorun (5 Mayıs, 40 m'de Offboard'a geçmeme): `State.WAITING` eksikliği düzeltildi (2026-10-25), doğrulanmadı. Eski kayıtlar: `rootfs/{log,1/log}/2026-05-05/*.ulg`; yeni `-d` çalıştırmada uav0 kaydı `rootfs/0/log/` altında (büyük, tamamını ekrana dökme).
+- Çalışıyor: DDS zinciri, iki İHA ayrı konumda doğuyor, uav0 QGC'siz 100 m LOITER.
+- Kanıtsız: orbit düğümü ile uçuş, iki araçla orbit, tespit/takip entegrasyonu, uav1 kamerası.
+
+## Yol haritası
+1. `.ulg` analiziyle 40 m / Offboard hatasını bul → 2. tek İHA orbit → 3. iki İHA orbit → 4. iki kamera köprüsü → 5. YOLO tek başına → 6. tracker + Kalman → 7. tespitten uçuş komutuna kontrol katmanı.

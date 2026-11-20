@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Yalnızca vehicle_status_v2'yi ham okuyan süreçler için (orbit_abort, qr_pass, qr_watch; px4_status.py).
+     px4_msgs VehicleStatus (v3, en büyük 87 bayt) ile PX4'ün gönderdiği v2 (88 bayt) uyuşmuyor; varsayılan
+     önceden ayrılmış okuyucu geçmişi 88 baytlık örneği reddediyor. DYNAMIC politika örnek başına ayırır. -->
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <subscriber profile_name="dinamik_okuyucu" is_default_profile="true">
+    <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+  </subscriber>
+  <publisher profile_name="dinamik_yazici" is_default_profile="true">
+    <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+  </publisher>
+</profiles>

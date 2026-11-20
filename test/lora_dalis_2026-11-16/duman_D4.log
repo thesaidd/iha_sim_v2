@@ -1,0 +1,105 @@
+T+   0.0  hedef (uav1 NED) (-75.0, -45.0); dalış planı {"hedef": [-75.0, -45.0], "baslangic_yatay_m": 1300.0, "gelis_yonu_deg": 280.0, "tercih_yon_deg": 280.0, "geo": {"durma_mesafesi_m": 20.0, "durma_irtifa_m": 15.0, "x_durma_m": 13.228756555322953, "aci_istenen_deg": 12.0, "aci_sinir_deg": 8.19, "aci_etkin_deg": 8.19, "aci_kirpildi": true, "egim": 0.14400000000000002, "alcalma_m_s": 2.16, "hat_uzunlugu_m": 250.0, "duz_giris_m": 75.0, "dalis_yatay_m": 161.77124344467705, "dalis_irtifa_kaybi_m": 23.3, "giris_irtifa_m": 38.295059056033494, "dalis_sn": 10.8, "hiz": 15.0, "irtifa_onalma_sn": 3.5, "min_irtifa_m": 8.0, "pullup_dip_tahmin_m": 11.8, "alcalma_siniri_etkin_m_s": 2.4, "uygun": true, "nedenler": []}, "uygun": true, "yon_deg": 280.0, "yon_sapma_deg": 0.0, "ilk_red": null, "giris": "dogrudan", "giris_detay": {"s": -1300.0, "x": 0.0, "gerekli_m": 967.4}, "ara_noktalar": [], "A": [-118.4, 201.2], "H": [-39.6, 215.1], "S": [-77.3, -32.0], "C": [16.2, -562.3], "cikis_m": 538.5, "gecis_m": 1050.0, "en_kucuk_aciklik_m": {"uav0_bekleme": 1.0, "direk_B": 3.8, "direk_G": 26.9}, "sure_sn": {"gecis": 70.0, "cember": 0.0, "hat": 15.8, "dalis": 10.8, "tirmanma": 34.4, "toplam": 120.2}}
+T+   0.0  UYARI: istenen dalış açısı 12.0° → 8.19° (alçalma sınırı 2.4 m/s = min(PX4 4.0, süzülme 2.4) × pay 0.9, hız 15.0 m/s)
+T+   0.0  hizalama: s=-1301 m  x=+0.0 m  rota hatası=-180.0°  irtifa=120.0 m  bekleyen: rota
+T+   5.0  hizalama: s=-1365 m  x=-33.2 m  rota hatası=-126.1°  irtifa=120.0 m  bekleyen: rota
+T+  10.0  hizalama: s=-1376 m  x=-104.6 m  rota hatası=-72.4°  irtifa=120.0 m  bekleyen: rota
+T+  14.0  DO_SET_MODE → OFFBOARD (deneme 1): s=-1339 m, x=-149.9 m, rota hatası=-29.5°, irtifa=120.0 m
+T+  14.0  OFFBOARD ✔ (hizalama 14 sn): s=-1339 m, x=-149.9 m, irtifa=120.0 m; hat yönü 280°
+T+  14.1  hat: s=-1338.4 m  x=-150.3 m  irtifa=120.0 m (profil 120.0)  3B=1352.2 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  15.1  hat: s=-1324.2 m  x=-154.9 m  irtifa=120.0 m (profil 120.0)  3B=1338.7 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  16.1  hat: s=-1309.3 m  x=-154.3 m  irtifa=120.0 m (profil 120.0)  3B=1323.8 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  17.1  hat: s=-1295.5 m  x=-148.7 m  irtifa=120.0 m (profil 120.0)  3B=1309.5 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  18.1  hat: s=-1284.5 m  x=-138.7 m  irtifa=120.0 m (profil 120.0)  3B=1297.5 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  19.1  hat: s=-1277.5 m  x=-125.5 m  irtifa=120.0 m (profil 120.0)  3B=1289.2 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  20.1  hat: s=-1273.7 m  x=-110.9 m  irtifa=120.0 m (profil 120.0)  3B=1284.2 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  21.1  hat: s=-1269.6 m  x=-96.5 m  irtifa=120.0 m (profil 120.0)  3B=1278.9 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  22.1  hat: s=-1264.8 m  x=-82.3 m  irtifa=120.0 m (profil 120.0)  3B=1273.1 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  23.1  hat: s=-1259.3 m  x=-68.4 m  irtifa=120.0 m (profil 120.0)  3B=1266.8 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  24.1  hat: s=-1252.7 m  x=-54.9 m  irtifa=120.0 m (profil 120.0)  3B=1259.6 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  25.1  hat: s=-1244.8 m  x=-42.1 m  irtifa=120.0 m (profil 120.0)  3B=1251.3 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  26.1  hat: s=-1235.3 m  x=-30.6 m  irtifa=120.0 m (profil 120.0)  3B=1241.5 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  27.1  hat: s=-1223.9 m  x=-20.8 m  irtifa=120.0 m (profil 120.0)  3B=1229.9 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  28.1  hat: s=-1210.9 m  x=-13.4 m  irtifa=120.0 m (profil 120.0)  3B=1216.9 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  29.1  hat: s=-1196.8 m  x= -8.4 m  irtifa=120.0 m (profil 120.0)  3B=1202.8 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  30.1  hat: s=-1182.1 m  x= -5.1 m  irtifa=120.0 m (profil 120.0)  3B=1188.2 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  31.1  hat: s=-1167.3 m  x= -3.1 m  irtifa=120.0 m (profil 120.0)  3B=1173.4 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  32.1  hat: s=-1152.3 m  x= -1.9 m  irtifa=120.0 m (profil 120.0)  3B=1158.6 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  33.1  hat: s=-1137.3 m  x= -1.1 m  irtifa=120.0 m (profil 120.0)  3B=1143.7 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  34.1  hat: s=-1122.4 m  x= -0.7 m  irtifa=120.0 m (profil 120.0)  3B=1128.8 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  35.1  hat: s=-1107.4 m  x= -0.4 m  irtifa=120.0 m (profil 120.0)  3B=1113.8 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  36.1  hat: s=-1092.4 m  x= -0.2 m  irtifa=120.0 m (profil 120.0)  3B=1098.9 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  37.1  hat: s=-1077.4 m  x= -0.1 m  irtifa=120.0 m (profil 120.0)  3B=1084.0 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  38.1  hat: s=-1062.4 m  x= -0.1 m  irtifa=120.0 m (profil 120.0)  3B=1069.1 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  39.1  hat: s=-1047.4 m  x= -0.1 m  irtifa=120.0 m (profil 120.0)  3B=1054.2 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  40.1  hat: s=-1032.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B=1039.3 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  41.1  hat: s=-1017.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B=1024.4 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  42.1  hat: s=-1002.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B=1009.5 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  43.1  hat: s= -987.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 994.6 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  44.1  hat: s= -972.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 979.7 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  45.1  hat: s= -957.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 964.8 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  46.1  hat: s= -942.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 950.0 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  47.1  hat: s= -927.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 935.1 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  48.1  hat: s= -912.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 920.2 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  49.1  hat: s= -897.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 905.3 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  50.1  hat: s= -882.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 890.5 m  yer_hızı=15.0  vz=+0.0 m/s
+T+  51.1  hat: s= -867.4 m  x= -0.0 m  irtifa=120.0 m (profil 120.0)  3B= 875.6 m  yer_hızı=15.0  vz=-0.1 m/s
+T+  52.1  hat: s= -852.4 m  x= -0.0 m  irtifa=119.6 m (profil 120.0)  3B= 860.7 m  yer_hızı=15.0  vz=-0.6 m/s
+T+  53.1  hat: s= -837.4 m  x= -0.0 m  irtifa=118.8 m (profil 120.0)  3B= 845.7 m  yer_hızı=15.0  vz=-1.0 m/s
+T+  54.1  hat: s= -822.4 m  x= -0.0 m  irtifa=117.6 m (profil 120.0)  3B= 830.7 m  yer_hızı=15.0  vz=-1.3 m/s
+T+  55.1  hat: s= -807.4 m  x= -0.0 m  irtifa=116.2 m (profil 118.6)  3B= 815.7 m  yer_hızı=15.0  vz=-1.5 m/s
+T+  56.1  hat: s= -792.4 m  x= -0.0 m  irtifa=114.6 m (profil 116.4)  3B= 800.6 m  yer_hızı=15.0  vz=-1.7 m/s
+T+  57.1  hat: s= -777.4 m  x= -0.0 m  irtifa=112.9 m (profil 114.2)  3B= 785.5 m  yer_hızı=15.0  vz=-1.8 m/s
+T+  58.1  hat: s= -762.4 m  x= -0.0 m  irtifa=111.0 m (profil 112.1)  3B= 770.4 m  yer_hızı=15.0  vz=-1.9 m/s
+T+  59.1  hat: s= -747.4 m  x= -0.0 m  irtifa=109.1 m (profil 109.9)  3B= 755.3 m  yer_hızı=15.0  vz=-1.9 m/s
+T+  60.1  hat: s= -732.4 m  x= -0.0 m  irtifa=107.2 m (profil 107.8)  3B= 740.2 m  yer_hızı=15.0  vz=-2.0 m/s
+T+  61.1  hat: s= -717.4 m  x= -0.0 m  irtifa=105.1 m (profil 105.6)  3B= 725.0 m  yer_hızı=15.0  vz=-2.0 m/s
+T+  62.1  hat: s= -702.4 m  x= -0.0 m  irtifa=103.1 m (profil 103.4)  3B= 709.9 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  63.1  hat: s= -687.4 m  x= -0.0 m  irtifa=101.0 m (profil 101.3)  3B= 694.7 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  64.1  hat: s= -672.4 m  x= -0.0 m  irtifa= 98.9 m (profil  99.1)  3B= 679.6 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  65.1  hat: s= -657.4 m  x= -0.0 m  irtifa= 96.8 m (profil  97.0)  3B= 664.4 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  66.1  hat: s= -642.4 m  x= -0.0 m  irtifa= 94.7 m (profil  94.8)  3B= 649.3 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  67.1  hat: s= -627.4 m  x= -0.0 m  irtifa= 92.5 m (profil  92.6)  3B= 634.1 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  68.1  hat: s= -612.4 m  x= -0.0 m  irtifa= 90.4 m (profil  90.5)  3B= 619.0 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  69.1  hat: s= -597.4 m  x= -0.0 m  irtifa= 88.3 m (profil  88.3)  3B= 603.8 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  70.1  hat: s= -582.4 m  x= -0.0 m  irtifa= 86.1 m (profil  86.2)  3B= 588.7 m  yer_hızı=15.0  vz=-2.1 m/s
+T+  71.1  hat: s= -567.4 m  x= -0.0 m  irtifa= 84.0 m (profil  84.0)  3B= 573.5 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  72.1  hat: s= -552.4 m  x= -0.0 m  irtifa= 81.8 m (profil  81.8)  3B= 558.4 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  73.1  hat: s= -537.4 m  x= -0.0 m  irtifa= 79.7 m (profil  79.7)  3B= 543.2 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  74.1  hat: s= -522.4 m  x= -0.0 m  irtifa= 77.5 m (profil  77.5)  3B= 528.1 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  75.1  hat: s= -507.4 m  x= -0.0 m  irtifa= 75.3 m (profil  75.4)  3B= 512.9 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  76.1  hat: s= -492.4 m  x= -0.0 m  irtifa= 73.2 m (profil  73.2)  3B= 497.8 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  77.1  hat: s= -477.4 m  x= -0.0 m  irtifa= 71.0 m (profil  71.0)  3B= 482.6 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  78.1  hat: s= -462.4 m  x= -0.0 m  irtifa= 68.9 m (profil  68.9)  3B= 467.5 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  79.1  hat: s= -447.4 m  x= -0.0 m  irtifa= 66.7 m (profil  66.7)  3B= 452.3 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  80.1  hat: s= -432.4 m  x= -0.0 m  irtifa= 64.6 m (profil  64.6)  3B= 437.2 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  81.1  hat: s= -417.4 m  x= -0.0 m  irtifa= 62.4 m (profil  62.4)  3B= 422.0 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  82.1  hat: s= -402.4 m  x= -0.0 m  irtifa= 60.2 m (profil  60.2)  3B= 406.8 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  83.1  hat: s= -387.4 m  x= -0.0 m  irtifa= 58.1 m (profil  58.1)  3B= 391.7 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  84.1  hat: s= -372.4 m  x= -0.0 m  irtifa= 55.9 m (profil  55.9)  3B= 376.5 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  85.1  hat: s= -357.4 m  x= -0.0 m  irtifa= 53.8 m (profil  53.8)  3B= 361.4 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  86.1  hat: s= -342.4 m  x= -0.0 m  irtifa= 51.6 m (profil  51.6)  3B= 346.2 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  87.1  hat: s= -327.4 m  x= -0.0 m  irtifa= 49.4 m (profil  49.4)  3B= 331.1 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  88.1  hat: s= -312.4 m  x= -0.0 m  irtifa= 47.3 m (profil  47.3)  3B= 315.9 m  yer_hızı=15.0  vz=-2.2 m/s
+T+  89.1  hat: s= -297.4 m  x= -0.0 m  irtifa= 45.1 m (profil  45.1)  3B= 300.8 m  yer_hızı=15.0  vz=-2.0 m/s
+T+  90.1  hat: s= -282.4 m  x= -0.0 m  irtifa= 43.5 m (profil  43.0)  3B= 285.7 m  yer_hızı=15.0  vz=-1.5 m/s
+T+  91.1  hat: s= -267.4 m  x= -0.0 m  irtifa= 42.2 m (profil  40.8)  3B= 270.7 m  yer_hızı=15.0  vz=-1.1 m/s
+T+  92.1  hat: s= -252.4 m  x= -0.0 m  irtifa= 41.3 m (profil  38.6)  3B= 255.7 m  yer_hızı=15.0  vz=-0.8 m/s
+T+  92.3  HAT GİRİŞİ (A): yanal -0.0 m, irtifa 41.1 m (giriş 38.3), rota hatası +0.0°
+T+  93.1  hat: s= -237.4 m  x= -0.0 m  irtifa= 40.5 m (profil  38.3)  3B= 240.8 m  yer_hızı=15.0  vz=-0.6 m/s
+T+  94.1  hat: s= -222.4 m  x= -0.0 m  irtifa= 40.0 m (profil  38.3)  3B= 225.9 m  yer_hızı=15.0  vz=-0.7 m/s
+T+  95.1  hat: s= -207.4 m  x= -0.0 m  irtifa= 39.1 m (profil  38.3)  3B= 211.0 m  yer_hızı=15.0  vz=-1.1 m/s
+T+  96.1  hat: s= -192.4 m  x= -0.0 m  irtifa= 37.9 m (profil  38.3)  3B= 196.1 m  yer_hızı=15.0  vz=-1.3 m/s
+T+  97.1  hat: s= -177.4 m  x= -0.0 m  irtifa= 36.4 m (profil  38.3)  3B= 181.1 m  yer_hızı=15.0  vz=-1.5 m/s
+T+  98.1  hat: s= -162.4 m  x= -0.0 m  irtifa= 34.8 m (profil  36.5)  3B= 166.0 m  yer_hızı=15.0  vz=-1.7 m/s
+T+  99.1  hat: s= -147.4 m  x= -0.0 m  irtifa= 33.0 m (profil  34.3)  3B= 151.0 m  yer_hızı=15.0  vz=-1.8 m/s
+T+ 100.1  hat: s= -132.4 m  x= -0.0 m  irtifa= 31.2 m (profil  32.2)  3B= 136.0 m  yer_hızı=15.0  vz=-1.9 m/s
+T+ 101.1  hat: s= -117.4 m  x= -0.0 m  irtifa= 29.3 m (profil  30.0)  3B= 121.0 m  yer_hızı=15.0  vz=-2.0 m/s
+T+ 102.1  hat: s= -102.4 m  x= -0.0 m  irtifa= 27.3 m (profil  27.8)  3B= 105.9 m  yer_hızı=15.0  vz=-2.0 m/s
+T+ 103.1  hat: s=  -87.4 m  x= -0.0 m  irtifa= 25.2 m (profil  25.7)  3B=  90.9 m  yer_hızı=15.0  vz=-2.0 m/s
+T+ 104.1  hat: s=  -72.4 m  x= -0.0 m  irtifa= 23.2 m (profil  23.5)  3B=  76.0 m  yer_hızı=15.0  vz=-2.1 m/s
+T+ 105.1  hat: s=  -57.4 m  x= -0.0 m  irtifa= 21.1 m (profil  21.4)  3B=  61.1 m  yer_hızı=15.0  vz=-2.1 m/s
+T+ 106.1  hat: s=  -42.4 m  x= -0.0 m  irtifa= 19.0 m (profil  19.2)  3B=  46.4 m  yer_hızı=15.0  vz=-2.1 m/s
+T+ 107.1  hat: s=  -27.4 m  x= -0.0 m  irtifa= 16.9 m (profil  17.0)  3B=  32.2 m  yer_hızı=15.0  vz=-2.1 m/s
+T+ 108.0  DURDU: 3B 19.8 m, yatay 13.1 m, irtifa 14.9 m (neden durma-mesafesi (3b)); dalış {'olculen_aci_deg': 7.5, 'irtifa_kaybi_m': 21.2, 'sure_sn': 10.7, 'en_buyuk_yanal_m': 0.0}; tırmanış → 120 m
+T+ 134.9  tırmanış tamam: irtifa 115.0 m (26.9 sn), dip 13.8 m; Hold veriliyor
+T+ 135.0  Hold: ✔ nav_state=AUTO_LOITER (nav_bitis AUTO_LOITER); toplam manevra 135.0 sn

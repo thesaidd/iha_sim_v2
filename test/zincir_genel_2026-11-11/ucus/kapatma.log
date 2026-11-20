@@ -1,0 +1,4 @@
+Tüm süreçler durduruldu.
+253 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+301 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+12022 python3 -u test/zincir_genel_2026-11-11/ucus/iz2.py /home/yusuf22_04/iha_sim_v2/test/zincir_genel_2026-11-11/ucus/iz_iki_arac.csv

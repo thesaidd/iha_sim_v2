@@ -1,0 +1,7 @@
+cam_probe.py 20 sn (köprü + ros2 dışı tek abone, sistem CAM=T, kalkış yok):
+PROBE kare: 478 / 20.0 sn → 23.90 Hz (duvar), stamp aralığı medyan 32.0 ms (≈ 31.25 Hz sim)
+PROBE kayıp: 11 boşluk, ~12 kare eksik (stamp aralığı > 1,5 × medyan); en büyük aralık 100 ms
+PROBE gecikme (uçtan uca, sim stamp → ROS varış): medyan 43 ms, p95 50 ms, maks 58 ms (n=478, saat örneği 4076)
+PROBE görüntü: 1456×1088 rgb8, frame_id 'advanced_plane_0/base_link/camera'; camera_info k: fx=fy=4637.81, cx=728, cy=544
+DDS: /fmu/out/vehicle_odometry 84,3 Hz, /px4_1/fmu/out/vehicle_odometry 84,0 Hz; dds.log hata 0; Agent RSS 38 MB
+Pencere (QR üstünde 8 m, dik aşağı): QRCodeDetector 'HEDEF-01', modül ~4,4 px, doku ile modül uyumu %100, aynasız, kuzey yukarı

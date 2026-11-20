@@ -1,0 +1,132 @@
+12:53:35  [uav0] Bağlanılıyor: udpin:0.0.0.0:14540 (sysid 1), GCS kalp atışı 1 Hz gönderiliyor
+12:53:35  [uav0] PX4 kalp atışı alındı — irtifa=    0.0 m  mod=LOITER       disarmed hava_hızı=  1.1 m/s  gz_RSS=682 MB
+12:53:35  [uav0] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+12:53:35  [uav0] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+12:53:35  [uav0] FW_AIRSPD_TRIM = 14.0 (zaten ayarlı)
+12:53:35  [uav0] NAV_DLL_ACT = 0 (zaten ayarlı)
+12:53:35  [uav0] RWTO_MAX_THR: 0.8500000238418579 → 0.8500000238418579
+12:53:35  [uav0] FW_TKO_PITCH_MIN = 20.0 (zaten ayarlı)
+12:53:35  [uav0] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+12:53:35  [uav0] MIS_TAKEOFF_ALT = 100.0 (zaten ayarlı)
+12:53:35  [uav0] Deneme 1: NAV_TAKEOFF → MAV_RESULT_ACCEPTED, ARM → MAV_RESULT_ACCEPTED
+12:53:35  [uav0] irtifa=    0.0 m  mod=LOITER       disarmed hava_hızı= -0.8 m/s  gz_RSS=682 MB
+12:53:36  [uav0] PX4 [sev 6]: Armed by external command	
+12:53:36  [uav0] PX4 [sev 6]: Using default takeoff altitude: 100.0 m	
+12:53:39  [uav0] PX4 [sev 6]: Takeoff detected	
+12:53:40  [uav0] irtifa=    2.1 m  mod=TAKEOFF      ARMED    hava_hızı= 18.6 m/s  gz_RSS=690 MB
+12:53:45  [uav0] irtifa=   50.0 m  mod=TAKEOFF      ARMED    hava_hızı= 40.0 m/s  gz_RSS=691 MB
+12:53:50  [uav0] irtifa=  106.2 m  mod=TAKEOFF      ARMED    hava_hızı= 41.0 m/s  gz_RSS=691 MB
+12:53:55  [uav0] irtifa=  111.6 m  mod=LOITER       ARMED    hava_hızı= 20.1 m/s  gz_RSS=697 MB
+12:53:55  Turlama başladı (20 sn sonra) — 3000 sn izleniyor
+12:54:00  [uav0] irtifa=  103.9 m  mod=LOITER       ARMED    hava_hızı= 16.0 m/s  gz_RSS=697 MB
+12:54:05  [uav0] irtifa=   99.5 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=697 MB
+12:54:10  [uav0] irtifa=   98.6 m  mod=LOITER       ARMED    hava_hızı= 13.6 m/s  gz_RSS=697 MB
+12:54:15  [uav0] irtifa=   98.3 m  mod=LOITER       ARMED    hava_hızı= 13.3 m/s  gz_RSS=697 MB
+12:54:20  [uav0] irtifa=   98.1 m  mod=LOITER       ARMED    hava_hızı= 13.5 m/s  gz_RSS=697 MB
+12:54:25  [uav0] irtifa=   95.4 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=697 MB
+12:54:30  [uav0] irtifa=   89.5 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=697 MB
+12:54:35  [uav0] irtifa=   82.4 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=697 MB
+12:54:40  [uav0] irtifa=   73.9 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=697 MB
+12:54:45  [uav0] irtifa=   65.1 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=697 MB
+12:54:50  [uav0] irtifa=   62.2 m  mod=LOITER       ARMED    hava_hızı= 13.4 m/s  gz_RSS=697 MB
+12:54:55  [uav0] irtifa=   61.3 m  mod=LOITER       ARMED    hava_hızı= 13.2 m/s  gz_RSS=697 MB
+12:55:00  [uav0] irtifa=   60.4 m  mod=LOITER       ARMED    hava_hızı= 13.5 m/s  gz_RSS=697 MB
+12:55:05  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=697 MB
+12:55:10  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=697 MB
+12:55:15  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=697 MB
+12:55:20  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 13.6 m/s  gz_RSS=697 MB
+12:55:25  [uav0] irtifa=   60.0 m  mod=LOITER       ARMED    hava_hızı= 13.6 m/s  gz_RSS=697 MB
+12:55:30  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 13.6 m/s  gz_RSS=697 MB
+12:55:35  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=697 MB
+12:55:41  [uav0] irtifa=   60.0 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=697 MB
+12:55:46  [uav0] irtifa=   58.0 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=697 MB
+12:55:51  [uav0] irtifa=   59.5 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=697 MB
+12:55:56  [uav0] irtifa=   58.7 m  mod=LOITER       ARMED    hava_hızı= 14.8 m/s  gz_RSS=697 MB
+12:56:01  [uav0] irtifa=   58.9 m  mod=LOITER       ARMED    hava_hızı= 14.7 m/s  gz_RSS=697 MB
+12:56:06  [uav0] irtifa=   60.4 m  mod=UNKNOWN      ARMED    hava_hızı= 13.8 m/s  gz_RSS=697 MB
+12:56:11  [uav0] irtifa=   60.5 m  mod=UNKNOWN      ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:56:16  [uav0] irtifa=   60.5 m  mod=UNKNOWN      ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:56:21  [uav0] irtifa=   60.5 m  mod=UNKNOWN      ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:56:26  [uav0] irtifa=   60.7 m  mod=UNKNOWN      ARMED    hava_hızı= 13.6 m/s  gz_RSS=698 MB
+12:56:31  [uav0] irtifa=   60.8 m  mod=UNKNOWN      ARMED    hava_hızı= 13.5 m/s  gz_RSS=698 MB
+12:56:36  [uav0] irtifa=   60.9 m  mod=UNKNOWN      ARMED    hava_hızı= 13.5 m/s  gz_RSS=698 MB
+12:56:41  [uav0] irtifa=   60.8 m  mod=UNKNOWN      ARMED    hava_hızı= 13.6 m/s  gz_RSS=698 MB
+12:56:46  [uav0] irtifa=   60.7 m  mod=UNKNOWN      ARMED    hava_hızı= 13.6 m/s  gz_RSS=698 MB
+12:56:51  [uav0] irtifa=   60.5 m  mod=UNKNOWN      ARMED    hava_hızı= 13.7 m/s  gz_RSS=698 MB
+12:56:56  [uav0] irtifa=   60.3 m  mod=UNKNOWN      ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:57:01  [uav0] irtifa=   60.3 m  mod=UNKNOWN      ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+12:57:06  [uav0] irtifa=   60.3 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+12:57:11  [uav0] irtifa=   58.7 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=698 MB
+12:57:16  [uav0] irtifa=   58.1 m  mod=LOITER       ARMED    hava_hızı= 15.1 m/s  gz_RSS=698 MB
+12:57:21  [uav0] irtifa=   60.4 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:57:26  [uav0] irtifa=   60.7 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:57:31  [uav0] irtifa=   60.7 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:57:36  [uav0] irtifa=   60.2 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=698 MB
+12:57:41  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.8 m/s  gz_RSS=698 MB
+12:57:46  [uav0] irtifa=   58.2 m  mod=LOITER       ARMED    hava_hızı= 15.2 m/s  gz_RSS=698 MB
+12:57:51  [uav0] irtifa=   60.3 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+12:57:56  [uav0] irtifa=   62.0 m  mod=LOITER       ARMED    hava_hızı= 13.0 m/s  gz_RSS=698 MB
+12:58:01  [uav0] irtifa=   61.0 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+12:58:06  [uav0] irtifa=   59.2 m  mod=LOITER       ARMED    hava_hızı= 14.8 m/s  gz_RSS=698 MB
+12:58:11  [uav0] irtifa=   58.7 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=698 MB
+12:58:16  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 14.3 m/s  gz_RSS=698 MB
+12:58:21  [uav0] irtifa=   60.1 m  mod=LOITER       ARMED    hava_hızı= 14.3 m/s  gz_RSS=698 MB
+12:58:26  [uav0] irtifa=   59.6 m  mod=LOITER       ARMED    hava_hızı= 14.6 m/s  gz_RSS=698 MB
+12:58:31  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+12:58:36  [uav0] irtifa=   60.9 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=698 MB
+12:58:41  [uav0] irtifa=   60.7 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=698 MB
+12:58:46  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+12:58:51  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=698 MB
+12:58:56  [uav0] irtifa=   60.1 m  mod=LOITER       ARMED    hava_hızı= 14.3 m/s  gz_RSS=698 MB
+12:59:01  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=698 MB
+12:59:06  [uav0] irtifa=   58.8 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=698 MB
+12:59:11  [uav0] irtifa=   59.3 m  mod=LOITER       ARMED    hava_hızı= 14.7 m/s  gz_RSS=698 MB
+12:59:16  [uav0] irtifa=   61.1 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=698 MB
+12:59:21  [uav0] irtifa=   60.6 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=698 MB
+12:59:26  [uav0] irtifa=   59.2 m  mod=LOITER       ARMED    hava_hızı= 14.8 m/s  gz_RSS=698 MB
+12:59:31  [uav0] irtifa=   58.6 m  mod=LOITER       ARMED    hava_hızı= 15.1 m/s  gz_RSS=698 MB
+12:59:36  [uav0] irtifa=   59.3 m  mod=LOITER       ARMED    hava_hızı= 14.7 m/s  gz_RSS=698 MB
+12:59:41  [uav0] irtifa=   59.4 m  mod=LOITER       ARMED    hava_hızı= 14.6 m/s  gz_RSS=698 MB
+12:59:46  [uav0] irtifa=   58.7 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=698 MB
+12:59:51  [uav0] irtifa=   59.0 m  mod=LOITER       ARMED    hava_hızı= 14.9 m/s  gz_RSS=698 MB
+12:59:56  [uav0] irtifa=   60.3 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=698 MB
+13:00:01  [uav0] irtifa=   60.0 m  mod=LOITER       ARMED    hava_hızı= 14.3 m/s  gz_RSS=698 MB
+13:00:06  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.8 m/s  gz_RSS=698 MB
+13:00:11  [uav0] irtifa=   59.4 m  mod=LOITER       ARMED    hava_hızı= 14.6 m/s  gz_RSS=698 MB
+13:00:16  [uav0] irtifa=   60.2 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=698 MB
+13:00:21  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+13:00:26  [uav0] irtifa=   58.7 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=698 MB
+13:00:31  [uav0] irtifa=   59.3 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=698 MB
+13:00:36  [uav0] irtifa=   60.6 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+13:00:41  [uav0] irtifa=   60.0 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=698 MB
+13:00:46  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.6 m/s  gz_RSS=698 MB
+13:00:51  [uav0] irtifa=   59.3 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+13:00:56  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=698 MB
+13:01:01  [uav0] irtifa=   59.4 m  mod=LOITER       ARMED    hava_hızı= 14.3 m/s  gz_RSS=698 MB
+13:01:06  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=698 MB
+13:01:11  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=698 MB
+13:01:16  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=698 MB
+13:01:21  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=698 MB
+13:01:26  [uav0] irtifa=   59.0 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+13:01:31  [uav0] irtifa=   60.0 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+13:01:36  [uav0] irtifa=   60.1 m  mod=LOITER       ARMED    hava_hızı= 13.8 m/s  gz_RSS=698 MB
+13:01:41  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+13:01:46  [uav0] irtifa=   58.5 m  mod=LOITER       ARMED    hava_hızı= 14.7 m/s  gz_RSS=698 MB
+13:01:51  [uav0] irtifa=   59.4 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=698 MB
+13:01:56  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=698 MB
+13:02:01  [uav0] irtifa=   59.4 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=698 MB
+13:02:06  [uav0] irtifa=   59.5 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=698 MB
+13:02:11  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+13:02:16  [uav0] irtifa=   59.4 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=698 MB
+13:02:21  [uav0] irtifa=   59.0 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+13:02:26  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=698 MB
+13:02:31  [uav0] irtifa=   60.0 m  mod=LOITER       ARMED    hava_hızı= 13.7 m/s  gz_RSS=698 MB
+13:02:36  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.4 m/s  gz_RSS=698 MB
+13:02:41  [uav0] irtifa=   58.5 m  mod=LOITER       ARMED    hava_hızı= 14.6 m/s  gz_RSS=698 MB
+13:02:46  [uav0] irtifa=   59.7 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+13:02:51  [uav0] irtifa=   60.6 m  mod=LOITER       ARMED    hava_hızı= 13.4 m/s  gz_RSS=698 MB
+13:02:56  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 13.9 m/s  gz_RSS=698 MB
+13:03:01  [uav0] irtifa=   58.8 m  mod=LOITER       ARMED    hava_hızı= 14.6 m/s  gz_RSS=698 MB
+13:03:06  [uav0] irtifa=   58.5 m  mod=LOITER       ARMED    hava_hızı= 14.7 m/s  gz_RSS=698 MB
+13:03:11  [uav0] irtifa=   59.1 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=698 MB
+13:03:16  Durduruldu — kalp atışı kesildi

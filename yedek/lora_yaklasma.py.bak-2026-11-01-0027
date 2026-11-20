@@ -1,0 +1,415 @@
+#!/usr/bin/env python3
+"""
+lora_yaklasma.py — uav1, /hedef_konum_role'den gelen hedefe Offboard ile KONTROLLÜ YAKLAŞMA (SİMÜLASYON testi).
+İşaretçiye ~durma-mesafesi kala durur, güvenli irtifaya yükselir, Hold'a geçer. KAMİKAZE DEĞİL: temas yok,
+dalış yok (düz/yatay yaklaşma, pull-up + tırmanış).
+
+Çerçeve: /hedef_konum_role hedefi uav0 yerel NED'de (x_kuzey, y_dogu; yer, z=0). uav1 kaynağı uav0'dan
+(--kaynak-fark-n, --kaynak-fark-e) ötede (uav1 = uav0 + N15 E−15) → uav1 NED hedefi = (x_kuzey−ΔN, y_dogu−ΔE).
+
+Yaklaşma hattı (DÜZ ÇİZGİ, tavşan değil): setpoint = hedefin yatay konumu, hız = V·birim(hedef−konum),
+ivme NaN; z = −yaklasma-irtifa (düz terminal irtifa, dalış yok). Seçim nedeni: hedef bir NOKTA (çember değil),
+qr_pass'teki düz-çizgi yöntemi (konum+sonlu hız, NPFG) kanıtlı ve zamandan bağımsız (RTF jitter'ına dayanıklı);
+tavşan lookahead orbit'te +6 m dışa kayma yapıyordu, nokta yaklaşmada istenmez.
+
+Durma: hedefe 3B uzaklık < --durma-mesafesi (ya da güvenlik için irtifa < --min-irtifa) → pull-up: setpoint
+z = −guvenli-irtifa, ileri hız; irtifa ≥ guvenli−tol olunca DO_SET_MODE(AUTO_LOITER) ve nav_state doğrula.
+3B uzaklık yerdeki hedefe göre; düz yaklaşmada yaklasma-irtifa seviyesinde en küçük 3B = yaklasma-irtifa, bu
+yüzden yaklasma-irtifa < durma-mesafesi olmalı (yatay tetik noktası sqrt(durma²−yaklasma²)).
+
+Gecikme/kayıp toleransı: --zaman-asimi (3 s) mesaj gelmezse EKSTRAPOLASYON YOK, son bilinen hedefe gitmeyi
+sürdür; 2×zaman-asimi (6 s) geçerse dur ve Hold. Abort (düğüm içinde — global kural: uçan araca ayrı abort
+süreci bağlama): nav_state RTL/iniş, irtifa tabanı, RTF < --rtf-min, gz RSS > --rss-max-mb → Hold'a geç.
+
+Çıktı: --sonuc JSONL (bir satır/koşum), --log klasörüne. Parametreler komut satırından (sabit gömme yok).
+
+Kullanım:
+  source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash
+  python3 lora_yaklasma.py --uav 1 --sonuc test/.../yaklasma_sonuc.jsonl
+"""
+import argparse
+import json
+import math
+import os
+import time
+
+# ---- Saf geometri/karar (ROS'suz; lora_yaklasma_test.py bunları içe aktarır) ----------------------
+
+def uav1_hedef(x_kuzey, y_dogu, dN, dE):
+    """uav0 NED hedefini uav1 NED'ine çevir (uav1 = uav0 + (dN,dE))."""
+    return x_kuzey - dN, y_dogu - dE
+
+
+def mesafe_3b(pN, pE, palt, tN, tE, tz=0.0):
+    return math.sqrt((pN - tN) ** 2 + (pE - tE) ** 2 + (palt - tz) ** 2)
+
+
+def yaklasma_plani(start, tN, tE, yaklasma_irtifa, durma_mesafesi, guvenli_irtifa, hiz, tirmanma_hizi=3.0,
+                   mesafe_turu="3b"):
+    """start=(N,E,alt). Düz yaklaşma + pull-up geometrisi ve süre tahmini (dry test tablosu için).
+    mesafe_turu: '3b' (yerdeki hedefe 3B) ya da 'yatay' (yalnız yatay mesafe). İniş açısı güvenlik göstergesi."""
+    sN, sE, salt = start
+    yatay = math.hypot(tN - sN, tE - sE)
+    dist0 = math.sqrt(yatay ** 2 + salt ** 2)
+    yon = math.degrees(math.atan2(tE - sE, tN - sN)) % 360          # NED: atan2(E,N)
+    if mesafe_turu == "yatay":
+        durma_yatay = min(durma_mesafesi, yatay)
+    elif durma_mesafesi > yaklasma_irtifa:                           # 3B: düz yaklaşmada irtifa=yaklasma_irtifa
+        durma_yatay = math.sqrt(durma_mesafesi ** 2 - yaklasma_irtifa ** 2)
+    else:
+        durma_yatay = 0.0                                            # tetik yalnız tam tepede (ya da min-irtifa)
+    durma_alt = yaklasma_irtifa
+    durma_3b = math.sqrt(durma_yatay ** 2 + durma_alt ** 2)
+    yol = max(yatay - durma_yatay, 0.0)                              # kat edilecek yatay yol
+    inis = max(salt - yaklasma_irtifa, 0.0)
+    inis_aci_deg = round(math.degrees(math.atan2(inis, yol)), 1) if yol > 0 else 90.0   # iniş eğimi (güvenlik)
+    yaklasma_sn = yol / hiz if hiz > 0 else math.inf
+    tirmanma_sn = max(guvenli_irtifa - yaklasma_irtifa, 0.0) / max(tirmanma_hizi, 0.1)
+    return {"yon_deg": round(yon, 1), "yatay_mesafe_m": round(yatay, 1), "baslangic_3b_m": round(dist0, 1),
+            "durma_yatay_m": round(durma_yatay, 1), "durma_3b_m": round(durma_3b, 1), "durma_irtifa_m": round(durma_alt, 1),
+            "kat_edilen_yatay_m": round(yol, 1), "inis_aci_deg": inis_aci_deg, "yaklasma_sn": round(yaklasma_sn, 1),
+            "tirmanma_sn": round(tirmanma_sn, 1), "toplam_sn": round(yaklasma_sn + tirmanma_sn, 1)}
+
+
+# ---- Uçuş düğümü (ROS) -----------------------------------------------------------------------------
+
+def _log(msg):
+    print(f"{time.strftime('%H:%M:%S')}  {msg}", flush=True)
+
+
+def _run_flight(args):
+    import collections
+    import rclpy
+    from px4_msgs.msg import (OffboardControlMode, TrajectorySetpoint, VehicleCommand, VehicleCommandAck,
+                              VehicleControlMode, VehicleLandDetected, VehicleLocalPosition)
+    from rclpy.node import Node
+    from v2_orbit_mission import NAN3, PX4_QOS, SENSOR_QOS, control_mode_name, get_fmu_prefix, make_vehicle_command
+    from nav_izleyici import AUTO_LOITER, AUTO_RTL, OFFBOARD, NavIzleyici
+    from std_msgs.msg import String
+    try:
+        from gz.transport13 import Node as GzNode
+        from gz.msgs10.world_stats_pb2 import WorldStatistics
+    except ImportError:
+        GzNode = None
+
+    pre = get_fmu_prefix(args.uav)
+    LOOP_HZ = 20
+
+    class Yaklasma(Node):
+        def __init__(self):
+            super().__init__(f"lora_yaklasma_uav{args.uav}")
+            self.mode = self.pos = None
+            self.landed = None
+            self.ack = {}
+            self.pub_ocm = self.create_publisher(OffboardControlMode, f"{pre}/in/offboard_control_mode", PX4_QOS)
+            self.pub_sp = self.create_publisher(TrajectorySetpoint, f"{pre}/in/trajectory_setpoint", PX4_QOS)
+            self.pub_cmd = self.create_publisher(VehicleCommand, f"{pre}/in/vehicle_command", PX4_QOS)
+            self.create_subscription(VehicleControlMode, f"{pre}/out/vehicle_control_mode",
+                                     lambda m: setattr(self, "mode", m), SENSOR_QOS)
+            self.create_subscription(VehicleLocalPosition, f"{pre}/out/vehicle_local_position_v1",
+                                     lambda m: setattr(self, "pos", m), SENSOR_QOS)
+            self.create_subscription(VehicleLandDetected, f"{pre}/out/vehicle_land_detected",
+                                     lambda m: setattr(self, "landed", m.landed), SENSOR_QOS)
+            self.create_subscription(VehicleCommandAck, f"{pre}/out/vehicle_command_ack_v1",
+                                     lambda m: self.ack.__setitem__(m.command, m.result), SENSOR_QOS)
+            # Hedef uav0 NED'de; kendi ad alanından dinle (/hedef_konum_role küresel)
+            self.hedef = None            # (tN_uav1, tE_uav1)
+            self.hedef_sayac = 0
+            self.son_mesaj_t = None
+            self.create_subscription(String, "/hedef_konum_role", self.on_role, 50)
+
+        def on_role(self, msg):
+            try:
+                d = json.loads(msg.data)
+                xk = d.get("ort_x_kuzey", d.get("x_kuzey"))
+                yd = d.get("ort_y_dogu", d.get("y_dogu"))
+                if xk is None or yd is None:
+                    return
+            except (ValueError, TypeError):
+                return
+            self.hedef = uav1_hedef(float(xk), float(yd), args.kaynak_fark_n, args.kaynak_fark_e)
+            self.hedef_sayac += 1
+            self.son_mesaj_t = time.monotonic()
+
+        def ts(self):
+            return int(self.get_clock().now().nanoseconds / 1000)
+
+        def offboard(self):
+            return bool(self.mode and self.mode.flag_control_offboard_enabled)
+
+        def stream(self, position, velocity):
+            ocm = OffboardControlMode(); ocm.timestamp = self.ts(); ocm.position = True
+            self.pub_ocm.publish(ocm)
+            sp = TrajectorySetpoint(); sp.timestamp = self.ts()
+            sp.position = [float(v) for v in position]; sp.velocity = [float(v) for v in velocity]
+            sp.acceleration = NAN3; sp.jerk = NAN3; sp.yaw = math.nan; sp.yawspeed = math.nan
+            self.pub_sp.publish(sp)
+
+    rclpy.init()
+    node = Yaklasma()
+    nav = NavIzleyici(args.uav)
+    # RTF: gz real_time_factor anlık değeri geçici tepe yapabiliyor (2026-10-31: tek örnek 0.17 iken 5 sn
+    # ort 0.79) → qr_watch gibi 5 sn pencereli ortalama; en az 3 örnekle abort (yanlış abortu önler).
+    rtf_win = collections.deque()      # (monotonic, rtf)
+    if GzNode is not None:
+        gzn = GzNode()
+
+        def on_stats(m):
+            if m.real_time_factor:
+                now = time.monotonic()
+                rtf_win.append((now, m.real_time_factor))
+                while rtf_win and now - rtf_win[0][0] > 5.0:
+                    rtf_win.popleft()
+        gzn.subscribe(WorldStatistics, "/world/default/stats", on_stats)
+
+    def rtf_ort():
+        vals = [v for _, v in rtf_win]
+        return sum(vals) / len(vals) if len(vals) >= 3 else None
+
+    res = {"uav": args.uav, "baslangic": time.strftime("%H:%M:%S"), "durma_mesafesi_m": args.durma_mesafesi,
+           "guvenli_irtifa_m": args.guvenli_irtifa, "yaklasma_irtifa_m": args.yaklasma_irtifa, "hiz": args.hiz}
+    sonuc_kod = 1
+    try:
+        nav.wait_first(8.0)
+        # uav1 HAZIR olana kadar bekle (launch'ta YAKLASMA=1 ile düğüm uav1 kalkışından önce başlayabilir):
+        # arm + havada (irtifa ≥ 30) + AUTO_LOITER. Çıkmaz, bekler (hazir-asimi'ye kadar).
+        t_ready = time.monotonic()
+        next_r = t_ready
+        while True:
+            rclpy.spin_once(node, timeout_sec=0.2)
+            if os.path.exists(args.abort_file):
+                _log("abort-file — hazırlık beklenirken durduruldu"); return 2
+            p = node.pos
+            if (p and node.mode and node.mode.flag_armed and not node.landed
+                    and -p.z >= 30 and nav.nav == AUTO_LOITER):
+                break
+            alt_r = (-p.z) if p else 0.0
+            if time.monotonic() - t_ready > args.hazir_asimi:
+                _log(f"HATA: uav1 {args.hazir_asimi:.0f} sn içinde hazır olmadı "
+                     f"(arm={node.mode.flag_armed if node.mode else '?'}, "
+                     f"irtifa={alt_r:.1f}, nav={nav.name()})"); return 1
+            if time.monotonic() >= next_r:
+                next_r += 10.0
+                _log(f"uav1 hazır bekleniyor (arm={node.mode.flag_armed if node.mode else '?'}, "
+                     f"irtifa={(-p.z if p else 0):.0f} m, nav={nav.name()})")
+        p = node.pos
+        _log(f"uav1 hazır: ({p.x:.0f}, {p.y:.0f}, {-p.z:.0f} m) Hold; /hedef_konum_role bekleniyor "
+             f"(eşik {args.esik_mesaj} mesaj)")
+        res["baslangic_konum"] = {"n": round(p.x, 1), "e": round(p.y, 1), "irtifa": round(-p.z, 1)}
+
+        # 1) Hedef mesajı bekle
+        t = time.monotonic()
+        while node.hedef_sayac < args.esik_mesaj:
+            rclpy.spin_once(node, timeout_sec=0.1)
+            if os.path.exists(args.abort_file):
+                _log("abort-file — beklerken durduruldu"); return 2
+            if time.monotonic() - t > args.bekleme_asimi:
+                _log(f"HATA: {args.bekleme_asimi:.0f} sn içinde /hedef_konum_role gelmedi"); return 1
+        tespit_t = time.monotonic()
+        res["tespit_bekleme_sn"] = round(tespit_t - t, 2)
+        plan = yaklasma_plani((p.x, p.y, -p.z), node.hedef[0], node.hedef[1], args.yaklasma_irtifa,
+                              args.durma_mesafesi, args.guvenli_irtifa, args.hiz, mesafe_turu=args.mesafe_turu)
+        res["plan"] = plan
+        _log(f"hedef (uav1 NED) ({node.hedef[0]:.1f}, {node.hedef[1]:.1f}); plan {json.dumps(plan, ensure_ascii=False)}")
+
+        # 2) OFFBOARD'a geç (önce setpoint akışı)
+        def abort_nedeni_kritik():
+            if os.path.exists(args.abort_file):
+                return "abort-file"
+            if nav.nav == AUTO_RTL:
+                return "failsafe/RTL (nav_state)"
+            if node.landed:
+                return "iniş algılandı"
+            return None
+
+        def abort_nedeni():
+            n = abort_nedeni_kritik()
+            if n:
+                return n
+            r = rtf_ort()
+            if r is not None and r < args.rtf_min:
+                return f"RTF(5s) {r:.3f} < {args.rtf_min}"
+            return None
+
+        # Devralma anında (role mesajı geldiğinde) RTF'nin tek seferlik overflight çukuruna (uav0 kamera+arena
+        # merkezi geçişi) denk gelmesi abort'a yol açıyordu (2026-10-31). Hedefi kilitleyip (node.hedef zaten
+        # her yeni role mesajıyla güncelleniyor) RTF(5s) ortalaması --rtf-min'i geçene kadar bekle; yalnızca
+        # --devralma-bekleme sn içinde toparlanmazsa gerçek abort.
+        engaged = None
+        rtf_latch_t0 = None
+        t = time.monotonic()
+        while engaged is None:
+            rclpy.spin_once(node, timeout_sec=1.0 / LOOP_HZ)
+            nk = abort_nedeni_kritik()
+            if nk:
+                _log(f"ABORT (hazırlık): {nk}"); res["sonuc"] = "abort"; res["neden"] = nk; return 2
+            r = rtf_ort()
+            if r is not None and r < args.rtf_min:
+                if rtf_latch_t0 is None:
+                    rtf_latch_t0 = time.monotonic()
+                    _log(f"RTF(5s) {r:.3f} < {args.rtf_min} — hedef kilitlendi, toparlanma bekleniyor "
+                         f"(en fazla {args.devralma_bekleme:.0f} sn)")
+                elif time.monotonic() - rtf_latch_t0 > args.devralma_bekleme:
+                    n = (f"RTF latch zaman aşımı ({args.devralma_bekleme:.0f} sn), "
+                         f"RTF(5s) {r:.3f} < {args.rtf_min}")
+                    _log(f"ABORT (hazırlık): {n}"); res["sonuc"] = "abort"; res["neden"] = n
+                    res["rtf_latch_bekleme_sn"] = round(time.monotonic() - rtf_latch_t0, 1)
+                    return 2
+            elif rtf_latch_t0 is not None:
+                _log(f"RTF(5s) {r:.3f} ≥ {args.rtf_min} — toparlandı, devralmaya devam "
+                     f"({time.monotonic() - rtf_latch_t0:.1f} sn beklendi)")
+                res["rtf_latch_bekleme_sn"] = round(time.monotonic() - rtf_latch_t0, 1)
+                rtf_latch_t0 = None
+            p = node.pos
+            dirn, dire = node.hedef[0] - p.x, node.hedef[1] - p.y
+            L = math.hypot(dirn, dire) or 1.0
+            node.stream((node.hedef[0], node.hedef[1], -args.yaklasma_irtifa),
+                        (args.hiz * dirn / L, args.hiz * dire / L, 0.0))
+            if node.offboard():
+                engaged = time.monotonic(); break
+            if time.monotonic() - t > 1.0 * (1 + int((time.monotonic() - t))):
+                node.pub_cmd.publish(make_vehicle_command(args.uav, node.ts(),
+                                     VehicleCommand.VEHICLE_CMD_DO_SET_MODE, 1.0, 6.0))
+            if time.monotonic() - t > args.engage_asimi:
+                _log("HATA: OFFBOARD'a geçilemedi"); return 1
+        res["tespit_hareket_sn"] = round(engaged - tespit_t, 2)
+        _log(f"OFFBOARD ✔ (tespitten {res['tespit_hareket_sn']:.1f} sn sonra); yaklaşma başlıyor")
+
+        # 3) YAKLAŞMA
+        d3b0 = mesafe_3b(p.x, p.y, -p.z, node.hedef[0], node.hedef[1])
+        next_log = time.monotonic()
+        durdu = False
+        while not durdu:
+            rclpy.spin_once(node, timeout_sec=1.0 / LOOP_HZ)
+            if not node.offboard():
+                _log(f"ABORT: OFFBOARD kaybı (mod={control_mode_name(node.mode)})")
+                res["sonuc"] = "abort"; res["neden"] = "OFFBOARD kaybı"; return 2
+            n = abort_nedeni()
+            if n:
+                _log(f"ABORT (yaklaşma): {n}"); res["sonuc"] = "abort"; res["neden"] = n
+                break
+            p = node.pos
+            alt = -p.z
+            # mesaj zaman aşımı: ekstrapolasyon yok, son hedefe devam; 2× → dur
+            yas = (time.monotonic() - node.son_mesaj_t) if node.son_mesaj_t else 0.0
+            if yas > 2 * args.zaman_asimi:
+                _log(f"role {yas:.1f} s gelmedi (2×{args.zaman_asimi}) → dur, Hold")
+                res["durma_nedeni"] = "role zaman aşımı"; durdu = True; break
+            dirn, dire = node.hedef[0] - p.x, node.hedef[1] - p.y
+            L = math.hypot(dirn, dire) or 1.0
+            node.stream((node.hedef[0], node.hedef[1], -args.yaklasma_irtifa),
+                        (args.hiz * dirn / L, args.hiz * dire / L, 0.0))
+            yatay_m = math.hypot(dirn, dire)
+            d3b = mesafe_3b(p.x, p.y, alt, node.hedef[0], node.hedef[1])
+            d_stop = yatay_m if args.mesafe_turu == "yatay" else d3b
+            if d_stop < args.durma_mesafesi:
+                res["durma_nedeni"] = f"durma-mesafesi ({args.mesafe_turu})"; durdu = True
+            elif alt < args.min_irtifa:
+                res["durma_nedeni"] = f"irtifa tabanı (<{args.min_irtifa})"; durdu = True
+            if time.monotonic() >= next_log:
+                next_log += 1.0
+                _log(f"yaklaşma: 3B={d3b:6.1f} m  yatay={math.hypot(dirn,dire):6.1f} m  irtifa={alt:5.1f} m  "
+                     f"yer_hızı={math.hypot(p.vx,p.vy):4.1f} m/s  role_yaşı={yas:.1f} s")
+        p = node.pos
+        durma_3b = mesafe_3b(p.x, p.y, -p.z, node.hedef[0], node.hedef[1])
+        res["durma"] = {"3b_m": round(durma_3b, 2), "yatay_m": round(math.hypot(p.x-node.hedef[0], p.y-node.hedef[1]), 2),
+                        "irtifa_m": round(-p.z, 2)}
+        res["kapanan_mesafe_m"] = round(d3b0 - durma_3b, 1)
+        _log(f"DURDU: 3B {durma_3b:.1f} m, yatay {res['durma']['yatay_m']:.1f} m, irtifa {-p.z:.1f} m "
+             f"(neden {res.get('durma_nedeni')}); pull-up → {args.guvenli_irtifa:.0f} m")
+
+        # 4) PULL-UP: güvenli irtifaya tırman (ileri hız, z = −guvenli)
+        t_pu = time.monotonic()
+        while -node.pos.z < args.guvenli_irtifa - 5.0:
+            rclpy.spin_once(node, timeout_sec=1.0 / LOOP_HZ)
+            if not node.offboard():
+                _log(f"ABORT: OFFBOARD kaybı (pull-up, mod={control_mode_name(node.mode)})")
+                res["sonuc"] = "abort"; res["neden"] = "OFFBOARD kaybı (pull-up)"; return 2
+            p = node.pos
+            v = math.hypot(p.vx, p.vy) or 1.0
+            node.stream((p.x + 200.0 * p.vx / v, p.y + 200.0 * p.vy / v, -args.guvenli_irtifa),
+                        (args.hiz * p.vx / v, args.hiz * p.vy / v, 0.0))
+            if time.monotonic() - t_pu > args.tirmanma_asimi:
+                _log(f"UYARI: {args.tirmanma_asimi:.0f} sn'de güvenli irtifaya ulaşılamadı (irtifa {-p.z:.1f})")
+                break
+        res["yukselis_irtifa_m"] = round(-node.pos.z, 1)
+        res["tirmanma_sn"] = round(time.monotonic() - t_pu, 1)
+        _log(f"pull-up tamam: irtifa {-node.pos.z:.1f} m ({res['tirmanma_sn']:.1f} sn); Hold veriliyor")
+
+        # 5) HOLD (DO_SET_MODE AUTO_LOITER), nav_state doğrula; akış mod değişene kadar sürer
+        hold_ok, last_cmd, t_hold = False, 0.0, time.monotonic()
+        while time.monotonic() - t_hold < 10.0:
+            rclpy.spin_once(node, timeout_sec=1.0 / LOOP_HZ)
+            p = node.pos
+            v = math.hypot(p.vx, p.vy) or 1.0
+            node.stream((p.x + 200.0 * p.vx / v, p.y + 200.0 * p.vy / v, -args.guvenli_irtifa),
+                        (args.hiz * p.vx / v, args.hiz * p.vy / v, 0.0))
+            ack = node.ack.get(VehicleCommand.VEHICLE_CMD_DO_SET_MODE)
+            if (ack == VehicleCommandAck.VEHICLE_CMD_RESULT_ACCEPTED and node.mode
+                    and node.mode.flag_control_auto_enabled and not node.mode.flag_control_offboard_enabled
+                    and nav.nav == AUTO_LOITER and nav.fresh(1.5)):
+                hold_ok = True; break
+            if time.monotonic() - last_cmd >= 0.5:
+                last_cmd = time.monotonic()
+                node.ack.pop(VehicleCommand.VEHICLE_CMD_DO_SET_MODE, None)
+                node.pub_cmd.publish(make_vehicle_command(args.uav, node.ts(),
+                                     VehicleCommand.VEHICLE_CMD_DO_SET_MODE, 1.0, 4.0, 3.0))
+        res["nav_bitis"] = nav.name()
+        res["hold"] = hold_ok
+        res["toplam_manevra_sn"] = round(time.monotonic() - tespit_t, 1)
+        if "sonuc" not in res:
+            res["sonuc"] = "tamam" if hold_ok else "hold_dogrulanamadi"
+        _log(f"Hold: {'✔ nav_state=AUTO_LOITER' if hold_ok else '✘ doğrulanamadı'} (nav_bitis {nav.name()}); "
+             f"toplam manevra {res['toplam_manevra_sn']:.1f} sn")
+        sonuc_kod = 0 if hold_ok else 4
+        return sonuc_kod
+    finally:
+        res["bitis"] = time.strftime("%H:%M:%S")
+        if args.sonuc:
+            os.makedirs(os.path.dirname(args.sonuc) or ".", exist_ok=True)
+            with open(args.sonuc, "a") as f:
+                f.write(json.dumps(res, ensure_ascii=False) + "\n")
+        nav.close()
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+def build_parser():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--uav", type=int, default=1)
+    ap.add_argument("--kaynak-fark-n", type=float, default=15.0, help="uav1 kaynağı − uav0 kaynağı, Kuzey [m]")
+    ap.add_argument("--kaynak-fark-e", type=float, default=-15.0, help="uav1 kaynağı − uav0 kaynağı, Doğu [m]")
+    ap.add_argument("--esik-mesaj", type=int, default=1, help="yaklaşmaya başlamadan önce ardışık geçerli mesaj")
+    ap.add_argument("--durma-mesafesi", type=float, default=20.0, help="durma mesafesi [m] (--mesafe-turu'na göre)")
+    ap.add_argument("--mesafe-turu", choices=("3b", "yatay"), default="3b",
+                    help="durma ölçütü: 3b (yerdeki hedefe 3B; düşük irtifa/dik iniş gerektirir) ya da yatay "
+                         "(yalnız yatay; sabit güvenli irtifada yaklaşma için önerilir)")
+    ap.add_argument("--yaklasma-irtifa", type=float, default=15.0, help="düz terminal yaklaşma irtifası [m] (<durma)")
+    ap.add_argument("--guvenli-irtifa", type=float, default=100.0, help="pull-up sonrası tırmanma irtifası [m]")
+    ap.add_argument("--min-irtifa", type=float, default=8.0, help="güvenlik tabanı; altına inince pull-up [m]")
+    ap.add_argument("--hiz", type=float, default=15.0, help="yaklaşma hızı [m/s]")
+    ap.add_argument("--zaman-asimi", type=float, default=3.0, help="role mesaj zaman aşımı [s] (2× → dur)")
+    ap.add_argument("--rtf-min", type=float, default=0.7)
+    ap.add_argument("--devralma-bekleme", type=float, default=15.0,
+                    help="devralma anında RTF(5s) < rtf-min ise hedefi kilitleyip toparlanma için bekleme "
+                         "sınırı [s] (dolarsa gerçek abort)")
+    ap.add_argument("--rss-max-mb", type=float, default=4096.0)
+    ap.add_argument("--hazir-asimi", type=float, default=600.0, help="uav1'in Hold'a geçmesini bekleme sınırı [s]")
+    ap.add_argument("--bekleme-asimi", type=float, default=120.0, help="ilk role mesajı bekleme sınırı [s]")
+    ap.add_argument("--engage-asimi", type=float, default=30.0, help="OFFBOARD'a geçiş sınırı [s]")
+    ap.add_argument("--tirmanma-asimi", type=float, default=90.0, help="güvenli irtifaya tırmanma sınırı [s]")
+    ap.add_argument("--abort-file", default="/tmp/lora_yaklasma.abort")
+    ap.add_argument("--sonuc", default=None, help="sonuç JSONL yolu")
+    return ap
+
+
+def main():
+    args = build_parser().parse_args()
+    if args.mesafe_turu == "3b" and args.yaklasma_irtifa >= args.durma_mesafesi:
+        _log(f"UYARI: --mesafe-turu 3b iken yaklasma-irtifa ({args.yaklasma_irtifa}) ≥ durma-mesafesi "
+             f"({args.durma_mesafesi}); 3B durma tetiklenmez, yalnızca irtifa tabanı ({args.min_irtifa}) ile durur")
+    return _run_flight(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

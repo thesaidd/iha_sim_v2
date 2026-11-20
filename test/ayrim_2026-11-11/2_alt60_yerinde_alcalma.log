@@ -1,0 +1,12 @@
+08:02:51  [geçiş 82] hedef (-60, -60), ψ=210°, irtifa 60 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (39, 248, 100 m)
+08:02:58  ayrım denetimi: uav1 hold, Hold merkezi (46, 327), irtifa 121 m; eşik 3B 40 m
+08:02:58  AYRIM: bacak: öteki araç hold, en kötü durum yatay boşluk -114 m, dikey boşluk 10 m → 3B 10 m < 40 m. Hedef irtifada (60 m) bacak uygun → önce YERİNDE irtifa değişimi 100 → 60 m (kendi Hold merkezi (-30, 290)): kabul
+08:03:19  AYRIM: yerinde irtifa değişimi tamam: irtifa 64.0 m
+08:03:19  DO_REPOSITION → H (543, 196), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 89 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı -4°; ayrım: bacak: öteki araç hold, en kötü durum yatay boşluk -6 m, dikey boşluk 46 m → 3B 46 m ≥ 40 m
+08:03:19  ayrım: taşıma komutlarına kadar gerçekleşen en küçük 3B {'3b_m': 69.0, 'yatay_m': 66.0, 'dikey_m': 20.1, 'saat': '08:02:51'}
+08:03:19  taşıma: H'ye 579 m, irtifa 64.0 m, direk 141 m
+08:03:29  taşıma: H'ye 433 m, irtifa 61.4 m, direk 113 m
+08:03:39  taşıma: H'ye 300 m, irtifa 62.8 m, direk 216 m
+08:03:49  taşıma: H'ye 164 m, irtifa 61.0 m, direk 328 m
+08:03:52  TAŞIMA TAMAM (--transit-only): H'ye 120 m, irtifa 61.0 m, Hold'da
+08:03:52  AYRIM ÖZETİ: bu koşuda uav1 ile gerçekleşen en küçük 3B ayrım {'3b_m': 69.0, 'yatay_m': 66.0, 'dikey_m': 20.1, 'saat': '08:02:51'} (eşik 40 m)

@@ -1,0 +1,45 @@
+✔ u_donus: 400 rastgele dönüş — bitiş hedef hattın başında, ters yönde, sürekli; D ≥ 2R ⇔ stadyum; yay R ≥ 85
+✔ yay ilkeli: ilerleme/yanal sapma tutarlı; setpoint ivmesi merkezcil (V²/R), hıza dik
+✔ [pay 40] plan doğrulaması boş (süreklilik, direk, çıkış Hold'ları, yarıçap)
+✔ [pay 40] 9 hattın her biri bir kez, yön her hatta değişiyor
+✔ [pay 40] her hat (uzatmalar dahil) direklerden ≥ 40 m (en küçük 40.0)
+✔ [pay 40] her dönüş direklerden ≥ 55 m (uçlar hariç; en küçük 64.0), koridor dışı
+✔ [pay 40] geçişler: 1 tanesi D ≥ 170 m (stadyum), 7 tanesi dış bağlantı (ampul); hiçbir yay < R_min
+✔ [pay 40] komşu hat aralığı ≤ W; yalnız direk bantları boş
+✔ [pay 40] her hat sonu için çıkış Hold çemberleri direklerden ≥ 65 m
+✔ [pay 20] plan doğrulaması boş (süreklilik, direk, çıkış Hold'ları, yarıçap)
+✔ [pay 20] 16 hattın her biri bir kez, yön her hatta değişiyor
+✔ [pay 20] her hat (uzatmalar dahil) direklerden ≥ 20 m (en küçük 20.0)
+✔ [pay 20] her dönüş direklerden ≥ 55 m (uçlar hariç; en küçük 53.9), koridor dışı
+✔ [pay 20] geçişler: 6 tanesi D ≥ 170 m (stadyum), 9 tanesi dış bağlantı (ampul); hiçbir yay < R_min
+✔ [pay 20] komşu hat aralığı ≤ W; yalnız direk bantları boş
+✔ [pay 20] her hat sonu için çıkış Hold çemberleri direklerden ≥ 65 m
+✔ atlamasız seyrek karşılaştırma planı: 2 hat, kapsama %11
+✔ kitap_sirasi: 0, k, 1, k+1, …
+✔ tespitsiz koşu: 9 hat plan sırasıyla uçuldu, sonuç 'bulunamadi'
+✔ kutu içinde hatta yanal sapma < 3 m (model; en büyük 1.23 m)
+✔ gerçekleşen iz direklerden ≥ 37 m (hatlarda 39.3, tüm uçuşta 39.3)
+✔ dönüşler kalkış koridoruna girmedi
+✔ irtifa 60 ± 3 m; dönüş hızı model sınırında
+✔ bitiş: Hold ✔, çıkış merkezi [290, 25] direklerden uzak
+✔ tarama süresi plan ile uyumlu (model 465 sn, plan 441 sn + giriş/çıkış)
+✔ izden ölçülen kapsama %42.4 ≈ plan %44.4
+✔ gerçek QR (−60, −60): 9/9. hatta tespit, tarama başından 441.6 sn sonra
+✔ hedef (−60, −68): 3. hatta tespit (tarama 138.2 sn), sonraki hat AÇILMADI (uçulmayan 6 hat)
+✔ tespit kaydı sonuçta (konum, içerik, hat, süre)
+✔ tespitten sonra hat bitirildi, düz çıkış, Hold'a geçiş N=290 (kutu dışı), merkez [290, 10]
+✔ tespit sonrası iz direklerden ≥ 37 m
+✔ tespit süzgeci: yanlış içerik / kutu dışı konum sayılmaz
+✔ kapsama dışı hedef (0, 0; direk bandı): 'bulunamadi' — dürüst sonuç
+✔ son hattaki hedef: son hatta tespit
+✔ uav1 kalkış Hold'unda (45, 334) @119 m: dikey ayrım yetiyor, hiçbir hat ertelenmedi
+✔ uav1 doğu hatlarının üstünde Hold'da (0, 160) @65 m: doğu hatları ertelendi, batı hatları (5) öne alınıp uçuldu, sonra 'kesildi' (uçulmayan [40.0, 67.5, 81.2, 53.7]), çıkış Hold'u
+✔ uav1 aynı irtifada hareketli (yeri belirsiz): tarama BAŞLAMADI, komut yok, kod 3
+✔ uav1 yerde (kalkmamış): koridoru kesen doğu hatları uçulmadı (sonuç 'kesildi')
+✔ OFFBOARD kaybı: kod 2, setpoint akışı kesildi
+✔ OFFBOARD reddi: 10 denemeden sonra kod 1, tarama yok
+✔ zor başlangıç (140, 100): taşıma REDDEDİLDİ → kod 3, OFFBOARD yok; denetimsiz bacak yok
+✔ taşıma bacakları direk + iz payı denetimli
+✔ [pay 20] 16 hat uçuldu, iz direklerden ≥ 17 m (19.2), 795 sn
+
+43 doğrulama geçti

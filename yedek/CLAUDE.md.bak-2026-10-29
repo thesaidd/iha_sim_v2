@@ -1,0 +1,45 @@
+# İHA Sim V2
+
+TÜBİTAK kapsamında İHA tespit/takip sistemi. Hedef: simülasyonda iki sabit kanatlı İHA'yı birlikte uçurmak ve aralarında tespit/takip sistemini test etmek.
+
+## Yığın (Ubuntu 22.04, WSL2)
+- ROS 2 Humble, Gazebo Sim 8 (Harmonic), PX4 SITL (`~/PX4-Autopilot`, v1.17.0-alpha1), MicroXRCE-DDS Agent
+- `px4_msgs` çalışma alanı: `~/ros2_ws` (`source ~/ros2_ws/install/setup.bash`)
+- Model: `advanced_plane` (sabit kanat, 640x480 30 Hz kamera). MAVROS/ArduPilot kullanılmıyor.
+- Python: ultralytics (YOLO11), opencv + contrib, torch
+
+## Klasörler
+- `~/iha_sim_v2/` — V2, **aktif** (orbit görevi, telemetri monitörü, `v2_proje_gunlugu.md`)
+- `~/iha_tespit_sim/` — Git deposu. `detection_core/` (YOLO, tracker, Kalman), `yolo11m-uav.pt`. V1 swarm kodu **arşiv/deprecated**.
+- Yedek dalı: `yedek/2026-10-25-v1-v2-calisma` (iha_tespit_sim)
+
+## Simülasyonu başlatma (ayrı terminaller, sırayla)
+```
+MicroXRCEAgent udp4 -p 8888
+cd ~/PX4-Autopilot && PX4_GZ_WORLD=default PX4_GZ_POSE="0,0,0.5,0,0,0" PX4_SYS_AUTOSTART=4008 make px4_sitl gz_advanced_plane
+cd ~/PX4-Autopilot && PX4_GZ_WORLD=default PX4_GZ_POSE="-15,15,0.5,0,0,0" PX4_SYS_AUTOSTART=4008 instance=1 ./build/px4_sitl_default/bin/px4 -i 1
+source ~/ros2_ws/install/setup.bash && python3 v2_telemetry_monitor.py
+source ~/ros2_ws/install/setup.bash && python3 v2_orbit_mission.py --ros-args -p uav_id:=0   # ve :=1
+```
+Kalkış QGroundControl'den manuel; görev düğümü uçak 40 m'ye ulaşınca Offboard'u devralır.
+
+## Çoklu araç kuralları
+- uav0: topic öneki `/fmu`, SysID 1. uav1: `/px4_1/fmu`, SysID 2 (`target_system = uav_id + 1`).
+- Okuma topic'leri sürüm ekli: `vehicle_status_v2`, `vehicle_local_position_v1`.
+- PX4 çıkış topic'leri için QoS: BEST_EFFORT + VOLATILE. Komut yayıncıları: TRANSIENT_LOCAL.
+- Orbit: R=100 m, V=15 m/s, uav1 faz farkı π.
+
+## Kurallar
+- Mimari: yalnızca standart Offboard + TrajectorySetpoint. L1/TECS/APF/Pure Pursuit **yasak** (V1'de sorun çıkardı).
+- Kamera köprüsü: Gazebo → ROS için `ros_gz_bridge`; şu an yalnızca tek `/camera/image` var, uav1 için yok. Topic adları (`/camera/image` vs `/uav0/camera`) tutarsız, hizalanacak.
+- Gizli bilgileri (token, `.ssh`, `.aws`) asla dosyaya/commit'e yazma.
+- Simülasyon süreçlerini kullanıcı onayı olmadan başlatma/durdurma. PX4 `Tools/simulation/gz` elle değiştirilmiş; PX4'ü güncelleme/reset yapma.
+- Her oturum sonunda `v2_proje_gunlugu.md` başına (üste) kayıt ekle.
+
+## Bilinen durum (2026-10-25)
+- Çalışıyor: DDS zinciri, iki İHA'nın 300 m'de uçuşu, telemetri monitörü.
+- Açık sorun: görev betiği 40 m eşiğini algılayıp Offboard'a geçmedi (5 Mayıs). Son PX4 kaydı: `PX4-Autopilot/build/px4_sitl_default/rootfs/{log,1/log}/2026-05-05/*.ulg` (~1,5 GB, tamamını ekrana dökme).
+- Kanıtsız: iki araçla orbit, tespit/takip ile uçuş entegrasyonu, uav1 kamerası.
+
+## Yol haritası
+1. `.ulg` analiziyle 40 m / Offboard hatasını bul → 2. tek İHA orbit → 3. iki İHA orbit → 4. iki kamera köprüsü → 5. YOLO tek başına → 6. tracker + Kalman → 7. tespitten uçuş komutuna kontrol katmanı.

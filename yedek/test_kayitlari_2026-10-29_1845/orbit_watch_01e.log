@@ -1,0 +1,468 @@
+18:33:03  izleme: uav0 100 m, uav1 120 m; merkez (0, 0) [uav0 çerçevesi], R 100 m, gz RSS başlangıç 531 MB; abort → [0, 1]
+18:33:04  uav0 orijini uav0 çerçevesinde: N=+0.0 E=+0.0 m
+18:33:04  uav1 orijini uav0 çerçevesinde: N=+15.0 E=-15.0 m
+18:33:04  Tüm araçlar OFFBOARD — 360 sn izleniyor
+18:33:04  [uav0] t=    0 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 13.8  yer_hızı= 14.3 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:04  [uav1] t=    0 sn  mod=OFFBOARD irtifa= 122.0 m  merkeze=  77.9 m  yarıçap_hatası= -22.1 m  hava_hızı= 12.7  yer_hızı= 13.3 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:33:04  [uav0–uav1] t=    0 sn  açı farkı= 167.2°  3B mesafe= 184.5 m
+18:33:09  [uav0] t=    5 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 13.8  yer_hızı= 14.4 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:33:09  [uav1] t=    5 sn  mod=OFFBOARD irtifa= 120.5 m  merkeze=  97.0 m  yarıçap_hatası=  -3.0 m  hava_hızı= 13.5  yer_hızı= 13.8 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:33:09  [uav0–uav1] t=    5 sn  açı farkı= 170.3°  3B mesafe= 203.8 m
+18:33:14  [uav0] t=   10 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 13.9  yer_hızı= 14.4 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:33:14  [uav1] t=   10 sn  mod=OFFBOARD irtifa= 120.0 m  merkeze= 103.5 m  yarıçap_hatası=  +3.5 m  hava_hızı= 13.5  yer_hızı= 13.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:14  [uav0–uav1] t=   10 sn  açı farkı= 171.2°  3B mesafe= 210.4 m
+18:33:14  [uav0] YAKALANDI: t=10 sn (hata 10 sn boyunca < 30 m)
+18:33:14  [uav1] YAKALANDI: t=10 sn (hata 10 sn boyunca < 30 m)
+18:33:19  [uav0] t=   15 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 13.9  yer_hızı= 14.4 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:33:19  [uav1] t=   15 sn  mod=OFFBOARD irtifa= 119.8 m  merkeze= 104.7 m  yarıçap_hatası=  +4.7 m  hava_hızı= 13.5  yer_hızı= 14.0 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:19  [uav0–uav1] t=   15 sn  açı farkı= 171.0°  3B mesafe= 211.5 m
+18:33:24  [uav0] t=   20 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.4 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:33:24  [uav1] t=   20 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 13.6  yer_hızı= 14.1 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:24  [uav0–uav1] t=   20 sn  açı farkı= 170.9°  3B mesafe= 211.8 m
+18:33:29  [uav0] t=   25 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 13.9  yer_hızı= 14.4 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:29  [uav1] t=   25 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 13.7  yer_hızı= 14.2 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:33:29  [uav0–uav1] t=   25 sn  açı farkı= 170.7°  3B mesafe= 212.1 m
+18:33:34  [uav0] t=   30 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 13.9  yer_hızı= 14.4 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:33:34  [uav1] t=   30 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 13.8  yer_hızı= 14.3 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:34  [uav0–uav1] t=   30 sn  açı farkı= 170.5°  3B mesafe= 212.2 m
+18:33:39  [uav0] t=   35 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:39  [uav1] t=   35 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 106.0 m  yarıçap_hatası=  +6.0 m  hava_hızı= 13.8  yer_hızı= 14.4 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:39  [uav0–uav1] t=   35 sn  açı farkı= 170.5°  3B mesafe= 212.6 m
+18:33:44  [uav0] t=   40 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:44  [uav1] t=   40 sn  mod=OFFBOARD irtifa= 119.0 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:44  [uav0–uav1] t=   40 sn  açı farkı= 170.8°  3B mesafe= 213.1 m
+18:33:49  [uav0] t=   45 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:49  [uav1] t=   45 sn  mod=OFFBOARD irtifa= 118.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.8 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:49  [uav0–uav1] t=   45 sn  açı farkı= 171.3°  3B mesafe= 213.3 m
+18:33:54  [uav0] t=   50 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:33:54  [uav1] t=   50 sn  mod=OFFBOARD irtifa= 118.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.2  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:54  [uav0–uav1] t=   50 sn  açı farkı= 172.1°  3B mesafe= 213.2 m
+18:33:59  [uav0] t=   55 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:33:59  [uav1] t=   55 sn  mod=OFFBOARD irtifa= 118.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.3  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:33:59  [uav0–uav1] t=   55 sn  açı farkı= 172.9°  3B mesafe= 213.5 m
+18:34:04  [uav0] t=   60 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:04  [uav1] t=   60 sn  mod=OFFBOARD irtifa= 119.0 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.3  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:04  [uav0–uav1] t=   60 sn  açı farkı= 173.4°  3B mesafe= 213.8 m
+18:34:09  [uav0] t=   65 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:34:09  [uav1] t=   65 sn  mod=OFFBOARD irtifa= 119.2 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.2  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:09  [uav0–uav1] t=   65 sn  açı farkı= 174.1°  3B mesafe= 213.7 m
+18:34:14  [uav0] t=   70 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:14  [uav1] t=   70 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 106.2 m  yarıçap_hatası=  +6.2 m  hava_hızı= 14.3  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:14  [uav0–uav1] t=   70 sn  açı farkı= 174.8°  3B mesafe= 213.4 m
+18:34:19  [uav0] t=   75 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:34:19  [uav1] t=   75 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 14.3  yer_hızı= 14.9 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:34:19  [uav0–uav1] t=   75 sn  açı farkı= 175.7°  3B mesafe= 213.3 m
+18:34:24  [uav0] t=   80 sn  mod=OFFBOARD irtifa=  99.2 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:34:24  [uav1] t=   80 sn  mod=OFFBOARD irtifa= 119.7 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.2  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:24  [uav0–uav1] t=   80 sn  açı farkı= 176.5°  3B mesafe= 213.4 m
+18:34:29  [uav0] t=   85 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:29  [uav1] t=   85 sn  mod=OFFBOARD irtifa= 119.9 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:29  [uav0–uav1] t=   85 sn  açı farkı= 176.8°  3B mesafe= 213.5 m
+18:34:34  [uav0] t=   90 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:34  [uav1] t=   90 sn  mod=OFFBOARD irtifa= 120.1 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:34  [uav0–uav1] t=   90 sn  açı farkı= 177.2°  3B mesafe= 213.5 m
+18:34:39  [uav0] t=   95 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:34:39  [uav1] t=   95 sn  mod=OFFBOARD irtifa= 120.3 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:39  [uav0–uav1] t=   95 sn  açı farkı= 177.8°  3B mesafe= 213.3 m
+18:34:44  [uav0] t=  100 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:34:44  [uav1] t=  100 sn  mod=OFFBOARD irtifa= 120.4 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 13.9  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:44  [uav0–uav1] t=  100 sn  açı farkı= 177.7°  3B mesafe= 213.0 m
+18:34:49  [uav0] t=  105 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:34:49  [uav1] t=  105 sn  mod=OFFBOARD irtifa= 120.4 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:49  [uav0–uav1] t=  105 sn  açı farkı= 178.1°  3B mesafe= 212.9 m
+18:34:54  [uav0] t=  110 sn  mod=OFFBOARD irtifa=  99.0 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:34:54  [uav1] t=  110 sn  mod=OFFBOARD irtifa= 120.4 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:34:54  [uav0–uav1] t=  110 sn  açı farkı= 178.0°  3B mesafe= 213.1 m
+18:34:59  [uav0] t=  115 sn  mod=OFFBOARD irtifa=  99.0 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:34:59  [uav1] t=  115 sn  mod=OFFBOARD irtifa= 120.3 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:34:59  [uav0–uav1] t=  115 sn  açı farkı= 178.2°  3B mesafe= 213.3 m
+18:35:04  [uav0] t=  120 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:35:04  [uav1] t=  120 sn  mod=OFFBOARD irtifa= 120.1 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:35:04  [uav0–uav1] t=  120 sn  açı farkı= 178.7°  3B mesafe= 213.3 m
+18:35:09  [uav0] t=  125 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:35:09  [uav1] t=  125 sn  mod=OFFBOARD irtifa= 120.0 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.2  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:09  [uav0–uav1] t=  125 sn  açı farkı= 179.3°  3B mesafe= 212.8 m
+18:35:14  [uav0] t=  130 sn  mod=OFFBOARD irtifa=  99.1 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:14  [uav1] t=  130 sn  mod=OFFBOARD irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.2  yer_hızı= 14.8 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:14  [uav0–uav1] t=  130 sn  açı farkı= 180.0°  3B mesafe= 212.7 m
+18:35:19  [uav0] t=  135 sn  mod=OFFBOARD irtifa=  99.2 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:19  [uav1] t=  135 sn  mod=OFFBOARD irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:19  [uav0–uav1] t=  135 sn  açı farkı= 180.7°  3B mesafe= 212.7 m
+18:35:24  [uav0] t=  140 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:24  [uav1] t=  140 sn  mod=OFFBOARD irtifa= 120.1 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:24  [uav0–uav1] t=  140 sn  açı farkı= 181.4°  3B mesafe= 212.8 m
+18:35:29  [uav0] t=  145 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:29  [uav1] t=  145 sn  mod=OFFBOARD irtifa= 120.1 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:29  [uav0–uav1] t=  145 sn  açı farkı= 182.0°  3B mesafe= 212.7 m
+18:35:34  [uav0] t=  150 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:34  [uav1] t=  150 sn  mod=OFFBOARD irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:35:34  [uav0–uav1] t=  150 sn  açı farkı= 182.6°  3B mesafe= 212.6 m
+18:35:39  [uav0] t=  155 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:35:39  [uav1] t=  155 sn  mod=OFFBOARD irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:39  [uav0–uav1] t=  155 sn  açı farkı= 182.8°  3B mesafe= 212.7 m
+18:35:44  [uav0] t=  160 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:44  [uav1] t=  160 sn  mod=OFFBOARD irtifa= 119.8 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:44  [uav0–uav1] t=  160 sn  açı farkı= 183.7°  3B mesafe= 212.8 m
+18:35:49  [uav0] t=  165 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:49  [uav1] t=  165 sn  mod=OFFBOARD irtifa= 119.7 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:35:49  [uav0–uav1] t=  165 sn  açı farkı= 184.4°  3B mesafe= 212.7 m
+18:35:54  [uav0] t=  170 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:35:54  [uav1] t=  170 sn  mod=OFFBOARD irtifa= 119.6 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.2  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:35:54  [uav0–uav1] t=  170 sn  açı farkı= 184.9°  3B mesafe= 212.5 m
+18:35:59  [uav0] t=  175 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:35:59  [uav1] t=  175 sn  mod=OFFBOARD irtifa= 119.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.2  yer_hızı= 14.8 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:35:59  [uav0–uav1] t=  175 sn  açı farkı= 185.6°  3B mesafe= 212.4 m
+18:36:04  [uav0] t=  180 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:36:04  [uav1] t=  180 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.3  yer_hızı= 14.9 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:04  [uav0–uav1] t=  180 sn  açı farkı= 186.3°  3B mesafe= 212.4 m
+18:36:09  [uav0] t=  185 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:36:09  [uav1] t=  185 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.2  yer_hızı= 14.8 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:36:09  [uav0–uav1] t=  185 sn  açı farkı= 187.3°  3B mesafe= 212.3 m
+18:36:14  [uav0] t=  190 sn  mod=OFFBOARD irtifa=  99.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:36:14  [uav1] t=  190 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:14  [uav0–uav1] t=  190 sn  açı farkı= 187.9°  3B mesafe= 212.3 m
+18:36:19  [uav0] t=  195 sn  mod=OFFBOARD irtifa=  99.3 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:19  [uav1] t=  195 sn  mod=OFFBOARD irtifa= 119.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:19  [uav0–uav1] t=  195 sn  açı farkı= 188.1°  3B mesafe= 212.2 m
+18:36:24  [uav0] t=  200 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:36:24  [uav1] t=  200 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:24  [uav0–uav1] t=  200 sn  açı farkı= 188.9°  3B mesafe= 212.0 m
+18:36:29  [uav0] t=  205 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:29  [uav1] t=  205 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:36:29  [uav0–uav1] t=  205 sn  açı farkı= 189.8°  3B mesafe= 211.8 m
+18:36:34  [uav0] t=  210 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:34  [uav1] t=  210 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:34  [uav0–uav1] t=  210 sn  açı farkı= 190.2°  3B mesafe= 211.9 m
+18:36:39  [uav0] t=  215 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:36:39  [uav1] t=  215 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:36:39  [uav0–uav1] t=  215 sn  açı farkı= 190.6°  3B mesafe= 211.9 m
+18:36:44  [uav0] t=  220 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:36:44  [uav1] t=  220 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:44  [uav0–uav1] t=  220 sn  açı farkı= 191.2°  3B mesafe= 211.6 m
+18:36:49  [uav0] t=  225 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:36:49  [uav1] t=  225 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:49  [uav0–uav1] t=  225 sn  açı farkı= 192.1°  3B mesafe= 211.1 m
+18:36:54  [uav0] t=  230 sn  mod=OFFBOARD irtifa=  99.4 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:36:54  [uav1] t=  230 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1  yer_hızı= 14.8 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:36:54  [uav0–uav1] t=  230 sn  açı farkı= 193.0°  3B mesafe= 210.9 m
+18:36:59  [uav0] t=  235 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:36:59  [uav1] t=  235 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1  yer_hızı= 14.8 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:36:59  [uav0–uav1] t=  235 sn  açı farkı= 193.8°  3B mesafe= 210.7 m
+18:37:04  [uav0] t=  240 sn  mod=OFFBOARD irtifa=  99.5 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:37:04  [uav1] t=  240 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:37:04  [uav0–uav1] t=  240 sn  açı farkı= 194.4°  3B mesafe= 210.9 m
+18:37:09  [uav0] t=  245 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:37:09  [uav1] t=  245 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:09  [uav0–uav1] t=  245 sn  açı farkı= 194.9°  3B mesafe= 210.9 m
+18:37:14  [uav0] t=  250 sn  mod=OFFBOARD irtifa=  99.6 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:37:14  [uav1] t=  250 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.0  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:14  [uav0–uav1] t=  250 sn  açı farkı= 195.8°  3B mesafe= 210.4 m
+18:37:19  [uav0] t=  255 sn  mod=OFFBOARD irtifa=  99.7 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:19  [uav1] t=  255 sn  mod=OFFBOARD irtifa= 119.1 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:37:19  [uav0–uav1] t=  255 sn  açı farkı= 196.4°  3B mesafe= 210.0 m
+18:37:24  [uav0] t=  260 sn  mod=OFFBOARD irtifa=  99.8 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:37:24  [uav1] t=  260 sn  mod=OFFBOARD irtifa= 119.2 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:24  [uav0–uav1] t=  260 sn  açı farkı= 197.3°  3B mesafe= 210.0 m
+18:37:29  [uav0] t=  265 sn  mod=OFFBOARD irtifa=  99.8 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:29  [uav1] t=  265 sn  mod=OFFBOARD irtifa= 119.2 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:29  [uav0–uav1] t=  265 sn  açı farkı= 197.8°  3B mesafe= 209.9 m
+18:37:34  [uav0] t=  270 sn  mod=OFFBOARD irtifa=  99.8 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:37:34  [uav1] t=  270 sn  mod=OFFBOARD irtifa= 119.0 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:34  [uav0–uav1] t=  270 sn  açı farkı= 198.8°  3B mesafe= 209.6 m
+18:37:39  [uav0] t=  275 sn  mod=OFFBOARD irtifa=  99.8 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:39  [uav1] t=  275 sn  mod=OFFBOARD irtifa= 119.1 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:39  [uav0–uav1] t=  275 sn  açı farkı= 199.8°  3B mesafe= 209.2 m
+18:37:44  [uav0] t=  280 sn  mod=OFFBOARD irtifa=  99.8 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:44  [uav1] t=  280 sn  mod=OFFBOARD irtifa= 119.1 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:44  [uav0–uav1] t=  280 sn  açı farkı= 200.7°  3B mesafe= 208.8 m
+18:37:49  [uav0] t=  285 sn  mod=OFFBOARD irtifa=  99.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:49  [uav1] t=  285 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:49  [uav0–uav1] t=  285 sn  açı farkı= 201.2°  3B mesafe= 208.5 m
+18:37:54  [uav0] t=  290 sn  mod=OFFBOARD irtifa= 100.0 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:54  [uav1] t=  290 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:54  [uav0–uav1] t=  290 sn  açı farkı= 202.1°  3B mesafe= 208.3 m
+18:37:59  [uav0] t=  295 sn  mod=OFFBOARD irtifa= 100.0 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:37:59  [uav1] t=  295 sn  mod=OFFBOARD irtifa= 119.3 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:37:59  [uav0–uav1] t=  295 sn  açı farkı= 203.1°  3B mesafe= 207.9 m
+18:38:04  [uav0] t=  300 sn  mod=OFFBOARD irtifa= 100.1 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:38:04  [uav1] t=  300 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 104.7 m  yarıçap_hatası=  +4.7 m  hava_hızı= 13.9  yer_hızı= 14.4 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:04  [uav0–uav1] t=  300 sn  açı farkı= 203.5°  3B mesafe= 207.7 m
+18:38:09  [uav0] t=  305 sn  mod=OFFBOARD irtifa= 100.1 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:09  [uav1] t=  305 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 13.9  yer_hızı= 14.4 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:09  [uav0–uav1] t=  305 sn  açı farkı= 204.0°  3B mesafe= 207.4 m
+18:38:14  [uav0] t=  310 sn  mod=OFFBOARD irtifa= 100.3 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:38:14  [uav1] t=  310 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:14  [uav0–uav1] t=  310 sn  açı farkı= 204.8°  3B mesafe= 207.0 m
+18:38:19  [uav0] t=  315 sn  mod=OFFBOARD irtifa= 100.3 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 13.9  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:38:19  [uav1] t=  315 sn  mod=OFFBOARD irtifa= 119.4 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 13.9  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:19  [uav0–uav1] t=  315 sn  açı farkı= 205.7°  3B mesafe= 206.8 m
+18:38:24  [uav0] t=  320 sn  mod=OFFBOARD irtifa= 100.2 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:38:24  [uav1] t=  320 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:38:24  [uav0–uav1] t=  320 sn  açı farkı= 205.9°  3B mesafe= 206.8 m
+18:38:29  [uav0] t=  325 sn  mod=OFFBOARD irtifa= 100.2 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:38:29  [uav1] t=  325 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:29  [uav0–uav1] t=  325 sn  açı farkı= 206.9°  3B mesafe= 206.3 m
+18:38:34  [uav0] t=  330 sn  mod=OFFBOARD irtifa= 100.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:34  [uav1] t=  330 sn  mod=OFFBOARD irtifa= 119.5 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:34  [uav0–uav1] t=  330 sn  açı farkı= 207.7°  3B mesafe= 205.8 m
+18:38:39  [uav0] t=  335 sn  mod=OFFBOARD irtifa= 100.1 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:38:39  [uav1] t=  335 sn  mod=OFFBOARD irtifa= 119.6 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:39  [uav0–uav1] t=  335 sn  açı farkı= 208.7°  3B mesafe= 205.3 m
+18:38:44  [uav0] t=  340 sn  mod=OFFBOARD irtifa= 100.0 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:38:44  [uav1] t=  340 sn  mod=OFFBOARD irtifa= 119.8 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 14.0  yer_hızı= 14.5 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:38:44  [uav0–uav1] t=  340 sn  açı farkı= 209.4°  3B mesafe= 205.1 m
+18:38:49  [uav0] t=  345 sn  mod=OFFBOARD irtifa=  99.9 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:49  [uav1] t=  345 sn  mod=OFFBOARD irtifa= 119.8 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 13.9  yer_hızı= 14.5 m/s  tavşan−uçak= +33.9°  gz=531 MB
+18:38:49  [uav0–uav1] t=  345 sn  açı farkı= 209.6°  3B mesafe= 205.2 m
+18:38:54  [uav0] t=  350 sn  mod=OFFBOARD irtifa=  99.9 m  merkeze= 106.9 m  yarıçap_hatası=  +6.9 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:38:54  [uav1] t=  350 sn  mod=OFFBOARD irtifa= 119.9 m  merkeze= 104.3 m  yarıçap_hatası=  +4.3 m  hava_hızı= 13.9  yer_hızı= 14.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:54  [uav0–uav1] t=  350 sn  açı farkı= 210.0°  3B mesafe= 204.9 m
+18:38:59  [uav0] t=  355 sn  mod=OFFBOARD irtifa= 100.0 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:38:59  [uav1] t=  355 sn  mod=OFFBOARD irtifa= 119.7 m  merkeze= 104.1 m  yarıçap_hatası=  +4.1 m  hava_hızı= 14.0  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:38:59  [uav0–uav1] t=  355 sn  açı farkı= 210.6°  3B mesafe= 204.2 m
+18:39:04  [uav0] t=  360 sn  mod=OFFBOARD irtifa= 100.0 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1  yer_hızı= 14.6 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:39:04  [uav1] t=  360 sn  mod=OFFBOARD irtifa= 119.6 m  merkeze= 104.2 m  yarıçap_hatası=  +4.2 m  hava_hızı= 14.1  yer_hızı= 14.7 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:39:04  [uav0–uav1] t=  360 sn  açı farkı= 211.8°  3B mesafe= 203.6 m
+
+### uav0 (hedef 100 m)
+| t (sn) | mod | irtifa (m) | merkeze (m) | yarıçap hatası (m) | hava hızı (m/s) | yer hızı (m/s) | tavşan−uçak (°) | değişim (°/sn) | gz (MB) |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | OFFBOARD | 99.6 | 106.3 | +6.3 | 13.8 | 14.3 | +34.1 | +nan | 531 |
+| 5 | OFFBOARD | 99.5 | 106.4 | +6.4 | 13.8 | 14.4 | +34.3 | +0.04 | 531 |
+| 10 | OFFBOARD | 99.5 | 106.5 | +6.5 | 13.9 | 14.4 | +34.2 | -0.01 | 531 |
+| 15 | OFFBOARD | 99.5 | 106.5 | +6.5 | 13.9 | 14.4 | +34.0 | -0.04 | 531 |
+| 20 | OFFBOARD | 99.5 | 106.6 | +6.6 | 14.0 | 14.4 | +34.3 | +0.06 | 531 |
+| 25 | OFFBOARD | 99.5 | 106.5 | +6.5 | 13.9 | 14.4 | +34.1 | -0.04 | 531 |
+| 30 | OFFBOARD | 99.6 | 106.4 | +6.4 | 13.9 | 14.4 | +34.2 | +0.02 | 531 |
+| 35 | OFFBOARD | 99.6 | 106.5 | +6.5 | 14.0 | 14.5 | +34.1 | -0.02 | 531 |
+| 40 | OFFBOARD | 99.6 | 106.6 | +6.6 | 14.0 | 14.5 | +34.1 | +0.01 | 531 |
+| 45 | OFFBOARD | 99.5 | 106.6 | +6.6 | 14.0 | 14.5 | +34.1 | -0.00 | 531 |
+| 50 | OFFBOARD | 99.4 | 106.5 | +6.5 | 14.0 | 14.6 | +34.2 | +0.01 | 531 |
+| 55 | OFFBOARD | 99.4 | 106.6 | +6.6 | 14.0 | 14.6 | +34.2 | -0.00 | 531 |
+| 60 | OFFBOARD | 99.4 | 106.7 | +6.7 | 14.0 | 14.6 | +34.1 | -0.01 | 531 |
+| 65 | OFFBOARD | 99.4 | 106.7 | +6.7 | 14.0 | 14.5 | +34.3 | +0.03 | 531 |
+| 70 | OFFBOARD | 99.3 | 106.5 | +6.5 | 14.0 | 14.6 | +34.1 | -0.04 | 531 |
+| 75 | OFFBOARD | 99.3 | 106.5 | +6.5 | 14.1 | 14.6 | +34.3 | +0.05 | 531 |
+| 80 | OFFBOARD | 99.2 | 106.7 | +6.7 | 14.1 | 14.7 | +34.2 | -0.03 | 531 |
+| 85 | OFFBOARD | 99.1 | 106.7 | +6.7 | 14.1 | 14.7 | +34.1 | -0.02 | 531 |
+| 90 | OFFBOARD | 99.1 | 106.8 | +6.8 | 14.1 | 14.6 | +34.1 | +0.00 | 531 |
+| 95 | OFFBOARD | 99.1 | 106.7 | +6.7 | 14.1 | 14.6 | +34.2 | +0.02 | 531 |
+| 100 | OFFBOARD | 99.1 | 106.5 | +6.5 | 14.1 | 14.6 | +34.3 | +0.01 | 531 |
+| 105 | OFFBOARD | 99.1 | 106.5 | +6.5 | 14.1 | 14.7 | +34.2 | -0.00 | 531 |
+| 110 | OFFBOARD | 99.0 | 106.7 | +6.7 | 14.1 | 14.6 | +34.3 | +0.00 | 531 |
+| 115 | OFFBOARD | 99.0 | 106.7 | +6.7 | 14.1 | 14.6 | +34.0 | -0.05 | 531 |
+| 120 | OFFBOARD | 99.1 | 106.7 | +6.7 | 14.1 | 14.6 | +34.2 | +0.04 | 531 |
+| 125 | OFFBOARD | 99.1 | 106.4 | +6.4 | 14.1 | 14.6 | +34.3 | +0.01 | 531 |
+| 130 | OFFBOARD | 99.1 | 106.4 | +6.4 | 14.1 | 14.6 | +34.1 | -0.04 | 531 |
+| 135 | OFFBOARD | 99.2 | 106.5 | +6.5 | 14.1 | 14.6 | +34.1 | +0.00 | 531 |
+| 140 | OFFBOARD | 99.3 | 106.5 | +6.5 | 14.1 | 14.5 | +34.1 | +0.01 | 531 |
+| 145 | OFFBOARD | 99.4 | 106.4 | +6.4 | 14.1 | 14.6 | +34.1 | -0.01 | 531 |
+| 150 | OFFBOARD | 99.4 | 106.5 | +6.5 | 14.0 | 14.6 | +34.1 | +0.00 | 531 |
+| 155 | OFFBOARD | 99.5 | 106.6 | +6.6 | 14.0 | 14.6 | +34.2 | +0.03 | 531 |
+| 160 | OFFBOARD | 99.5 | 106.5 | +6.5 | 14.0 | 14.6 | +34.1 | -0.03 | 531 |
+| 165 | OFFBOARD | 99.6 | 106.5 | +6.5 | 14.0 | 14.6 | +34.1 | +0.01 | 531 |
+| 170 | OFFBOARD | 99.4 | 106.4 | +6.4 | 14.1 | 14.6 | +34.3 | +0.03 | 531 |
+| 175 | OFFBOARD | 99.3 | 106.4 | +6.4 | 14.1 | 14.6 | +34.3 | +0.00 | 531 |
+| 180 | OFFBOARD | 99.3 | 106.5 | +6.5 | 14.1 | 14.6 | +33.9 | -0.06 | 531 |
+| 185 | OFFBOARD | 99.3 | 106.5 | +6.5 | 14.1 | 14.6 | +34.3 | +0.06 | 531 |
+| 190 | OFFBOARD | 99.2 | 106.6 | +6.6 | 14.1 | 14.6 | +34.3 | +0.00 | 531 |
+| 195 | OFFBOARD | 99.3 | 106.6 | +6.6 | 14.0 | 14.6 | +34.1 | -0.04 | 531 |
+| 200 | OFFBOARD | 99.4 | 106.6 | +6.6 | 14.0 | 14.6 | +34.0 | -0.01 | 531 |
+| 205 | OFFBOARD | 99.4 | 106.4 | +6.4 | 14.1 | 14.6 | +34.1 | +0.01 | 531 |
+| 210 | OFFBOARD | 99.4 | 106.4 | +6.4 | 14.1 | 14.6 | +34.1 | +0.00 | 531 |
+| 215 | OFFBOARD | 99.4 | 106.6 | +6.6 | 14.0 | 14.6 | +34.3 | +0.04 | 531 |
+| 220 | OFFBOARD | 99.4 | 106.6 | +6.6 | 14.0 | 14.5 | +34.0 | -0.05 | 531 |
+| 225 | OFFBOARD | 99.4 | 106.3 | +6.3 | 14.0 | 14.5 | +34.3 | +0.05 | 531 |
+| 230 | OFFBOARD | 99.4 | 106.3 | +6.3 | 14.0 | 14.5 | +34.1 | -0.04 | 531 |
+| 235 | OFFBOARD | 99.5 | 106.3 | +6.3 | 14.0 | 14.6 | +34.0 | -0.01 | 531 |
+| 240 | OFFBOARD | 99.5 | 106.4 | +6.4 | 14.0 | 14.6 | +34.2 | +0.04 | 531 |
+| 245 | OFFBOARD | 99.6 | 106.5 | +6.5 | 14.0 | 14.5 | +34.2 | +0.00 | 531 |
+| 250 | OFFBOARD | 99.6 | 106.5 | +6.5 | 14.0 | 14.5 | +34.3 | +0.01 | 531 |
+| 255 | OFFBOARD | 99.7 | 106.3 | +6.3 | 14.0 | 14.5 | +34.1 | -0.04 | 531 |
+| 260 | OFFBOARD | 99.8 | 106.5 | +6.5 | 14.0 | 14.5 | +34.3 | +0.04 | 531 |
+| 265 | OFFBOARD | 99.8 | 106.5 | +6.5 | 14.0 | 14.6 | +34.1 | -0.04 | 531 |
+| 270 | OFFBOARD | 99.8 | 106.6 | +6.6 | 14.0 | 14.6 | +34.3 | +0.04 | 531 |
+| 275 | OFFBOARD | 99.8 | 106.6 | +6.6 | 14.0 | 14.6 | +34.1 | -0.04 | 531 |
+| 280 | OFFBOARD | 99.8 | 106.5 | +6.5 | 14.1 | 14.6 | +34.1 | +0.01 | 531 |
+| 285 | OFFBOARD | 99.9 | 106.4 | +6.4 | 14.0 | 14.6 | +34.1 | -0.01 | 531 |
+| 290 | OFFBOARD | 100.0 | 106.5 | +6.5 | 14.0 | 14.6 | +34.1 | -0.00 | 531 |
+| 295 | OFFBOARD | 100.0 | 106.5 | +6.5 | 14.0 | 14.5 | +34.3 | +0.04 | 531 |
+| 300 | OFFBOARD | 100.1 | 106.5 | +6.5 | 14.0 | 14.6 | +34.3 | -0.00 | 531 |
+| 305 | OFFBOARD | 100.1 | 106.6 | +6.6 | 14.0 | 14.6 | +34.1 | -0.04 | 531 |
+| 310 | OFFBOARD | 100.3 | 106.7 | +6.7 | 14.0 | 14.5 | +34.2 | +0.03 | 531 |
+| 315 | OFFBOARD | 100.3 | 106.6 | +6.6 | 13.9 | 14.6 | +34.2 | -0.00 | 531 |
+| 320 | OFFBOARD | 100.2 | 106.8 | +6.8 | 14.0 | 14.6 | +34.2 | +0.00 | 531 |
+| 325 | OFFBOARD | 100.2 | 106.8 | +6.8 | 14.0 | 14.6 | +34.3 | +0.01 | 531 |
+| 330 | OFFBOARD | 100.2 | 106.6 | +6.6 | 14.0 | 14.6 | +34.1 | -0.02 | 531 |
+| 335 | OFFBOARD | 100.1 | 106.5 | +6.5 | 14.1 | 14.7 | +34.2 | +0.01 | 531 |
+| 340 | OFFBOARD | 100.0 | 106.6 | +6.6 | 14.1 | 14.7 | +34.3 | +0.01 | 531 |
+| 345 | OFFBOARD | 99.9 | 106.8 | +6.8 | 14.1 | 14.6 | +34.1 | -0.04 | 531 |
+| 350 | OFFBOARD | 99.9 | 106.9 | +6.9 | 14.0 | 14.6 | +34.3 | +0.05 | 531 |
+| 355 | OFFBOARD | 100.0 | 106.7 | +6.7 | 14.1 | 14.6 | +34.2 | -0.03 | 531 |
+| 360 | OFFBOARD | 100.0 | 106.5 | +6.5 | 14.1 | 14.6 | +34.1 | -0.03 | 531 |
+
+uav0 yakalama: 10. sn. Sonrası (70 örnek): yarıçap hatası ort |e| 6.5 m, maks |e| 6.9 m, ort e +6.5 m, std 0.1 m; tavşan−uçak +33.9…+34.3°; irtifa 99.0–100.3 m; ort. yer hızı 14.6 m/s
+
+### uav1 (hedef 120 m)
+| t (sn) | mod | irtifa (m) | merkeze (m) | yarıçap hatası (m) | hava hızı (m/s) | yer hızı (m/s) | tavşan−uçak (°) | değişim (°/sn) | gz (MB) |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | OFFBOARD | 122.0 | 77.9 | -22.1 | 12.7 | 13.3 | +33.9 | +nan | 531 |
+| 5 | OFFBOARD | 120.5 | 97.0 | -3.0 | 13.5 | 13.8 | +34.0 | +0.02 | 531 |
+| 10 | OFFBOARD | 120.0 | 103.5 | +3.5 | 13.5 | 13.9 | +34.1 | +0.00 | 531 |
+| 15 | OFFBOARD | 119.8 | 104.7 | +4.7 | 13.5 | 14.0 | +34.1 | +0.00 | 531 |
+| 20 | OFFBOARD | 119.5 | 104.9 | +4.9 | 13.6 | 14.1 | +34.1 | -0.00 | 531 |
+| 25 | OFFBOARD | 119.5 | 105.3 | +5.3 | 13.7 | 14.2 | +33.9 | -0.04 | 531 |
+| 30 | OFFBOARD | 119.4 | 105.6 | +5.6 | 13.8 | 14.3 | +34.1 | +0.04 | 531 |
+| 35 | OFFBOARD | 119.3 | 106.0 | +6.0 | 13.8 | 14.4 | +34.1 | +0.00 | 531 |
+| 40 | OFFBOARD | 119.0 | 106.3 | +6.3 | 14.1 | 14.7 | +34.1 | -0.00 | 531 |
+| 45 | OFFBOARD | 118.9 | 106.4 | +6.4 | 14.1 | 14.8 | +34.1 | -0.00 | 531 |
+| 50 | OFFBOARD | 118.9 | 106.4 | +6.4 | 14.2 | 14.9 | +34.1 | -0.00 | 531 |
+| 55 | OFFBOARD | 118.9 | 106.4 | +6.4 | 14.3 | 14.9 | +34.1 | +0.01 | 531 |
+| 60 | OFFBOARD | 119.0 | 106.5 | +6.5 | 14.3 | 14.9 | +34.1 | +0.00 | 531 |
+| 65 | OFFBOARD | 119.2 | 106.3 | +6.3 | 14.2 | 14.9 | +34.1 | -0.01 | 531 |
+| 70 | OFFBOARD | 119.4 | 106.2 | +6.2 | 14.3 | 14.9 | +34.1 | -0.00 | 531 |
+| 75 | OFFBOARD | 119.5 | 105.9 | +5.9 | 14.3 | 14.9 | +33.9 | -0.03 | 531 |
+| 80 | OFFBOARD | 119.7 | 105.8 | +5.8 | 14.2 | 14.9 | +34.1 | +0.03 | 531 |
+| 85 | OFFBOARD | 119.9 | 105.9 | +5.9 | 14.1 | 14.7 | +34.1 | +0.00 | 531 |
+| 90 | OFFBOARD | 120.1 | 105.8 | +5.8 | 14.0 | 14.6 | +34.1 | +0.00 | 531 |
+| 95 | OFFBOARD | 120.3 | 105.6 | +5.6 | 14.0 | 14.5 | +34.1 | +0.01 | 531 |
+| 100 | OFFBOARD | 120.4 | 105.4 | +5.4 | 13.9 | 14.5 | +34.1 | -0.01 | 531 |
+| 105 | OFFBOARD | 120.4 | 105.4 | +5.4 | 14.0 | 14.5 | +34.1 | +0.00 | 531 |
+| 110 | OFFBOARD | 120.4 | 105.4 | +5.4 | 14.0 | 14.6 | +34.2 | +0.03 | 531 |
+| 115 | OFFBOARD | 120.3 | 105.6 | +5.6 | 14.0 | 14.6 | +34.1 | -0.01 | 531 |
+| 120 | OFFBOARD | 120.1 | 105.6 | +5.6 | 14.1 | 14.7 | +34.0 | -0.03 | 531 |
+| 125 | OFFBOARD | 120.0 | 105.4 | +5.4 | 14.2 | 14.7 | +34.1 | +0.01 | 531 |
+| 130 | OFFBOARD | 120.0 | 105.2 | +5.2 | 14.2 | 14.8 | +34.1 | -0.00 | 531 |
+| 135 | OFFBOARD | 120.0 | 105.2 | +5.2 | 14.1 | 14.7 | +34.1 | +0.00 | 531 |
+| 140 | OFFBOARD | 120.1 | 105.3 | +5.3 | 14.1 | 14.6 | +34.1 | +0.00 | 531 |
+| 145 | OFFBOARD | 120.1 | 105.2 | +5.2 | 14.0 | 14.6 | +34.1 | +0.00 | 531 |
+| 150 | OFFBOARD | 120.0 | 105.2 | +5.2 | 14.0 | 14.6 | +33.9 | -0.04 | 531 |
+| 155 | OFFBOARD | 120.0 | 105.2 | +5.2 | 14.1 | 14.7 | +34.1 | +0.04 | 531 |
+| 160 | OFFBOARD | 119.8 | 105.5 | +5.5 | 14.1 | 14.7 | +34.1 | +0.00 | 531 |
+| 165 | OFFBOARD | 119.7 | 105.4 | +5.4 | 14.1 | 14.7 | +33.9 | -0.03 | 531 |
+| 170 | OFFBOARD | 119.6 | 105.3 | +5.3 | 14.2 | 14.7 | +34.1 | +0.03 | 531 |
+| 175 | OFFBOARD | 119.6 | 105.2 | +5.2 | 14.2 | 14.8 | +33.9 | -0.03 | 531 |
+| 180 | OFFBOARD | 119.3 | 105.2 | +5.2 | 14.3 | 14.9 | +34.1 | +0.04 | 531 |
+| 185 | OFFBOARD | 119.4 | 105.3 | +5.3 | 14.2 | 14.8 | +34.2 | +0.03 | 531 |
+| 190 | OFFBOARD | 119.5 | 105.3 | +5.3 | 14.1 | 14.6 | +34.1 | -0.04 | 531 |
+| 195 | OFFBOARD | 119.6 | 105.2 | +5.2 | 14.0 | 14.6 | +34.1 | +0.00 | 531 |
+| 200 | OFFBOARD | 119.5 | 105.1 | +5.1 | 14.1 | 14.7 | +34.1 | -0.00 | 531 |
+| 205 | OFFBOARD | 119.4 | 105.2 | +5.2 | 14.1 | 14.7 | +33.9 | -0.04 | 531 |
+| 210 | OFFBOARD | 119.4 | 105.3 | +5.3 | 14.1 | 14.7 | +34.1 | +0.05 | 531 |
+| 215 | OFFBOARD | 119.4 | 105.3 | +5.3 | 14.1 | 14.7 | +34.0 | -0.02 | 531 |
+| 220 | OFFBOARD | 119.4 | 105.1 | +5.1 | 14.1 | 14.6 | +34.1 | +0.01 | 531 |
+| 225 | OFFBOARD | 119.4 | 105.0 | +5.0 | 14.1 | 14.7 | +34.1 | +0.01 | 531 |
+| 230 | OFFBOARD | 119.3 | 105.0 | +5.0 | 14.1 | 14.8 | +33.9 | -0.04 | 531 |
+| 235 | OFFBOARD | 119.3 | 105.1 | +5.1 | 14.1 | 14.8 | +33.9 | +0.00 | 531 |
+| 240 | OFFBOARD | 119.4 | 105.2 | +5.2 | 14.1 | 14.7 | +34.2 | +0.05 | 531 |
+| 245 | OFFBOARD | 119.4 | 105.2 | +5.2 | 14.0 | 14.6 | +34.1 | -0.03 | 531 |
+| 250 | OFFBOARD | 119.4 | 105.0 | +5.0 | 14.0 | 14.7 | +34.1 | -0.00 | 531 |
+| 255 | OFFBOARD | 119.1 | 105.0 | +5.0 | 14.1 | 14.7 | +33.9 | -0.03 | 531 |
+| 260 | OFFBOARD | 119.2 | 105.0 | +5.0 | 14.1 | 14.7 | +34.1 | +0.03 | 531 |
+| 265 | OFFBOARD | 119.2 | 105.1 | +5.1 | 14.1 | 14.7 | +34.1 | +0.00 | 531 |
+| 270 | OFFBOARD | 119.0 | 105.0 | +5.0 | 14.1 | 14.7 | +34.1 | +0.01 | 531 |
+| 275 | OFFBOARD | 119.1 | 104.9 | +4.9 | 14.1 | 14.7 | +34.1 | -0.01 | 531 |
+| 280 | OFFBOARD | 119.1 | 104.8 | +4.8 | 14.1 | 14.7 | +34.1 | +0.00 | 531 |
+| 285 | OFFBOARD | 119.3 | 104.8 | +4.8 | 14.1 | 14.7 | +34.1 | +0.01 | 531 |
+| 290 | OFFBOARD | 119.3 | 104.9 | +4.9 | 14.1 | 14.6 | +34.1 | -0.01 | 531 |
+| 295 | OFFBOARD | 119.3 | 104.8 | +4.8 | 14.0 | 14.5 | +34.1 | -0.00 | 531 |
+| 300 | OFFBOARD | 119.4 | 104.7 | +4.7 | 13.9 | 14.4 | +34.1 | +0.00 | 531 |
+| 305 | OFFBOARD | 119.4 | 104.5 | +4.5 | 13.9 | 14.4 | +34.1 | -0.00 | 531 |
+| 310 | OFFBOARD | 119.5 | 104.4 | +4.4 | 14.0 | 14.5 | +34.1 | -0.00 | 531 |
+| 315 | OFFBOARD | 119.4 | 104.5 | +4.5 | 13.9 | 14.5 | +34.1 | +0.00 | 531 |
+| 320 | OFFBOARD | 119.5 | 104.5 | +4.5 | 14.0 | 14.5 | +34.2 | +0.04 | 531 |
+| 325 | OFFBOARD | 119.5 | 104.4 | +4.4 | 14.0 | 14.6 | +34.1 | -0.04 | 531 |
+| 330 | OFFBOARD | 119.5 | 104.4 | +4.4 | 14.0 | 14.6 | +34.1 | +0.00 | 531 |
+| 335 | OFFBOARD | 119.6 | 104.4 | +4.4 | 14.0 | 14.6 | +34.1 | +0.00 | 531 |
+| 340 | OFFBOARD | 119.8 | 104.5 | +4.5 | 14.0 | 14.5 | +33.9 | -0.04 | 531 |
+| 345 | OFFBOARD | 119.8 | 104.4 | +4.4 | 13.9 | 14.5 | +33.9 | +0.00 | 531 |
+| 350 | OFFBOARD | 119.9 | 104.3 | +4.3 | 13.9 | 14.5 | +34.1 | +0.05 | 531 |
+| 355 | OFFBOARD | 119.7 | 104.1 | +4.1 | 14.0 | 14.6 | +34.1 | -0.01 | 531 |
+| 360 | OFFBOARD | 119.6 | 104.2 | +4.2 | 14.1 | 14.7 | +34.0 | -0.01 | 531 |
+
+uav1 yakalama: 10. sn. Sonrası (70 örnek): yarıçap hatası ort |e| 5.2 m, maks |e| 6.5 m, ort e +5.2 m, std 0.6 m; tavşan−uçak +33.9…+34.2°; irtifa 118.9–120.4 m; ort. yer hızı 14.6 m/s
+
+### uav0–uav1
+| t (sn) | açı farkı (°) | 3B mesafe (m) |
+|---|---|---|
+| 0 | 167.2 | 184.5 |
+| 5 | 170.3 | 203.8 |
+| 10 | 171.2 | 210.4 |
+| 15 | 171.0 | 211.5 |
+| 20 | 170.9 | 211.8 |
+| 25 | 170.7 | 212.1 |
+| 30 | 170.5 | 212.2 |
+| 35 | 170.5 | 212.6 |
+| 40 | 170.8 | 213.1 |
+| 45 | 171.3 | 213.3 |
+| 50 | 172.1 | 213.2 |
+| 55 | 172.9 | 213.5 |
+| 60 | 173.4 | 213.8 |
+| 65 | 174.1 | 213.7 |
+| 70 | 174.8 | 213.4 |
+| 75 | 175.7 | 213.3 |
+| 80 | 176.5 | 213.4 |
+| 85 | 176.8 | 213.5 |
+| 90 | 177.2 | 213.5 |
+| 95 | 177.8 | 213.3 |
+| 100 | 177.7 | 213.0 |
+| 105 | 178.1 | 212.9 |
+| 110 | 178.0 | 213.1 |
+| 115 | 178.2 | 213.3 |
+| 120 | 178.7 | 213.3 |
+| 125 | 179.3 | 212.8 |
+| 130 | 180.0 | 212.7 |
+| 135 | 180.7 | 212.7 |
+| 140 | 181.4 | 212.8 |
+| 145 | 182.0 | 212.7 |
+| 150 | 182.6 | 212.6 |
+| 155 | 182.8 | 212.7 |
+| 160 | 183.7 | 212.8 |
+| 165 | 184.4 | 212.7 |
+| 170 | 184.9 | 212.5 |
+| 175 | 185.6 | 212.4 |
+| 180 | 186.3 | 212.4 |
+| 185 | 187.3 | 212.3 |
+| 190 | 187.9 | 212.3 |
+| 195 | 188.1 | 212.2 |
+| 200 | 188.9 | 212.0 |
+| 205 | 189.8 | 211.8 |
+| 210 | 190.2 | 211.9 |
+| 215 | 190.6 | 211.9 |
+| 220 | 191.2 | 211.6 |
+| 225 | 192.1 | 211.1 |
+| 230 | 193.0 | 210.9 |
+| 235 | 193.8 | 210.7 |
+| 240 | 194.4 | 210.9 |
+| 245 | 194.9 | 210.9 |
+| 250 | 195.8 | 210.4 |
+| 255 | 196.4 | 210.0 |
+| 260 | 197.3 | 210.0 |
+| 265 | 197.8 | 209.9 |
+| 270 | 198.8 | 209.6 |
+| 275 | 199.8 | 209.2 |
+| 280 | 200.7 | 208.8 |
+| 285 | 201.2 | 208.5 |
+| 290 | 202.1 | 208.3 |
+| 295 | 203.1 | 207.9 |
+| 300 | 203.5 | 207.7 |
+| 305 | 204.0 | 207.4 |
+| 310 | 204.8 | 207.0 |
+| 315 | 205.7 | 206.8 |
+| 320 | 205.9 | 206.8 |
+| 325 | 206.9 | 206.3 |
+| 330 | 207.7 | 205.8 |
+| 335 | 208.7 | 205.3 |
+| 340 | 209.4 | 205.1 |
+| 345 | 209.6 | 205.2 |
+| 350 | 210.0 | 204.9 |
+| 355 | 210.6 | 204.2 |
+| 360 | 211.8 | 203.6 |
+
+açı farkı: başlangıç 167.2°, bitiş 211.8°, en küçük 167.2°, en büyük 211.8°; ortalama değişim +0.124 °/sn; en küçük 3B mesafe 184.5 m
+
+Duraklamalar (0):
+18:39:04  Test başarılı (360 sn).
+[uav0] HOLD ✔ (DO_SET_MODE kabul edildi, mod=AUTO)
+[uav1] HOLD ✔ (DO_SET_MODE kabul edildi, mod=AUTO)
+watch çıkış: 0

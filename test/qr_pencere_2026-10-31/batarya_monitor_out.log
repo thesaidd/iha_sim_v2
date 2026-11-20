@@ -1,0 +1,21 @@
+13:55:30  t=2s  batarya=50%  | 13:55:16  [uav0] irtifa=  100.0 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+13:56:37  t=69s  batarya=50%  | 13:56:21  [uav0] irtifa=   99.9 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+13:57:43  t=135s  batarya=50%  | 13:57:23  [uav0] irtifa=  100.4 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=648 MB
+13:58:50  t=202s  batarya=50%  | 13:58:29  [uav0] irtifa=  100.1 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+13:59:57  t=269s  batarya=50%  | 13:59:34  [uav0] irtifa=   99.8 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:01:04  t=336s  batarya=50%  | 14:00:39  [uav0] irtifa=   99.6 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:02:11  t=403s  batarya=50%  | 14:01:43  [uav0] irtifa=   99.6 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:03:18  t=470s  batarya=50%  | 14:02:49  [uav0] irtifa=  100.4 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=648 MB
+14:04:22  t=534s  batarya=50%  | 14:03:54  [uav0] irtifa=  100.2 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=648 MB
+14:05:29  t=601s  batarya=50%  | 14:05:29  [uav0] irtifa=  100.0 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:06:37  t=669s  batarya=50%  | 14:06:35  [uav0] irtifa=  100.5 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=648 MB
+14:07:45  t=737s  batarya=50%  | 14:07:40  [uav0] irtifa=  100.1 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:08:51  t=803s  batarya=50%  | 14:08:45  [uav0] irtifa=   99.5 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:09:58  t=870s  batarya=50%  | 14:09:50  [uav0] irtifa=   99.9 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=648 MB
+14:11:06  t=938s  batarya=50%  | 14:10:55  [uav0] irtifa=  100.1 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=648 MB
+14:12:13  t=1005s  batarya=50%  | 14:11:59  [uav0] irtifa=   99.5 m  mod=LOITER       ARMED    hava_hızı= 14.2 m/s  gz_RSS=648 MB
+14:13:19  t=1071s  batarya=50%  | 14:13:02  [uav0] irtifa=   99.8 m  mod=LOITER       ARMED    hava_hızı= 14.1 m/s  gz_RSS=648 MB
+14:14:26  t=1138s  batarya=50%  | 14:14:07  [uav0] irtifa=   99.6 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=648 MB
+14:15:33  t=1205s  batarya=50%  | 14:15:12  [uav0] irtifa=  100.2 m  mod=LOITER       ARMED    hava_hızı= 14.0 m/s  gz_RSS=648 MB
+14:15:33  KAPATILIYOR: 20 dk doldu
+14:15:38  kapandı (20 dk doldu)

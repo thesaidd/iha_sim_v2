@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+"""
+qr_watch.py — QR geçişini qr_pass.py'den bağımsız izler; kural ihlalinde orbit_abort ile Hold verir.
+
+Bir geçiş için çalıştırılır: araç OFFBOARD'a geçince kurallar devreye girer, qr_pass.py geçişi
+bitirip --done-file yazdıktan sonra araç OFFBOARD'dan çıkınca (Hold) normal biter.
+
+Kurallar (OFFBOARD'dayken, 0,5 sn'de bir):
+  |irtifa − hedef| > --alt-tol (15 m)
+  OFFBOARD'dan beklenmeyen çıkış (--done-file yokken; failsafe ya da dış komut)
+  iniş algılanması (vehicle_land_detected.landed)
+  PX4 STATUSTEXT'te failsafe/RTL/iniş (--mav-log, mavlink_takeoff.py çıktısı; yalnızca izleyici açıldıktan
+    sonraki satırlar)
+  RTF < --rtf-min (0,7; son 5 sn, gz /world/default/stats)
+  gz sunucu RSS > --rss-max-mb (4096)
+Abort: orbit_abort 0 (Hold), --abort-file yazılır (qr_pass.py görür ve durur).
+Mod bilgisi vehicle_control_mode'dan (vehicle_status_v2 px4_msgs uyumsuzluğu, bkz. v2_orbit_mission.py).
+
+Kullanım:
+  source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash
+  python3 qr_watch.py --alt 60 --done-file F --abort-file G --mav-log /tmp/qr_mavlink.log
+Çıkış kodu: 0 = geçiş normal bitti, 2 = abort, 3 = OFFBOARD'a geçilmedi (zaman aşımı), 5 = SIGTERM.
+"""
+
+import argparse
+import collections
+import math
+import os
+import re
+import signal
+import subprocess
+import time
+
+import rclpy
+from rclpy.node import Node
+from rclpy.signals import SignalHandlerOptions
+from px4_msgs.msg import VehicleControlMode, VehicleLandDetected, VehicleLocalPosition
+from gz.transport13 import Node as GzNode
+from gz.msgs10.world_stats_pb2 import WorldStatistics
+
+from mavlink_takeoff import gz_rss_mb
+from v2_orbit_mission import SENSOR_QOS, control_mode_name
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+FAILSAFE_RE = re.compile(r"failsafe|return to launch|\bRTL\b|returning|land(ing)? (now|detected|mode)|emergency",
+                         re.IGNORECASE)
+
+
+def log(msg):
+    print(f"{time.strftime('%H:%M:%S')}  {msg}", flush=True)
+
+
+class Watch(Node):
+    def __init__(self):
+        super().__init__("qr_watch")
+        self.mode = self.pos = None
+        self.landed = None
+        self.create_subscription(VehicleControlMode, "/fmu/out/vehicle_control_mode",
+                                 lambda m: setattr(self, "mode", m), SENSOR_QOS)
+        self.create_subscription(VehicleLocalPosition, "/fmu/out/vehicle_local_position_v1",
+                                 lambda m: setattr(self, "pos", m), SENSOR_QOS)
+        self.create_subscription(VehicleLandDetected, "/fmu/out/vehicle_land_detected",
+                                 lambda m: setattr(self, "landed", m.landed), SENSOR_QOS)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--alt", type=float, default=60.0)
+    ap.add_argument("--alt-tol", type=float, default=15.0)
+    ap.add_argument("--rtf-min", type=float, default=0.7)
+    ap.add_argument("--rss-max-mb", type=float, default=4096.0)
+    ap.add_argument("--done-file", required=True)
+    ap.add_argument("--abort-file", required=True)
+    ap.add_argument("--mav-log", help="mavlink_takeoff.py çıktısı (PX4 STATUSTEXT satırları)")
+    ap.add_argument("--engage-timeout", type=float, default=600.0)
+    ap.add_argument("--period", type=float, default=5.0)
+    args = ap.parse_args()
+
+    stop = {"flag": False}
+    signal.signal(signal.SIGTERM, lambda *_: stop.__setitem__("flag", True))
+    rclpy.init(signal_handler_options=SignalHandlerOptions.NO)
+    w = Watch()
+    stats = collections.deque(maxlen=200)     # (duvar, sim, gerçek)
+    gz = GzNode()
+    gz.subscribe(WorldStatistics, "/world/default/stats",
+                 lambda m: stats.append((time.time(), m.sim_time.sec + m.sim_time.nsec * 1e-9,
+                                         m.real_time.sec + m.real_time.nsec * 1e-9)))
+    mav_pos = os.path.getsize(args.mav_log) if args.mav_log and os.path.exists(args.mav_log) else 0
+    log(f"izleme: hedef irtifa {args.alt:.0f} ± {args.alt_tol:.0f} m, RTF ≥ {args.rtf_min}, gz RSS ≤ "
+        f"{args.rss_max_mb:.0f} MB, STATUSTEXT {args.mav_log or 'yok'}; abort → orbit_abort 0")
+
+    def rtf5():
+        now = time.time()
+        win = [s for s in stats if now - s[0] <= 5.0]
+        if len(win) < 2 or win[-1][2] <= win[0][2]:
+            return math.nan
+        return (win[-1][1] - win[0][1]) / (win[-1][2] - win[0][2])
+
+    def new_texts():
+        nonlocal mav_pos
+        if not args.mav_log or not os.path.exists(args.mav_log):
+            return []
+        with open(args.mav_log, errors="replace") as f:
+            f.seek(mav_pos)
+            lines = f.readlines()
+            mav_pos = f.tell()
+        return [l.strip() for l in lines if "PX4 [sev" in l]
+
+    def offboard():
+        return bool(w.mode and w.mode.flag_control_offboard_enabled)
+
+    def abort(reason):
+        p = w.pos
+        log(f"ABORT: {reason} | mod={control_mode_name(w.mode)} irtifa={-p.z if p else math.nan:.1f} m "
+            f"yer_hızı={math.hypot(p.vx, p.vy) if p else math.nan:.1f} m/s RTF={rtf5():.3f} gz={gz_rss_mb()} MB")
+        with open(args.abort_file, "w") as f:
+            f.write(reason + "\n")
+        subprocess.run([os.path.join(HERE, "orbit_abort"), "0"])
+        return 2
+
+    t0 = time.monotonic()
+    while not offboard():
+        rclpy.spin_once(w, timeout_sec=0.1)
+        for t in new_texts():
+            log(f"STATUSTEXT (OFFBOARD öncesi): {t}")
+        if stop["flag"]:
+            return 5
+        if time.monotonic() - t0 > args.engage_timeout:
+            log(f"{args.engage_timeout:.0f} sn içinde OFFBOARD'a geçilmedi (mod={control_mode_name(w.mode)})")
+            return 3
+    log("OFFBOARD — kurallar devrede")
+    engaged = time.monotonic()
+    next_check = next_row = engaged
+    min_rtf, max_rss = math.inf, 0
+    code = 0
+    while True:
+        rclpy.spin_once(w, timeout_sec=0.05)
+        now = time.monotonic()
+        if stop["flag"]:
+            log("SIGTERM — izleme durduruldu (Hold verilmedi)")
+            code = 5
+            break
+        if now < next_check:
+            continue
+        next_check = now + 0.5
+        p = w.pos
+        alt = -p.z if p else math.nan
+        rtf = rtf5()
+        rss = gz_rss_mb()
+        if math.isfinite(rtf):
+            min_rtf = min(min_rtf, rtf)
+        max_rss = max(max_rss, rss or 0)
+        if now >= next_row:
+            next_row += args.period
+            log(f"t={now - engaged:5.0f} sn mod={control_mode_name(w.mode):<8} irtifa={alt:6.1f} m "
+                f"yer_hızı={math.hypot(p.vx, p.vy) if p else math.nan:5.1f} m/s RTF={rtf:.3f} gz={rss} MB")
+        texts = [t for t in new_texts()]
+        for t in texts:
+            log(f"STATUSTEXT: {t}")
+        reason = None
+        if not offboard():
+            if os.path.exists(args.done_file):
+                # Hold ile failsafe (RTL de AUTO görünür) yalnızca STATUSTEXT'ten ayrılır; 10 sn daha izle.
+                log(f"Geçiş bitti (done-file var), mod={control_mode_name(w.mode)} — 10 sn STATUSTEXT izleniyor")
+                t_end = time.monotonic()
+                while time.monotonic() - t_end < 10.0:
+                    rclpy.spin_once(w, timeout_sec=0.2)
+                    for t in new_texts():
+                        log(f"STATUSTEXT: {t}")
+                        if FAILSAFE_RE.search(t):
+                            code = abort(f"bitişte PX4 failsafe/iniş mesajı: {t}")
+                if code == 0:
+                    log("Geçiş normal bitti")
+                break
+            reason = "OFFBOARD'dan beklenmeyen çıkış (failsafe ya da dış komut)"
+        elif w.landed:
+            reason = "iniş algılandı"
+        elif abs(alt - args.alt) > args.alt_tol:
+            reason = f"irtifa hedeften {alt - args.alt:+.1f} m saptı (sınır ±{args.alt_tol:.0f} m)"
+        elif any(FAILSAFE_RE.search(t) for t in texts):
+            reason = f"PX4 failsafe/iniş mesajı: {[t for t in texts if FAILSAFE_RE.search(t)][0]}"
+        elif math.isfinite(rtf) and rtf < args.rtf_min:
+            reason = f"RTF {rtf:.3f} < {args.rtf_min}"
+        elif rss is not None and rss > args.rss_max_mb:
+            reason = f"gz RSS {rss} MB > {args.rss_max_mb:.0f} MB"
+        if reason:
+            code = abort(reason)
+            break
+    log(f"ÖZET: OFFBOARD süresi {time.monotonic() - engaged:.0f} sn, en düşük RTF(5 sn) {min_rtf:.3f}, "
+        f"en yüksek gz RSS {max_rss} MB, çıkış kodu {code}")
+    w.destroy_node()
+    rclpy.shutdown()
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

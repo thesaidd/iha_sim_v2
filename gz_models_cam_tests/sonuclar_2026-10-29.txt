@@ -1,0 +1,73 @@
+=== A | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_tests/A | gz ek argüman: 'yok' | 18:47:12 ===
+free -m (başlangıç): kullanılan 882 MB, kullanılabilir 14014 MB
+sunucu PID 51020; yüklü görüntü motoru: ['libgz-rendering8-ogre2.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      911    nan    nan
+   15     1262    329  0.877
+   30     1616    328  0.889
+   45     1971    328  0.886
+   60     2323    331  0.880
+   75     2672    328  0.869
+   90     3016    328  0.865
+  105     3360    327  0.861
+  120     3698    322  0.844
+ÖZET başlangıç_RSS=911 bitiş_RSS=3698 artış=1393_MB/dk CPU=328% RTF=0.871 süre=120_sn
+KAMERA advanced_plane_0: 18.0 Hz
+KAMERA advanced_plane_1: 17.9 Hz
+/tmp/claude-1000/-home-yusuf22-04/25a203cc-c223-4c5f-8740-87e1bf541234/scratchpad/cam_leak_trial.sh: line 25: 51020 Killed                  setsid gz sim --verbose=1 -r -s $gzarg "$PX4_GZ_WORLDS/default.sdf" < /dev/null > /tmp/cam_leak_gz_$label.log 2>&1  (wd: ~/PX4-Autopilot/build/px4_sitl_default/rootfs)
+free -m (bitiş): kullanılan 882 MB, kullanılabilir 14013 MB; kalan süreç: 0
+=== B | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_tests/B | gz ek argüman: 'yok' | 18:50:06 ===
+free -m (başlangıç): kullanılan 883 MB, kullanılabilir 14012 MB
+sunucu PID 52453; yüklü görüntü motoru: ['libgz-rendering8-ogre2.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      901    nan    nan
+   15     1238    320  0.844
+   30     1574    317  0.838
+   45     1906    317  0.832
+   60     2235    320  0.822
+   75     2574    319  0.847
+   90     2917    323  0.853
+  105     3251    322  0.842
+  120     3581    324  0.817
+ÖZET başlangıç_RSS=901 bitiş_RSS=3581 artış=1340_MB/dk CPU=320% RTF=0.837 süre=120_sn
+KAMERA advanced_plane_0: 17.3 Hz
+KAMERA advanced_plane_1: 17.3 Hz
+/tmp/claude-1000/-home-yusuf22-04/25a203cc-c223-4c5f-8740-87e1bf541234/scratchpad/cam_leak_trial.sh: line 25: 52453 Killed                  setsid gz sim --verbose=1 -r -s $gzarg "$PX4_GZ_WORLDS/default.sdf" < /dev/null > /tmp/cam_leak_gz_$label.log 2>&1  (wd: ~/PX4-Autopilot/build/px4_sitl_default/rootfs)
+free -m (bitiş): kullanılan 859 MB, kullanılabilir 14037 MB; kalan süreç: 0
+=== C | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_tests/C | gz ek argüman: 'yok' | 18:53:00 ===
+free -m (başlangıç): kullanılan 985 MB, kullanılabilir 13910 MB
+sunucu PID 53747; yüklü görüntü motoru: ['libgz-rendering8-ogre2.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      669    nan    nan
+   15      701    206  0.996
+   30      735    206  0.997
+   45      768    197  0.998
+   60      801    190  0.999
+   75      834    190  1.000
+   90      867    190  1.000
+  105      900    192  0.999
+  120      933    191  0.999
+ÖZET başlangıç_RSS=669 bitiş_RSS=933 artış=132_MB/dk CPU=195% RTF=0.998 süre=120_sn
+KAMERA advanced_plane_0: 8.8 Hz
+KAMERA advanced_plane_1: 8.9 Hz
+free -m (bitiş): kullanılan 825 MB, kullanılabilir 14071 MB; kalan süreç: 0
+=== D | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_tests/D | gz ek argüman: '--render-engine ogre' | 18:55:47 ===
+free -m (başlangıç): kullanılan 824 MB, kullanılabilir 14071 MB
+sunucu PID 55002; yüklü görüntü motoru: ['libgz-rendering8-ogre.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      787    nan    nan
+   15     1189    221  1.000
+   30     1590    224  1.000
+   45     1990    222  1.000
+   60     2390    223  1.000
+   75     2789    222  1.000
+   90     3190    222  1.000
+  105     3589    222  1.000
+  120     3989    230  0.999
+ÖZET başlangıç_RSS=787 bitiş_RSS=3989 artış=1601_MB/dk CPU=223% RTF=1.000 süre=120_sn
+KAMERA advanced_plane_0: 29.5 Hz
+KAMERA advanced_plane_1: 29.6 Hz
+/tmp/claude-1000/-home-yusuf22-04/25a203cc-c223-4c5f-8740-87e1bf541234/scratchpad/cam_leak_trial.sh: line 25: 55002 Killed                  setsid gz sim --verbose=1 -r -s $gzarg "$PX4_GZ_WORLDS/default.sdf" < /dev/null > /tmp/cam_leak_gz_$label.log 2>&1  (wd: ~/PX4-Autopilot/build/px4_sitl_default/rootfs)
+free -m (bitiş): kullanılan 829 MB, kullanılabilir 14067 MB; kalan süreç: 0
+
+[exited with code 0]

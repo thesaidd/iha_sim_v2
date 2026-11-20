@@ -1,0 +1,11 @@
+PID: {'gz': 18344, 'kopru': 19666, 'dds': 18342}
+ t_sn     gz_MB   gz_CPU%  kopru_MB kopru_CPU%    dds_MB  dds_CPU%    RTF
+    0       630       nan        59       nan        36       nan    nan
+   15       630       299        63        37        36         4  0.830
+   30       630       298        59        37        36         4  0.827
+   45       630       298        59        37        36         4  0.826
+   60       630       299        59        37        36         4  0.826
+ÖZET gz: RSS 630 → 630 MB (+0 MB/dk), CPU ort %299
+ÖZET kopru: RSS 59 → 59 MB (+0 MB/dk), CPU ort %37
+ÖZET dds: RSS 36 → 36 MB (+0 MB/dk), CPU ort %4
+ÖZET RTF ort 0.827 min 0.826

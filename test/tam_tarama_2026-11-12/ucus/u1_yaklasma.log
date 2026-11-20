@@ -1,0 +1,55 @@
+22:28:11  uav1 hazır bekleniyor (arm=True, irtifa=0 m, nav=AUTO_LOITER)
+22:28:11  uav1 hazır: (48, 429, 121 m) Hold; /hedef_konum_role bekleniyor (eşik 1 mesaj)
+22:33:01  uav0 canlı: kararlı Hold çemberi bekleniyor (≥ 8 sn kararlı, en fazla 240 sn); uav1 Hold'da
+22:33:01  uav0 Hold bekleniyor: (105, 341, 119 m)
+22:33:06  uav0 Hold bekleniyor: (86, 401, 118 m)
+22:33:11  uav0 Hold bekleniyor: (27, 427, 118 m)
+22:33:16  uav0 Hold bekleniyor: (-28, 400, 120 m)
+22:33:21  uav0 Hold bekleniyor: (-42, 344, 121 m)
+22:33:26  uav0 Hold bekleniyor: (-11, 294, 120 m)
+22:33:31  uav0 Hold bekleniyor: (53, 282, 117 m)
+22:33:37  uav0 Hold bekleniyor: (105, 328, 117 m)
+22:33:42  uav0 Hold bekleniyor: (93, 398, 120 m)
+22:33:47  uav0 Hold bekleniyor: (32, 425, 121 m)
+22:33:52  uav0 Hold bekleniyor: (-23, 397, 120 m)
+22:33:56  uav0 hold: Hold merkezi (uav1 NED) (296, 27), irtifa 61 m; tespitten 54 sn sonra — plan buna göre kuruluyor
+22:33:56  hedef (uav1 NED) (-72.8, -43.6); dalış planı {"hedef": [-72.8, -43.6], "baslangic_yatay_m": 390.3, "gelis_yonu_deg": 265.2, "tercih_yon_deg": 265.2, "geo": {"durma_mesafesi_m": 20.0, "durma_irtifa_m": 15.0, "x_durma_m": 13.228756555322953, "aci_istenen_deg": 12.0, "aci_sinir_deg": 13.5, "aci_etkin_deg": 12.0, "aci_kirpildi": false, "egim": 0.21255656167002213, "alcalma_m_s": 3.19, "hat_uzunlugu_m": 250.0, "duz_giris_m": 75.0, "dalis_yatay_m": 161.77124344467705, "dalis_irtifa_kaybi_m": 34.4, "giris_irtifa_m": 49.38553928368466, "dalis_sn": 10.8, "hiz": 15.0, "irtifa_onalma_sn": 3.5, "min_irtifa_m": 8.0, "pullup_dip_tahmin_m": 10.2, "uygun": true, "nedenler": []}, "uygun": true, "yon_deg": 280.2, "yon_sapma_deg": 15.0, "ilk_red": "hizalanma çemberi ↔ direk_D (-9.3 m)", "giris": "hizalan", "giris_detay": {"s": -377.0, "x": 101.0, "gerekli_m": 723.7}, "ara_noktalar": [], "A": [-117.0, 202.5], "H": [-38.2, 216.6], "S": [-75.1, -30.6], "C": [21.4, -568.5], "cikis_m": 546.5, "gecis_m": 128.8, "en_kucuk_aciklik_m": {"direk_B": 1.0, "direk_D": 1.7, "direk_G": 29.1}, "sure_sn": {"gecis": 8.6, "cember": 45.9, "hat": 15.8, "dalis": 10.8, "tirmanma": 34.9, "toplam": 105.2}}
+22:33:56  DO_REPOSITION → H (-38, 217), 118 m: kabul
+22:33:56  geçiş: (-40, 345, 118 m)
+22:33:57  H çemberinde giriş irtifasına alçalma: 118 → 49 m
+22:33:57  hizalama: s=-368 m  x=+100.5 m  rota hatası=-3.9°  irtifa=118.0 m  bekleyen: yanal
+22:34:02  hizalama: s=-320 m  x=+74.1 m  rota hatası=-64.4°  irtifa=118.1 m  bekleyen: rota
+22:34:07  hizalama: s=-307 m  x=+37.2 m  rota hatası=-70.5°  irtifa=118.2 m  bekleyen: rota
+22:34:12  hizalama: s=-263 m  x=+10.4 m  rota hatası=-14.1°  irtifa=98.5 m  bekleyen: irtifa
+22:34:17  hizalama: s=-179 m  x=+46.5 m  rota hatası=+58.8°  irtifa=74.6 m  bekleyen: rota
+22:34:22  hizalama: s=-185 m  x=+128.1 m  rota hatası=+129.0°  irtifa=68.7 m  bekleyen: rota
+22:34:27  hizalama: s=-247 m  x=+154.2 m  rota hatası=+177.8°  irtifa=60.0 m  bekleyen: rota
+22:34:32  hizalama: s=-305 m  x=+127.5 m  rota hatası=-136.4°  irtifa=51.4 m  bekleyen: rota
+22:34:37  hizalama: s=-324 m  x=+58.4 m  rota hatası=-78.0°  irtifa=46.0 m  bekleyen: rota
+22:34:42  hizalama: s=-281 m  x=+3.4 m  rota hatası=-21.4°  irtifa=50.4 m  bekleyen: rota
+22:34:43  DO_SET_MODE → OFFBOARD (deneme 1): s=-273 m, x=+0.3 m, rota hatası=-14.9°, irtifa=51.3 m
+22:34:43  OFFBOARD ✔ (hizalama 46 sn): s=-272 m, x=+0.2 m, irtifa=51.3 m; hat yönü 280°
+22:34:43  hat: s= -272.5 m  x= +0.2 m  irtifa= 51.3 m (profil  49.4)  3B= 277.3 m  yer_hızı=15.2  vz=+0.9 m/s
+22:34:44  hat: s= -260.7 m  x= -2.1 m  irtifa= 52.1 m (profil  49.4)  3B= 265.9 m  yer_hızı=14.6  vz=+0.6 m/s
+22:34:45  hat: s= -249.0 m  x= -2.8 m  irtifa= 52.6 m (profil  49.4)  3B= 254.5 m  yer_hızı=14.0  vz=+0.3 m/s
+22:34:46  hat: s= -237.6 m  x= -2.6 m  irtifa= 52.8 m (profil  49.4)  3B= 243.4 m  yer_hızı=13.6  vz=+0.2 m/s
+22:34:47  hat: s= -226.0 m  x= -1.8 m  irtifa= 52.9 m (profil  49.4)  3B= 232.1 m  yer_hızı=13.3  vz=+0.1 m/s
+22:34:48  hat: s= -214.9 m  x= -0.8 m  irtifa= 52.6 m (profil  49.4)  3B= 221.2 m  yer_hızı=12.7  vz=-0.9 m/s
+22:34:49  hat: s= -203.7 m  x= +0.1 m  irtifa= 51.4 m (profil  49.4)  3B= 210.1 m  yer_hızı=12.7  vz=-1.7 m/s
+22:34:50  hat: s= -192.5 m  x= +0.8 m  irtifa= 49.9 m (profil  49.4)  3B= 198.9 m  yer_hızı=13.0  vz=-1.8 m/s
+22:34:51  hat: s= -179.8 m  x= +1.8 m  irtifa= 48.4 m (profil  49.4)  3B= 186.2 m  yer_hızı=13.4  vz=-1.7 m/s
+22:34:52  hat: s= -166.3 m  x= +2.9 m  irtifa= 46.7 m (profil  47.5)  3B= 172.8 m  yer_hızı=13.6  vz=-1.7 m/s
+22:34:54  hat: s= -152.6 m  x= +3.7 m  irtifa= 45.1 m (profil  44.6)  3B= 159.2 m  yer_hızı=13.8  vz=-1.8 m/s
+22:34:55  hat: s= -138.8 m  x= +4.3 m  irtifa= 43.3 m (profil  41.7)  3B= 145.5 m  yer_hızı=14.1  vz=-2.0 m/s
+22:34:56  hat: s= -124.8 m  x= +4.9 m  irtifa= 41.5 m (profil  38.7)  3B= 131.6 m  yer_hızı=14.5  vz=-2.1 m/s
+22:34:57  hat: s= -110.6 m  x= +5.3 m  irtifa= 39.6 m (profil  35.7)  3B= 117.6 m  yer_hızı=14.8  vz=-2.2 m/s
+22:34:58  hat: s=  -96.2 m  x= +5.6 m  irtifa= 37.6 m (profil  32.6)  3B= 103.5 m  yer_hızı=15.1  vz=-2.4 m/s
+22:34:59  hat: s=  -81.6 m  x= +5.9 m  irtifa= 35.5 m (profil  29.5)  3B=  89.2 m  yer_hızı=15.5  vz=-2.4 m/s
+22:35:00  hat: s=  -66.8 m  x= +6.1 m  irtifa= 33.5 m (profil  26.4)  3B=  75.0 m  yer_hızı=15.6  vz=-2.4 m/s
+22:35:01  hat: s=  -52.0 m  x= +6.2 m  irtifa= 31.5 m (profil  23.2)  3B=  61.1 m  yer_hızı=15.8  vz=-2.4 m/s
+22:35:02  hat: s=  -36.9 m  x= +6.1 m  irtifa= 29.4 m (profil  20.0)  3B=  47.6 m  yer_hızı=16.0  vz=-2.5 m/s
+22:35:03  hat: s=  -21.7 m  x= +5.9 m  irtifa= 27.2 m (profil  16.8)  3B=  35.3 m  yer_hızı=16.2  vz=-2.5 m/s
+22:35:04  hat: s=   -6.4 m  x= +5.5 m  irtifa= 25.3 m (profil  13.6)  3B=  26.7 m  yer_hızı=16.2  vz=-2.1 m/s
+22:35:05  DURDU: 3B 25.1 m, yatay 5.3 m, irtifa 24.5 m (neden hedef geçildi (3B tetiklenmedi)); dalış {'olculen_aci_deg': 7.6, 'irtifa_kaybi_m': 23.3, 'sure_sn': 12.1, 'en_buyuk_yanal_m': 6.2}; tırmanış → 120 m
+22:35:37  tırmanış tamam: irtifa 115.0 m (31.5 sn), dip 22.7 m; Hold veriliyor
+22:35:37  Hold: ✔ nav_state=AUTO_LOITER (nav_bitis AUTO_LOITER); toplam manevra 152.8 sn

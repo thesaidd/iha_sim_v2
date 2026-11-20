@@ -1,0 +1,6 @@
+Tüm süreçler durduruldu.
+253 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+308 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+7948 /usr/bin/python3 -c from ros2cli.daemon.daemonize import main; main() --name ros2-daemon --ros-domain-id 0 --rmw-implementation rmw_fastrtps_cpp
+26804 python3 -u viz_trails.py
+44420 python3 -u viz_trails.py

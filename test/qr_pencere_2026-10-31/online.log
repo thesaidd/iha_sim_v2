@@ -1,0 +1,17 @@
+13:44:05  qr_online hazır: /uav0/camera/image → /hedef_konum; log /home/yusuf22_04/iha_sim_v2/test/qr_pencere_2026-10-31/online
+13:44:05  camera_info: 1456×1088, fx 4637.81, cx 728.0, cy 544.0 (kullanılan fx 4637.81, asal nokta 727.5, 543.5 — qr_analyze ile aynı)
+13:44:35  durum: gelen 68, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 151, bulunan 0, çözülen 0, yayın 0, işlem ort 5.5 ms maks 12.9 ms
+13:45:05  durum: gelen 130, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 324, bulunan 0, çözülen 0, yayın 0, işlem ort 5.1 ms maks 12.9 ms
+13:45:35  durum: gelen 202, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 483, bulunan 0, çözülen 0, yayın 0, işlem ort 5.0 ms maks 12.9 ms
+13:46:05  durum: gelen 282, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 646, bulunan 0, çözülen 0, yayın 0, işlem ort 5.0 ms maks 12.9 ms
+13:46:35  durum: gelen 369, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 799, bulunan 0, çözülen 0, yayın 0, işlem ort 4.8 ms maks 12.4 ms
+13:47:05  durum: gelen 450, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 956, bulunan 0, çözülen 0, yayın 0, işlem ort 5.0 ms maks 12.5 ms
+13:47:35  durum: gelen 574, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1098, bulunan 0, çözülen 0, yayın 0, işlem ort 5.0 ms maks 12.8 ms
+13:48:05  durum: gelen 716, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1181, bulunan 0, çözülen 0, yayın 0, işlem ort 5.0 ms maks 12.8 ms
+13:48:35  durum: gelen 869, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1273, bulunan 0, çözülen 0, yayın 0, işlem ort 4.8 ms maks 11.0 ms
+13:49:05  durum: gelen 1006, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1385, bulunan 0, çözülen 0, yayın 0, işlem ort 4.8 ms maks 10.0 ms
+13:49:35  durum: gelen 1108, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1482, bulunan 0, çözülen 0, yayın 0, işlem ort 5.1 ms maks 12.5 ms
+13:50:05  durum: gelen 1229, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1581, bulunan 0, çözülen 0, yayın 0, işlem ort 5.5 ms maks 12.5 ms
+13:50:35  durum: gelen 1313, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1693, bulunan 0, çözülen 0, yayın 0, işlem ort 5.9 ms maks 15.0 ms
+13:51:07  durum: gelen 1402, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 1810, bulunan 0, çözülen 0, yayın 0, işlem ort 5.9 ms maks 15.0 ms
+13:51:24  ÖZET: gelen 1464, atlanan 0, köprü kaybı 1867, bulunan 0, çözülen 0, yayın 0, işlem ort 5.2 ms, p95 9.6 ms, maks 15.0 ms

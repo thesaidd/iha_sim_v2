@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!-- Sabit QR irtifa testi kamerası (2026-10-30). Kamera bloğu gz_models_cam_hw/T_nadir ile aynı
+     (1456×1088, horizontal_fov 0.3114, clip 0.1–1000, pitch +π/2 = dik aşağı); farklar: update_rate 10,
+     sensör link merkezinde (T_nadir'de gövde altı 0.07 0 -0.1). Statik, yerçekimi yok, çarpışma ve görsel yok.
+     Model yaw'ı görüntünün üst kenarının dünya yönüdür (yaw 0 → üst = doğu). Dünyaya çalışma anında
+     /world/default/create ile eklenir, /world/default/set_pose ile taşınır, /world/default/remove ile silinir. -->
+<sdf version="1.9">
+  <model name="kamera_test">
+    <static>true</static>
+    <link name="link">
+      <gravity>false</gravity>
+      <sensor name="camera" type="camera">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <camera>
+          <horizontal_fov>0.3114</horizontal_fov>
+          <image>
+            <width>1456</width>
+            <height>1088</height>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>1000</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>10</update_rate>
+        <visualize>true</visualize>
+      </sensor>
+    </link>
+  </model>
+</sdf>

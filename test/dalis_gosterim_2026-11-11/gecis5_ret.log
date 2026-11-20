@@ -1,0 +1,3 @@
+06:51:01  [geçiş 5] hedef (-60, -60), ψ=210°, irtifa 60 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (506, 267, 100 m)
+06:51:01  bekleme: (506, 267)'den rota kapısı tutmadı (rota farkı -91°, sınır ±45°) — Hold çemberinde uygun an bekleniyor (en fazla 60 sn)
+06:52:01  ROTA REDDEDİLDİ: rota kapısı tutmadı (rota farkı -90°, sınır ±45°). Komut gönderilmedi — uçak mevcut Hold'da kalıyor (620, 210)

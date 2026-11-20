@@ -1,0 +1,46 @@
+T+   0.0  hedefsiz plan: {'uygun': True, 'giris': 'yer', 'yon_deg': 105.0, 'C': [-88.0, 328.4], 'yer': {'pist_yonu_deg': 105.0, 'kalkis_mesafe_m': 120.0, 'kalkis_irtifa_m': 25.0, 'inis': {'inis_yonu_deg': 105.0, 'Td': [12.9, -48.3], 'G': [103.5, -386.4], 'Lc': [26.3, -407.1], 'yaricap': 80.0, 'giris_irtifa_m': 25.0, 'yaklasma_m': 350.0, 'suzulme_deg': 4.09}}, 'donus': {'rota': [(-88.0, 328.4), (26.3, -407.1)], 'uzunluk_m': 744.3, 'en_kucuk_m': 129.9}, 'en_kucuk_aciklik_m': {'ev': 173.4, 'depo': 245.8, 'direk_B': 254.9}}
+T+   0.0  iniş görevi yükleme: ✔ (sahte ACK)
+T+   0.0  KALKIŞ komutu kabul edildi (arm + Takeoff, MIS_TAKEOFF_ALT 25 m; 0.0 sn)
+T+   0.0  kalkış: irtifa   0.0 m  yer_hızı  0.2 m/s  üsten     0 m  arm=True  yerde=True
+T+   2.0  kalkış: irtifa   0.0 m  yer_hızı  8.2 m/s  üsten     9 m  arm=True  yerde=True
+T+   4.0  kalkış: irtifa   0.0 m  yer_hızı 16.2 m/s  üsten    33 m  arm=True  yerde=True
+T+   4.6  TEKER KESME: komuttan 4.7 sn sonra, yer koşusu 44 m, yer hızı 18.6 m/s
+T+   6.0  kalkış: irtifa   9.6 m  yer_hızı 22.0 m/s  üsten    73 m  arm=True  yerde=False
+T+   8.0  kalkış: irtifa  21.6 m  yer_hızı 22.0 m/s  üsten   117 m  arm=True  yerde=False
+T+   8.4  KALKIŞ İRTİFASI geçildi: 24.0 m, üsten yatay 126 m, komuttan 8.4 sn, yer hızı 22.0 m/s, rota 105°
+T+   9.0  OFFBOARD ✔: irtifa 26.9 m, üsten 138 m; pist doğrultusunda 60 m'ye tırmanış
+T+   9.0  tırmanış: irtifa  27.1 m  üsten   139 m  yanal  +0.5 m  yer_hızı 21.5
+T+  11.0  tırmanış: irtifa  32.6 m  üsten   180 m  yanal  +0.6 m  yer_hızı 19.7
+T+  13.0  tırmanış: irtifa  37.9 m  üsten   218 m  yanal  +0.3 m  yer_hızı 18.4
+T+  15.0  tırmanış: irtifa  44.7 m  üsten   254 m  yanal  +0.2 m  yer_hızı 17.4
+T+  17.0  tırmanış: irtifa  51.3 m  üsten   288 m  yanal  +0.1 m  yer_hızı 16.7
+T+  19.0  tırmanış: irtifa  55.0 m  üsten   321 m  yanal  +0.1 m  yer_hızı 16.2
+T+  19.1  DÖNÜŞ bacağı 1/1: (-88, 328) → (26, -407), yön 279°, 744 m, irtifa 60 m
+T+  19.1  dönüş: bacak 1  s=    18/744 m  x=  +1.9 m  rota hatası=-173.9°  irtifa= 55.2 m
+T+  24.1  dönüş: bacak 1  s=   -42/744 m  x= -44.0 m  rota hatası=-110.5°  irtifa= 58.8 m
+T+  29.1  dönüş: bacak 1  s=   -26/744 m  x=-115.0 m  rota hatası= -45.2°  irtifa= 59.7 m
+T+  34.1  dönüş: bacak 1  s=    44/744 m  x=-129.7 m  rota hatası= +21.0°  irtifa= 59.9 m
+T+  39.1  dönüş: bacak 1  s=    94/744 m  x= -75.7 m  rota hatası= +51.8°  irtifa= 60.0 m
+T+  44.1  dönüş: bacak 1  s=   152/744 m  x= -28.7 m  rota hatası= +25.8°  irtifa= 60.0 m
+T+  49.1  dönüş: bacak 1  s=   224/744 m  x=  -8.6 m  rota hatası=  +8.3°  irtifa= 60.0 m
+T+  54.1  dönüş: bacak 1  s=   299/744 m  x=  -2.5 m  rota hatası=  +2.4°  irtifa= 60.0 m
+T+  59.1  dönüş: bacak 1  s=   374/744 m  x=  -0.7 m  rota hatası=  +0.7°  irtifa= 60.0 m
+T+  64.1  dönüş: bacak 1  s=   449/744 m  x=  -0.2 m  rota hatası=  +0.2°  irtifa= 60.0 m
+T+  67.2  GÖREV DEVRİ: iniş orbitine 250 m; AUTO_MISSION isteniyor (LOITER_TO_ALT (26, -407) R 80 → 25 m → LAND (13, -48), iniş yönü 105°)
+T+  67.2  AUTO_MISSION ✔ — iniş deseni PX4'te
+T+  67.3  iniş: nav=AUTO_MISSION  (   -12,   -162)  irtifa= 60.0 m  yer_hızı=15.0  vz=+0.0  Td'ye   116 m
+T+  72.3  iniş: nav=AUTO_MISSION  (    -0,   -236)  irtifa= 60.0 m  yer_hızı=15.0  vz=+0.0  Td'ye   188 m
+T+  77.3  iniş: nav=AUTO_MISSION  (     6,   -310)  irtifa= 59.7 m  yer_hızı=15.0  vz=-0.8  Td'ye   262 m
+T+  82.3  iniş: nav=AUTO_MISSION  (   -43,   -366)  irtifa= 50.8 m  yer_hızı=15.0  vz=-2.0  Td'ye   322 m
+T+  87.3  iniş: nav=AUTO_MISSION  (   -48,   -438)  irtifa= 40.8 m  yer_hızı=15.0  vz=-2.0  Td'ye   394 m
+T+  92.3  iniş: nav=AUTO_MISSION  (     7,   -485)  irtifa= 31.2 m  yer_hızı=15.0  vz=-1.5  Td'ye   437 m
+T+  97.3  iniş: nav=AUTO_MISSION  (    78,   -468)  irtifa= 26.7 m  yer_hızı=15.0  vz=-0.5  Td'ye   425 m
+T+ 102.3  iniş: nav=AUTO_MISSION  (   106,   -402)  irtifa= 25.4 m  yer_hızı=15.0  vz=-0.1  Td'ye   366 m
+T+ 107.3  iniş: nav=AUTO_MISSION  (    90,   -337)  irtifa= 21.4 m  yer_hızı=12.2  vz=-1.0  Td'ye   299 m
+T+ 112.3  iniş: nav=AUTO_MISSION  (    75,   -281)  irtifa= 17.2 m  yer_hızı=11.3  vz=-1.0  Td'ye   241 m
+T+ 117.3  iniş: nav=AUTO_MISSION  (    61,   -227)  irtifa= 13.2 m  yer_hızı=11.1  vz=-1.0  Td'ye   185 m
+T+ 122.3  iniş: nav=AUTO_MISSION  (    46,   -173)  irtifa=  9.3 m  yer_hızı=11.0  vz=-1.0  Td'ye   129 m
+T+ 127.3  iniş: nav=AUTO_MISSION  (    32,   -120)  irtifa=  5.3 m  yer_hızı=11.0  vz=-1.0  Td'ye    74 m
+T+ 132.3  iniş: nav=AUTO_MISSION  (    18,    -67)  irtifa=  1.4 m  yer_hızı=11.0  vz=-1.0  Td'ye    19 m
+T+ 134.1  YER ALGILANDI: Td'ye göre boyuna +0.5 m, yanal -0.0 m; yer hızı 0.0 m/s
+T+ 136.2  DISARM ✔ (yer algılamadan 2.0 sn sonra); son konum (13, -48), üsse 50 m

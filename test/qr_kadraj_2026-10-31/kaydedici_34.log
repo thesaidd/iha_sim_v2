@@ -1,0 +1,29 @@
+13:04:15  kaydedici hazır: /home/yusuf22_04/iha_sim_v2/test/qr_kadraj_2026-10-31/kayit; pencere s ∈ [−250, +100] m, hedef (-60, -60), disk sınırı 3.0 GB, PNG seviye 1
+13:04:45  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:05:15  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:05:45  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:06:15  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:06:45  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:07:15  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:07:45  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:08:15  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:08:45  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:09:15  durum: kayıt=kapalı offboard=True kare=0 düşen=0 kuyruk=0 disk=0 MB
+13:09:29  KAYIT BAŞLADI: geçiş 3, s=-250 m, hedefe yatay 250 m
+13:09:45  durum: kayıt=AÇIK offboard=True kare=116 düşen=0 kuyruk=1 disk=4 MB
+13:10:01  KAYIT BİTTİ: geçiş 3, 240 kare, 0 düşen, s=+100 m, 32.1 sn, disk toplam 9 MB
+13:10:16  durum: kayıt=kapalı offboard=False kare=240 düşen=0 kuyruk=0 disk=9 MB
+13:10:46  durum: kayıt=kapalı offboard=False kare=240 düşen=0 kuyruk=0 disk=9 MB
+13:11:16  durum: kayıt=kapalı offboard=False kare=240 düşen=0 kuyruk=0 disk=9 MB
+13:11:46  durum: kayıt=kapalı offboard=False kare=240 düşen=0 kuyruk=0 disk=9 MB
+13:12:16  durum: kayıt=kapalı offboard=False kare=240 düşen=0 kuyruk=0 disk=9 MB
+13:12:46  durum: kayıt=kapalı offboard=True kare=240 düşen=0 kuyruk=0 disk=9 MB
+13:13:01  KAYIT BAŞLADI: geçiş 4, s=-250 m, hedefe yatay 250 m
+13:13:16  durum: kayıt=AÇIK offboard=True kare=336 düşen=0 kuyruk=0 disk=12 MB
+13:13:32  KAYIT BİTTİ: geçiş 4, 209 kare, 0 düşen, s=+100 m, 31.7 sn, disk toplam 16 MB
+13:13:46  durum: kayıt=kapalı offboard=False kare=449 düşen=0 kuyruk=0 disk=16 MB
+13:14:16  durum: kayıt=kapalı offboard=False kare=449 düşen=0 kuyruk=0 disk=16 MB
+13:14:31  durduruluyor — kuyruk boşaltılıyor
+13:14:31  ÖZET geçiş 3: 13:09:29–13:10:01, 240 kare, 0 düşen
+13:14:31  ÖZET geçiş 4: 13:13:01–13:13:32, 209 kare, 0 düşen
+13:14:31  ÖZET toplam: 449 kare, 0 düşen, disk 16 MB

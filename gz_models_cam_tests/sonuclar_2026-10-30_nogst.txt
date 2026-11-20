@@ -1,0 +1,19 @@
+=== E_nogst | modeller: /home/yusuf22_04/iha_sim_v2/gz_models_cam_tests/A | gz ek argüman: 'yok' | 17:36:40 ===
+free -m (başlangıç): kullanılan 867 MB, kullanılabilir 14031 MB
+GZ_SIM_SERVER_CONFIG_PATH=/home/yusuf22_04/iha_sim_v2/server_nogst.config
+sunucu PID 11898; yüklü görüntü motoru: ['libgz-rendering8-ogre2.so']
+ t_sn   RSS_MB   CPU%    RTF
+    0      527    nan    nan
+   15      527    148  1.000
+   30      527    140  1.000
+   45      527    147  1.000
+   60      528    152  1.000
+   75      528    147  1.000
+   90      528    146  1.000
+  105      528    145  1.000
+  120      529    150  1.000
+ÖZET başlangıç_RSS=527 bitiş_RSS=529 artış=1_MB/dk CPU=147% RTF=1.000 süre=120_sn
+KAMERA advanced_plane_0: 16.7 Hz
+KAMERA advanced_plane_1: 16.6 Hz
+/tmp/claude-1000/-home-yusuf22-04/83513e30-1df4-415e-b10e-bae6f1fda3f4/scratchpad/trial_cfg.sh: line 26: 11898 Segmentation fault      (core dumped) setsid gz sim --verbose=4 -r -s $gzarg "$PX4_GZ_WORLDS/default.sdf" < /dev/null > /tmp/cam_leak_gz_$label.log 2>&1  (wd: ~/PX4-Autopilot/build/px4_sitl_default/rootfs)
+free -m (bitiş): kullanılan 862 MB, kullanılabilir 14036 MB; kalan süreç: 0

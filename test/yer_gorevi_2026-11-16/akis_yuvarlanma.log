@@ -1,0 +1,16 @@
+T+   0.0  hedef (uav1 NED) (-260.0, 890.0); dalış planı {"hedef": [-260.0, 890.0], "baslangic_yatay_m": 927.2, "gelis_yonu_deg": 108.7, "tercih_yon_deg": 108.7, "geo": {"durma_mesafesi_m": 20.0, "durma_irtifa_m": 15.0, "x_durma_m": 13.228756555322953, "aci_istenen_deg": 12.0, "aci_sinir_deg": 8.19, "aci_etkin_deg": 8.19, "aci_kirpildi": true, "egim": 0.14400000000000002, "alcalma_m_s": 2.16, "hat_uzunlugu_m": 250.0, "duz_giris_m": 75.0, "dalis_yatay_m": 161.77124344467705, "dalis_irtifa_kaybi_m": 23.3, "giris_irtifa_m": 38.295059056033494, "dalis_sn": 10.8, "hiz": 15.0, "irtifa_onalma_sn": 3.5, "min_irtifa_m": 8.0, "pullup_dip_tahmin_m": 11.8, "alcalma_siniri_etkin_m_s": 2.4, "uygun": true, "nedenler": []}, "uygun": true, "giris": "yer", "ara_noktalar": [], "yer": {"pist_yonu_deg": 90.0, "kalkis_mesafe_m": 120.0, "kalkis_irtifa_m": 25.0, "kalkis_sonu": [0.0, 120.0], "kalkis_sonu_hedef_m": 812.7, "inis": {"inis_yonu_deg": 90.0, "Td": [-0.0, -50.0], "G": [-0.0, -400.0], "Lc": [-80.0, -400.0], "yaricap": 80.0, "giris_irtifa_m": 25.0, "yaklasma_m": 350.0, "suzulme_deg": 4.09}}, "yon_deg": 98.7, "yon_sapma_deg": -10.0, "ilk_red": "hat ↔ direk_B (-2.0 m)", "giris_detay": {"s": -800.4, "x": -141.1, "s_otur": -517.0, "rota_farki_deg": 8.7}, "A": [-222.4, 642.8], "H": [-301.5, 630.8], "S": [-258.0, 876.9], "C": [-339.1, 1409.3], "cikis_m": 538.5, "gecis_m": 599.2, "en_kucuk_aciklik_m": {"direk_B": 0.8, "depo": 9.5, "direk_G": 23.6}, "uav0_en_kucuk_3b_m": null, "donus": {"rota": [[-339.1, 1409.3], [-459.8, 1100.0], [-80.0, -400.0]], "uzunluk_m": 1879.4, "en_kucuk_m": 7.8}, "sure_sn": {"katilma": 39.9, "hat": 15.8, "dalis": 10.8, "tirmanma": 34.4, "donus": 125.3}}
+T+   0.0  UYARI: istenen dalış açısı 12.0° → 8.19° (alçalma sınırı 2.4 m/s = min(PX4 4.0, süzülme 2.4) × pay 0.9, hız 15.0 m/s)
+T+   0.0  iniş görevi yükleme: ✔ (sahte ACK)
+T+   0.0  KALKIŞ KOMUTU: tespitten 0.0 sn sonra; hat yönü 99° (pist 90°, sapma -10°)
+T+   0.0  KALKIŞ komutu kabul edildi (arm + Takeoff, MIS_TAKEOFF_ALT 25 m; 0.0 sn)
+T+   0.0  kalkış: irtifa   0.0 m  yer_hızı  0.5 m/s  üsten     0 m  arm=True  yerde=True
+T+   2.0  kalkış: irtifa   0.0 m  yer_hızı 10.5 m/s  üsten    13 m  arm=True  yerde=False
+T+   4.0  kalkış: irtifa   0.0 m  yer_hızı  9.4 m/s  üsten    35 m  arm=True  yerde=False
+T+   6.0  kalkış: irtifa   0.0 m  yer_hızı  8.4 m/s  üsten    52 m  arm=True  yerde=False
+T+   8.0  kalkış: irtifa   0.0 m  yer_hızı  8.1 m/s  üsten    69 m  arm=True  yerde=False
+T+  10.0  kalkış: irtifa   0.0 m  yer_hızı  8.0 m/s  üsten    85 m  arm=True  yerde=False
+T+  12.0  kalkış: irtifa   0.0 m  yer_hızı  8.0 m/s  üsten   101 m  arm=True  yerde=False
+T+  14.0  kalkış: irtifa   0.0 m  yer_hızı  8.0 m/s  üsten   117 m  arm=True  yerde=False
+T+  15.0  KALKIŞ BAŞARISIZ: 15 sn'de irtifa kazanılmadı (irtifa 0.0 m < 3 m) — irtifa 0.0 m, |vz| 0.0 m/s, yer_hızı 8.0 m/s → DISARM
+T+  18.1  DISARM reddedildi (ack 4) ve araç hâlâ yerde → ZORLA DISARM (21196)
+T+  18.1  ZORLA DISARM ✔ — motor kesildi, araç yerde duracak

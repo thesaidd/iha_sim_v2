@@ -1,0 +1,38 @@
+# ros_gz_bridge yapılandırması: uav0 kamerası Gazebo → ROS 2 (2026-10-30)
+#
+# Gazebo topic'leri (`gz topic -l`, CAM=T ile): sensör base_link'e bağlı, model adı advanced_plane_0
+#   /world/default/model/advanced_plane_0/link/base_link/sensor/camera/image
+#   /world/default/model/advanced_plane_0/link/base_link/sensor/camera/camera_info
+# ROS topic'leri: /uav0/camera/image, /uav0/camera/camera_info (uav1 ileride /uav1/...)
+#
+# QoS: bu YAML biçiminde QoS alanı yok; yayıncı QoS'u ROS parametresiyle (qos_overrides) verilir.
+# Sensör verisi profili: best_effort + volatile, keep_last 5 (publisher_queue ile aynı).
+#
+# Çalıştırma (sistem CAM=T ile açıkken):
+#   source /opt/ros/humble/setup.bash
+#   ros2 run ros_gz_bridge parameter_bridge --ros-args \
+#     -p config_file:=$HOME/iha_sim_v2/camera_bridge.yaml \
+#     -p qos_overrides./uav0/camera/image.publisher.reliability:=best_effort \
+#     -p qos_overrides./uav0/camera/image.publisher.depth:=5 \
+#     -p qos_overrides./uav0/camera/camera_info.publisher.reliability:=best_effort \
+#     -p qos_overrides./uav0/camera/camera_info.publisher.depth:=5
+#
+# 1456×1088 rgb8 kare 4,75 MB; ~13 Hz'de ~62 MB/s.
+
+- ros_topic_name: "/uav0/camera/image"
+  gz_topic_name: "/world/default/model/advanced_plane_0/link/base_link/sensor/camera/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: false
+  subscriber_queue: 5
+  publisher_queue: 5
+
+- ros_topic_name: "/uav0/camera/camera_info"
+  gz_topic_name: "/world/default/model/advanced_plane_0/link/base_link/sensor/camera/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: false
+  subscriber_queue: 5
+  publisher_queue: 5

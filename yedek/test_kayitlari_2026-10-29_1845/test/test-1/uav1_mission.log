@@ -1,0 +1,272 @@
+2026-10-29 16:34:37  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 16:34:37  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 16:34:37  [uav1] Bekleniyor — irtifa=-0.0 m (hedef ≥ 40 m), arm DEĞİL, mod=?
+2026-10-29 16:34:42  [uav1] Bekleniyor — irtifa=0.0 m (hedef ≥ 40 m), arm DEĞİL, mod=AUTO
+2026-10-29 16:34:52  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 16:34:52  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 16:34:52  [uav1] Bekleniyor — irtifa=0.0 m (hedef ≥ 40 m), arm DEĞİL, mod=?
+2026-10-29 16:34:57  [uav1] Bekleniyor — irtifa=-0.0 m (hedef ≥ 40 m), arm DEĞİL, mod=AUTO
+2026-10-29 16:39:01  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 16:39:01  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 16:39:01  [uav1] Bekleniyor — irtifa=119.7 m (hedef ≥ 40 m), arm DEĞİL, mod=?
+2026-10-29 16:39:01  [uav1] ✅ Devralma koşulları sağlandı (irtifa=119.7 m, arm, mod=AUTO). Görev Bilgisayarı kontrolü (OFFBOARD) devralıyor!
+2026-10-29 16:39:01  [uav1] ✈ DO_SET_MODE → OFFBOARD | deneme 1/10 | mod=AUTO | target_system=2
+2026-10-29 16:39:01  [uav1] ✈ OFFBOARD aktif (1. denemede) — orbit başladı
+2026-10-29 16:39:06  [uav1] ORBIT θ=  26.6°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze=  98.5 m  yarıçap_hatası=  -1.5 m  hava_hızı= 13.8 m/s
+2026-10-29 16:39:11  [uav1] ORBIT θ=  66.9°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1 m/s
+2026-10-29 16:39:16  [uav1] ORBIT θ= 106.6°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 106.1 m  yarıçap_hatası=  +6.1 m  hava_hızı= 14.2 m/s
+2026-10-29 16:39:21  [uav1] ORBIT θ= 146.6°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.1 m  yarıçap_hatası=  +6.1 m  hava_hızı= 14.2 m/s
+2026-10-29 16:39:26  [uav1] ORBIT θ= 185.9°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.2 m/s
+2026-10-29 16:39:31  [uav1] ORBIT θ= 225.5°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.1 m/s
+2026-10-29 16:39:36  [uav1] ORBIT θ= 265.2°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.1 m/s
+2026-10-29 16:39:41  [uav1] ORBIT θ= 304.8°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.1 m/s
+2026-10-29 16:39:47  [uav1] ORBIT θ= 344.2°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.2 m/s
+2026-10-29 16:39:52  [uav1] ORBIT θ=  23.5°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.2 m/s
+2026-10-29 16:39:57  [uav1] ORBIT θ=  62.9°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.3 m/s
+2026-10-29 16:40:02  [uav1] ORBIT θ= 102.6°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.4 m/s
+2026-10-29 16:40:07  [uav1] ORBIT θ= 142.9°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.4 m/s
+2026-10-29 16:40:12  [uav1] ORBIT θ= 182.9°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.3 m/s
+2026-10-29 16:40:17  [uav1] ORBIT θ= 222.4°  setpoint−uçak= +34.4°  irtifa= 119.2 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.2 m/s
+2026-10-29 16:40:22  [uav1] ORBIT θ= 261.6°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 16:40:27  [uav1] ORBIT θ= 301.5°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 16:40:32  [uav1] ORBIT θ= 340.9°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.2 m/s
+2026-10-29 16:40:37  [uav1] ORBIT θ=  20.5°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 16:40:42  [uav1] ORBIT θ=  59.9°  setpoint−uçak= +34.4°  irtifa= 118.7 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.2 m/s
+2026-10-29 16:40:47  [uav1] ORBIT θ=  99.5°  setpoint−uçak= +34.4°  irtifa= 118.5 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.3 m/s
+2026-10-29 16:40:52  [uav1] ORBIT θ= 139.7°  setpoint−uçak= +34.4°  irtifa= 118.3 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.3 m/s
+2026-10-29 16:40:57  [uav1] ORBIT θ= 179.4°  setpoint−uçak= +34.4°  irtifa= 118.3 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.2 m/s
+2026-10-29 16:41:02  [uav1] ORBIT θ= 218.7°  setpoint−uçak= +34.4°  irtifa= 118.5 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.1 m/s
+2026-10-29 16:41:07  [uav1] ORBIT θ= 257.9°  setpoint−uçak= +34.4°  irtifa= 118.7 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.1 m/s
+2026-10-29 16:41:12  [uav1] ORBIT θ= 297.3°  setpoint−uçak= +34.4°  irtifa= 118.7 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.1 m/s
+2026-10-29 16:41:17  [uav1] ORBIT θ= 337.0°  setpoint−uçak= +34.4°  irtifa= 118.8 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.0 m/s
+2026-10-29 16:41:22  [uav1] ORBIT θ=  16.0°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 107.0 m  yarıçap_hatası=  +7.0 m  hava_hızı= 14.0 m/s
+2026-10-29 16:41:27  [uav1] ORBIT θ=  55.1°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.9 m  yarıçap_hatası=  +6.9 m  hava_hızı= 14.1 m/s
+2026-10-29 16:41:32  [uav1] ORBIT θ=  94.3°  setpoint−uçak= +34.4°  irtifa= 118.7 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.1 m/s
+2026-10-29 16:41:37  [uav1] ORBIT θ= 134.1°  setpoint−uçak= +34.4°  irtifa= 118.6 m  merkeze= 106.8 m  yarıçap_hatası=  +6.8 m  hava_hızı= 14.2 m/s
+2026-10-29 16:41:42  [uav1] ORBIT θ= 173.9°  setpoint−uçak= +34.4°  irtifa= 118.6 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1 m/s
+2026-10-29 16:41:47  [uav1] ORBIT θ= 213.5°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.0 m/s
+2026-10-29 16:41:52  [uav1] ORBIT θ= 252.5°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.0 m/s
+2026-10-29 16:41:57  [uav1] ORBIT θ= 291.7°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:02  [uav1] ORBIT θ= 330.8°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:07  [uav1] ORBIT θ=   9.8°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:12  [uav1] ORBIT θ=  49.0°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 13.9 m/s
+2026-10-29 16:42:17  [uav1] ORBIT θ=  88.1°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:22  [uav1] ORBIT θ= 127.9°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.1 m/s
+2026-10-29 16:42:27  [uav1] ORBIT θ= 167.3°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1 m/s
+2026-10-29 16:42:32  [uav1] ORBIT θ= 206.4°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1 m/s
+2026-10-29 16:42:37  [uav1] ORBIT θ= 245.8°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:42  [uav1] ORBIT θ= 285.0°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:47  [uav1] ORBIT θ= 324.1°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.2 m  yarıçap_hatası=  +6.2 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:52  [uav1] ORBIT θ=   3.7°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.0 m/s
+2026-10-29 16:42:57  [uav1] ORBIT θ=  42.8°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 106.2 m  yarıçap_hatası=  +6.2 m  hava_hızı= 14.0 m/s
+2026-10-29 16:43:02  [uav1] ORBIT θ=  82.4°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 106.0 m  yarıçap_hatası=  +6.0 m  hava_hızı= 14.1 m/s
+2026-10-29 16:43:03  [uav1] ⚠ OFFBOARD'dan çıkıldı: mod=AUTO, irtifa=119.7 m. Yeniden girilmeyecek; setpoint yayını durduruldu.
+2026-10-29 16:54:20  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 16:54:20  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 16:54:20  [uav1] Bekleniyor — irtifa=120.7 m (hedef ≥ 40 m), arm DEĞİL, mod=?
+2026-10-29 16:54:20  [uav1] ✅ Devralma koşulları sağlandı (irtifa=120.7 m, arm, mod=AUTO). Görev Bilgisayarı kontrolü (OFFBOARD) devralıyor!
+2026-10-29 16:54:20  [uav1] ✈ DO_SET_MODE → OFFBOARD | deneme 1/10 | mod=AUTO | target_system=2
+2026-10-29 16:54:20  [uav1] ✈ OFFBOARD aktif (1. denemede) — orbit başladı
+2026-10-29 16:54:25  [uav1] ORBIT θ= 271.9°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze=  97.1 m  yarıçap_hatası=  -2.9 m  hava_hızı= 13.8 m/s
+2026-10-29 16:54:30  [uav1] ORBIT θ= 311.8°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 13.7 m/s
+2026-10-29 16:54:35  [uav1] ORBIT θ= 350.8°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 13.8 m/s
+2026-10-29 16:54:40  [uav1] ORBIT θ=  30.0°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 105.7 m  yarıçap_hatası=  +5.7 m  hava_hızı= 13.9 m/s
+2026-10-29 16:54:45  [uav1] ORBIT θ=  69.6°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 105.7 m  yarıçap_hatası=  +5.7 m  hava_hızı= 14.0 m/s
+2026-10-29 16:54:50  [uav1] ORBIT θ= 109.6°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.1 m/s
+2026-10-29 16:54:55  [uav1] ORBIT θ= 149.0°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.1 m  yarıçap_hatası=  +6.1 m  hava_hızı= 14.1 m/s
+2026-10-29 16:55:00  [uav1] ORBIT θ= 188.7°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.2 m  yarıçap_hatası=  +6.2 m  hava_hızı= 14.1 m/s
+2026-10-29 16:55:05  [uav1] ORBIT θ= 227.9°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.1 m  yarıçap_hatası=  +6.1 m  hava_hızı= 14.0 m/s
+2026-10-29 16:55:10  [uav1] ORBIT θ= 267.4°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 14.0 m/s
+2026-10-29 16:55:15  [uav1] ORBIT θ= 307.3°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 14.1 m/s
+2026-10-29 16:55:20  [uav1] ORBIT θ= 347.4°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 106.1 m  yarıçap_hatası=  +6.1 m  hava_hızı= 14.2 m/s
+2026-10-29 16:55:25  [uav1] ORBIT θ=  26.9°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.1 m  yarıçap_hatası=  +6.1 m  hava_hızı= 14.2 m/s
+2026-10-29 16:55:30  [uav1] ORBIT θ=  66.7°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.0 m  yarıçap_hatası=  +6.0 m  hava_hızı= 14.2 m/s
+2026-10-29 16:55:35  [uav1] ORBIT θ= 107.1°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 14.2 m/s
+2026-10-29 16:55:40  [uav1] ORBIT θ= 146.9°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.1 m/s
+2026-10-29 16:55:45  [uav1] ORBIT θ= 186.9°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 14.1 m/s
+2026-10-29 16:55:50  [uav1] ORBIT θ= 226.6°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.0 m/s
+2026-10-29 16:55:55  [uav1] ORBIT θ= 266.3°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.7 m  yarıçap_hatası=  +5.7 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:00  [uav1] ORBIT θ= 306.1°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:05  [uav1] ORBIT θ= 346.0°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:10  [uav1] ORBIT θ=  25.5°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:15  [uav1] ORBIT θ=  64.8°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:20  [uav1] ORBIT θ= 104.8°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 14.1 m/s
+2026-10-29 16:56:25  [uav1] ORBIT θ= 144.5°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.1 m/s
+2026-10-29 16:56:30  [uav1] ORBIT θ= 184.4°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:35  [uav1] ORBIT θ= 223.5°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.7 m  yarıçap_hatası=  +5.7 m  hava_hızı= 13.9 m/s
+2026-10-29 16:56:40  [uav1] ORBIT θ= 262.7°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:45  [uav1] ORBIT θ= 302.4°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:51  [uav1] ORBIT θ= 342.5°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0 m/s
+2026-10-29 16:56:56  [uav1] ORBIT θ=  22.6°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0 m/s
+2026-10-29 16:57:01  [uav1] ORBIT θ=  62.5°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.2 m/s
+2026-10-29 16:57:06  [uav1] ORBIT θ= 102.3°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 14.2 m/s
+2026-10-29 16:57:11  [uav1] ORBIT θ= 142.6°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.2 m/s
+2026-10-29 16:57:16  [uav1] ORBIT θ= 182.7°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 105.7 m  yarıçap_hatası=  +5.7 m  hava_hızı= 14.1 m/s
+2026-10-29 16:57:21  [uav1] ORBIT θ= 222.7°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.1 m/s
+2026-10-29 16:57:22  [uav1] ⚠ OFFBOARD'dan çıkıldı: mod=AUTO, irtifa=119.9 m. Yeniden girilmeyecek; setpoint yayını durduruldu.
+2026-10-29 17:14:28  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 17:14:28  [uav1] Bekleniyor — irtifa=120.0 m (hedef ≥ 40 m), arm DEĞİL, mod=?, merkez çerçevesi (uav0) bekleniyor
+2026-10-29 17:14:29  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 17:14:29  [uav1] ✅ Devralma koşulları sağlandı (irtifa=120.1 m, arm, mod=AUTO). Görev Bilgisayarı kontrolü (OFFBOARD) devralıyor!
+2026-10-29 17:14:29  [uav1] ✈ DO_SET_MODE → OFFBOARD | deneme 1/10 | mod=AUTO | target_system=2
+2026-10-29 17:14:29  [uav1] ✈ OFFBOARD aktif (1. denemede) — orbit başladı
+2026-10-29 17:14:33  [uav1] ORBIT θ=  23.6°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze=  92.1 m  yarıçap_hatası=  -7.9 m  hava_hızı= 14.9 m/s
+2026-10-29 17:14:38  [uav1] ORBIT θ=  61.7°  setpoint−uçak= +34.4°  irtifa= 120.5 m  merkeze= 103.8 m  yarıçap_hatası=  +3.8 m  hava_hızı= 14.2 m/s
+2026-10-29 17:14:43  [uav1] ORBIT θ=  97.9°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 106.0 m  yarıçap_hatası=  +6.0 m  hava_hızı= 14.4 m/s
+2026-10-29 17:14:48  [uav1] ORBIT θ= 133.4°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.4 m/s
+2026-10-29 17:14:53  [uav1] ORBIT θ= 169.3°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.4 m/s
+2026-10-29 17:14:58  [uav1] ORBIT θ= 206.3°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.5 m/s
+2026-10-29 17:15:03  [uav1] ORBIT θ= 243.4°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.5 m/s
+2026-10-29 17:15:08  [uav1] ORBIT θ= 279.3°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.5 m/s
+2026-10-29 17:15:13  [uav1] ORBIT θ= 317.1°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.4 m/s
+2026-10-29 17:15:18  [uav1] ORBIT θ= 353.4°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.4 m/s
+2026-10-29 17:15:23  [uav1] ORBIT θ=  30.3°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.3 m/s
+2026-10-29 17:15:28  [uav1] ORBIT θ=  66.6°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.3 m/s
+2026-10-29 17:15:33  [uav1] ORBIT θ= 101.6°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.4 m/s
+2026-10-29 17:15:38  [uav1] ORBIT θ= 135.6°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.4 m/s
+2026-10-29 17:15:43  [uav1] ORBIT θ= 170.0°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.3 m/s
+2026-10-29 17:15:48  [uav1] ORBIT θ= 201.7°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:15:53  [uav1] ORBIT θ= 236.2°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.2 m/s
+2026-10-29 17:15:58  [uav1] ORBIT θ= 271.9°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:03  [uav1] ORBIT θ= 306.7°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1 m/s
+2026-10-29 17:16:08  [uav1] ORBIT θ= 340.7°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:13  [uav1] ORBIT θ=  15.9°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1 m/s
+2026-10-29 17:16:18  [uav1] ORBIT θ=  50.2°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.1 m/s
+2026-10-29 17:16:23  [uav1] ORBIT θ=  85.5°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:28  [uav1] ORBIT θ= 120.7°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:33  [uav1] ORBIT θ= 155.9°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:38  [uav1] ORBIT θ= 191.1°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.7 m  yarıçap_hatası=  +6.7 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:43  [uav1] ORBIT θ= 227.2°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:49  [uav1] ORBIT θ= 263.4°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:54  [uav1] ORBIT θ= 297.9°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.2 m/s
+2026-10-29 17:16:59  [uav1] ORBIT θ= 332.7°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.1 m/s
+2026-10-29 17:17:04  [uav1] ORBIT θ=   8.5°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 106.6 m  yarıçap_hatası=  +6.6 m  hava_hızı= 14.1 m/s
+2026-10-29 17:17:09  [uav1] ORBIT θ=  43.0°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1 m/s
+2026-10-29 17:17:14  [uav1] ORBIT θ=  77.1°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 14.1 m/s
+2026-10-29 17:17:19  [uav1] ORBIT θ= 108.8°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1 m/s
+2026-10-29 17:17:24  [uav1] ORBIT θ= 145.3°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.3 m/s
+2026-10-29 17:17:29  [uav1] ORBIT θ= 180.9°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.2 m/s
+2026-10-29 17:17:33  [uav1] ⚠ OFFBOARD'dan çıkıldı: mod=AUTO, irtifa=120.2 m. Yeniden girilmeyecek; setpoint yayını durduruldu.
+2026-10-29 17:41:05  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 17:41:05  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 17:41:05  [uav1] Bekleniyor — irtifa=119.7 m (hedef ≥ 40 m), arm DEĞİL, mod=?
+2026-10-29 17:41:05  [uav1] ✅ Devralma koşulları sağlandı (irtifa=119.7 m, arm, mod=AUTO). Görev Bilgisayarı kontrolü (OFFBOARD) devralıyor!
+2026-10-29 17:41:05  [uav1] ✈ DO_SET_MODE → OFFBOARD | deneme 1/10 | mod=AUTO | target_system=2
+2026-10-29 17:41:05  [uav1] ✈ OFFBOARD aktif (1. denemede) — orbit başladı
+2026-10-29 17:41:10  [uav1] ORBIT θ= 199.5°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze=  97.6 m  yarıçap_hatası=  -2.4 m  hava_hızı= 14.0 m/s
+2026-10-29 17:41:15  [uav1] ORBIT θ= 238.1°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 104.1 m  yarıçap_hatası=  +4.1 m  hava_hızı= 13.9 m/s
+2026-10-29 17:41:20  [uav1] ORBIT θ= 275.9°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 13.9 m/s
+2026-10-29 17:41:25  [uav1] ORBIT θ= 311.9°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 13.9 m/s
+2026-10-29 17:41:30  [uav1] ORBIT θ= 351.5°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 13.9 m/s
+2026-10-29 17:41:35  [uav1] ORBIT θ=  30.8°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.0 m/s
+2026-10-29 17:41:40  [uav1] ORBIT θ=  70.4°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 17:41:45  [uav1] ORBIT θ= 110.2°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 17:41:50  [uav1] ORBIT θ= 146.9°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 17:41:55  [uav1] ORBIT θ= 185.9°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:00  [uav1] ORBIT θ= 223.3°  setpoint−uçak= +34.4°  irtifa= 120.5 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:05  [uav1] ORBIT θ= 260.5°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 13.9 m/s
+2026-10-29 17:42:10  [uav1] ORBIT θ= 298.7°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 13.9 m/s
+2026-10-29 17:42:16  [uav1] ORBIT θ= 337.6°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:21  [uav1] ORBIT θ=  15.6°  setpoint−uçak= +34.4°  irtifa= 120.8 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:26  [uav1] ORBIT θ=  54.4°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:31  [uav1] ORBIT θ=  94.5°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 17:42:36  [uav1] ORBIT θ= 134.7°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 17:42:41  [uav1] ORBIT θ= 173.3°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:46  [uav1] ORBIT θ= 211.8°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:51  [uav1] ORBIT θ= 250.2°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.0 m/s
+2026-10-29 17:42:56  [uav1] ORBIT θ= 289.4°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:01  [uav1] ORBIT θ= 328.3°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:06  [uav1] ORBIT θ=   7.5°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:11  [uav1] ORBIT θ=  46.0°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:16  [uav1] ORBIT θ=  84.4°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:21  [uav1] ORBIT θ= 123.3°  setpoint−uçak= +34.4°  irtifa= 120.8 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.1 m/s
+2026-10-29 17:43:26  [uav1] ORBIT θ= 162.2°  setpoint−uçak= +34.4°  irtifa= 120.8 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:31  [uav1] ORBIT θ= 200.6°  setpoint−uçak= +34.4°  irtifa= 120.8 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:36  [uav1] ORBIT θ= 239.1°  setpoint−uçak= +34.4°  irtifa= 120.8 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:41  [uav1] ORBIT θ= 276.2°  setpoint−uçak= +34.4°  irtifa= 120.7 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.0 m/s
+2026-10-29 17:43:46  [uav1] ORBIT θ= 315.0°  setpoint−uçak= +34.4°  irtifa= 120.6 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1 m/s
+2026-10-29 17:43:51  [uav1] ORBIT θ= 353.2°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1 m/s
+2026-10-29 17:43:56  [uav1] ORBIT θ=  31.6°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1 m/s
+2026-10-29 17:44:01  [uav1] ORBIT θ=  69.5°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.2 m/s
+2026-10-29 17:44:06  [uav1] ORBIT θ= 107.3°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.3 m/s
+2026-10-29 17:44:11  [uav1] ORBIT θ= 144.7°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.2 m/s
+2026-10-29 17:44:12  [uav1] ⚠ OFFBOARD'dan çıkıldı: mod=AUTO, irtifa=120.1 m. Yeniden girilmeyecek; setpoint yayını durduruldu.
+2026-10-29 18:33:02  [uav1] Başlatıldı — merkez=(0, 0) [uav0 çerçevesi] R=100 m V=15.0 m/s irtifa=120 m | mod=rabbit lookahead=34.4° (≈60 m yay, 4.0 sn) | devralma: irtifa ≥ 40 m + arm | feedforward=açık | FMU prefix: /px4_1/fmu | Log: test/test-1/uav1_mission.log
+2026-10-29 18:33:02  [uav1] Merkez çerçevesi: orijinimiz uav0 çerçevesinde N=+15.0 E=-15.0 m → kendi çerçevemizde merkez=(-15.0, +15.0)
+2026-10-29 18:33:02  [uav1] Bekleniyor — irtifa=121.7 m (hedef ≥ 40 m), arm DEĞİL, mod=?
+2026-10-29 18:33:02  [uav1] ✅ Devralma koşulları sağlandı (irtifa=121.7 m, arm, mod=AUTO). Görev Bilgisayarı kontrolü (OFFBOARD) devralıyor!
+2026-10-29 18:33:02  [uav1] ✈ DO_SET_MODE → OFFBOARD | deneme 1/10 | mod=AUTO | target_system=2
+2026-10-29 18:33:02  [uav1] ✈ OFFBOARD aktif (1. denemede) — orbit başladı
+2026-10-29 18:33:07  [uav1] ORBIT θ= 282.5°  setpoint−uçak= +34.4°  irtifa= 120.8 m  merkeze=  92.5 m  yarıçap_hatası=  -7.5 m  hava_hızı= 13.5 m/s
+2026-10-29 18:33:12  [uav1] ORBIT θ= 318.8°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 102.3 m  yarıçap_hatası=  +2.3 m  hava_hızı= 13.5 m/s
+2026-10-29 18:33:17  [uav1] ORBIT θ= 352.4°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 13.5 m/s
+2026-10-29 18:33:22  [uav1] ORBIT θ=  26.3°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 13.6 m/s
+2026-10-29 18:33:27  [uav1] ORBIT θ=  61.4°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 13.7 m/s
+2026-10-29 18:33:32  [uav1] ORBIT θ=  97.6°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 13.8 m/s
+2026-10-29 18:33:37  [uav1] ORBIT θ= 134.4°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 13.8 m/s
+2026-10-29 18:33:42  [uav1] ORBIT θ= 171.6°  setpoint−uçak= +34.4°  irtifa= 119.0 m  merkeze= 106.2 m  yarıçap_hatası=  +6.2 m  hava_hızı= 14.1 m/s
+2026-10-29 18:33:47  [uav1] ORBIT θ= 208.9°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.1 m/s
+2026-10-29 18:33:52  [uav1] ORBIT θ= 246.2°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.2 m/s
+2026-10-29 18:33:57  [uav1] ORBIT θ= 283.1°  setpoint−uçak= +34.4°  irtifa= 118.9 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.3 m/s
+2026-10-29 18:34:02  [uav1] ORBIT θ= 319.9°  setpoint−uçak= +34.4°  irtifa= 119.0 m  merkeze= 106.5 m  yarıçap_hatası=  +6.5 m  hava_hızı= 14.3 m/s
+2026-10-29 18:34:08  [uav1] ORBIT θ= 355.7°  setpoint−uçak= +34.4°  irtifa= 119.2 m  merkeze= 106.4 m  yarıçap_hatası=  +6.4 m  hava_hızı= 14.3 m/s
+2026-10-29 18:34:13  [uav1] ORBIT θ=  32.1°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 106.2 m  yarıçap_hatası=  +6.2 m  hava_hızı= 14.3 m/s
+2026-10-29 18:34:18  [uav1] ORBIT θ=  69.0°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 106.0 m  yarıçap_hatası=  +6.0 m  hava_hızı= 14.3 m/s
+2026-10-29 18:34:23  [uav1] ORBIT θ= 106.4°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.3 m/s
+2026-10-29 18:34:28  [uav1] ORBIT θ= 145.2°  setpoint−uçak= +34.4°  irtifa= 119.9 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.2 m/s
+2026-10-29 18:34:33  [uav1] ORBIT θ= 182.6°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.8 m  yarıçap_hatası=  +5.8 m  hava_hızı= 14.1 m/s
+2026-10-29 18:34:38  [uav1] ORBIT θ= 220.5°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.7 m  yarıçap_hatası=  +5.7 m  hava_hızı= 14.0 m/s
+2026-10-29 18:34:43  [uav1] ORBIT θ= 257.4°  setpoint−uçak= +34.4°  irtifa= 120.3 m  merkeze= 105.5 m  yarıçap_hatası=  +5.5 m  hava_hızı= 13.9 m/s
+2026-10-29 18:34:48  [uav1] ORBIT θ= 294.1°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 13.9 m/s
+2026-10-29 18:34:53  [uav1] ORBIT θ= 327.2°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.0 m/s
+2026-10-29 18:34:58  [uav1] ORBIT θ=   0.4°  setpoint−uçak= +34.4°  irtifa= 120.4 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.0 m/s
+2026-10-29 18:35:03  [uav1] ORBIT θ=  35.7°  setpoint−uçak= +34.4°  irtifa= 120.2 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:08  [uav1] ORBIT θ=  73.8°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:13  [uav1] ORBIT θ= 112.4°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.2 m/s
+2026-10-29 18:35:18  [uav1] ORBIT θ= 152.2°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:23  [uav1] ORBIT θ= 191.2°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:28  [uav1] ORBIT θ= 228.0°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:33  [uav1] ORBIT θ= 263.3°  setpoint−uçak= +34.4°  irtifa= 120.1 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0 m/s
+2026-10-29 18:35:38  [uav1] ORBIT θ= 298.7°  setpoint−uçak= +34.4°  irtifa= 120.0 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:43  [uav1] ORBIT θ= 334.1°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:48  [uav1] ORBIT θ=   9.3°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:53  [uav1] ORBIT θ=  45.4°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 18:35:58  [uav1] ORBIT θ=  80.5°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.2 m/s
+2026-10-29 18:36:03  [uav1] ORBIT θ= 115.9°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.2 m/s
+2026-10-29 18:36:08  [uav1] ORBIT θ= 150.2°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.2 m/s
+2026-10-29 18:36:13  [uav1] ORBIT θ= 184.9°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:18  [uav1] ORBIT θ= 220.2°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.0 m/s
+2026-10-29 18:36:23  [uav1] ORBIT θ= 256.5°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:28  [uav1] ORBIT θ= 293.1°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:33  [uav1] ORBIT θ= 329.6°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:38  [uav1] ORBIT θ=   5.5°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.3 m  yarıçap_hatası=  +5.3 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:43  [uav1] ORBIT θ=  40.6°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:48  [uav1] ORBIT θ=  76.5°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 18:36:54  [uav1] ORBIT θ= 113.1°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.2 m/s
+2026-10-29 18:36:59  [uav1] ORBIT θ= 149.5°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:04  [uav1] ORBIT θ= 185.9°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:09  [uav1] ORBIT θ= 221.4°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.2 m  yarıçap_hatası=  +5.2 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:14  [uav1] ORBIT θ= 256.6°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:19  [uav1] ORBIT θ= 292.6°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:24  [uav1] ORBIT θ= 329.5°  setpoint−uçak= +34.4°  irtifa= 119.2 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:29  [uav1] ORBIT θ=   6.0°  setpoint−uçak= +34.4°  irtifa= 119.2 m  merkeze= 105.1 m  yarıçap_hatası=  +5.1 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:34  [uav1] ORBIT θ=  42.5°  setpoint−uçak= +34.4°  irtifa= 119.0 m  merkeze= 105.0 m  yarıçap_hatası=  +5.0 m  hava_hızı= 14.2 m/s
+2026-10-29 18:37:39  [uav1] ORBIT θ=  78.3°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:44  [uav1] ORBIT θ= 114.4°  setpoint−uçak= +34.4°  irtifa= 119.1 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:49  [uav1] ORBIT θ= 150.1°  setpoint−uçak= +34.4°  irtifa= 119.2 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:54  [uav1] ORBIT θ= 186.4°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 104.9 m  yarıçap_hatası=  +4.9 m  hava_hızı= 14.1 m/s
+2026-10-29 18:37:59  [uav1] ORBIT θ= 223.0°  setpoint−uçak= +34.4°  irtifa= 119.3 m  merkeze= 104.8 m  yarıçap_hatası=  +4.8 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:04  [uav1] ORBIT θ= 257.3°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 104.7 m  yarıçap_hatası=  +4.7 m  hava_hızı= 13.9 m/s
+2026-10-29 18:38:09  [uav1] ORBIT θ= 292.1°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 13.9 m/s
+2026-10-29 18:38:14  [uav1] ORBIT θ= 328.0°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:19  [uav1] ORBIT θ=   0.8°  setpoint−uçak= +34.4°  irtifa= 119.4 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:24  [uav1] ORBIT θ=  33.9°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:29  [uav1] ORBIT θ=  69.8°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:34  [uav1] ORBIT θ= 101.9°  setpoint−uçak= +34.4°  irtifa= 119.5 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:39  [uav1] ORBIT θ= 135.6°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:44  [uav1] ORBIT θ= 170.6°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 104.5 m  yarıçap_hatası=  +4.5 m  hava_hızı= 14.0 m/s
+2026-10-29 18:38:49  [uav1] ORBIT θ= 203.6°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 104.4 m  yarıçap_hatası=  +4.4 m  hava_hızı= 13.9 m/s
+2026-10-29 18:38:54  [uav1] ORBIT θ= 237.4°  setpoint−uçak= +34.4°  irtifa= 119.8 m  merkeze= 104.2 m  yarıçap_hatası=  +4.2 m  hava_hızı= 13.9 m/s
+2026-10-29 18:38:59  [uav1] ORBIT θ= 271.6°  setpoint−uçak= +34.4°  irtifa= 119.7 m  merkeze= 104.1 m  yarıçap_hatası=  +4.1 m  hava_hızı= 14.0 m/s
+2026-10-29 18:39:04  [uav1] ORBIT θ= 307.5°  setpoint−uçak= +34.4°  irtifa= 119.6 m  merkeze= 104.2 m  yarıçap_hatası=  +4.2 m  hava_hızı= 14.0 m/s
+2026-10-29 18:39:05  [uav1] ⚠ OFFBOARD'dan çıkıldı: mod=AUTO, irtifa=119.5 m. Yeniden girilmeyecek; setpoint yayını durduruldu.

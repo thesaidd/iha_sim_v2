@@ -1,0 +1,12 @@
+19:05:21  kaydedici hazır: /home/yusuf22_04/iha_sim_v2/test/qr_gecis_2026-10-30/kayit; pencere s ∈ [−250, +100] m, hedef (-60, -60), disk sınırı 3.0 GB, PNG seviye 1
+19:05:51  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:06:21  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:06:51  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:07:21  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:07:51  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:08:21  durum: kayıt=kapalı offboard=True kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:08:51  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:09:21  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:09:51  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:09:56  durduruluyor — kuyruk boşaltılıyor
+19:09:56  ÖZET toplam: 0 kare, 0 düşen, disk 0 MB

@@ -1,0 +1,45 @@
+23:16:00  [uav1] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+23:16:00  [uav1] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+23:16:00  [uav1] FW_AIRSPD_TRIM = 14.0 (zaten ayarlı)
+23:16:00  [uav1] NAV_DLL_ACT = 0 (zaten ayarlı)
+23:16:00  [uav1] RWTO_MAX_THR: 0.8500000238418579 → 0.8500000238418579
+23:16:00  [uav1] FW_TKO_PITCH_MIN = 20.0 (zaten ayarlı)
+23:16:00  [uav1] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+23:16:00  [uav1] FW_T_SINK_R_SP = 4.0 (zaten ayarlı)
+23:16:00  [uav1] FW_T_SINK_MAX = 5.0 (zaten ayarlı)
+23:16:01  [uav1] FW_LND_USETER: 1 → 0
+23:16:01  [uav1] MIS_TKO_LAND_REQ: 2 → 0
+23:16:01  uav1 yerde hazır bekleniyor (arm=False, yerde=None)
+23:16:01  uav1 ÜSTE HAZIR: yerde, disarmed, yerel (-0.0, 0.0); üs uav0 çerçevesinde (200, -775), pist yönü 105°; rota 100°
+23:16:01  hedefsiz plan: {'uygun': True, 'giris': 'yer', 'yon_deg': 105.0, 'C': [-88.0, 328.4], 'yer': {'pist_yonu_deg': 105.0, 'kalkis_mesafe_m': 120.0, 'kalkis_irtifa_m': 25.0, 'inis': {'inis_yonu_deg': 105.0, 'Td': [12.9, -48.3], 'G': [103.5, -386.4], 'Lc': [26.3, -407.1], 'yaricap': 80.0, 'giris_irtifa_m': 25.0, 'yaklasma_m': 350.0, 'suzulme_deg': 4.09}}, 'donus': {'rota': [(-88.0, 328.4), (26.3, -407.1)], 'uzunluk_m': 744.3, 'en_kucuk_m': 129.9}, 'en_kucuk_aciklik_m': {'ev': 173.4, 'depo': 245.8, 'direk_B': 254.9}}
+23:16:01  iniş görevi yükleme: ✔ (MISSION_ACK tip 0)
+23:16:01  [uav1] MIS_TAKEOFF_ALT: 120.0 → 25.0
+23:16:01  [uav1] PX4 [sev 6]: Armed by external command	
+23:16:01  [uav1] Deneme 1: NAV_TAKEOFF → MAV_RESULT_ACCEPTED, ARM → MAV_RESULT_ACCEPTED
+23:16:01  KALKIŞ komutu kabul edildi (arm + Takeoff, MIS_TAKEOFF_ALT 25 m; 0.2 sn)
+23:16:01  kalkış: irtifa  -0.0 m  yer_hızı  0.0 m/s  üsten     0 m  arm=True  yerde=True
+23:16:01  [uav1] PX4 [sev 6]: Using default takeoff altitude: 120.0 m	
+23:16:03  kalkış: irtifa  -0.0 m  yer_hızı  0.9 m/s  üsten     0 m  arm=True  yerde=True
+23:16:05  [uav1] PX4 [sev 6]: Takeoff detected	
+23:16:05  kalkış: irtifa  -0.1 m  yer_hızı 13.3 m/s  üsten    14 m  arm=True  yerde=False
+23:16:07  kalkış: irtifa  -0.0 m  yer_hızı  8.7 m/s  üsten    36 m  arm=True  yerde=False
+23:16:09  kalkış: irtifa   0.0 m  yer_hızı  8.3 m/s  üsten    53 m  arm=True  yerde=False
+23:16:11  kalkış: irtifa   0.0 m  yer_hızı  8.3 m/s  üsten    69 m  arm=True  yerde=False
+23:16:13  kalkış: irtifa  -0.0 m  yer_hızı  7.7 m/s  üsten    86 m  arm=True  yerde=False
+23:16:15  kalkış: irtifa  -0.0 m  yer_hızı  7.3 m/s  üsten   100 m  arm=True  yerde=False
+23:16:17  kalkış: irtifa   0.0 m  yer_hızı  7.2 m/s  üsten   115 m  arm=True  yerde=False
+23:16:19  kalkış: irtifa  -0.0 m  yer_hızı  7.2 m/s  üsten   129 m  arm=True  yerde=False
+23:16:21  kalkış: irtifa  -0.0 m  yer_hızı  7.2 m/s  üsten   144 m  arm=True  yerde=False
+23:16:23  kalkış: irtifa  -0.0 m  yer_hızı  7.2 m/s  üsten   158 m  arm=True  yerde=False
+23:16:25  kalkış: irtifa  -0.0 m  yer_hızı  7.2 m/s  üsten   172 m  arm=True  yerde=False
+23:16:27  kalkış: irtifa  -0.0 m  yer_hızı  6.2 m/s  üsten   186 m  arm=True  yerde=False
+23:16:29  kalkış: irtifa  -0.1 m  yer_hızı  4.1 m/s  üsten   194 m  arm=True  yerde=False
+23:16:30  [uav1] PX4 [sev 6]: Landing detected	
+23:16:30  [uav1] PX4 [sev 6]: Takeoff detected	
+23:16:31  kalkış: irtifa  -0.0 m  yer_hızı  7.2 m/s  üsten   196 m  arm=True  yerde=False
+23:16:33  kalkış: irtifa  -0.0 m  yer_hızı  7.9 m/s  üsten   198 m  arm=True  yerde=False
+23:16:36  kalkış: irtifa  -0.0 m  yer_hızı  8.0 m/s  üsten   201 m  arm=True  yerde=False
+23:16:38  kalkış: irtifa  -0.0 m  yer_hızı  8.0 m/s  üsten   205 m  arm=True  yerde=False
+23:16:40  kalkış: irtifa   0.0 m  yer_hızı  8.0 m/s  üsten   211 m  arm=True  yerde=False
+23:16:42  KALKIŞ BAŞARISIZ: 40 sn içinde teker kesilmedi — araç yerde, DISARM gönderiliyor
+23:16:42  [uav1] PX4 [sev 2]: Disarming denied: not landed	

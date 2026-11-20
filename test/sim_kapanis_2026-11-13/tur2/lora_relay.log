@@ -1,0 +1,24 @@
+03:12:57  lora_relay hazır: /hedef_konum → /hedef_konum_role | gecikme 50.0±20.0 ms (Gauss, kırpılı), kayıp %3
+03:26:47  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:26:57  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:27:07  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:27:17  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:27:27  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:27:37  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:27:47  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:27:57  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:28:07  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:28:17  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:28:27  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:28:37  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:28:47  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:28:57  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:29:07  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:29:17  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:29:27  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:29:37  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:29:47  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:29:57  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:30:07  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:30:17  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}
+03:30:27  istatistik: {"alinan": 10, "gonderilen": 10, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 54.26, "gecikme_min_ms": 30.0, "gecikme_maks_ms": 65.65}

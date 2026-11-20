@@ -1,0 +1,19 @@
+video_s,saat,asama
+0.3,12:53:33,hazirlik
+4.0,12:53:36,uav1 uste hazir (yerde, disarmed)
+42.9,12:54:15,plan
+78.4,12:54:51,uav0 tarama
+148.6,12:56:01,OFFBOARD - hatta katilma
+178.6,12:56:31,QR TESPIT
+206.8,12:56:59,uav0 tarama bitti
+223.8,12:57:16,KALKIS KOMUTU (role geldi)
+230.8,12:57:23,uav1 havada
+233.3,12:57:26,kalkis irtifasi
+234.8,12:57:27,OFFBOARD - hatta katilma
+289.2,12:58:22,yaklasma hatti
+310.5,12:58:43,DALIS - durdu
+344.2,12:59:17,tirmanis tamam
+344.6,12:59:17,usse donus
+478.2,13:01:31,inis deseni (PX4 gorevi)
+561.8,13:02:54,TEKER KOYMA
+565.4,13:02:58,DISARM - gorev tamam

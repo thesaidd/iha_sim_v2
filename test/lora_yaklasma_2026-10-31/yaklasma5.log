@@ -1,0 +1,4 @@
+18:30:26  uav1 hazır bekleniyor (arm=True, irtifa=0 m, nav=AUTO_LOITER)
+18:30:26  uav1 hazır: (67, 505, 121 m) Hold; /hedef_konum_role bekleniyor (eşik 1 mesaj)
+18:32:11  hedef (uav1 NED) (-74.1, -48.0); plan {"yon_deg": 255.7, "yatay_mesafe_m": 570.2, "baslangic_3b_m": 583.0, "durma_yatay_m": 20.0, "durma_3b_m": 106.9, "durma_irtifa_m": 105.0, "kat_edilen_yatay_m": 550.2, "inis_aci_deg": 1.7, "yaklasma_sn": 36.7, "tirmanma_sn": 5.0, "toplam_sn": 41.7}
+18:32:20  ABORT (hazırlık): RTF(5s) 0.585 < 0.6

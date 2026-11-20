@@ -1,0 +1,9 @@
+18:12:54  [uav1] yerde: irtifa=-0.0 m, mod=AUTO; hedef 120 m (MIS_TAKEOFF_ALT)
+18:12:54  [uav1] komut 22 deneme 1: ACK=0
+18:12:54  [uav1] komut 400 deneme 1: ACK=0
+18:12:54  [uav1] irtifa=  -0.0 m  yer_hızı=  0.0 m/s  mod=AUTO  arm
+18:12:59  [uav1] irtifa=  18.2 m  yer_hızı= 38.4 m/s  mod=AUTO  arm
+18:13:04  [uav1] irtifa=  76.8 m  yer_hızı= 56.7 m/s  mod=AUTO  arm
+18:13:09  [uav1] irtifa= 121.7 m  yer_hızı= 54.9 m/s  mod=AUTO  arm
+18:13:14  [uav1] irtifa= 124.0 m  yer_hızı= 24.4 m/s  mod=AUTO  arm
+18:13:16  [uav1] HAZIR: irtifa=123.7 m (22 sn sonra)

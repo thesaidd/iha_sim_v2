@@ -1,0 +1,29 @@
+18:32:23  izleme: uav0 100 m; merkez (0, 0) [uav0 çerçevesi], R 100 m, gz RSS başlangıç 531 MB; abort → [0, 1]
+18:32:23  uav0 orijini uav0 çerçevesinde: N=+0.0 E=+0.0 m
+18:32:23  Tüm araçlar OFFBOARD — 1200 sn izleniyor
+18:32:23  [uav0] t=    0 sn  mod=OFFBOARD irtifa= 102.5 m  merkeze=  83.2 m  yarıçap_hatası= -16.8 m  hava_hızı= 12.8  yer_hızı= 13.0 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:32:28  [uav0] t=    5 sn  mod=OFFBOARD irtifa= 101.1 m  merkeze= 101.2 m  yarıçap_hatası=  +1.2 m  hava_hızı= 13.4  yer_hızı= 13.5 m/s  tavşan−uçak= +34.1°  gz=531 MB
+18:32:33  [uav0] t=   10 sn  mod=OFFBOARD irtifa= 100.8 m  merkeze= 105.4 m  yarıçap_hatası=  +5.4 m  hava_hızı= 13.3  yer_hızı= 13.6 m/s  tavşan−uçak= +34.4°  gz=531 MB
+18:32:33  [uav0] YAKALANDI: t=10 sn (hata 10 sn boyunca < 30 m)
+18:32:38  [uav0] t=   15 sn  mod=OFFBOARD irtifa= 100.6 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 13.4  yer_hızı= 13.8 m/s  tavşan−uçak= +34.3°  gz=531 MB
+18:32:43  [uav0] t=   20 sn  mod=OFFBOARD irtifa= 100.2 m  merkeze= 105.6 m  yarıçap_hatası=  +5.6 m  hava_hızı= 13.5  yer_hızı= 14.0 m/s  tavşan−uçak= +34.4°  gz=531 MB
+18:32:48  [uav0] t=   25 sn  mod=OFFBOARD irtifa= 100.0 m  merkeze= 105.9 m  yarıçap_hatası=  +5.9 m  hava_hızı= 13.6  yer_hızı= 14.0 m/s  tavşan−uçak= +34.0°  gz=531 MB
+18:32:53  [uav0] t=   30 sn  mod=OFFBOARD irtifa=  99.8 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 13.7  yer_hızı= 14.1 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:32:58  [uav0] t=   35 sn  mod=OFFBOARD irtifa=  99.7 m  merkeze= 106.3 m  yarıçap_hatası=  +6.3 m  hava_hızı= 13.7  yer_hızı= 14.2 m/s  tavşan−uçak= +34.2°  gz=531 MB
+18:33:02  SIGTERM — izleme durduruldu (Hold verilmedi)
+
+### uav0 (hedef 100 m)
+| t (sn) | mod | irtifa (m) | merkeze (m) | yarıçap hatası (m) | hava hızı (m/s) | yer hızı (m/s) | tavşan−uçak (°) | değişim (°/sn) | gz (MB) |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | OFFBOARD | 102.5 | 83.2 | -16.8 | 12.8 | 13.0 | +34.2 | +nan | 531 |
+| 5 | OFFBOARD | 101.1 | 101.2 | +1.2 | 13.4 | 13.5 | +34.1 | -0.04 | 531 |
+| 10 | OFFBOARD | 100.8 | 105.4 | +5.4 | 13.3 | 13.6 | +34.4 | +0.06 | 531 |
+| 15 | OFFBOARD | 100.6 | 105.6 | +5.6 | 13.4 | 13.8 | +34.3 | -0.02 | 531 |
+| 20 | OFFBOARD | 100.2 | 105.6 | +5.6 | 13.5 | 14.0 | +34.4 | +0.02 | 531 |
+| 25 | OFFBOARD | 100.0 | 105.9 | +5.9 | 13.6 | 14.0 | +34.0 | -0.07 | 531 |
+| 30 | OFFBOARD | 99.8 | 106.3 | +6.3 | 13.7 | 14.1 | +34.2 | +0.04 | 531 |
+| 35 | OFFBOARD | 99.7 | 106.3 | +6.3 | 13.7 | 14.2 | +34.2 | -0.00 | 531 |
+
+uav0 yakalama: 10. sn. Sonrası (5 örnek): yarıçap hatası ort |e| 5.9 m, maks |e| 6.3 m, ort e +5.9 m, std 0.3 m; tavşan−uçak +34.0…+34.4°; irtifa 99.7–100.6 m; ort. yer hızı 14.0 m/s
+
+Duraklamalar (0):

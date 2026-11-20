@@ -1,0 +1,2 @@
+[INFO] [1794511575.353252538] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/advanced_plane_0/link/base_link/sensor/camera/image (gz.msgs.Image) -> /uav0/camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[INFO] [1794511575.359339789] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/advanced_plane_0/link/base_link/sensor/camera/camera_info (gz.msgs.CameraInfo) -> /uav0/camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)

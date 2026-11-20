@@ -1,0 +1,771 @@
+{
+ "erisilebilirlik": {
+  "toplam": 144,
+  "uygun": 65,
+  "sapma0": 8,
+  "red": {
+   "hat ↔ depo": 14,
+   "hat ↔ direk_B": 20,
+   "tırmanış ↔ direk_K": 12,
+   "tırmanış ↔ direk_G": 6,
+   "hat ↔ direk_G": 6,
+   "hat ↔ direk_K": 15,
+   "tırmanış ↔ direk_D": 6
+  }
+ },
+ "akislar": [
+  {
+   "ad": "tam görev",
+   "kod": 0,
+   "res": {
+    "profil": "dalis",
+    "plan": {
+     "hedef": [
+      -260.0,
+      715.0
+     ],
+     "baslangic_yatay_m": 760.8,
+     "gelis_yonu_deg": 110.9,
+     "tercih_yon_deg": 110.9,
+     "geo": {
+      "durma_mesafesi_m": 20.0,
+      "durma_irtifa_m": 15.0,
+      "x_durma_m": 13.228756555322953,
+      "aci_istenen_deg": 12.0,
+      "aci_sinir_deg": 8.19,
+      "aci_etkin_deg": 8.19,
+      "aci_kirpildi": true,
+      "egim": 0.14400000000000002,
+      "alcalma_m_s": 2.16,
+      "hat_uzunlugu_m": 250.0,
+      "duz_giris_m": 75.0,
+      "dalis_yatay_m": 161.77124344467705,
+      "dalis_irtifa_kaybi_m": 23.3,
+      "giris_irtifa_m": 38.295059056033494,
+      "dalis_sn": 10.8,
+      "hiz": 15.0,
+      "irtifa_onalma_sn": 3.5,
+      "min_irtifa_m": 8.0,
+      "pullup_dip_tahmin_m": 11.8,
+      "alcalma_siniri_etkin_m_s": 2.4,
+      "uygun": true,
+      "nedenler": []
+     },
+     "uygun": true,
+     "giris": "yer",
+     "ara_noktalar": [],
+     "yer": {
+      "pist_yonu_deg": 105.0,
+      "kalkis_mesafe_m": 120.0,
+      "kalkis_irtifa_m": 25.0,
+      "kalkis_sonu": [
+       -31.1,
+       115.9
+      ],
+      "kalkis_sonu_hedef_m": 641.3,
+      "inis": {
+       "inis_yonu_deg": 105.0,
+       "Td": [
+        12.9,
+        -48.3
+       ],
+       "G": [
+        103.5,
+        -386.4
+       ],
+       "Lc": [
+        26.3,
+        -407.1
+       ],
+       "yaricap": 80.0,
+       "giris_irtifa_m": 25.0,
+       "yaklasma_m": 350.0,
+       "suzulme_deg": 4.09
+      }
+     },
+     "yon_deg": 95.9,
+     "yon_sapma_deg": -15.0,
+     "ilk_red": "hat ↔ direk_B (-1.6 m)",
+     "giris_detay": {
+      "s": -619.5,
+      "x": -166.0,
+      "s_otur": -353.8,
+      "rota_farki_deg": -9.1
+     },
+     "A": [
+      -234.2,
+      466.3
+     ],
+     "H": [
+      -313.8,
+      458.1
+     ],
+     "S": [
+      -258.6,
+      701.8
+     ],
+     "C": [
+      -314.1,
+      1237.5
+     ],
+     "cikis_m": 538.5,
+     "gecis_m": 430.8,
+     "en_kucuk_aciklik_m": {
+      "direk_B": 5.0,
+      "depo": 6.3,
+      "direk_G": 26.9
+     },
+     "uav0_en_kucuk_3b_m": null,
+     "donus": {
+      "rota": [
+       [
+        -314.1,
+        1237.5
+       ],
+       [
+        -459.8,
+        625.0
+       ],
+       [
+        26.3,
+        -407.1
+       ]
+      ],
+      "uzunluk_m": 1770.4,
+      "en_kucuk_m": 10.4
+     },
+     "sure_sn": {
+      "katilma": 28.7,
+      "hat": 15.8,
+      "dalis": 10.8,
+      "tirmanma": 34.4,
+      "donus": 118.0
+     }
+    },
+    "tespit_kalkis_komutu_sn": 0.0,
+    "kalkis": {
+     "komut_saat": "T+   0.0",
+     "arm_sn": 0.0,
+     "teker_kesme_sn": 4.65,
+     "yer_kosusu_m": 43.7,
+     "teker_kesme_hizi_m_s": 18.6,
+     "kalkis_mesafe_m": 126.0,
+     "kalkis_irtifa_sn": 8.45,
+     "kalkis_sonu_hizi_m_s": 22.0,
+     "kalkis_sonu": [
+      -32.6,
+      121.7,
+      24.0
+     ],
+     "kalkis_sonu_rota_deg": 105.0,
+     "en_yuksek_yer_hizi_m_s": 22.0
+    },
+    "hizalama_sn": 1.5,
+    "tespit_hareket_sn": 10.0,
+    "devralma": {
+     "s_m": -582.4,
+     "x_m": -154.78,
+     "irtifa_m": 29.2
+    },
+    "hat_girisi": {
+     "s_m": -250.0,
+     "yanal_m": -0.85,
+     "irtifa_m": 38.3,
+     "rota_hatasi_deg": 0.8,
+     "yer_hizi_m_s": 15.1,
+     "devralmadan_sn": 23.9
+    },
+    "durma_nedeni": "durma-mesafesi (3b)",
+    "durma": {
+     "3b_m": 19.87,
+     "yatay_m": 13.18,
+     "irtifa_m": 14.87,
+     "s_m": -13.2,
+     "x_m": -0.02
+    },
+    "dalis": {
+     "olculen_aci_deg": 7.3,
+     "irtifa_kaybi_m": 20.6,
+     "sure_sn": 10.7,
+     "en_buyuk_yanal_m": 0.2
+    },
+    "dip_irtifa_m": 13.83,
+    "yukselis_irtifa_m": 115.0,
+    "tirmanma_sn": 26.9,
+    "tespit_tirmanis_sonu_sn": 76.6,
+    "donus": {
+     "rota": [
+      [
+       -314.1,
+       1237.5
+      ],
+      [
+       -459.8,
+       625.0
+      ],
+      [
+       26.3,
+       -407.1
+      ]
+     ],
+     "bacak_yanal_maks_m": 14.9,
+     "donus_sn": 106.8,
+     "gorev_devri_saat": "T+ 183.5"
+    },
+    "inis": {
+     "yer_algilama_saat": "T+ 282.4",
+     "konum": [
+      12.8,
+      -47.8
+     ],
+     "boyuna_m": 0.5,
+     "yanal_m": -0.0,
+     "yer_hizi_m_s": 0.0,
+     "son_3sn_en_buyuk_alcalma_m_s": 1.0,
+     "gorevden_sn": 98.9,
+     "disarm_sn": 2.0,
+     "son_konum": [
+      12.8,
+      -47.8
+     ],
+     "ustten_m": 49.5
+    },
+    "sonuc": "indi",
+    "toplam_gorev_sn": 284.4
+   }
+  },
+  {
+   "ad": "NO-GO (direğe yakın hedef)",
+   "kod": 3,
+   "res": {
+    "profil": "dalis",
+    "plan": {
+     "hedef": [
+      -200.0,
+      655.0
+     ],
+     "baslangic_yatay_m": 684.9,
+     "gelis_yonu_deg": 107.4,
+     "tercih_yon_deg": 107.4,
+     "geo": {
+      "durma_mesafesi_m": 20.0,
+      "durma_irtifa_m": 15.0,
+      "x_durma_m": 13.228756555322953,
+      "aci_istenen_deg": 12.0,
+      "aci_sinir_deg": 8.19,
+      "aci_etkin_deg": 8.19,
+      "aci_kirpildi": true,
+      "egim": 0.14400000000000002,
+      "alcalma_m_s": 2.16,
+      "hat_uzunlugu_m": 250.0,
+      "duz_giris_m": 75.0,
+      "dalis_yatay_m": 161.77124344467705,
+      "dalis_irtifa_kaybi_m": 23.3,
+      "giris_irtifa_m": 38.295059056033494,
+      "dalis_sn": 10.8,
+      "hiz": 15.0,
+      "irtifa_onalma_sn": 3.5,
+      "min_irtifa_m": 8.0,
+      "pullup_dip_tahmin_m": 11.8,
+      "alcalma_siniri_etkin_m_s": 2.4,
+      "uygun": true,
+      "nedenler": []
+     },
+     "uygun": false,
+     "giris": "yer",
+     "ara_noktalar": [],
+     "yer": {
+      "pist_yonu_deg": 105.0,
+      "kalkis_mesafe_m": 120.0,
+      "kalkis_irtifa_m": 25.0,
+      "kalkis_sonu": [
+       -31.1,
+       115.9
+      ],
+      "kalkis_sonu_hedef_m": 564.9,
+      "inis": {
+       "inis_yonu_deg": 105.0,
+       "Td": [
+        12.9,
+        -48.3
+       ],
+       "G": [
+        103.5,
+        -386.4
+       ],
+       "Lc": [
+        26.3,
+        -407.1
+       ],
+       "yaricap": 80.0,
+       "giris_irtifa_m": 25.0,
+       "yaklasma_m": 350.0,
+       "suzulme_deg": 4.09
+      }
+     },
+     "ilk_red": "hat ↔ ev (-10.8 m)",
+     "neden": "±20° içinde uygun yön yok (ilk ret: hat ↔ ev (-10.8 m))"
+    },
+    "sonuc": "no-go",
+    "neden": "±20° içinde uygun yön yok (ilk ret: hat ↔ ev (-10.8 m))"
+   }
+  },
+  {
+   "ad": "kalkış başarısız",
+   "kod": 4,
+   "res": {
+    "profil": "dalis",
+    "plan": {
+     "hedef": [
+      -260.0,
+      715.0
+     ],
+     "baslangic_yatay_m": 760.8,
+     "gelis_yonu_deg": 110.9,
+     "tercih_yon_deg": 110.9,
+     "geo": {
+      "durma_mesafesi_m": 20.0,
+      "durma_irtifa_m": 15.0,
+      "x_durma_m": 13.228756555322953,
+      "aci_istenen_deg": 12.0,
+      "aci_sinir_deg": 8.19,
+      "aci_etkin_deg": 8.19,
+      "aci_kirpildi": true,
+      "egim": 0.14400000000000002,
+      "alcalma_m_s": 2.16,
+      "hat_uzunlugu_m": 250.0,
+      "duz_giris_m": 75.0,
+      "dalis_yatay_m": 161.77124344467705,
+      "dalis_irtifa_kaybi_m": 23.3,
+      "giris_irtifa_m": 38.295059056033494,
+      "dalis_sn": 10.8,
+      "hiz": 15.0,
+      "irtifa_onalma_sn": 3.5,
+      "min_irtifa_m": 8.0,
+      "pullup_dip_tahmin_m": 11.8,
+      "alcalma_siniri_etkin_m_s": 2.4,
+      "uygun": true,
+      "nedenler": []
+     },
+     "uygun": true,
+     "giris": "yer",
+     "ara_noktalar": [],
+     "yer": {
+      "pist_yonu_deg": 105.0,
+      "kalkis_mesafe_m": 120.0,
+      "kalkis_irtifa_m": 25.0,
+      "kalkis_sonu": [
+       -31.1,
+       115.9
+      ],
+      "kalkis_sonu_hedef_m": 641.3,
+      "inis": {
+       "inis_yonu_deg": 105.0,
+       "Td": [
+        12.9,
+        -48.3
+       ],
+       "G": [
+        103.5,
+        -386.4
+       ],
+       "Lc": [
+        26.3,
+        -407.1
+       ],
+       "yaricap": 80.0,
+       "giris_irtifa_m": 25.0,
+       "yaklasma_m": 350.0,
+       "suzulme_deg": 4.09
+      }
+     },
+     "yon_deg": 95.9,
+     "yon_sapma_deg": -15.0,
+     "ilk_red": "hat ↔ direk_B (-1.6 m)",
+     "giris_detay": {
+      "s": -619.5,
+      "x": -166.0,
+      "s_otur": -353.8,
+      "rota_farki_deg": -9.1
+     },
+     "A": [
+      -234.2,
+      466.3
+     ],
+     "H": [
+      -313.8,
+      458.1
+     ],
+     "S": [
+      -258.6,
+      701.8
+     ],
+     "C": [
+      -314.1,
+      1237.5
+     ],
+     "cikis_m": 538.5,
+     "gecis_m": 430.8,
+     "en_kucuk_aciklik_m": {
+      "direk_B": 5.0,
+      "depo": 6.3,
+      "direk_G": 26.9
+     },
+     "uav0_en_kucuk_3b_m": null,
+     "donus": {
+      "rota": [
+       [
+        -314.1,
+        1237.5
+       ],
+       [
+        -459.8,
+        625.0
+       ],
+       [
+        26.3,
+        -407.1
+       ]
+      ],
+      "uzunluk_m": 1770.4,
+      "en_kucuk_m": 10.4
+     },
+     "sure_sn": {
+      "katilma": 28.7,
+      "hat": 15.8,
+      "dalis": 10.8,
+      "tirmanma": 34.4,
+      "donus": 118.0
+     }
+    },
+    "tespit_kalkis_komutu_sn": 0.0,
+    "kalkis": {
+     "komut_saat": "T+   0.0",
+     "arm_sn": 0.0,
+     "hata": "8 sn içinde teker kesilmedi",
+     "disarm_ack": 0
+    },
+    "sonuc": "kalkis_basarisiz",
+    "neden": "8 sn içinde teker kesilmedi"
+   }
+  },
+  {
+   "ad": "görev modu reddi",
+   "kod": 4,
+   "res": {
+    "profil": "dalis",
+    "plan": {
+     "hedef": [
+      -260.0,
+      715.0
+     ],
+     "baslangic_yatay_m": 760.8,
+     "gelis_yonu_deg": 110.9,
+     "tercih_yon_deg": 110.9,
+     "geo": {
+      "durma_mesafesi_m": 20.0,
+      "durma_irtifa_m": 15.0,
+      "x_durma_m": 13.228756555322953,
+      "aci_istenen_deg": 12.0,
+      "aci_sinir_deg": 8.19,
+      "aci_etkin_deg": 8.19,
+      "aci_kirpildi": true,
+      "egim": 0.14400000000000002,
+      "alcalma_m_s": 2.16,
+      "hat_uzunlugu_m": 250.0,
+      "duz_giris_m": 75.0,
+      "dalis_yatay_m": 161.77124344467705,
+      "dalis_irtifa_kaybi_m": 23.3,
+      "giris_irtifa_m": 38.295059056033494,
+      "dalis_sn": 10.8,
+      "hiz": 15.0,
+      "irtifa_onalma_sn": 3.5,
+      "min_irtifa_m": 8.0,
+      "pullup_dip_tahmin_m": 11.8,
+      "alcalma_siniri_etkin_m_s": 2.4,
+      "uygun": true,
+      "nedenler": []
+     },
+     "uygun": true,
+     "giris": "yer",
+     "ara_noktalar": [],
+     "yer": {
+      "pist_yonu_deg": 105.0,
+      "kalkis_mesafe_m": 120.0,
+      "kalkis_irtifa_m": 25.0,
+      "kalkis_sonu": [
+       -31.1,
+       115.9
+      ],
+      "kalkis_sonu_hedef_m": 641.3,
+      "inis": {
+       "inis_yonu_deg": 105.0,
+       "Td": [
+        12.9,
+        -48.3
+       ],
+       "G": [
+        103.5,
+        -386.4
+       ],
+       "Lc": [
+        26.3,
+        -407.1
+       ],
+       "yaricap": 80.0,
+       "giris_irtifa_m": 25.0,
+       "yaklasma_m": 350.0,
+       "suzulme_deg": 4.09
+      }
+     },
+     "yon_deg": 95.9,
+     "yon_sapma_deg": -15.0,
+     "ilk_red": "hat ↔ direk_B (-1.6 m)",
+     "giris_detay": {
+      "s": -619.5,
+      "x": -166.0,
+      "s_otur": -353.8,
+      "rota_farki_deg": -9.1
+     },
+     "A": [
+      -234.2,
+      466.3
+     ],
+     "H": [
+      -313.8,
+      458.1
+     ],
+     "S": [
+      -258.6,
+      701.8
+     ],
+     "C": [
+      -314.1,
+      1237.5
+     ],
+     "cikis_m": 538.5,
+     "gecis_m": 430.8,
+     "en_kucuk_aciklik_m": {
+      "direk_B": 5.0,
+      "depo": 6.3,
+      "direk_G": 26.9
+     },
+     "uav0_en_kucuk_3b_m": null,
+     "donus": {
+      "rota": [
+       [
+        -314.1,
+        1237.5
+       ],
+       [
+        -459.8,
+        625.0
+       ],
+       [
+        26.3,
+        -407.1
+       ]
+      ],
+      "uzunluk_m": 1770.4,
+      "en_kucuk_m": 10.4
+     },
+     "sure_sn": {
+      "katilma": 28.7,
+      "hat": 15.8,
+      "dalis": 10.8,
+      "tirmanma": 34.4,
+      "donus": 118.0
+     }
+    },
+    "tespit_kalkis_komutu_sn": 0.0,
+    "kalkis": {
+     "komut_saat": "T+   0.0",
+     "arm_sn": 0.0,
+     "teker_kesme_sn": 4.65,
+     "yer_kosusu_m": 43.7,
+     "teker_kesme_hizi_m_s": 18.6,
+     "kalkis_mesafe_m": 126.0,
+     "kalkis_irtifa_sn": 8.45,
+     "kalkis_sonu_hizi_m_s": 22.0,
+     "kalkis_sonu": [
+      -32.6,
+      121.7,
+      24.0
+     ],
+     "kalkis_sonu_rota_deg": 105.0,
+     "en_yuksek_yer_hizi_m_s": 22.0
+    },
+    "hizalama_sn": 1.5,
+    "tespit_hareket_sn": 10.0,
+    "devralma": {
+     "s_m": -582.4,
+     "x_m": -154.78,
+     "irtifa_m": 29.2
+    },
+    "hat_girisi": {
+     "s_m": -250.0,
+     "yanal_m": -0.85,
+     "irtifa_m": 38.3,
+     "rota_hatasi_deg": 0.8,
+     "yer_hizi_m_s": 15.1,
+     "devralmadan_sn": 23.9
+    },
+    "durma_nedeni": "durma-mesafesi (3b)",
+    "durma": {
+     "3b_m": 19.87,
+     "yatay_m": 13.18,
+     "irtifa_m": 14.87,
+     "s_m": -13.2,
+     "x_m": -0.02
+    },
+    "dalis": {
+     "olculen_aci_deg": 7.3,
+     "irtifa_kaybi_m": 20.6,
+     "sure_sn": 10.7,
+     "en_buyuk_yanal_m": 0.2
+    },
+    "dip_irtifa_m": 13.83,
+    "yukselis_irtifa_m": 115.0,
+    "tirmanma_sn": 26.9,
+    "tespit_tirmanis_sonu_sn": 76.6,
+    "donus": {
+     "rota": [
+      [
+       -314.1,
+       1237.5
+      ],
+      [
+       -459.8,
+       625.0
+      ],
+      [
+       26.3,
+       -407.1
+      ]
+     ],
+     "bacak_yanal_maks_m": 14.9,
+     "donus_sn": 106.8,
+     "hata": "AUTO_MISSION moduna geçilemedi (15 sn)",
+     "guvenli_mod_hold": true
+    },
+    "sonuc": "donus_basarisiz",
+    "neden": "AUTO_MISSION moduna geçilemedi (15 sn)"
+   }
+  },
+  {
+   "ad": "hedefsiz (Aşama 1)",
+   "kod": 0,
+   "res": {
+    "plan": {
+     "uygun": true,
+     "giris": "yer",
+     "yon_deg": 105.0,
+     "C": [
+      -88.0,
+      328.4
+     ],
+     "yer": {
+      "pist_yonu_deg": 105.0,
+      "kalkis_mesafe_m": 120.0,
+      "kalkis_irtifa_m": 25.0,
+      "inis": {
+       "inis_yonu_deg": 105.0,
+       "Td": [
+        12.9,
+        -48.3
+       ],
+       "G": [
+        103.5,
+        -386.4
+       ],
+       "Lc": [
+        26.3,
+        -407.1
+       ],
+       "yaricap": 80.0,
+       "giris_irtifa_m": 25.0,
+       "yaklasma_m": 350.0,
+       "suzulme_deg": 4.09
+      }
+     },
+     "donus": {
+      "rota": [
+       [
+        -88.0,
+        328.4
+       ],
+       [
+        26.3,
+        -407.1
+       ]
+      ],
+      "uzunluk_m": 744.3,
+      "en_kucuk_m": 129.9
+     },
+     "en_kucuk_aciklik_m": {
+      "ev": 173.4,
+      "depo": 245.8,
+      "direk_B": 254.9
+     }
+    },
+    "kalkis": {
+     "komut_saat": "T+   0.0",
+     "arm_sn": 0.0,
+     "teker_kesme_sn": 4.65,
+     "yer_kosusu_m": 43.7,
+     "teker_kesme_hizi_m_s": 18.6,
+     "kalkis_mesafe_m": 126.0,
+     "kalkis_irtifa_sn": 8.45,
+     "kalkis_sonu_hizi_m_s": 22.0,
+     "kalkis_sonu": [
+      -32.6,
+      121.7,
+      24.0
+     ],
+     "kalkis_sonu_rota_deg": 105.0,
+     "en_yuksek_yer_hizi_m_s": 22.0
+    },
+    "devralma": {
+     "irtifa_m": 26.9,
+     "ustten_m": 138.0,
+     "yer_hizi_m_s": 21.6
+    },
+    "donus": {
+     "rota": [
+      [
+       -88.0,
+       328.4
+      ],
+      [
+       26.3,
+       -407.1
+      ]
+     ],
+     "bacak_yanal_maks_m": 15.0,
+     "donus_sn": 48.1,
+     "gorev_devri_saat": "T+  67.2"
+    },
+    "inis": {
+     "yer_algilama_saat": "T+ 134.1",
+     "konum": [
+      12.8,
+      -47.8
+     ],
+     "boyuna_m": 0.5,
+     "yanal_m": -0.0,
+     "yer_hizi_m_s": 0.0,
+     "son_3sn_en_buyuk_alcalma_m_s": 1.0,
+     "gorevden_sn": 66.9,
+     "disarm_sn": 2.0,
+     "son_konum": [
+      12.8,
+      -47.8
+     ],
+     "ustten_m": 49.5
+    },
+    "sonuc": "indi",
+    "toplam_gorev_sn": 136.2
+   }
+  }
+ ]
+}

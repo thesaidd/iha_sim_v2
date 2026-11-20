@@ -1,0 +1,19 @@
+Model: 16 mm, aşağı bakan kamera (T_nadir_10) — /home/yusuf22_04/iha_sim_v2/gz_models_cam_hw/T_nadir_10
+Sunucu yapılandırması: /home/yusuf22_04/iha_sim_v2/server_nogst.config (GstCameraSystem yok)
+Dünya: /home/yusuf22_04/iha_sim_v2/gz_worlds/iha_arena_v2.sdf (ad: default)
+[1/4] DDS Agent başlatılıyor...
+[2/4] Gazebo sunucusu başlatılıyor (pencere yok)...
+[3/4] PX4 instance 0 başlatılıyor (konum 0,0,0.5,0,0,0)...
+[4/4] PX4 instance 1 başlatılıyor (konum -950,200,0.5,0,0,0)...
+Kontrol ediliyor...
+  PX4-0: başlangıç betiği tamamlandı
+  PX4-1: başlangıç betiği tamamlandı
+  /fmu/out/: 27 topic görünüyor
+  /px4_1/fmu/out/: 27 topic görünüyor
+[LoRa] kamera köprüsü + qr_online + lora_relay başlatılıyor...
+      /hedef_konum → /hedef_konum_role (varsayılan gecikme ~50 ms, kayıp %3); loglar /tmp/{kopru,qr_online,lora_relay}.log
+
+Log dosyaları: /tmp/dds.log | /tmp/gz.log | /tmp/kopru.log | /tmp/qr_online.log | /tmp/lora_relay.log | /tmp/px4_0.log | /tmp/px4_1.log  (sınır: 5 MB, yedek .1)
+Durdurmak için: ./launch_all.sh stop
+Sonraki adım: QGC'yi kendin aç, kalkış yap, sonra orbit node'u başlat.
+pencere acildi (pid 44277)

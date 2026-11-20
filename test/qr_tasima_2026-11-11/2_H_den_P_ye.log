@@ -1,0 +1,6 @@
+06:42:35  uav0 (473, 161, 61 m) → P=(-406, -260) 60 m
+06:42:35  bekleme: (473, 161)'den rota kapısı tutmadı (rota farkı +76°, sınır ±45°) — Hold çemberinde uygun an bekleniyor (en fazla 60 sn)
+06:42:57  DO_REPOSITION → ara nokta (-61, -345), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 96 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı -45°
+06:43:55  DO_REPOSITION → H (-406, -260), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 126 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı +16°
+06:43:55  transit kodu 0: {'bacaklar': [{'tur': 'ara nokta', 'nereden': [537, 271], 'nereye': [-61, -345], 'direk_m': 96.0}, {'tur': 'H', 'nereden': [30, -266], 'nereye': [-406, -260], 'direk_m': 126.0}], 'ara_nokta': 1, 'ret': None}
+06:44:19  VARDI: P'ye 100 m, irtifa 60.9 m

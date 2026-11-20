@@ -1,0 +1,5 @@
+Tüm süreçler durduruldu.
+253 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+308 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+7948 /usr/bin/python3 -c from ros2cli.daemon.daemonize import main; main() --name ros2-daemon --ros-domain-id 0 --rmw-implementation rmw_fastrtps_cpp
+12975 python3 -u /home/yusuf22_04/iha_sim_v2/test/yerden_kalkis_2026-11-15/ucus/iz2.py /home/yusuf22_04/iha_sim_v2/test/yerden_kalkis_2026-11-15/ucus/t1/iz.csv

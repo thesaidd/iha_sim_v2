@@ -1,0 +1,313 @@
+#!/usr/bin/env python3
+"""
+qr_pass_test.py — qr_pass.py taşıma / yeniden planlama mantığının kuru testi (uçuş yok, ROS düğümü yok).
+
+2026-11-11 düzeltmesini doğrular: ara nokta hakkı tükendiğinde ya da ara nokta bulunamadığında uçak H'ye
+DENETİMSİZ gönderilmez; rota reddedilir ve uçak güvenli Hold'da bırakılır.
+
+Kullanım:  source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash && python3 qr_pass_test.py
+"""
+import math
+import random
+import sys
+
+import qr_pass as q
+
+CLEAR = 40.0
+H = (543.0, 196.0)          # ψ 210°, pre 650 için hizalama Hold merkezi
+q.log = lambda m: None      # test çıktısını sade tut
+
+
+class SahteDugum:
+    """reposition() komutlarını kaydeder; spin() uçağı son komuta doğru düz uçurur (15 m/s, 0,1 sn adım)."""
+
+    class P:
+        pass
+
+    def __init__(self, n, e, varis="duz", rng=None, kabul=True):
+        self.pos = self.P()
+        self.pos.x, self.pos.y, self.pos.z = n, e, -60.0
+        self.pos.vx = self.pos.vy = 0.0
+        self.cember = (n, e + q.LOITER_R)      # başlangıçta bu merkezde Hold'da dönüyor
+        self.komutlar = []          # (nereden, nereye)
+        self.rota_farki = []        # komut anındaki rota farkı [°]
+        self.komut_alt, self.hedef_alt, self.her_adim = [], None, None
+        self.hedef = None
+        self.varis, self.rng, self.kabul = varis, rng, kabul
+        self.t = 0.0
+
+    def reposition(self, n, e, alt):
+        self.komutlar.append(((self.pos.x, self.pos.y), (n, e)))
+        self.rota_farki.append(q.course_error(self.pos, (n, e)))
+        if not self.kabul:
+            return None
+        self.hedef = (n, e)
+        self.hedef_alt = alt
+        self.komut_alt.append(alt)
+        return 1
+
+    def spin(self):
+        self.t += 1.0
+        x0, y0 = self.pos.x, self.pos.y
+        self._adim()
+        self.pos.vx, self.pos.vy = self.pos.x - x0, self.pos.y - y0
+        if self.hedef_alt is not None:      # irtifa hedefe ≤ 2 m/sn yaklaşır
+            self.pos.z -= max(-2.0, min(2.0, self.hedef_alt + self.pos.z))
+        if self.her_adim:
+            self.her_adim(self)
+
+    def _adim(self):
+        c = self.hedef or self.cember
+        dn, de = c[0] - self.pos.x, c[1] - self.pos.y
+        L = math.hypot(dn, de)
+        if L > q.ARRIVE_R:
+            k = min(15.0, L - q.ARRIVE_R + 0.5) / L
+            self.pos.x += k * dn
+            self.pos.y += k * de
+            if self.varis == "rastgele" and math.hypot(c[0] - self.pos.x, c[1] - self.pos.y) <= q.ARRIVE_R:
+                # en kötü durum: varış çemberinin (80–120 m) rastgele bir noktası
+                a, r = self.rng.uniform(0, 2 * math.pi), self.rng.uniform(q.LOITER_R, q.ARRIVE_R - 1)
+                self.pos.x, self.pos.y = c[0] + r * math.cos(a), c[1] + r * math.sin(a)
+        else:                       # Hold çemberinde dön (saat yönü), yarıçap korunur
+            r = max(L, 1.0)
+            a = math.atan2(self.pos.y - c[1], self.pos.x - c[0]) + 15.0 / r
+            self.pos.x = c[0] + r * math.cos(a)
+            self.pos.y = c[1] + r * math.sin(a)
+
+    def clock(self):
+        return self.t
+
+
+def kos(n, e, **kw):
+    dugum_kw = {k: kw.pop(k) for k in ("varis", "rng", "kabul") if k in kw}
+    d = SahteDugum(n, e, **dugum_kw)
+    kod, bilgi = q.transit(d, kw.pop("H", H), 60.0, CLEAR, spin=d.spin, clock=d.clock, **kw)
+    return d, kod, bilgi
+
+
+def bacaklar_guvenli(d):
+    """Komut edilen her bacak: düz hat ≥ clear + iz payı, ve rota kapısı içinde verilmiş (geri çekilme hariç)."""
+    hat = all(q.seg_clearance(a, b) >= CLEAR + q.TRACK_MARGIN for a, b in d.komutlar)
+    kapi = all(f is not None and abs(f) <= q.COURSE_GATE for (a, b), f in zip(d.komutlar, d.rota_farki)
+               if math.dist(a, b) > q.ARRIVE_R)
+    return hat and kapi
+
+
+n_assert = 0
+
+
+def dogrula(kosul, ad):
+    global n_assert
+    n_assert += 1
+    if not kosul:
+        print(f"✘ {ad}")
+        sys.exit(1)
+    print(f"✔ {ad}")
+
+
+# ── 1. Temel: direğe < 40 m geçen bacak reddedilir ────────────────────────────────────────────────
+a, b = (-300.0, 30.0), (300.0, 30.0)        # K (140, 0) direğine 30 m
+dogrula(abs(q.seg_clearance(a, b) - 30.0) < 1e-6 and not q.leg_ok(a, b, CLEAR), "leg_ok: direğe 30 m geçen bacak kapalı")
+dogrula(q.next_leg(a, b, CLEAR, 0)[0] == "reject", "next_leg: 30 m'lik bacak, ara nokta hakkı 0 → ret (eski kod burada denetimsiz giderdi)")
+tur, w = q.next_leg(a, b, CLEAR, 3)
+dogrula(tur == "via" and q.leg_ok(a, w, CLEAR) and q.leg_ok(w, b, CLEAR), "next_leg: hak varken iki bacağı açık ara nokta")
+dogrula(q.next_leg((500.0, 300.0), H, CLEAR, 0) == ("H", H), "next_leg: açık düz yol → H (hak 0 olsa da)")
+
+# ── 2. Geçiş sonu konumu (hedefin ilerisi, arena karşı tarafı): düz yol direk dibinden geçer ─────
+olay = (-248.0, -68.0)                      # 2026-10-31 geçiş 4 başlangıcı; 10 Kasım olayıyla aynı tür konum
+dogrula(q.seg_clearance(olay, H) < CLEAR, f"geçiş sonu konumu: düz yol–direk {q.seg_clearance(olay, H):.0f} m < 40 m")
+d, kod, bilgi = kos(*olay, max_hops=0, replan_wait=0.0)
+dogrula(kod == q.EXIT_ROUTE_REJECTED and d.komutlar == [] and bilgi["geri_cekilme"] == "mevcut Hold",
+        "geçiş sonu konumu, hak 0: RET, hiçbir komut gönderilmedi, uçak mevcut Hold'da")
+d, kod, bilgi = kos(*olay)
+dogrula(kod == 0 and d.komutlar[-1][1] == H and bacaklar_guvenli(d),
+        f"geçiş sonu konumu, hak 3: H'ye {bilgi['ara_nokta']} ara noktayla, tüm bacaklar ≥ 65 m + rota kapısı "
+        f"({[b['direk_m'] for b in bilgi['bacaklar']]})")
+
+# ── 3. Ara noktadan sonra yol açılmazsa: geri çekilme = son ara nokta, H komutu YOK ───────────────
+# (Sağlam ara noktalarla bu durum taramada doğal olarak çıkmıyor; ara noktaya varınca planlayıcı zorla
+#  "ret" döndürülerek geri çekilme dalı sınanır.)
+asil_next_leg = q.next_leg
+d = SahteDugum(*olay)
+q.next_leg = lambda here, goal, clear, left: asil_next_leg(here, goal, clear, left) if not d.komutlar else ("reject", "sınama: yol kapalı")
+kod, bilgi = q.transit(d, H, 60.0, CLEAR, replan_wait=20.0, spin=d.spin, clock=d.clock)
+q.next_leg = asil_next_leg
+son = d.komutlar[-1][1]
+dogrula(kod == q.EXIT_ROUTE_REJECTED and len(d.komutlar) == 2 and son == d.komutlar[0][1] and son != H
+        and list(map(round, son)) == bilgi["geri_cekilme"] and q.pylon_dist(son) - q.LOITER_R >= CLEAR,
+        f"ara noktadan sonra yol kapalı: geri çekilme → son ara nokta ({son[0]:.0f}, {son[1]:.0f}), çember–direk "
+        f"{q.pylon_dist(son) - q.LOITER_R:.0f} m ≥ 40; H komutu yok")
+
+# ── 3b. İz payı (uçuş bulgusu): düz hattı direğe 43 m olan bacak artık kabul edilmez ─────────────
+ucus = ((-481.0, -278.0), (329.0, -120.0))  # 2026-11-11 06:38 bacağı: plan 43 m, gerçek iz 30 m
+dogrula(40 < q.seg_clearance(*ucus) < 40 + q.TRACK_MARGIN and q.leg_ok(*ucus, CLEAR)
+        and not q.leg_ok(*ucus, CLEAR + q.TRACK_MARGIN),
+        f"uçuştaki bacak (düz hat {q.seg_clearance(*ucus):.0f} m): 40 m'de açık, 40 + {q.TRACK_MARGIN:.0f} m'de kapalı")
+d, kod, bilgi = kos(*ucus[0])
+dogrula(kod == 0 and bacaklar_guvenli(d), f"aynı başlangıçtan yeni plan: bacak–direk {[b['direk_m'] for b in bilgi['bacaklar']]} m, "
+        f"rota farkı {[round(f) for f in d.rota_farki]}°")
+
+# ── 3c. Uçak zaten H çemberinde (gösterim denemesi hatası): rota kapısı aranmaz, H komutu hemen ──
+d = SahteDugum(H[0] + 80.0, H[1])
+d.hedef = H
+for _ in range(5):
+    d.spin()
+t_once = d.t
+kod, bilgi = q.transit(d, H, 60.0, CLEAR, spin=d.spin, clock=d.clock)
+dogrula(kod == 0 and len(d.komutlar) == 1 and d.komutlar[0][1] == H and d.t == t_once
+        and abs(d.rota_farki[0]) > q.COURSE_GATE,
+        f"uçak H çemberinde (rota farkı {d.rota_farki[0]:+.0f}°): beklemeden H komutu, ret yok")
+
+# ── 4. Ara nokta yok: istisna değil ret ───────────────────────────────────────────────────────────
+sikisik = (140.0, 25.0)                     # K direğinin 25 m yanı: her bacak < 40 m ile başlar
+dogrula(q.next_leg(sikisik, H, CLEAR, 3)[0] == "reject", "ara nokta yok: RuntimeError yerine ret")
+d, kod, bilgi = kos(*sikisik, replan_wait=0.0)
+dogrula(kod == q.EXIT_ROUTE_REJECTED and d.komutlar == [], "ara nokta yok: transit RET, komut gönderilmedi")
+
+# ── 5. H'nin Hold çemberi direğe yakınsa baştan ret ───────────────────────────────────────────────
+d, kod, bilgi = kos(500.0, 300.0, H=(140.0, 100.0))
+dogrula(kod == q.EXIT_ROUTE_REJECTED and d.komutlar == [], "H çemberi direğe 20 m: baştan RET")
+
+# ── 6. Komut kabul edilmezse 1 ───────────────────────────────────────────────────────────────────
+d, kod, _ = kos(500.0, 300.0, kabul=False)
+dogrula(kod == 1 and len(d.komutlar) == 1, "DO_REPOSITION kabul edilmedi → kod 1, yeniden deneme yok")
+
+# ── 7. Bekleyince açılan bacak: çemberde dönerken açık nokta bulunur ──────────────────────────────
+d = SahteDugum(*olay)
+d.hedef = (olay[0] + 80.0, olay[1])         # uçak bu merkezde Hold'da dönüyor
+kod, bilgi = q.transit(d, H, 60.0, CLEAR, max_hops=0, replan_wait=60.0, spin=d.spin, clock=d.clock)
+dogrula((kod == 0 and bacaklar_guvenli(d)) or (kod == q.EXIT_ROUTE_REJECTED and d.komutlar == []),
+        f"hak 0 + 60 sn bekleme: {'çemberde açık bacak bulundu, H denetimli' if kod == 0 else 'açık bacak çıkmadı → ret'}")
+
+# ── 8. Tarama: her başlangıçtan, her varış konumundan — denetimsiz bacak OLMAMALI ────────────────
+rng = random.Random(20261111)
+say = {"H": 0, "ret": 0, "kosu": 0, "ret_hak": {0: 0, 1: 0, 3: 0}, "ara": {0: 0, 1: 0, 2: 0, 3: 0}}
+en_kucuk = math.inf
+for varis in ("duz", "rastgele"):
+    for n0 in range(-600, 601, 60):
+        for e0 in range(-600, 601, 60):
+            s0 = (float(n0), float(e0))
+            if q.pylon_dist(s0) < CLEAR:
+                continue
+            for hak in (0, 1, 3):
+                d, kod, bilgi = kos(*s0, max_hops=hak, replan_wait=40.0, varis=varis, rng=rng)
+                say["kosu"] += 1
+                if kod != 0 and d.komutlar:
+                    gc = d.komutlar.pop()[1]; d.rota_farki.pop()   # geri çekilme komutu: bacak denetimi dışında
+                    assert list(map(round, gc)) == bilgi["geri_cekilme"] and gc == d.komutlar[-1][1] and gc != H
+                    assert q.pylon_dist(gc) - q.LOITER_R >= CLEAR
+                    say["geri"] = say.get("geri", 0) + 1
+                for a, b in d.komutlar:
+                    en_kucuk = min(en_kucuk, q.seg_clearance(a, b))
+                if not bacaklar_guvenli(d):
+                    print(f"✘ DENETİMSİZ BACAK: başlangıç {s0}, hak {hak}, varış {varis}: {d.komutlar}")
+                    sys.exit(1)
+                if kod == 0:
+                    say["H"] += 1
+                    if hak == 3:
+                        say["ara"][bilgi["ara_nokta"]] += 1
+                    assert d.komutlar[-1][1] == H
+                else:
+                    say["ret"] += 1
+                    say["ret_hak"][hak] += 1
+                    assert kod == q.EXIT_ROUTE_REJECTED and all(b != H for _, b in d.komutlar)
+n_assert += 1
+print(f"✔ tarama: {say['kosu']} koşu (2 varış modeli × 3 hak), komut edilen tüm bacaklar ≥ 40 + {q.TRACK_MARGIN:.0f} m ve rota kapısı ±{q.COURSE_GATE:.0f}° içinde "
+      f"(en küçük {en_kucuk:.1f} m); H'ye varan {say['H']}, reddedilen {say['ret']} (hakka göre {say['ret_hak']}; {say.get('geri', 0)} tanesi son ara noktaya geri çekilme, çemberi direklerden ≥ 40 m); "
+      f"hak 3'te ara nokta sayısı dağılımı {say['ara']}")
+
+# ── 9. Eski mantık karşılaştırması (belge): aynı taramada eski kod kaç kez denetimsiz giderdi ────
+
+
+def eski_plan_via(start, goal, clear):
+    if q.leg_ok(start, goal, clear):
+        return None
+    best = None
+    for radius in (250.0, 350.0, 450.0):
+        for k in range(36):
+            a = math.radians(10 * k)
+            w = (radius * math.cos(a), radius * math.sin(a))
+            if q.pylon_dist(w) < clear + 60 or q.in_corridor(*w):
+                continue
+            if q.leg_ok(start, w, clear) and q.leg_ok(w, goal, clear):
+                length = math.dist(start, w) + math.dist(w, goal)
+                if best is None or length < best[0]:
+                    best = (length, w)
+    if best is None:
+        raise RuntimeError
+    return best[1]
+
+
+eski = {"kosu": 0, "denetimsiz": 0, "istisna": 0, "en_kucuk": math.inf}
+rng = random.Random(20261111)
+for n0 in range(-600, 601, 40):
+    for e0 in range(-600, 601, 40):
+        here = (float(n0), float(e0))
+        if q.pylon_dist(here) < CLEAR:
+            continue
+        eski["kosu"] += 1
+        try:
+            for hop in range(4):
+                via = eski_plan_via(here, H, CLEAR) if hop < 3 else None
+                tgt = via or H
+                c = q.seg_clearance(here, tgt)
+                if c < CLEAR:
+                    eski["denetimsiz"] += 1
+                    eski["en_kucuk"] = min(eski["en_kucuk"], c)
+                if not via:
+                    break
+                L = math.dist(here, via)        # düz uçuş: ara noktaya 120 m kala (gerçek uçuştaki varış)
+                if L > q.ARRIVE_R:
+                    k = (L - q.ARRIVE_R + 0.5) / L
+                    here = (here[0] + k * (via[0] - here[0]), here[1] + k * (via[1] - here[1]))
+        except RuntimeError:
+            eski["istisna"] += 1
+print(f"  (karşılaştırma) eski mantık, aynı ızgara, düz varış (120 m kala): {eski['kosu']} koşuda "
+      f"{eski['denetimsiz']} denetimsiz < 40 m bacak (en küçük {eski['en_kucuk']:.1f} m), {eski['istisna']} RuntimeError")
+
+# ── 10. İki araç arası ayrım (ayrim.py): 2026-11-11 06:49 olayının sentetik yeniden üretimi ──────
+# uav0 kalkış Hold'unda (−88, 236) ~99 m; uav1 Hold çemberi merkez (45,7, 330,3), 119 m (kayıtlı izden).
+# Eski davranış: H'ye düz bacak uav1 çemberinin dibinden geçti (yatay 54 m / dikey 21 m).
+import ayrim as A
+
+
+def ayrimli(alt_hedef, uav1_alt=119.0, replan_wait=45.0, uav1="hold"):
+    d = SahteDugum(-88.0, 236.0)
+    d.pos.z = -99.0
+    d.cember = (-88.0, 156.0)               # kendi Hold çemberi uav1 çemberinden ayrık (merkezler arası 219 m)
+    den = A.AyrimDenetimi(saat=d.clock)
+    en_kucuk = [math.inf]
+
+    def uav1_adim(dd):
+        if uav1 == "hold":
+            a = 15.0 / 80.0 * dd.t
+            p = (45.7 + 80 * math.cos(a), 330.3 + 80 * math.sin(a), -15 * math.sin(a), 15 * math.cos(a))
+        else:                               # hareketli: kuzeye düz uçuyor
+            p = (-300.0 + 15.0 * dd.t, 330.0, 15.0, 0.0)
+        den.guncelle(p[0], p[1], uav1_alt, p[2], p[3], (dd.pos.x, dd.pos.y, -dd.pos.z))
+    d.her_adim = uav1_adim
+    for _ in range(8):                      # qr_pass de karar öncesi geçmiş toplar
+        d.spin()
+    kod, bilgi = q.transit(d, H, alt_hedef, CLEAR, replan_wait=replan_wait, spin=d.spin, clock=d.clock, ayrim=den)
+    hedefe = kod == 0
+    while hedefe and math.dist((d.pos.x, d.pos.y), H) > q.ARRIVE_R and d.t < 400:      # H'ye kadar uçur
+        d.spin()
+    return d, kod, bilgi, den
+
+
+d, kod, bilgi, den = ayrimli(100.0)
+dogrula(kod == q.EXIT_ROUTE_REJECTED and d.komutlar == [] and "AYRIM" in bilgi["ret"],
+        f"olay senaryosu (H @100 m, uav1 Hold @119 m): bekledi, sonra RET, komut yok — {bilgi['ret'][:110]}")
+dogrula(den.ozet()["3b_m"] >= 40.0, f"  reddedilen senaryoda gerçekleşen en küçük ayrım {den.ozet()['3b_m']:.0f} m (uçak yerinden ayrılmadı)")
+d, kod, bilgi, den = ayrimli(60.0)
+dogrula(kod == 0 and bilgi.get("yerinde_irtifa") and len(d.komutlar) >= 2 and d.komutlar[-1][1] == H
+        and math.dist(d.komutlar[0][1], (-88.0, 156.0)) < 15.0 and set(d.komut_alt) == {60.0},
+        f"aynı senaryo H @60 m: önce YERİNDE alçalma ({bilgi['yerinde_irtifa']}), sonra H komutu")
+dogrula(den.ozet()["3b_m"] >= 40.0 and den.ozet()["dikey_m"] >= 40.0 or den.ozet()["3b_m"] >= 40.0,
+        f"  uçuş boyunca en küçük 3B ayrım {den.ozet()['3b_m']:.0f} m (yatay {den.ozet()['yatay_m']:.0f}, dikey {den.ozet()['dikey_m']:.0f}) ≥ 40 m")
+d, kod, bilgi, den = ayrimli(100.0, uav1_alt=160.0)
+dogrula(kod == 0 and not bilgi.get("yerinde_irtifa") and d.komutlar[-1][1] == H,
+        "uav1 160 m'de (dikey ayrım 50 m): bacak doğrudan kabul, gereksiz ret yok")
+d, kod, bilgi, den = ayrimli(100.0, uav1="hareketli", replan_wait=20.0)
+dogrula(kod == q.EXIT_ROUTE_REJECTED and d.komutlar == [], "uav1 hareketli (Hold'da değil), aynı irtifa bandı: RET, komut yok")
+print(f"\nTAMAM: {n_assert} doğrulama geçti")

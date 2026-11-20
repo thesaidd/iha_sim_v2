@@ -1,0 +1,22 @@
+19:17:19  izleme: hedef irtifa 60 ± 15 m, RTF ≥ 0.7, gz RSS ≤ 4096 MB, STATUSTEXT /home/yusuf22_04/iha_sim_v2/test/qr_gecis_2026-10-30/mavlink.log; abort → orbit_abort 0
+19:19:01  OFFBOARD — kurallar devrede
+19:19:01  t=    0 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 14.5 m/s RTF=0.929 gz=651 MB
+19:19:07  t=    5 sn mod=OFFBOARD irtifa=  60.4 m yer_hızı= 14.5 m/s RTF=0.932 gz=651 MB
+19:19:12  t=   10 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.5 m/s RTF=0.935 gz=651 MB
+19:19:17  t=   15 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.5 m/s RTF=0.908 gz=651 MB
+19:19:22  t=   20 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.4 m/s RTF=0.782 gz=651 MB
+19:19:27  t=   25 sn mod=OFFBOARD irtifa=  60.4 m yer_hızı= 14.4 m/s RTF=0.773 gz=651 MB
+19:19:32  t=   30 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 14.4 m/s RTF=0.778 gz=651 MB
+19:19:37  t=   35 sn mod=OFFBOARD irtifa=  60.4 m yer_hızı= 14.4 m/s RTF=0.773 gz=651 MB
+19:19:41  t=   40 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.4 m/s RTF=0.777 gz=651 MB
+19:19:47  t=   45 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.4 m/s RTF=0.765 gz=651 MB
+19:19:52  t=   50 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.4 m/s RTF=0.754 gz=651 MB
+19:19:57  t=   55 sn mod=OFFBOARD irtifa=  60.4 m yer_hızı= 14.4 m/s RTF=0.766 gz=651 MB
+19:20:02  t=   60 sn mod=OFFBOARD irtifa=  60.4 m yer_hızı= 14.4 m/s RTF=0.774 gz=653 MB
+19:20:07  t=   65 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.5 m/s RTF=0.777 gz=651 MB
+19:20:12  t=   70 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.5 m/s RTF=0.780 gz=651 MB
+19:20:13  STATUSTEXT: 19:20:13  [uav0] PX4 [sev 2]: Failsafe activated
+19:20:13  STATUSTEXT: 19:20:13  [uav0] PX4 [sev 6]: RTL: start return at 101 m (100 m above destinatio
+19:20:13  STATUSTEXT: 19:20:13  [uav0] PX4 [sev 6]: n)
+19:20:13  Geçiş normal bitti (done-file var), mod=AUTO
+19:20:13  ÖZET: OFFBOARD süresi 72 sn, en düşük RTF(5 sn) 0.753, en yüksek gz RSS 654 MB, çıkış kodu 0

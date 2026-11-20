@@ -1,0 +1,153 @@
+{
+ "kayit": "/home/yusuf22_04/iha_sim_v2/test/qr_lora_2026-10-31/online/degerlendirme.csv",
+ "yayin_sayisi": 8,
+ "kayitli_hedef_ort_uav0": [
+  -60.408,
+  -60.036
+ ],
+ "hedef_uav1_NED": [
+  -75.408,
+  -45.036
+ ],
+ "params": {
+  "durma_mesafesi_m": 20.0,
+  "yaklasma_irtifa_m": 15.0,
+  "guvenli_irtifa_m": 100.0,
+  "hiz": 15.0,
+  "baslangic_irtifa_m": 120.0
+ },
+ "planlar": {
+  "S0_uav1_spawn_~88m": {
+   "baslangic_uav1_NED": {
+    "n": 0.0,
+    "e": 0.0,
+    "irtifa": 120.0
+   },
+   "3b": {
+    "yon_deg": 210.8,
+    "yatay_mesafe_m": 87.8,
+    "baslangic_3b_m": 148.7,
+    "durma_yatay_m": 13.2,
+    "durma_3b_m": 20.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 74.6,
+    "inis_aci_deg": 54.6,
+    "yaklasma_sn": 5.0,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 33.3
+   },
+   "yatay": {
+    "yon_deg": 210.8,
+    "yatay_mesafe_m": 87.8,
+    "baslangic_3b_m": 148.7,
+    "durma_yatay_m": 20.0,
+    "durma_3b_m": 25.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 67.8,
+    "inis_aci_deg": 57.1,
+    "yaklasma_sn": 4.5,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 32.9
+   }
+  },
+  "S1_varsayim_KD_150m": {
+   "baslangic_uav1_NED": {
+    "n": 30.7,
+    "e": 61.0,
+    "irtifa": 120.0
+   },
+   "3b": {
+    "yon_deg": 225.0,
+    "yatay_mesafe_m": 150.0,
+    "baslangic_3b_m": 192.1,
+    "durma_yatay_m": 13.2,
+    "durma_3b_m": 20.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 136.8,
+    "inis_aci_deg": 37.5,
+    "yaklasma_sn": 9.1,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 37.5
+   },
+   "yatay": {
+    "yon_deg": 225.0,
+    "yatay_mesafe_m": 150.0,
+    "baslangic_3b_m": 192.1,
+    "durma_yatay_m": 20.0,
+    "durma_3b_m": 25.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 130.0,
+    "inis_aci_deg": 38.9,
+    "yaklasma_sn": 8.7,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 37.0
+   }
+  },
+  "S2_varsayim_GB_300m": {
+   "baslangic_uav1_NED": {
+    "n": -287.5,
+    "e": -257.2,
+    "irtifa": 120.0
+   },
+   "3b": {
+    "yon_deg": 45.0,
+    "yatay_mesafe_m": 300.0,
+    "baslangic_3b_m": 323.1,
+    "durma_yatay_m": 13.2,
+    "durma_3b_m": 20.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 286.8,
+    "inis_aci_deg": 20.1,
+    "yaklasma_sn": 19.1,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 47.5
+   },
+   "yatay": {
+    "yon_deg": 45.0,
+    "yatay_mesafe_m": 300.0,
+    "baslangic_3b_m": 323.1,
+    "durma_yatay_m": 20.0,
+    "durma_3b_m": 25.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 280.0,
+    "inis_aci_deg": 20.6,
+    "yaklasma_sn": 18.7,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 47.0
+   }
+  },
+  "S3_varsayim_D_500m": {
+   "baslangic_uav1_NED": {
+    "n": -75.4,
+    "e": 455.0,
+    "irtifa": 120.0
+   },
+   "3b": {
+    "yon_deg": 270.0,
+    "yatay_mesafe_m": 500.0,
+    "baslangic_3b_m": 514.2,
+    "durma_yatay_m": 13.2,
+    "durma_3b_m": 20.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 486.8,
+    "inis_aci_deg": 12.2,
+    "yaklasma_sn": 32.5,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 60.8
+   },
+   "yatay": {
+    "yon_deg": 270.0,
+    "yatay_mesafe_m": 500.0,
+    "baslangic_3b_m": 514.2,
+    "durma_yatay_m": 20.0,
+    "durma_3b_m": 25.0,
+    "durma_irtifa_m": 15.0,
+    "kat_edilen_yatay_m": 480.0,
+    "inis_aci_deg": 12.3,
+    "yaklasma_sn": 32.0,
+    "tirmanma_sn": 28.3,
+    "toplam_sn": 60.3
+   }
+  }
+ }
+}

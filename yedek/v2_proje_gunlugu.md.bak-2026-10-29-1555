@@ -1,0 +1,360 @@
+# İHA Sim V2 - Proje Günlüğü
+
+> **Proje:** İşbirlikçi Otonom Keşif ve Kamikaze İHA Sistemi (V2)
+> **Platform:** ROS 2 Humble + PX4 SITL (MicroXRCE-DDS Agent)
+> **Mimari Kural:** Sadece standart Offboard modu ve TrajectorySetpoint. L1/TECS/APF/PurePursuit YASAK.
+
+---
+
+## Kayıtlar
+
+### [2026-10-29 15:50] - Merkezden teğet giriş + uav0 orbit testi (abort, 41. sn)
+
+**Yapılan Değişiklikler:**
+- Yeni `orbit_approach.py`: DO_REPOSITION ile merkezde Hold (NAV_LOITER_RAD 80 m, saat yönü); bant 60–110 m, irtifa ±10 m, |radyal hız| ≤ 5 m/s ve aynı dönüş yönü 5 sn sağlanınca hazır.
+- `v2_orbit_mission.py`: faz hizalama (`phase_ref_deg`; verilmezse devralmada uçağın yönüne hizalanır, değer loglanır).
+- `orbit_watch.py`: yakalama = 10 sn boyunca hata < 30 m; öncesi 90 sn sınırı; sonrası > 40 m abort; yer hızı ve özet.
+
+**Temiz açılış:** Pusula/ivmeölçer uyarısı yok. Hava hızı geçerli (tırmanış 39→56 m/s, turlama 15–17 m/s).
+
+**Test:** Giriş 35 sn'de hazır (79 m, radyal +0,3 m/s). OFFBOARD 1. denemede, 10. sn'de yakalandı (+4…+8 m). 25. sn'den sonra hata dışa doğru büyüdü, 41. sn'de +41,2 m → abort, Hold ✔. İrtifa 100,5–101,4 m, gz 478 MB sabit, uyarı yok.
+
+**Neden:** Uçak 13,4 m/s, setpoint 15 m/s ilerliyor → faz gecikmesi Δθ büyüyor; PX4 yol takibi (AUTO_PATH) uçağı setpoint'teki teğet doğruya çekiyor, bu doğru uçağın konumunda R/cos Δθ uzaklıkta (30. sn ≈ +24 m, 35. sn ≈ +35 m tahmin; ölçülen +19 / +35 m). Hız açığının kaynağı yine sıcaklık hatası: rüzgar kestiricisi TAS'taki %14 açığı ölçek 1,185 olarak öğrendi, `ASPD_SCALE_APPLY=2` bunu uçuşta uyguluyor → sensör IAS 12,9 m/s iken CAS 15,3 m/s raporlanıyor, TECS uçağı gerçekte ~13 m/s'de tutuyor.
+
+**Risk:** `ASPD_SCALE_APPLY>0` iken disarm'da tahmini ölçek `ASPD_SCALE_1`'e (~1,185) kaydedilebilir.
+
+**Durum:** 🟡 Giriş ve yakalama çalışıyor; zaman tabanlı setpoint hız farkına dayanıksız.
+
+---
+
+### [2026-10-29 15:38] - NAV_DLL_ACT simülasyonda kapatıldı, temiz yeniden başlatma
+
+**Yapılan Değişiklikler:**
+- `mavlink_takeoff.py`: `SIM_ONLY_PARAMS`'a `"NAV_DLL_ACT": (0, 2)` eklendi (`--revert-sim-params` 2'ye döndürür); `--takeoff` seçeneği (kalp atışı/parametre tüm araçlara, kalkış yalnızca seçilenlere).
+
+**⚠️ YALNIZCA SİMÜLASYON:** `NAV_DLL_ACT=0` gerçek donanıma taşınmayacak; gerçek uçakta veri bağlantısı kaybında Return açık kalmalı.
+
+---
+
+### [2026-10-29 15:30] - Orbit düğümü yeniden yazıldı, uav0 ilk Offboard orbit testi
+
+**Yapılan Değişiklikler:**
+- `v2_orbit_mission.py`: irtifa/merkez/yarıçap/hız parametre (uav0 100 m, uav1 120 m; merkez (0,0), R 100 m); devralma = irtifa ≥ 40 m + arm; Offboard onayı görülene kadar 2 sn'de bir, en çok 10 deneme; Offboard'dan çıkışta log + yayın durur, yeniden girilmez; faz ortak PX4 saatine bağlı (uav1 tam 180°).
+- Setpoint artık konum + teğet hız + merkezcil ivme; kullanılmayan alanlar NaN. **Eski kod hız/ivmeyi doldurmuyordu → ROS varsayılanı [0,0,0] PX4'te "sıfır hızlı yol" (AUTO_PATH) sayılıyordu.**
+- Yeni: `orbit_abort` (+ `orbit_abort.py`) tek komutla Hold; `orbit_watch.py` test izleyici + abort koşulları.
+
+**Bulgu — px4_msgs uyumsuzluğu:** `vehicle_status_v2` ROS'a hiç ulaşmıyor. `~/ros2_ws/src/px4_msgs` VehicleStatus v3, PX4 derlemesi v2 (+`failure_detector_status`); mesaj 88 bayt, ROS tipi 87 → Fast-DDS "payload size 88 > 87" hatasıyla düşürüyor. Eski düğüm `nav_state`'i hiç görmüyordu. Geçici çözüm: arm/Offboard bilgisi `vehicle_control_mode`'dan. Kullanılan diğer mesajlar (VehicleControlMode, VehicleLocalPosition, AirspeedValidated, TrajectorySetpoint, OffboardControlMode, VehicleCommandAck, VehicleLandDetected) birebir aynı; VehicleCommand yalnızca sabitlerde farklı.
+
+**Test (uav0, 100 m, airspeed nan — bu açılışta geçersiz kalmıştı):** OFFBOARD 1. denemede. Merkezden 405 m'den yaklaştı, 28. sn'de çembere yakalandı (+40,6 m), radyal hızla içeri taştı (−55,3 m) → 36. sn'de abort. `orbit_abort` Hold'u ACK ile doğruladı; düğüm çıkışı logladı, yeniden girmedi. İrtifa 99,6–112,2 m; gz 479 MB sabit.
+
+**Durum:** 🟡 Güvenlik zinciri çalışıyor; uzak noktadan çembere giriş taşması çözülmeli.
+
+---
+
+### [2026-10-29 15:22] - Hava hızı kontrolü simülasyonda kapatıldı, kalkış betiği iki araçlı
+
+**Yapılan Değişiklikler:**
+- `mavlink_takeoff.py`: `SIM_ONLY_PARAMS = {"ASPD_DO_CHECKS": (0, 7)}` — her çalıştırmada araçlara yazılıyor (`--params-only`, `--revert-sim-params` seçenekleri). İki araç desteği (`--uav 0 1`, `--alt 100 120`); uav1 bağlantısı udp 14541 / sysid 2. Havadaki araçta kalkış atlanıyor; arm reddedilirse 5 kez yeniden deneniyor.
+- uav0 ve uav1'de `ASPD_DO_CHECKS` 7 → 0 yazıldı, `parameters.bson`'a kaydedildi.
+
+**⚠️ YALNIZCA SİMÜLASYON:** `ASPD_DO_CHECKS=0` gerçek donanıma taşınmayacak. Gerçek donanımda hava hızı doğrulama kontrolleri açık kalmalı.
+
+**Açık iş:** gz `AirSpeed` eklentisinin sıcaklık hatası. Gerçek düzeltme `src/modules/simulation/gz_plugins/airspeed/AirSpeed.cpp` (sıcaklığı mesaja yaz) ve `src/modules/simulation/gz_bridge/GZBridge.cpp` (0 K'yi geçersiz say). Düzeltilince `--revert-sim-params` ile `ASPD_DO_CHECKS=7`.
+
+**Olay:** Betik değiştirilirken uav0'ın GCS kalp atışı ~11 sn kesildi → "Connection to ground station lost" → Hold 5 sn → bağlantı geri gelmesine rağmen RTL. ROS 2 `VehicleCommand` ile Hold'a alındı; irtifa 81,7 m'ye düşüp ~100 m'ye döndü. Ardından "Compass needs calibration - Land now!", "Compass 0 fault", "High Accelerometer Bias" uyarıları (ivme ofseti uyarısı kesintiden hemen önce başlamıştı).
+
+---
+
+### [2026-10-29 15:08] - Bellek sızıntısı, spawn konumu, QGC'siz kalkış, hava hızı arızası
+
+**Bulgular:**
+- **Kamera sızıntısı:** `advanced_plane` kamerası (640x480, 30 Hz) açıkken gz sim sunucusu QGC olmadan da ~650 MB/30 sn büyüyor (5,5 dk'da 1,4 → 8,0 GB). Kamerasız kopyada 478 MB'ta sabit, CPU %340 → %160, gerçek zaman oranı ~0,74 → ~0,92. Uçakların üst üste doğması sızıntının nedeni değil.
+- **Spawn konumu:** PX4 `PX4_GZ_POSE` değişkenini hiç okumuyor; doğrusu `PX4_GZ_MODEL_POSE`. Önceki tüm çalıştırmalarda iki uçak (0,0)'da üst üste doğuyordu. 2026-10-25 kaydındaki "spawn z'sini orbit irtifasıyla eşleştir" çözümü bu yüzden hiç uygulanmamıştı; havada doğurma da işe yaramıyor (uçak hızsız düşüyor).
+- **QGC'siz kalkış:** `mavlink_takeoff.py` GCS kalp atışı göndererek "No connection to the GCS" engelini aşıyor. uav0 `MIS_TAKEOFF_ALT=100` ile kalktı, 28 sn'de 80 m üstünde LOITER'a geçti, 100 ± 1 m'de ~80 m yarıçaplı daire çiziyor.
+- **Hava hızı arızası (açık sorun):** Kalkıştan ~19 sn sonra "Airspeed sensor failure detected. Return to launch (RTL) is advised." Kök neden: PX4 Gazebo `AirSpeed` eklentisi sıcaklık göndermiyor (0 K) → PX4 ortam sıcaklığını −60 °C'ye kırpıyor → hava yoğunluğu 1,656 kg/m³ → TAS gerçek hızın %86'sı. Rüzgar kestiricisi bu farkı ~8,6 m/s sahte rüzgar olarak öğreniyor, dönüşte yenilik kontrolü (ASPD_FS_INNOV=5, ASPD_FS_INTEG=10) tetikleniyor. `ASPD_FS_T_START=-1` olduğundan hava hızı kalıcı olarak `nan`; TECS hava hızısız modda.
+- Kalkışta hız 57 m/s'ye çıktı (`FW_AIRSPD_MAX=20`, gaz %100); ayrı bir açık nokta.
+
+**Yapılan Değişiklikler:**
+- `launch_all.sh`: varsayılan kamerasız model (`gz_models_nocam`), `CAM=1` ile kameralı; gz sunucusunu kendisi başlatıyor, iki PX4 `-d`; log sınırı 5 MB; `stop` alt komutu.
+- `PX4_GZ_POSE` → `PX4_GZ_MODEL_POSE` (`start_sim.sh`, `launch_all.sh`, `CLAUDE.md`); `start_sim.sh` başına kamera uyarısı.
+- Yeni: `mavlink_takeoff.py`. Yedekler: `yedek/`. Orijinal `model.sdf` değişmedi.
+
+**Durum:** 🟡 Tek İHA QGC'siz uçuyor; hava hızı arızası ve orbit düğümü entegrasyonu açık.
+
+---
+
+2026-10-25 — Sorun tespit edildi: UAV’lar z=0.5 (yerde) spawn ediliyor, kod 40 m eşiğini bekliyor. Sabit kanatlı yerden setpointla kalkamaz. Çözüm: spawn komutlarında z değerini orbit irtifasıyla eşleştir.
+
+### [2026-04-26 14:41] - Proje V2 Başlangıcı & Faz 1 Tamamlandı
+
+**Yapılan İşlemler:**
+- V2 projesi sıfırdan yeniden başlatıldı. Önceki karmaşık prototip tamamen rafa kaldırıldı.
+- `v2_proje_gunlugu.md` oluşturuldu (bu dosya).
+- `v2_orbit_mission.py` adlı Faz 1 ROS 2 düğümü yazıldı.
+
+**Faz 1 Kapsamı:**
+- **Hedef İHA'lar:** `uav0` (Keşif) ve `uav1` (Kamikaze)
+- **Kalkış:** Her iki İHA Offboard moda geçip 30 m irtifaya tırmanıyor.
+- **Yörünge:** (0, 0) merkezi, 50 m yarıçaplı dairesel orbit.
+- **Çarpışma Önleme:** İHA'lar arasında tam 180° (π radyan) faz farkı uygulandı.
+  - `uav0` pozisyonu: `theta`
+  - `uav1` pozisyonu: `theta + π`
+  - Böylece `uav0` kuzey kutbundayken `uav1` güney kutbunda olur.
+
+**Kullanılan ROS 2 Mesajları:**
+- `px4_msgs/VehicleCommand` → Arm, Offboard modu
+- `px4_msgs/OffboardControlMode` → Pozisyon kontrolü aktif
+- `px4_msgs/TrajectorySetpoint` → NED koordinat hedef noktası
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+### [2026-04-26 15:49] - Sabit Kanat Dinamiklerine Geçildi (Faz 1 v2)
+
+**Sorun:** Önceki kod Multicopter (Quadcopter) varsayımıyla yazılmıştı.
+`TrajectorySetpoint` ile doğrudan irtifa hedefi gönderiliyordu; sabit kanatlı
+İHA (advanced_plane) hover yapamadığından Offboard komutunu reddedip takılı kalıyordu.
+
+**Yapılan Değişiklikler:**
+- **Kalkış:** `VEHICLE_CMD_NAV_TAKEOFF` komutu ile PX4'ün kendi otonom kalkış
+  modu kullanıldı. Uçak pistde hızlanıp kendi kendine havalanıyor.
+- **İrtifa takibi:** `VehicleLocalPosition` topic'i abone edildi. Uçak
+  Z ≤ -40 m'ye ulaşana kadar Offboard moduna KESİNLİKLE geçilmiyor.
+- **Hareketli setpoint:** Sabit kanat duraksayamayacağı için orbit setpoint'i
+  statik değil; daire üzerinde sürekli hareket eden bir hedef nokta olarak
+  hesaplanıyor.
+  - R = 100 m, V = 15 m/s, ω = V/R = 0.15 rad/s
+  - θ = (t × ω) + (uav_id × π)  → 180° faz farkı korunuyor.
+
+**Yeni Durum Makinesi:**
+  `PREFLIGHT → TAKEOFF → CLIMB → ORBIT`
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+<!-- Yeni kayıtlar buraya YUKARIDAN eklenir -->
+
+### [2026-05-05 19:12] - Manuel Kalkış ve Havada Offboard Devralma (Mid-Air Takeover)
+
+**Karar:** PX4'ün kalkış güvenlik kilitleriyle vakit kaybetmek yerine kalkış
+QGC üzerinden manuel yapılacak; görev bilgisayarı uçak 40 m'ye ulaştığında
+devreye girecek.
+
+**Durum Makinesi Değişikliği:**
+```
+ESKİ: PREFLIGHT → TAKEOFF → CLIMB → ORBIT  (4 durum)
+YENİ: WAITING → ORBIT                       (2 durum)
+```
+
+**Silinen Metodlar:**
+- `_send_arm_cmd()`
+- `_send_auto_takeoff_mode_cmd()`
+- `_send_takeoff_cmd_once()`
+- `_handle_preflight()`, `_handle_takeoff()`, `_handle_climb()`, `_handle_orbit()`
+- `PREFLIGHT_TICKS` sabiti
+
+**Yeni `_timer_cb` Davranışı (20 Hz, her zaman):**
+1. `OffboardControlMode` heartbeat yayınlar (PX4 Offboard koşulu).
+2. Hareketli orbit setpoint yayınlar (uçak havada olsun olmasın).
+3. WAITING: `local_z <= -40 m` ise **tek seferlik** Offboard komutu gönderir
+   → State: ORBIT.
+4. ORBIT: Saniyede bir θ/x/y/z logu yazar.
+
+**Yeni değişken:** `self.offboard_sent = False` — komutun çift gönderimini önler.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-05-05 18:51] - Test-1 Kayıt Altyapısı (Flight Data Recorder) Eklendi
+
+**Bağlam:** Uçaklar 300 m'de uçuyor fakat 40 m eşiğini algılayamıyor.
+Hata tespitini kolaylaştırmak için kalıcı log altyapısı kuruldu.
+
+**Klasör yapısı:** `test/test-1/`  (script başlarken otomatik oluşturulur)
+
+**v2_orbit_mission.py değişiklikleri:**
+- `logging` + `pathlib` import edildi.
+- `LOG_DIR = pathlib.Path("test/test-1")` sabiti eklendi.
+- `setup_file_logger(uav_id)` fonksiyonu eklendi → `uav{id}_mission.log`
+  dosyasına saat damgalı, `append` modunda yazar.
+- `_log(msg)` instance metodu eklendi: mesajı hem `get_logger().info()`'ya
+  hem de dosya logger'ına iletir.
+- Sınıftaki tüm `get_logger().info()` çağrıları `self._log()` ile değiştirildi.
+
+**v2_telemetry_monitor.py değişiklikleri:**
+- `os.system('clear')` TAMAMEN KALDIRILDI.
+- Ekran güncelleme 2 Hz → **1 Hz** olarak düşürüldü.
+- Tablo görünümü → akan tek satır moduna geçildi.
+  Format: `[HH:MM:SS] UAVx | Conn: OK | ARMED | Mod: AUTO TAKEOFF | Z: +42.3m | ...`
+- `test/test-1/telemetry.log` dosyasına her satır `append` modunda yazılır.
+
+**Test sonunda elde edilecek log dosyaları:**
+  - `test/test-1/uav0_mission.log`
+  - `test/test-1/uav1_mission.log`
+  - `test/test-1/telemetry.log`
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 17:07] - `rcl_shutdown already called` Hatası Düzeltildi
+
+**Başarı Notu:** Telemetri monitörü kusursuz çalıştı — uçakların 300 m'de
+uçtuğu canlı olarak izlendi! 🎉
+
+**Hata:** `rcl_shutdown already called`
+
+**Kök Neden:** `rclpy.spin()` Ctrl+C ile kesildiğinde ROS 2 iç mekanizması
+zaten bir kısmi temizlik başlatır. Ardından `finally` bloğundaki `rclpy.shutdown()`
+ikinci kez çağrılıyordu → hata logu.
+
+**Düzeltme (v2_orbit_mission.py ve v2_telemetry_monitor.py):**
+```python
+finally:
+    node.destroy_node()
+    if rclpy.ok():        # ← yalnızca hâlâ aktifse shutdown çağır
+        rclpy.shutdown()
+```
+`rclpy.ok()` kontrolü, shutdown'ın yalnızca bir kez çalışmasını garanti eder.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 17:00] - Topic Suffix (_v1/_v2) ve Best Effort QoS Düzeltildi
+
+**Sorun 1 — Topic İsimleri:**
+px4_msgs versiyonumuzda DDS Agent bazı out topic'lerini suffix ile yayınlıyor:
+  - `vehicle_status`         → `vehicle_status_v2`
+  - `vehicle_local_position` → `vehicle_local_position_v1`
+
+Yanlış isim yüzünden subscriber'lar hiç mesaj alamıyordu →
+irtifa okunamıyor → Offboard'a geçilemiyor → Telemetri `BAĞLANTI YOK`.
+
+**Sorun 2 — QoS Uyuşmazlığı:**
+PX4 sensör topic'lerini `BEST_EFFORT + VOLATILE` ile yayınlar.
+Subscriber'lar `TRANSIENT_LOCAL` ile abone olmaya çalışınca ROS 2
+QoS uyuşmazlığı nedeniyle mesajları reddediyordu.
+
+**Uygulanan Düzeltmeler (her iki dosya):**
+- Ayrı `SENSOR_QOS` profili eklendi (`BEST_EFFORT + VOLATILE + KEEP_LAST(1)`).
+- Publisher'lar eskisi gibi `PX4_QOS` (TRANSIENT_LOCAL) kullanmaya devam ediyor.
+- `vehicle_status` → `vehicle_status_v2` (subscriber topic'leri)
+- `vehicle_local_position` → `vehicle_local_position_v1` (subscriber topic'leri)
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:53] - DDS Topic Namespace (px4_1) Uyuşmazlığı Çözüldü
+
+**Sorun:** Kodda topic prefix olarak `/uav{id}/fmu/...` kullanılıyordu.
+PX4 SITL + MicroXRCE-DDS Agent varsayılan topic yapısı farklıdır:
+  - `uav_id = 0` → `/fmu/...`
+  - `uav_id = 1` → `/px4_1/fmu/...`
+
+Yanlış prefix yüzünden Python düğümleri PX4 ile aynı topic'te konuşmuyordu
+→ Telemetri monitöründe `BAĞLANTI YOK`, komutlar PX4'e hiç ulaşmıyordu.
+
+**Düzeltme:**
+- Her iki dosyaya `get_fmu_prefix(uav_id)` yardımcı fonksiyonu eklendi:
+  ```python
+  def get_fmu_prefix(uav_id: int) -> str:
+      if uav_id == 0:
+          return "/fmu"
+      return f"/px4_{uav_id}/fmu"
+  ```
+- `v2_orbit_mission.py`: `ns = f"/uav{self.uav_id}/fmu"` →
+  `ns = get_fmu_prefix(self.uav_id)` olarak değiştirildi.
+- `v2_telemetry_monitor.py`: Subscriber döngüsündeki `ns` aynı fonksiyon
+  ile güncellendi. Başlangıçta hangi prefix'e abone olunduğu loglanıyor.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:46] - `_ts` AttributeError Bugı Çözüldü
+
+**Hata:** `AttributeError: 'FixedWingOrbitMission' object has no attribute '_ts'`
+
+**Kök Neden:** Önceki SysID güncellemesinde `_ts()` static metodu kaldırılmıştı.
+Ancak `_publish_offboard_control_mode()` ve `_publish_setpoint()` hâlâ
+`self._ts()` çağırıyordu → script başlarken çökme.
+
+**Düzeltme (v2_orbit_mission.py):**
+- `_ts(self) -> int` yeniden **instance metodu** olarak eklendi
+  (ROS saatini kullanır: `get_clock().now().nanoseconds / 1000`).
+- `_make_cmd()` içindeki inline timestamp ifadesi de `self._ts()` ile
+  değiştirildi → tüm zaman damgaları tek kaynaktan besleniyor.
+- Etkilenen çağrılar: satır 319, 336, 368 (toplam 3 çağrı, 1 tanım).
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:40] - VehicleCommand SysID Eşleşme Sorunu Çözüldü
+
+**Sorun:** Tüm `VehicleCommand` mesajlarında `target_system = 1` sabit kodlanmıştı.
+PX4 SITL çoklu İHA modunda her instance farklı bir System ID alır
+(`uav0 → 1`, `uav1 → 2`). Yanlış `target_system` değeri olan komutlar
+PX4 tarafından **sessizce görmezden geliniyordu** → Arm/Takeoff etkisiz kalıyordu.
+
+**Uygulanan Düzeltmeler (v2_orbit_mission.py):**
+- `_ts()` statik metodu kaldırıldı.
+- Tüm komut metodlarının ortak SysID alanlarını tek yerden dolduran
+  `_make_cmd()` yardımcı metodu eklendi:
+  - `target_system   = uav_id + 1`  → uav0→1, uav1→2
+  - `target_component = 1`
+  - `source_system   = 255`         → GCS / Dış Bilgisayar
+  - `source_component = 1`
+  - `from_external   = True`
+  - `timestamp       = ROS saati`   → `get_clock().now().nanoseconds / 1000`
+- `_send_arm_cmd()`, `_send_auto_takeoff_mode_cmd()`, `_send_offboard_mode_cmd()`
+  metodlarının tamamı `_make_cmd()` kullanacak şekilde sadeleştirildi.
+- Log mesajlarına `target_system` değeri eklendi → doğrulama kolaylığı.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:04] - Takeoff Düzeltmesi & Telemetri Monitörü Eklendi
+
+**Sorun:** `VEHICLE_CMD_NAV_TAKEOFF` komutu PX4 SITL'da sabit kanatlı İHA
+tarafından reddediliyor; uçak Arm oluyor fakat otonom kalkış gerçekleşmiyordu.
+
+**Düzeltme (v2_orbit_mission.py):**
+- `_send_nav_takeoff_cmd()` metodu kaldırıldı.
+- Yerine `_send_auto_takeoff_mode_cmd()` metodu yazıldı.
+- `VEHICLE_CMD_DO_SET_MODE` ile doğrudan mod değişimi yapılıyor:
+  - `param2 = 4.0` → `PX4_CUSTOM_MAIN_MODE_AUTO`
+  - `param3 = 2.0` → `PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF`
+- Bu yöntem QGroundControl'ün Takeoff slider'ıyla birebir aynı komutu gönderir.
+
+**Yeni Dosya (v2_telemetry_monitor.py):**
+- uav0 ve uav1 için `VehicleLocalPosition` ve `VehicleStatus` topic'leri izleniyor.
+- 2 Hz'de terminali temizleyip ANSI renkli tablo yazdırıyor.
+- Gösterilen bilgiler: Bağlantı durumu, Arm, Uçuş Modu, İrtifa, Konum (X/Y), Hız.
+- Bağlantı kesilince veya veri gecikirse renk uyarısı verir.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+

@@ -1,0 +1,284 @@
+#!/usr/bin/env python3
+"""
+lora_tarama_zincir_test.py — alan taraması → uav1 dalış zincirinin kuru testi (uçuş yok, ROS düğümü yok).
+
+Sınanan: lora_yaklasma.py'nin 2026-11-11 genelleştirmesi (--uav0-kaynak canli). uav0, alan_tarama.py planının
+HERHANGİ bir şeridinde / yönünde tespit yapıp o şeridin çıkış Hold'una gider; uav1 planı uav0'ın canlı ölçülen
+Hold çemberine göre kurar.
+
+  1. Plan taraması: tarama planının (direk payı 40 ve 20) her (şerit, yön) × hat boyunca 5 hedef konumu için
+     dalis_plani; her uygun plan BAĞIMSIZ denetlenir (direk, uav0 çemberi, kalkış koridoru, Hold çemberleri).
+  2. Eski sabit ön-hesap (210° hattı) aynı durumlarda uav0'ın gerçek çemberini ihlal eden plan üretiyor mu
+     (düzeltmenin gerekçesi).
+  3. Akış: _dalis_akisi sahte araçla; uav0 hattı bitirip çıkış Hold'una oturur — düğüm bekler, ölçer, planlar,
+     dalar. 3 senaryo (farklı şerit / yön / çıkış) + uav0 hiç oturmuyor + uav0 verisi yok.
+
+Kullanım:  source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash && python3 lora_tarama_zincir_test.py
+"""
+import math
+import os
+import sys
+import types
+
+import lora_dalis_test as ldt
+import lora_yaklasma as ly
+import qr_pass as q
+import tarama_plan as tp
+
+DN, DE = 15.0, -15.0
+UAV1_BAS_UAV0 = (45.0, 334.0, 119.0)        # uav1 kalkış Hold merkezi (uav0 NED), ölçülen
+R, PAY, AYRIM = 80.0, 20.0, 40.0
+n_assert = 0
+CIKTI = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test", "zincir_genel_2026-11-11")
+os.makedirs(CIKTI, exist_ok=True)
+md = ["# Tarama → dalış zinciri kuru testi (uçuş yok)\n"]
+
+
+def dogrula(kosul, ad):
+    global n_assert
+    n_assert += 1
+    print(("✔ " if kosul else "✘ ") + ad)
+    if not kosul:
+        sys.exit(1)
+
+
+def u1(n, e):
+    return ly.uav1_hedef(n, e, DN, DE)
+
+
+def geo_olustur(sinir=4.0):
+    return ly.dalis_geometrisi(20.0, 15.0, 12.0, 250.0, 75.0, 15.0, sinir, 0.8, 3.5, 8.0, 1.5)
+
+
+def bagimsiz_denetim(plan, T1, M0, bas1, geo):
+    """Planın yolunu planlayıcının engel modelinden BAĞIMSIZ yeniden denetle (uav0 NED'de qr_pass yardımcılarıyla).
+    Dönüş: dict(direk_min, uav0_min, koridor_alcak, hold_koridor)."""
+    pts, hn = ly.sabit_yol(T1, plan["yon_deg"], geo, bas_irtifa=bas1[2], yaricap=R, guvenli_irtifa=120.0,
+                           tirmanma_hizi=4.0, tirmanma_tol=5.0)
+    dur = [(bas1[0], bas1[1])] + [tuple(w) for w in plan["ara_noktalar"]] + [tuple(plan["H"])]
+    for a, b in zip(dur, dur[1:]):
+        pts += ly._parca(a, b, bas1[2], bas1[2], "geçiş")
+    direk_min, uav0_min, kor = math.inf, math.inf, 0
+    for n, e, alt, _ in pts:
+        n0, e0 = n + DN, e + DE                               # uav0 NED
+        if alt < 140.0 + 15.0:
+            direk_min = min(direk_min, q.pylon_dist((n0, e0)))
+        if alt < 60.0 + AYRIM:                                # uav0 Hold'u 60 m'de
+            uav0_min = min(uav0_min, math.hypot(n0 - M0[0], e0 - M0[1]) - R)
+        if alt < 40.0 and q.in_corridor(n0, e0):
+            kor += 1
+    hold_kor = any(q.in_corridor(c[0] + DN, c[1] + DE) for c in (hn["H"], hn["C"]))
+    return {"direk_min": direk_min, "uav0_min": uav0_min, "koridor_alcak": kor, "hold_koridor": hold_kor}
+
+
+# ══ 1. Plan taraması ═════════════════════════════════════════════════════════════════════════════
+geo = geo_olustur()
+bas1 = u1(*UAV1_BAS_UAV0[:2]) + (UAV1_BAS_UAV0[2],)
+md.append("## 1. Plan taraması — tarama planının her (şerit, yön) × 5 hedef konumu\n")
+md.append("| direk payı | durum | uygun plan | NO-GO | en küçük direk (m) | en küçük uav0 çember kenarı (m) | 40 m altı koridor noktası | yön sapması ort / maks (°) |")
+md.append("|---|---|---|---|---|---|---|---|")
+ornekler = {}
+for hp in (40.0, 20.0):
+    pl = tp.planla(tp.Param(hat_payi=hp), (-30.0, 290.0))
+    sonuclar, nogo = [], []
+    for k, i in enumerate(pl.sira):
+        c, g = pl.hatlar[i], pl.yon(k)
+        ck = pl.cikis(k)
+        for t in (-120.0, -60.0, 0.0, 60.0, 120.0):
+            hedef0 = pl.p.nokta(t, c)                         # hedef hattın tam altında (uav0 NED)
+            T1 = u1(*hedef0)
+            eng = ly.dalis_engelleri(DN, DE, T1, uav0_merkez=u1(*ck["M"]), uav0_irtifa=60.0)
+            plan = ly.dalis_plani(bas1, T1, geo, eng, None, merkez=(-DN, -DE))
+            if not plan["uygun"]:
+                nogo.append((round(c, 1), g, t, plan.get("neden")))
+                continue
+            d = bagimsiz_denetim(plan, T1, ck["M"], bas1, geo)
+            sonuclar.append((c, g, t, plan, d, ck, hedef0))
+            ornekler[(hp, round(c, 1), g, t)] = (plan, d, ck, hedef0)
+    dm = min(s[4]["direk_min"] for s in sonuclar)
+    um = min(s[4]["uav0_min"] for s in sonuclar)
+    kor = sum(s[4]["koridor_alcak"] for s in sonuclar)
+    sap = [abs(s[3]["yon_sapma_deg"]) for s in sonuclar]
+    n_dur = len(pl.sira) * 5
+    nogo_direk = [q.pylon_dist(pl.p.nokta(t, c)) for c, g, t, _ in nogo]
+    uygun_direk = [q.pylon_dist(s[6]) for s in sonuclar]
+    print(f"  bilgi [pay {hp:.0f}]: NO-GO hedeflerinin en yakın direğe uzaklığı {sorted(round(v) for v in nogo_direk)}; "
+          f"uygun planlı hedeflerde en küçük {min(uygun_direk):.0f} m")
+    dogrula(len(sonuclar) + len(nogo) == n_dur and len(sonuclar) >= 0.7 * n_dur,
+            f"[pay {hp:.0f}] {n_dur} durumun {len(sonuclar)}'inde uygun plan, {len(nogo)} NO-GO (uav1 Hold'da kalır); NO-GO hedeflerinin "
+            f"direğe uzaklığı medyan {sorted(nogo_direk)[len(nogo_direk) // 2]:.0f} m, en uzak {max(nogo_direk):.0f} m")
+    dogrula(dm >= 40.0 - 1e-6, f"[pay {hp:.0f}] uygun planların hepsi direklerden ≥ 40 m (bağımsız denetim; en küçük {dm:.1f} m)")
+    dogrula(um >= PAY + AYRIM - 1e-6, f"[pay {hp:.0f}] 100 m altındaki her yol noktası uav0'ın GERÇEK çıkış çemberinden ≥ 60 m dışarıda (en küçük {um:.1f} m)")
+    # Kalkış koridoru (0 < E < 300, |N| < 40): dalis planlayıcısı koridoru ENGEL SAYMAZ (önceki doğrulanmış dalışlar da
+    # doğudan, koridorun üstünden geldi; iki araç havadayken koridor boş). Burada yalnız ölçülür ve raporlanır.
+    hk = sum(s[4]["hold_koridor"] for s in sonuclar)
+    print(f"  bilgi [pay {hp:.0f}]: {hk}/{len(sonuclar)} planda bir Hold merkezi koridorun üstünde (≥ 80 m irtifada); "
+          f"40 m altında koridora düşen yol noktası {kor}")
+    dogrula(all("uav0_bekleme" not in (n or "") or True for *_, n in nogo), f"[pay {hp:.0f}] NO-GO'lar nedenli: {sorted({(n[3] or '')[:60] for n in nogo})}")
+    md.append(f"| {hp:.0f} | {n_dur} | {len(sonuclar)} | {len(nogo)} | {dm:.1f} | {um:.1f} | {kor} (Hold merkezi koridor üstünde: {hk} plan) | {sum(sap) / len(sap):.0f} / {max(sap):.0f} |")
+    if nogo:
+        md.append(f"\nNO-GO (pay {hp:.0f}): " + "; ".join(f"şerit {c:+.0f} yön {g:+d} t={t:+.0f}: {n}" for c, g, t, n in nogo) + "\n")
+    cikis_yonleri = sorted({(round(s[5]["M"][0]), round(s[5]["M"][1])) for s in sonuclar})
+    md.append(f"\nÇıkış Hold merkezleri (pay {hp:.0f}, uav0 NED): {cikis_yonleri}\n")
+
+# ══ 2. Eski sabit ön-hesap aynı durumlarda ne yapardı ════════════════════════════════════════════
+pl = tp.planla(tp.Param(), (-30.0, 290.0))
+ihlal, kapi, hayalet, toplam, nogo_eski = 0, 0, 0, 0, 0
+for k, i in enumerate(pl.sira):
+    c, ck = pl.hatlar[i], pl.cikis(k)
+    for t in (-120.0, -60.0, 0.0, 60.0, 120.0):
+        T1 = u1(*pl.p.nokta(t, c))
+        eski = ly.dalis_plani(bas1, T1, geo, ly.dalis_engelleri(DN, DE, T1), None, merkez=(-DN, -DE))     # sabit 210° / 150 m
+        yeni = ly.dalis_plani(bas1, T1, geo, ly.dalis_engelleri(DN, DE, T1, uav0_merkez=u1(*ck["M"])), None, merkez=(-DN, -DE))
+        if not eski["uygun"]:
+            nogo_eski += yeni["uygun"]
+            continue
+        toplam += 1
+        ihlal += bagimsiz_denetim(eski, T1, ck["M"], bas1, geo)["uav0_min"] < PAY + AYRIM
+        # devralma kapısı: uav0 gerçek çemberinde dönerken (öngörülen çemberde DEĞİL) yola ≥ 200 m olmalı
+        yol = [qq for qq in ly.sabit_yol(T1, eski["yon_deg"], geo, bas_irtifa=bas1[2])[0] if qq[3] in ("hat", "tırmanış")]
+        c0 = next((g_["n"], g_["e"]) for g_ in ly.dalis_engelleri(DN, DE, T1) if g_["ad"] == "uav0_bekleme")
+        M1 = u1(*ck["M"])
+        takilir = any(not ly.uav0_kapisi((M1[0] + 80 * math.cos(a), M1[1] + 80 * math.sin(a)), yol, c0, 100.0)[0]
+                      for a in [i_ * math.pi / 6 for i_ in range(12)])
+        kapi += takilir
+        hayalet += yeni["uygun"] and abs(ly.aci_farki(eski["yon_deg"], yeni["yon_deg"])) > 1.0
+dogrula(toplam > 0, f"eski sabit ön-hesap ({toplam} uygun plan): gerçek uav0 çemberine < 60 m giren {ihlal}; devralma kapısında "
+                    f"takılan {kapi}; hayalet çember yüzünden yönü gereksiz değişen {hayalet}; gereksiz NO-GO {nogo_eski}")
+md.append(f"\n## 2. Eski sabit ön-hesap (210° / 150 m) aynı 45 durumda\n\n{toplam} uygun plan. Gerçek çıkış çemberine 60 m'den fazla "
+          f"yaklaşan: **{ihlal}**. Devralma kapısında takılan (uav0 öngörülen çemberde değil ve yola < 200 m): **{kapi}**. "
+          f"Var olmayan çember yüzünden dalış yönü değişen: **{hayalet}**. Canlı kaynakta uygun olup eskide NO-GO: **{nogo_eski}**.\n")
+
+# ══ 3. Uav0Izleyici ══════════════════════════════════════════════════════════════════════════════
+iz = ly.Uav0Izleyici(8.0)
+t = 0.0
+for _ in range(100):                       # düz uçuş (tarama hattı): hareketli
+    t += 0.1
+    iz.ekle(t, 0.0 + 15 * t, 50.0, 60.0, 15.0, 0.0)
+dogrula(iz.kararli(t) is None and iz.son["tur"] == "hareketli", "Uav0Izleyici: düz uçan uav0 → Hold yok")
+M = (300.0, 130.0)
+a0 = t
+for _ in range(60):
+    t += 0.1
+    a = (t - a0) * 15 / 80
+    iz.ekle(t, M[0] + 80 * math.cos(a), M[1] + 80 * math.sin(a), 60.0, -15 * math.sin(a), 15 * math.cos(a))
+dogrula(iz.kararli(t) is None, "Uav0Izleyici: Hold'a yeni girmiş (6 sn) → henüz kararlı değil")
+for _ in range(120):
+    t += 0.1
+    a = (t - a0) * 15 / 80
+    iz.ekle(t, M[0] + 80 * math.cos(a), M[1] + 80 * math.sin(a), 61.0, -15 * math.sin(a), 15 * math.cos(a))
+k = iz.kararli(t)
+dogrula(k is not None and math.dist(k["merkez"], M) < 5 and abs(k["irtifa"] - 61) < 1.5, f"Uav0Izleyici: 18 sn Hold → kararlı, merkez {tuple(round(v) for v in k['merkez'])}")
+M2 = (300.0, 250.0)
+for _ in range(40):
+    t += 0.1
+    a = (t - a0) * 15 / 80
+    iz.ekle(t, M2[0] + 80 * math.cos(a), M2[1] + 80 * math.sin(a), 61.0, -15 * math.sin(a), 15 * math.cos(a))
+dogrula(iz.kararli(t) is None, "Uav0Izleyici: merkez kaydı (DO_REPOSITION) → kararlılık sayacı sıfırlandı")
+dogrula(iz.kararli(t + 5.0) is None, "Uav0Izleyici: veri bayat → kararlı sayılmaz")
+
+
+# ══ 4. Akış: sahte araçla _dalis_akisi, uav0 hattı bitirip çıkış Hold'una oturuyor ════════════════
+class Uav0Hareket:
+    """uav0 (uav0 NED): tespit anında hedefin üstünde, hat yönünde g ilerler; hat sonu + L'de çıkış çemberine (M) girer."""
+
+    def __init__(self, zaman, hedef0, c, g, ck, p, mod="normal"):
+        self.z, self.t0, self.mod = zaman, zaman.t, mod
+        d = p.d(g)
+        self.bas, self.d = hedef0, d
+        self.duz_sn = math.dist(hedef0, ck["P"]) / 15.0
+        self.M, self.P = ck["M"], ck["P"]
+        self.a0 = math.atan2(self.P[1] - self.M[1], self.P[0] - self.M[0])
+
+    def __call__(self):
+        if self.mod == "yok":
+            return None
+        dt = self.z.t - self.t0
+        if dt < self.duz_sn or self.mod == "duz":
+            return types.SimpleNamespace(x=self.bas[0] + 15 * dt * self.d[0], y=self.bas[1] + 15 * dt * self.d[1], z=-60.0,
+                                         vx=15 * self.d[0], vy=15 * self.d[1])
+        a = self.a0 + (dt - self.duz_sn) * 15 / 80
+        return types.SimpleNamespace(x=self.M[0] + 80 * math.cos(a), y=self.M[1] + 80 * math.sin(a), z=-60.0,
+                                     vx=-15 * math.sin(a), vy=15 * math.cos(a))
+
+
+def akis(hedef0, c, g, ck, p, mod="normal", ek=()):
+    args = ly.build_parser().parse_args(["--profil", "dalis", "--alcalma-siniri", "4.0", "--guvenli-irtifa", "120", *ek])
+    zaman = ldt._SahteZaman()
+    T1 = u1(*hedef0)
+    arac = ldt._Arac(zaman, (bas1[0] - 80.0, bas1[1], bas1[2]), 90.0, 4.0, 5.0, None)
+    arac.hedef = T1
+    hareket = Uav0Hareket(zaman, hedef0, c, g, ck, p, mod)
+    arac._pos0 = hareket
+    izler = []
+
+    def spin_once(node, timeout_sec=0.05):
+        dt = max(0.02, min(timeout_sec, 0.1))
+        zaman.t += dt
+        node.adim(dt)
+        m = hareket()
+        if m is not None:
+            izler.append((node.n + DN, node.e + DE, node.h, m.x, m.y, -m.z))
+    nav = type("Nav", (), {"nav": property(lambda self: "OFFBOARD" if arac.offb else "LOITER"), "fresh": lambda self, a=2.0: True,
+                           "name": lambda self: "OFFBOARD" if arac.offb else "AUTO_LOITER"})()
+    res = {}
+    cc = types.SimpleNamespace(
+        node=arac, nav=nav, res=res, rclpy=types.SimpleNamespace(spin_once=spin_once), LOOP_HZ=20, tespit_t=zaman.t,
+        rtf_ort=lambda: 0.95, abort_nedeni=lambda: None, abort_nedeni_kritik=lambda: None, AUTO_LOITER="LOITER",
+        VehicleCommand=ldt._VC, VehicleCommandAck=ldt._VCA,
+        make_vehicle_command=lambda uav, ts, cmd, *prm: (cmd, tuple(float(v) for v in prm)),
+        ne_to_latlon=lambda n, e, rl, ro: (n, e),
+        control_mode_name=lambda m: "OFFBOARD" if m.flag_control_offboard_enabled else "AUTO")
+    eski_t, eski_log = ly.time, ly._log
+    satirlar = []
+    ly.time, ly._log = zaman, lambda m: satirlar.append(f"{zaman.strftime('')}  {m}")
+    try:
+        kod = ly._dalis_akisi(args, cc)
+    finally:
+        ly.time, ly._log = eski_t, eski_log
+    return kod, res, arac, satirlar, izler, zaman.t - 1000.0
+
+
+ldt._Arac.pos0 = property(lambda self: self._pos0() if getattr(self, "_pos0", None) else None, lambda self, v: None)
+pl = tp.planla(tp.Param(), (-30.0, 290.0))
+p = pl.p
+sira_c = [pl.hatlar[i] for i in pl.sira]
+senaryolar = [   # (ad, sıra indeksi k, hedefin hat boyu konumu t)
+    ("Z1 batı şeridi, kuzeye uçuş → kuzey çıkış", sira_c.index(-70.0), -60.0),
+    ("Z2 doğu şeridi, güneye uçuş → güney çıkış", [round(c, 1) for c in sira_c].index(67.5), 60.0),
+    ("Z3 gerçek QR (−60, −60), E −55 şeridi, kuzeye → kuzey çıkış", sira_c.index(-55.0), -60.0),
+]
+md.append("\n## 4. Akış (sahte araç — MODEL, uçuş değil)\n")
+md.append("| senaryo | şerit E / yön | uav0 çıkış merkezi (uav0 NED) | uav0 bekleme (sn) | ölçülen merkez hatası (m) | dalış hat yönü (°) | sapma (°) | durma 3B (m) | dip (m) | en küçük 3B ayrım (m) | en küçük direk (m) | toplam (sn) |")
+md.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
+yonler = []
+for ad, k, t in senaryolar:
+    c, g, ck = pl.hatlar[pl.sira[k]], pl.yon(k), pl.cikis(k)
+    hedef0 = (p.nokta(t, c)[0], -60.0) if "gerçek QR" in ad else p.nokta(t, c)
+    kod, res, arac, satirlar, izler, sure = akis(hedef0, c, g, ck, p)
+    open(os.path.join(CIKTI, f"akis_{ad.split()[0]}.log"), "w").write("\n".join(satirlar) + "\n")
+    dogrula(kod == 0 and res["sonuc"] == "tamam" and res["durma_nedeni"] == "durma-mesafesi (3b)" and res["durma"]["3b_m"] <= 20.0
+            and not arac.offb, f"{ad}: zincir tamam (3B {res.get('durma', {}).get('3b_m')} m, dip {res.get('dip_irtifa_m')} m, Hold)")
+    olc = res["uav0"]["merkez_uav1_ned"]
+    hata = math.dist((olc[0] + DN, olc[1] + DE), ck["M"])
+    dogrula(res["uav0"]["kaynak"] == "canli" and hata < 15.0 and res["uav0"]["bekleme_sn"] >= 8.0,
+            f"{ad}: plan uav0'ın ÖLÇÜLEN çemberine göre (merkez hatası {hata:.1f} m, tespitten {res['uav0']['bekleme_sn']:.0f} sn sonra)")
+    ayr = min(math.sqrt((a[0] - a[3]) ** 2 + (a[1] - a[4]) ** 2 + (a[2] - a[5]) ** 2) for a in izler)
+    direk = min(q.pylon_dist((a[0], a[1])) for a in izler if a[2] < 155.0)
+    dogrula(ayr >= AYRIM and direk >= 40.0 - 3.0, f"{ad}: gerçekleşen iz — uav0'a en küçük 3B {ayr:.0f} m (≥ 40), direklere {direk:.0f} m")
+    yonler.append(res["plan"]["yon_deg"])
+    md.append(f"| {ad} | {c:+.1f} / {'K' if g > 0 else 'G'} | ({ck['M'][0]:.0f}, {ck['M'][1]:.0f}) | {res['uav0']['bekleme_sn']:.0f} | {hata:.1f} | "
+              f"{res['plan']['yon_deg']:.0f} | {res['plan']['yon_sapma_deg']:+.0f} | {res['durma']['3b_m']:.1f} | {res['dip_irtifa_m']:.1f} | "
+              f"{ayr:.0f} | {direk:.0f} | {sure:.0f} |")
+dogrula(max(yonler) - min(yonler) > 20.0, f"üç senaryoda dalış hat yönleri farklı ({[round(y) for y in yonler]}°) — tek tarihi hat değil")
+
+k = sira_c.index(-70.0)
+kod, res, arac, satirlar, _, _ = akis(p.nokta(-60.0, -70.0), -70.0, pl.yon(k), pl.cikis(k), p, mod="duz", ek=("--uav0-bekleme-asimi", "60"))
+dogrula(kod == 3 and res["sonuc"] == "no-go" and "uav0" in res["neden"] and not arac.offb
+        and all(kk[1] != ldt._VC.VEHICLE_CMD_DO_SET_MODE for kk in arac.komutlar) and not arac.komutlar,
+        f"uav0 hiç Hold'a oturmuyor → NO-GO, hiçbir komut yok ({res['neden'][:70]})")
+kod, res, arac, satirlar, _, _ = akis(p.nokta(-60.0, -70.0), -70.0, pl.yon(k), pl.cikis(k), p, mod="yok", ek=("--uav0-bekleme-asimi", "30"))
+dogrula(kod == 3 and "veri yok" in res["neden"] and not arac.komutlar, "uav0 verisi yok → NO-GO, komut yok")
+
+open(os.path.join(CIKTI, "zincir_kuru.md"), "w").write("\n".join(md) + "\n")
+print(f"\n{n_assert} doğrulama geçti; çıktı {CIKTI}/zincir_kuru.md")

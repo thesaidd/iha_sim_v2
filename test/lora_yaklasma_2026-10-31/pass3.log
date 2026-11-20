@@ -1,0 +1,10 @@
+18:22:32  [geçiş 3] hedef (-60, -60), ψ=210°, irtifa 60 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (-161, -61, 59 m)
+18:22:32  DO_REPOSITION → ara nokta (246, -43), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 48 m, koridor serbest
+Traceback (most recent call last):
+  File "/home/yusuf22_04/iha_sim_v2/qr_pass.py", line 390, in <module>
+    raise SystemExit(main())
+  File "/home/yusuf22_04/iha_sim_v2/qr_pass.py", line 235, in main
+    via = plan_via(here, H, args.clear) if hop < 3 else None
+  File "/home/yusuf22_04/iha_sim_v2/qr_pass.py", line 110, in plan_via
+    raise RuntimeError("direklerden uzak ara nokta bulunamadı")
+RuntimeError: direklerden uzak ara nokta bulunamadı

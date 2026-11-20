@@ -1,0 +1,333 @@
+{
+ "gecis_01": {
+  "kare": 228,
+  "kadrajda": 9,
+  "analiz_sn": 21.9,
+  "QR": {
+   "bulunan": 9,
+   "cozulen": 9,
+   "kadrajda_bulunan": 9,
+   "kadraj_disi_bulunan": 0,
+   "yanlis_icerik": 0,
+   "ms_ort": 74.1,
+   "ilk_cozum_sim_s": 283.6,
+   "son_cozum_sim_s": 284.4,
+   "ilk_cozum_s_m": -7.99,
+   "son_cozum_s_m": 3.7,
+   "cozum_suresi_s": 0.8,
+   "modul_px_ort": 3.66,
+   "izdusum_farki_px_ort": 4.53,
+   "mesafe_3b_ort": 60.34
+  },
+  "Aruco": {
+   "bulunan": 9,
+   "cozulen": 7,
+   "kadrajda_bulunan": 9,
+   "kadraj_disi_bulunan": 0,
+   "yanlis_icerik": 0,
+   "ms_ort": 12.1,
+   "ilk_cozum_sim_s": 283.6,
+   "son_cozum_sim_s": 284.4,
+   "ilk_cozum_s_m": -7.99,
+   "son_cozum_s_m": 3.7,
+   "cozum_suresi_s": 0.8,
+   "modul_px_ort": 3.62,
+   "izdusum_farki_px_ort": 4.54,
+   "mesafe_3b_ort": 60.34
+  },
+  "kadraj_s_m": [
+   -7.99,
+   3.7
+  ],
+  "kadraj_suresi_s": 0.8,
+  "hedef_ustu_gercek": {
+   "x_m": -0.183,
+   "irtifa_m": 60.332,
+   "s_m": -0.684
+  },
+  "en_kucuk_yanal_gercek_m": 0.001,
+  "kadrajda_yanal_gercek_m": [
+   -0.205,
+   -0.171
+  ],
+  "kamera_teorik_modul_px": 3.66,
+  "tahmin_gercek_tam": {
+   "n": 9,
+   "ort_dN": -0.051,
+   "ort_dE": -0.029,
+   "yatay_ort": 0.059,
+   "yatay_rms": 0.059,
+   "yatay_std": 0.001,
+   "yatay_maks": 0.062
+  },
+  "tahmin_gercek_yaw": {
+   "n": 9,
+   "ort_dN": 1.639,
+   "ort_dE": 0.352,
+   "yatay_ort": 1.677,
+   "yatay_rms": 1.677,
+   "yatay_std": 0.012,
+   "yatay_maks": 1.704
+  },
+  "bulunan_karelerde_roll_pitch_gercek_deg": {
+   "roll": [
+    0.36,
+    0.46
+   ],
+   "pitch": [
+    1.59,
+    1.6
+   ]
+  }
+ },
+ "gecis_02": {
+  "kare": 224,
+  "kadrajda": 8,
+  "analiz_sn": 21.2,
+  "QR": {
+   "bulunan": 8,
+   "cozulen": 8,
+   "kadrajda_bulunan": 8,
+   "kadraj_disi_bulunan": 0,
+   "yanlis_icerik": 0,
+   "ms_ort": 73.0,
+   "ilk_cozum_sim_s": 486.3,
+   "son_cozum_sim_s": 487.0,
+   "ilk_cozum_s_m": -6.11,
+   "son_cozum_s_m": 3.97,
+   "cozum_suresi_s": 0.7,
+   "modul_px_ort": 3.67,
+   "izdusum_farki_px_ort": 3.79,
+   "mesafe_3b_ort": 60.52
+  },
+  "Aruco": {
+   "bulunan": 8,
+   "cozulen": 6,
+   "kadrajda_bulunan": 8,
+   "kadraj_disi_bulunan": 0,
+   "yanlis_icerik": 0,
+   "ms_ort": 11.6,
+   "ilk_cozum_sim_s": 486.3,
+   "son_cozum_sim_s": 487.0,
+   "ilk_cozum_s_m": -6.11,
+   "son_cozum_s_m": 3.97,
+   "cozum_suresi_s": 0.7,
+   "modul_px_ort": 3.61,
+   "izdusum_farki_px_ort": 3.88,
+   "mesafe_3b_ort": 60.52
+  },
+  "kadraj_s_m": [
+   -6.11,
+   3.97
+  ],
+  "kadraj_suresi_s": 0.7,
+  "hedef_ustu_gercek": {
+   "x_m": -0.358,
+   "irtifa_m": 60.563,
+   "s_m": -0.35
+  },
+  "en_kucuk_yanal_gercek_m": 0.208,
+  "kadrajda_yanal_gercek_m": [
+   -0.366,
+   -0.35
+  ],
+  "kamera_teorik_modul_px": 3.65,
+  "tahmin_gercek_tam": {
+   "n": 8,
+   "ort_dN": -0.043,
+   "ort_dE": -0.024,
+   "yatay_ort": 0.049,
+   "yatay_rms": 0.053,
+   "yatay_std": 0.019,
+   "yatay_maks": 0.058
+  },
+  "tahmin_gercek_yaw": {
+   "n": 8,
+   "ort_dN": 1.553,
+   "ort_dE": 0.381,
+   "yatay_ort": 1.599,
+   "yatay_rms": 1.599,
+   "yatay_std": 0.017,
+   "yatay_maks": 1.639
+  },
+  "tahmin_px4_tam": {
+   "n": 8,
+   "ort_dN": -0.739,
+   "ort_dE": -0.535,
+   "yatay_ort": 1.031,
+   "yatay_rms": 1.038,
+   "yatay_std": 0.121,
+   "yatay_maks": 1.225
+  },
+  "tahmin_px4_yaw": {
+   "n": 8,
+   "ort_dN": 0.609,
+   "ort_dE": 0.059,
+   "yatay_ort": 0.777,
+   "yatay_rms": 0.808,
+   "yatay_std": 0.222,
+   "yatay_maks": 1.196
+  },
+  "px4_vs_gercek": {
+   "yatay_m": 1.098,
+   "dikey_m": 0.154,
+   "roll_fark_deg": -0.061,
+   "pitch_fark_deg": -0.151,
+   "dt_odo_ms": 1.75
+  },
+  "bulunan_karelerde_roll_pitch_gercek_deg": {
+   "roll": [
+    0.32,
+    0.4
+   ],
+   "pitch": [
+    1.51,
+    1.51
+   ]
+  }
+ },
+ "gecis_03": {
+  "kare": 226,
+  "kadrajda": 8,
+  "analiz_sn": 21.5,
+  "QR": {
+   "bulunan": 8,
+   "cozulen": 8,
+   "kadrajda_bulunan": 8,
+   "kadraj_disi_bulunan": 0,
+   "yanlis_icerik": 0,
+   "ms_ort": 73.4,
+   "ilk_cozum_sim_s": 634.3,
+   "son_cozum_sim_s": 635.1,
+   "ilk_cozum_s_m": -7.85,
+   "son_cozum_s_m": 3.65,
+   "cozum_suresi_s": 0.8,
+   "modul_px_ort": 3.7,
+   "izdusum_farki_px_ort": 4.56,
+   "mesafe_3b_ort": 59.99
+  },
+  "Aruco": {
+   "bulunan": 8,
+   "cozulen": 6,
+   "kadrajda_bulunan": 8,
+   "kadraj_disi_bulunan": 0,
+   "yanlis_icerik": 0,
+   "ms_ort": 11.8,
+   "ilk_cozum_sim_s": 634.3,
+   "son_cozum_sim_s": 635.0,
+   "ilk_cozum_s_m": -7.85,
+   "son_cozum_s_m": 2.21,
+   "cozum_suresi_s": 0.7,
+   "modul_px_ort": 3.65,
+   "izdusum_farki_px_ort": 4.68,
+   "mesafe_3b_ort": 59.99
+  },
+  "kadraj_s_m": [
+   -7.85,
+   3.65
+  ],
+  "kadraj_suresi_s": 0.8,
+  "hedef_ustu_gercek": {
+   "x_m": 0.354,
+   "irtifa_m": 59.978,
+   "s_m": -0.665
+  },
+  "en_kucuk_yanal_gercek_m": 0.132,
+  "kadrajda_yanal_gercek_m": [
+   0.331,
+   0.365
+  ],
+  "kamera_teorik_modul_px": 3.68,
+  "tahmin_gercek_tam": {
+   "n": 8,
+   "ort_dN": -0.051,
+   "ort_dE": -0.029,
+   "yatay_ort": 0.059,
+   "yatay_rms": 0.059,
+   "yatay_std": 0.002,
+   "yatay_maks": 0.063
+  },
+  "tahmin_gercek_yaw": {
+   "n": 8,
+   "ort_dN": 1.793,
+   "ort_dE": 0.698,
+   "yatay_ort": 1.926,
+   "yatay_rms": 1.926,
+   "yatay_std": 0.024,
+   "yatay_maks": 1.968
+  },
+  "tahmin_px4_tam": {
+   "n": 8,
+   "ort_dN": -0.891,
+   "ort_dE": -1.202,
+   "yatay_ort": 1.549,
+   "yatay_rms": 1.558,
+   "yatay_std": 0.16,
+   "yatay_maks": 1.817
+  },
+  "tahmin_px4_yaw": {
+   "n": 8,
+   "ort_dN": 0.689,
+   "ort_dE": 0.186,
+   "yatay_ort": 0.866,
+   "yatay_rms": 0.881,
+   "yatay_std": 0.166,
+   "yatay_maks": 1.205
+  },
+  "px4_vs_gercek": {
+   "yatay_m": 1.214,
+   "dikey_m": 0.237,
+   "roll_fark_deg": -0.465,
+   "pitch_fark_deg": 0.112,
+   "dt_odo_ms": 1.8
+  },
+  "bulunan_karelerde_roll_pitch_gercek_deg": {
+   "roll": [
+    0.07,
+    0.32
+   ],
+   "pitch": [
+    1.87,
+    1.89
+   ]
+  }
+ },
+ "toplam_tahmin": {
+  "tahmin_gercek_tam": {
+   "n": 25,
+   "ort_dN": -0.048,
+   "ort_dE": -0.028,
+   "yatay_ort": 0.056,
+   "yatay_rms": 0.057,
+   "yatay_std": 0.011,
+   "yatay_maks": 0.063
+  },
+  "tahmin_gercek_yaw": {
+   "n": 25,
+   "ort_dN": 1.661,
+   "ort_dE": 0.472,
+   "yatay_ort": 1.732,
+   "yatay_rms": 1.737,
+   "yatay_std": 0.138,
+   "yatay_maks": 1.968
+  },
+  "tahmin_px4_tam": {
+   "n": 16,
+   "ort_dN": -0.815,
+   "ort_dE": -0.869,
+   "yatay_ort": 1.29,
+   "yatay_rms": 1.324,
+   "yatay_std": 0.295,
+   "yatay_maks": 1.817
+  },
+  "tahmin_px4_yaw": {
+   "n": 16,
+   "ort_dN": 0.649,
+   "ort_dE": 0.122,
+   "yatay_ort": 0.821,
+   "yatay_rms": 0.845,
+   "yatay_std": 0.201,
+   "yatay_maks": 1.205
+  }
+ }
+}

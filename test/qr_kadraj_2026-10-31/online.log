@@ -1,0 +1,51 @@
+12:33:19  qr_online hazır: /uav0/camera/image → /hedef_konum; log /home/yusuf22_04/iha_sim_v2/test/qr_kadraj_2026-10-31/online
+12:33:19  camera_info: 1456×1088, fx 4637.81, cx 728.0, cy 544.0 (kullanılan fx 4637.81, asal nokta 727.5, 543.5 — qr_analyze ile aynı)
+12:33:49  durum: gelen 263, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 5, bulunan 0, çözülen 0, yayın 0, işlem ort 3.6 ms maks 10.0 ms
+12:34:19  durum: gelen 540, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 6, bulunan 0, çözülen 0, yayın 0, işlem ort 3.6 ms maks 5.5 ms
+12:34:49  durum: gelen 812, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 10, bulunan 0, çözülen 0, yayın 0, işlem ort 3.7 ms maks 5.7 ms
+12:35:19  durum: gelen 1068, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 12, bulunan 0, çözülen 0, yayın 0, işlem ort 3.7 ms maks 5.7 ms
+12:35:47  YAYIN kare 1278: (-59.54, -61.04) içerik='HEDEF-01' kenar 75.6 px, ort (-59.54, -61.04) n=1, aruco+roi_qr
+12:35:47  YAYIN kare 1279: (-59.79, -60.82) içerik='HEDEF-01' kenar 76.1 px, ort (-59.67, -60.93) n=2, aruco+roi_qr
+12:35:47  YAYIN kare 1280: (-59.95, -60.55) içerik='HEDEF-01' kenar 76.2 px, ort (-59.76, -60.80) n=3, aruco+roi_qr
+12:35:48  YAYIN kare 1281: (-60.20, -60.33) içerik='HEDEF-01' kenar 76.4 px, ort (-59.87, -60.69) n=4, aruco+roi_qr
+12:35:48  YAYIN kare 1282: (-60.35, -60.06) içerik='HEDEF-01' kenar 75.9 px, ort (-59.97, -60.56) n=5, aruco+roi_qr
+12:35:48  YAYIN kare 1283: (-60.60, -59.84) içerik='HEDEF-01' kenar 76.5 px, ort (-60.07, -60.44) n=6, aruco+roi_qr
+12:35:48  YAYIN kare 1284: (-60.75, -59.56) içerik='HEDEF-01' kenar 76.2 px, ort (-60.17, -60.32) n=7, aruco+roi_qr
+12:35:48  YAYIN kare 1285: (-61.10, -59.40) içerik='HEDEF-01' kenar 76.1 px, ort (-60.29, -60.20) n=8, aruco+roi_qr
+12:35:48  YAYIN kare 1286: (-61.25, -59.12) içerik='HEDEF-01' kenar 76.6 px, ort (-60.39, -60.08) n=9, aruco+roi_qr
+12:35:49  durum: gelen 1295, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 13, bulunan 9, çözülen 9, yayın 9, işlem ort 4.7 ms maks 36.5 ms
+12:36:19  durum: gelen 1523, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 15, bulunan 9, çözülen 9, yayın 9, işlem ort 4.7 ms maks 36.5 ms
+12:36:32  YAYIN kare 1621: (-59.24, -59.67) içerik='HEDEF-01' kenar 75.9 px, ort (-59.24, -59.67) n=1, aruco+roi_qr
+12:36:32  YAYIN kare 1622: (-59.29, -59.69) içerik='HEDEF-01' kenar 75.5 px, ort (-59.26, -59.68) n=2, aruco+roi_qr
+12:36:32  YAYIN kare 1623: (-59.23, -59.65) içerik='HEDEF-01' kenar 75.6 px, ort (-59.25, -59.67) n=3, aruco+roi_qr
+12:36:32  YAYIN kare 1624: (-59.29, -59.66) içerik='HEDEF-01' kenar 75.8 px, ort (-59.26, -59.67) n=4, aruco+roi_qr
+12:36:32  YAYIN kare 1625: (-59.35, -59.68) içerik='HEDEF-01' kenar 76.0 px, ort (-59.28, -59.67) n=5, aruco+roi_qr
+12:36:32  YAYIN kare 1626: (-59.30, -59.63) içerik='HEDEF-01' kenar 75.7 px, ort (-59.28, -59.67) n=6, aruco+roi_qr
+12:36:32  YAYIN kare 1627: (-59.36, -59.65) içerik='HEDEF-01' kenar 75.7 px, ort (-59.29, -59.66) n=7, aruco+roi_qr
+12:36:32  YAYIN kare 1628: (-59.42, -59.67) içerik='HEDEF-01' kenar 76.2 px, ort (-59.31, -59.66) n=8, aruco+roi_qr
+12:36:49  durum: gelen 1746, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 19, bulunan 17, çözülen 17, yayın 17, işlem ort 4.4 ms maks 39.9 ms
+12:37:19  durum: gelen 1984, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 22, bulunan 17, çözülen 17, yayın 17, işlem ort 3.6 ms maks 5.4 ms
+12:37:49  durum: gelen 2260, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 25, bulunan 17, çözülen 17, yayın 17, işlem ort 3.7 ms maks 5.6 ms
+12:38:19  durum: gelen 2513, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 27, bulunan 17, çözülen 17, yayın 17, işlem ort 3.6 ms maks 5.2 ms
+12:38:44  YAYIN kare 2711: (-60.96, -61.79) içerik='HEDEF-01' kenar 77.7 px, ort (-60.96, -61.79) n=1, aruco+roi_qr
+12:38:44  YAYIN kare 2712: (-61.00, -61.64) içerik='HEDEF-01' kenar 77.5 px, ort (-60.98, -61.72) n=2, aruco+roi_qr
+12:38:44  YAYIN kare 2713: (-61.04, -61.48) içerik='HEDEF-01' kenar 77.4 px, ort (-61.00, -61.64) n=3, aruco+roi_qr
+12:38:44  YAYIN kare 2714: (-61.18, -61.37) içerik='HEDEF-01' kenar 77.9 px, ort (-61.05, -61.57) n=4, aruco+roi_qr
+12:38:44  YAYIN kare 2715: (-61.23, -61.21) içerik='HEDEF-01' kenar 77.5 px, ort (-61.08, -61.50) n=5, aruco+roi_qr
+12:38:45  YAYIN kare 2716: (-61.38, -61.11) içerik='HEDEF-01' kenar 77.8 px, ort (-61.13, -61.43) n=6, aruco+roi_qr
+12:38:45  YAYIN kare 2717: (-61.42, -60.95) içerik='HEDEF-01' kenar 77.8 px, ort (-61.17, -61.36) n=7, aruco+roi_qr
+12:38:45  YAYIN kare 2718: (-61.57, -60.84) içerik='HEDEF-01' kenar 77.7 px, ort (-61.22, -61.30) n=8, aruco+roi_qr
+12:38:45  YAYIN kare 2719: (-61.62, -60.68) içerik='HEDEF-01' kenar 78.4 px, ort (-61.27, -61.23) n=9, aruco+roi_qr
+12:38:49  durum: gelen 2754, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 28, bulunan 26, çözülen 26, yayın 26, işlem ort 4.6 ms maks 38.9 ms
+12:39:19  durum: gelen 2984, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 29, bulunan 26, çözülen 26, yayın 26, işlem ort 4.5 ms maks 38.9 ms
+12:39:49  durum: gelen 3213, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 32, bulunan 26, çözülen 26, yayın 26, işlem ort 3.4 ms maks 6.1 ms
+12:40:19  durum: gelen 3438, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 36, bulunan 26, çözülen 26, yayın 26, işlem ort 3.5 ms maks 5.3 ms
+12:40:49  durum: gelen 3663, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 41, bulunan 26, çözülen 26, yayın 26, işlem ort 3.5 ms maks 7.3 ms
+12:41:19  durum: gelen 3889, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 43, bulunan 26, çözülen 26, yayın 26, işlem ort 3.6 ms maks 5.8 ms
+12:41:49  durum: gelen 4072, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms maks 7.6 ms
+12:42:19  durum: gelen 4072, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms maks 7.6 ms
+12:42:49  durum: gelen 4072, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms maks 7.6 ms
+12:43:19  durum: gelen 4072, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms maks 7.6 ms
+12:43:50  durum: gelen 4072, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms maks 7.6 ms
+12:44:20  durum: gelen 4072, atlanan (kuyruk dolu) 0, köprü kaybı (damga) 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms maks 7.6 ms
+12:44:26  ÖZET: gelen 4072, atlanan 0, köprü kaybı 50, bulunan 26, çözülen 26, yayın 26, işlem ort 3.8 ms, p95 4.8 ms, maks 39.9 ms

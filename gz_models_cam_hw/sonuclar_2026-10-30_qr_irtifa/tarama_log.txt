@@ -1,0 +1,25 @@
+model ekleme: True (data: true)
+görüntü topic'i: /world/default/model/kamera_test/link/link/sensor/camera/image
+18:21:49  20 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 20.05]) modül teorik 11.04 ölçülen 11.0 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:22:39  20 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 20.05]) modül teorik 11.04 ölçülen 11.06 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:23:27  30 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 30.05]) modül teorik 7.36 ölçülen 7.29 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:24:16  30 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 30.05]) modül teorik 7.36 ölçülen 7.37 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:25:06  40 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 40.05]) modül teorik 5.52 ölçülen 5.48 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:25:54  40 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 40.05]) modül teorik 5.52 ölçülen 5.54 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:26:44  50 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 50.05]) modül teorik 4.42 ölçülen 4.43 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:27:33  50 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 50.05]) modül teorik 4.42 ölçülen 4.4 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/0 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:28:20  60 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 60.05]) modül teorik 3.68 ölçülen 3.67 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:29:07  60 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 60.05]) modül teorik 3.68 ölçülen 3.66 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/0
+18:29:54  70 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 70.05]) modül teorik 3.15 ölçülen 3.1 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/100 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:30:42  70 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 70.05]) modül teorik 3.15 ölçülen 3.17 | fark 0 | ham/QR=100/100 ham/Ar=100/0 adaptif/QR=100/100 adaptif/Ar=100/0 2x/QR=100/0 2x/Ar=100/0 2x+adaptif/QR=100/0 2x+adaptif/Ar=100/0
+18:31:32  80 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 80.05]) modül teorik 2.76 ölçülen 2.71 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/0 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/100
+18:32:19  80 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 80.05]) modül teorik 2.76 ölçülen 2.79 | fark 0 | ham/QR=100/0 ham/Ar=100/0 adaptif/QR=100/0 adaptif/Ar=100/0 2x/QR=100/0 2x/Ar=100/0 2x+adaptif/QR=100/0 2x+adaptif/Ar=100/0
+18:33:05  90 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 90.05]) modül teorik 2.45 ölçülen 2.43 | fark 0 | ham/QR=100/100 ham/Ar=100/100 adaptif/QR=100/100 adaptif/Ar=100/100 2x/QR=100/100 2x/Ar=100/0 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/0
+18:33:51  90 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 90.05]) modül teorik 2.45 ölçülen 2.45 | fark 0 | ham/QR=100/0 ham/Ar=100/0 adaptif/QR=100/0 adaptif/Ar=100/0 2x/QR=100/100 2x/Ar=100/0 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/0
+18:34:39 100 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 100.05]) modül teorik 2.21 ölçülen 2.14 | fark 0 | ham/QR=100/0 ham/Ar=100/0 adaptif/QR=100/0 adaptif/Ar=100/0 2x/QR=100/100 2x/Ar=100/0 2x+adaptif/QR=100/100 2x+adaptif/Ar=100/0
+18:35:24 100 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 100.05]) modül teorik 2.21 ölçülen 2.22 | fark 0 | ham/QR=100/0 ham/Ar=0/0 adaptif/QR=100/100 adaptif/Ar=0/0 2x/QR=100/0 2x/Ar=100/0 2x+adaptif/QR=100/0 2x+adaptif/Ar=100/0
+18:36:09 120 m  0° set_pose=True poz=([227.0], [-60.0, -60.0, 120.05]) modül teorik 1.84 ölçülen 1.88 | fark 0 | ham/QR=100/0 ham/Ar=0/0 adaptif/QR=100/0 adaptif/Ar=0/0 2x/QR=100/100 2x/Ar=100/0 2x+adaptif/QR=100/0 2x+adaptif/Ar=100/100
+18:36:57 120 m 45° set_pose=True poz=([227.0], [-60.0, -60.0, 120.05]) modül teorik 1.84 ölçülen 1.84 | fark 0 | ham/QR=100/0 ham/Ar=0/0 adaptif/QR=100/0 adaptif/Ar=100/0 2x/QR=100/0 2x/Ar=100/0 2x+adaptif/QR=100/0 2x+adaptif/Ar=100/0
+model silme: True (data: true)
+bitti: 20 poz
+tarama çıkış: 0

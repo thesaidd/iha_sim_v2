@@ -1,0 +1,3 @@
+[INFO] [1793376090.944310840] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/advanced_plane_0/link/base_link/sensor/camera/image (gz.msgs.Image) -> /uav0/camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[INFO] [1793376091.039198046] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/advanced_plane_0/link/base_link/sensor/camera/camera_info (gz.msgs.CameraInfo) -> /uav0/camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[INFO] [1793376584.854507728] [rclcpp]: signal_handler(SIGINT/SIGTERM)

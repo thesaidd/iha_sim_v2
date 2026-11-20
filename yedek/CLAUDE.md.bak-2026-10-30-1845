@@ -1,0 +1,89 @@
+# İHA Sim V2
+
+TÜBİTAK kapsamında İHA tespit/takip sistemi. Hedef: simülasyonda iki sabit kanatlı İHA'yı birlikte uçurmak ve aralarında tespit/takip sistemini test etmek.
+
+## Yığın (Ubuntu 22.04, WSL2)
+- ROS 2 Humble, Gazebo Sim 8 (Harmonic), PX4 SITL (`~/PX4-Autopilot`, v1.17.0-alpha1), MicroXRCE-DDS Agent
+- `px4_msgs` çalışma alanı: `~/ros2_ws` (`source ~/ros2_ws/install/setup.bash`)
+- Model: `advanced_plane` (sabit kanat, 640x480 30 Hz kamera). MAVROS/ArduPilot kullanılmıyor.
+- Python: ultralytics (YOLO11), opencv + contrib, torch
+
+## Klasörler
+- `~/iha_sim_v2/` — V2, **aktif** (orbit görevi, telemetri monitörü, `v2_proje_gunlugu.md`)
+- `~/iha_tespit_sim/` — Git deposu. `detection_core/` (YOLO, tracker, Kalman), `yolo11m-uav.pt`. V1 swarm kodu **arşiv/deprecated**.
+- Yedek dalı: `yedek/2026-10-25-v1-v2-calisma` (iha_tespit_sim)
+
+## Simülasyonu başlatma (ayrı terminaller, sırayla)
+```
+MicroXRCEAgent udp4 -p 8888
+cd ~/PX4-Autopilot && PX4_GZ_WORLD=default PX4_GZ_MODEL_POSE="0,0,0.5,0,0,0" PX4_SYS_AUTOSTART=4008 make px4_sitl gz_advanced_plane
+cd ~/PX4-Autopilot && PX4_GZ_WORLD=default PX4_GZ_MODEL_POSE="-15,15,0.5,0,0,0" PX4_SYS_AUTOSTART=4008 instance=1 ./build/px4_sitl_default/bin/px4 -i 1
+source ~/ros2_ws/install/setup.bash && python3 v2_telemetry_monitor.py
+source ~/ros2_ws/install/setup.bash && python3 v2_orbit_mission.py --ros-args -p uav_id:=0   # ve :=1
+```
+Kalkış QGroundControl'den manuel; görev düğümü uçak 40 m'ye ulaşınca Offboard'u devralır.
+
+## Çoklu araç kuralları
+- uav0: topic öneki `/fmu`, SysID 1. uav1: `/px4_1/fmu`, SysID 2 (`target_system = uav_id + 1`).
+- Okuma topic'leri sürüm ekli: `vehicle_status_v2`, `vehicle_local_position_v1`.
+- PX4 çıkış topic'leri için QoS: BEST_EFFORT + VOLATILE. Komut yayıncıları: TRANSIENT_LOCAL.
+- Orbit: R=100 m, V=15 m/s, uav1 faz farkı π.
+
+## Kurallar
+- Mimari: yalnızca standart Offboard + TrajectorySetpoint. L1/TECS/APF/Pure Pursuit **yasak** (V1'de sorun çıkardı).
+- Kamera köprüsü: Gazebo → ROS için `ros_gz_bridge`; şu an yalnızca tek `/camera/image` var, uav1 için yok. Topic adları (`/camera/image` vs `/uav0/camera`) tutarsız, hizalanacak.
+- Gizli bilgileri (token, `.ssh`, `.aws`) asla dosyaya/commit'e yazma.
+- Simülasyon süreçlerini kullanıcı onayı olmadan başlatma/durdurma. PX4 `Tools/simulation/gz` elle değiştirilmiş; PX4'ü güncelleme/reset yapma.
+- Her oturum sonunda `v2_proje_gunlugu.md` başına (üste) kayıt ekle.
+
+## Bilinen durum (2026-10-30)
+- Günlük başlatma: `~/iha_sim_v2/launch_all.sh` (kamerasız model, QGC'siz). `CAM=1` kameralı modeli **GstCameraSystem'siz sunucu yapılandırmasıyla** açar (sızıntısız, 2026-10-30); `CAM=T` 16 mm aşağı bakan kamera + iha_arena (QR hedefi); `start_sim.sh` ve yukarıdaki `make` komutları da kameralıdır ama orijinal server.config'i kullanır → sızdırır.
+- Özel dünya: `GUI=1 WORLD=iha_arena ./launch_all.sh` → `gz_worlds/iha_arena.sdf` (üretici: `gz_worlds/make_iha_arena.py`; PX4 default.sdf'nin kopyası, dünya adı "default" ve spherical_coordinates aynı). Yalnızca görsel: R 100 m turuncu halka, merkez diski, 140 m'de 4 direk (20 m'de sarı bant, 100 m kırmızı, 120 m mavi; **D direği kalkış hattı yüzünden doğudan 30° kuzeyde**, (121, 70)), 50 m ızgara ±300 m, 6 bina (r > 186 m), QR hedefi (−60, −60); 138 varlık. Pencere güneybatıdan 300 m'den merkeze bakar, PX4 kamera takibi kapalı (`PX4_GZ_NO_FOLLOW=1`). RTF 0,95 (pencere açık), sunucu 527–529 MB. Bu genel bakışta uçaklar 1–2 piksel.
+- İşaretçiler: `GUI=1 VIZ=1 ./launch_all.sh` ya da çalışan pencereye `python3 viz_trails.py` (gerçek PID'i pgids'e yaz). Uçak başına yarı saydam küre (8 m; uav0 kırmızı, uav1 mavi), 60 sn iz, zemine dikey çizgi; 6 işaretçi, 5 Hz, `/world/default/dynamic_pose/info` (~51 Hz) → `/marker_array`. gz.transport13 Python bağında abonelik açıkken request() yanıtı teslim alamıyor; güncellemeler 20 ms beklemeyle "yanıtsız" gönderilir (uygulanıyor), kapanışta abonelik kaldırılıp silme `/marker_array` ile doğrulanır (`/marker` yanıt vermiyor). RTF etkisi yok (0,992 → 0,995).
+- Kamera: `~/iha_sim_v2/cam.sh uav0|uav1|genel` (`/gui/follow/offset` + `/gui/follow`, `/gui/move_to/pose`); hedef değişince kamera ~10 sn'de oturur.
+- Pencere: `GUI=1 ./launch_all.sh`; çalışan sunucuya sonradan bağlamak için sunucunun ortamıyla (`/proc/<pid>/environ`) `gz sim -g`. WSLg'de yazılımla işleniyor (llvmpipe/swrast, d3d12 değil): ~%400 CPU, ~670 MB; RTF 0,999, sunucu belleği sabit (2026-10-29). Ekran görüntüsü: `gz service -s /gui/screenshot --reqtype gz.msgs.StringMsg --reptype gz.msgs.Boolean --req 'data: ""'` → `~/.gz/gui/pictures/`.
+- **Kamera sızıntısı testi (2026-10-29 18:45, `gz_models_cam_tests/`):** A orijinal 1393 MB/dk, B `visualize=false` 1340, C 320×240@10 Hz 132, D `--render-engine ogre` (gerçekten ogre1 yüklendi) 1601; kamerasız 0. Sızıntı ≈ **tek kameranın her karesi için bir RGB kare** (A 23,2 MB/s ≈ 26 kare/s × 0,92 MB; C ve D de aynı orana uyuyor); render motoru ve visualize'dan bağımsız. Baş şüpheli PX4 `gz_plugins/gstreamer/GstCameraSystem` (server.config'te yüklü; yalnızca ilk kamera topic'ine abone, her kareyi `appsrc`'ye itiyor; appsrc'de max-bytes/block/leaky yok).
+- **Kamera sızıntısı ÇÖZÜLDÜ (2026-10-30): neden `GstCameraSystem`.** `~/iha_sim_v2/server_nogst.config` = PX4 `src/modules/simulation/gz_bridge/server.config` (gz_env.sh'in yüklediği; `Tools/simulation/gz/server.config` ile birebir aynı) eksi `libGstCameraSystem.so` satırı. A modeli + bu kopya: 527 → 529 MB / 2 dk (~1 MB/dk; önce 1393), CPU %147 (önce %328), RTF 1,000 (önce 0,871), kamera 16,7 / 16,6 Hz. Doğrulama: log'da `Loaded (12) plugins from file [.../server_nogst.config]`, `/proc/<pid>/maps`'te GstCamera yok. Bedeli: GStreamer UDP video akışı (QGC, 5600) yok; görüntü gz topic'inden (`/world/default/model/advanced_plane_<i>/link/base_link/sensor/camera/image`) alınmalı. Kamera hızı yazılım render'ında ~17 Hz (SDF 30 Hz). Kapanışta (SIGTERM) sunucu bir kez segfault verdi; ölçümü etkilemedi, incelenmedi. Orijinal server.config'e ve PX4'e dokunulmadı (yedek: `yedek/server.config.orig-2026-10-30`).
+- **Gerçek kamera modelleri (2026-10-30, `gz_models_cam_hw/T|W`, README.txt):** RPi Global Shutter Camera (Sony IMX296, 1456×1088, 3,45 µm, sensör 5,023×3,754 mm; resmi RPi belgesi + Sony spesifikasyonu ile doğrulandı). T = 16 mm telefoto `horizontal_fov` 0,3114 rad (17,84° × 13,38°), W = 6 mm geniş açı 0,7929 rad (45,43° × 34,74°); A'dan yalnızca kamera bloğu farklı, `gz sdf -k` A ile aynı. camera_info'da fx doğrulandı (W 1739,07 px ≈ f/p 1739,13). İğne deliği, nadir bakış: 1×1 m hedef 100 m'de T 46 px / W 17 px, 150 m'de 31 / 12 px; QR 50 px için azami irtifa T 92,8 m, W 34,8 m. **Modeldeki kamera ileri bakar** (pose pitch 0); yer hedefi için aşağı eğilmesi gerekir.
+  - Ölçüm (server_nogst.config, 1 dk, kalkış yok): T ve W ikisi de RSS 555 → 556 MB, RTF 1,000; CPU T %148, W %136. Kamera hızı 640×480'de 16,7 Hz → T 13,0, W 12,5 Hz (−%22/−%25; SDF 30 Hz). Kapanışta gz sunucusu her seferinde segfault veriyor (server_nogst.config ile 4/4, `libgcc_s`), ölçüm sonrası; incelenmedi.
+  - **DÜZELTME (2026-10-30 18:05):** Gazebo kamerası **yalnızca abonesi varken** görüntü işler. Yukarıdaki "RTF 1,000" abonesiz bellek aşamasından (kamera muhtemelen çalışmıyordu); Hz sayımı Python gz abonesiyle yapıldı ve aboneyle sınırlı olabilir. Kamera gerçekten çalışırken (köprü, 1 kamera 1456×1088): **RTF 0,83**, gz CPU %299, kamera sim zamanında ~31 Hz (stamp aralığı 32 ms), duvar saatinde ~24 Hz. Yani yüksek çözünürlük kare hızını değil RTF'yi düşürüyor (sensör sistemi işlemeyi bekliyor).
+- **QR hedefi (2026-10-30, `gz_worlds/`):** `make_qr_hedef.py` → `qr_hedef01.png` (sürüm 1, M, "HEDEF-01", 4 modül kenar, 29×29 modül, 16 px/modül, 464×464 RGB; format bitleriyle M ve `cv2.QRCodeDetector` ile içerik doğrulanır). OpenCV 4.9 `QRCodeDetector` ≥ 26 px/modülde kusursuz görüntüyü bile tespit edemiyor (`QRCodeDetectorAruco` edebiliyor) → 16 px. Levha: kod 1,00 m, modül 4,762 cm, kenarla 1,381 m. `make_iha_arena.py`: `arena_qr_hedef01`, (−60, −60, z 0,05), `<plane>` + PBR `albedo_map` (mutlak yol), çarpışma/gölge yok; 138 varlık. **Pencereden doğrulandı:** 8 m'den dik aşağı, kuzey yukarı bakışta çözüldü, aynasız, kuzey yukarı (modül uyumu %100).
+- **Aşağı bakan kamera `CAM=T` (2026-10-30):** `gz_models_cam_hw/T_nadir` = T + kamera `<pose>0.07 0 -0.1 0 1.5708 0</pose>` (gövde altı, dik aşağı, görüntü üstü = burun). `launch_all.sh CAM=T` → T_nadir + server_nogst.config + her zaman `WORLD=iha_arena`. **Yerdeyken kamera zeminden 2,5 cm yukarıda** (base_link z 0,125), `clip near` 0,1 m → zemin/ızgara/disk kırpılır, kare düz arka plan (218 = 0,7 arka plan rengi sRGB'de). Uçuşta sorun değil; yerde görüntü için `near` 0,01 ya da kamera daha yukarı.
+- **Kamera → ROS (2026-10-30):** `~/iha_sim_v2/camera_bridge.yaml` (`ros_gz_bridge parameter_bridge`; çalıştırma komutu ve QoS dosya başında). `/uav0/camera/image` (sensor_msgs/Image, rgb8 1456×1088, frame `advanced_plane_0/base_link/camera`) + `/uav0/camera/camera_info` (fx=fy 4637,81, cx 728, cy 544). QoS YAML'da tanımlanamıyor → `-p qos_overrides./uav0/camera/image.publisher.reliability:=best_effort` (doğrulandı: BEST_EFFORT/VOLATILE). `launch_all.sh` köprüyü başlatmıyor; elle başlat, gerçek pgid'i `/tmp/iha_sim.pgids`'e yaz (`setsid … &` ile `$!` yanlış).
+  - Ölçüm (CAM=T, kalkış yok, 60 sn): `ros2 topic hz` 24,5 Hz; RTF 0,826–0,830; gz 630 MB sabit / %299 CPU, köprü 59 MB / %37, Agent 36 MB / %4 (odometri 84 Hz her araç, log'da hata yok). Bellek artmıyor. Uçtan uca gecikme (sim stamp → ROS) medyan 43 ms, p95 50, maks 58 ms; kare kaybı ~%2,4 (≤ 100 ms boşluklar). Sonuçlar: `gz_models_cam_hw/sonuclar_2026-10-30_T_nadir/`; betikler `gz_models_cam_hw/sys_monitor.py`, `cam_probe.py`.
+- **Pencere tuzağı:** sonradan açılan `gz sim -g` `TRACK` modunda `advanced_plane_0`'a kilitli açılabiliyor (nereden geldiği bulunamadı; PX4 log'unda follow yok) → `/gui/move_to/pose` birkaç sn sonra bozuluyor. Önce `gz topic -t /gui/track -m gz.msgs.CameraTrack -p 'track_mode: NONE'`. `gz sim -g` kendi oturumunu açıyor; kapatmak için arayüz sürecinin kendi pgid'i öldürülmeli.
+- Kamerasız kopya: `~/iha_sim_v2/gz_models_nocam/` (478 MB'ta sabit), hâlâ varsayılan. Orijinal `model.sdf`'e dokunma; yedeği `~/iha_sim_v2/yedek/`.
+- **Spawn konumu:** Değişken `PX4_GZ_MODEL_POSE`; `PX4_GZ_POSE` PX4 tarafından okunmaz. Havada doğurma işe yaramaz (sabit kanat hızsız düşer).
+- **QGC'siz kalkış:** `mavlink_takeoff.py` (pymavlink, uav0 udp 14540) GCS kalp atışı gönderir, `MIS_TAKEOFF_ALT` ayarlar, arm + takeoff. Uçuşta kalp atışı kesilirse `NAV_DLL_ACT=2` → Return.
+- **Açık sorun — hava hızı:** Kalkıştan ~20 sn sonra "Airspeed sensor failure detected". Neden: PX4 gz `AirSpeed` eklentisi sıcaklık göndermiyor (0 K) → `vehicle_air_data.ambient_temperature` −60 °C → TAS %14 düşük → yenilik kontrolü tetikleniyor. `ASPD_FS_T_START=-1` → hava hızı kalıcı `nan`.
+  - **Geçici önlem — YALNIZCA SİMÜLASYON, gerçek donanıma TAŞINMAYACAK:** `ASPD_DO_CHECKS=0` (hava hızı doğrulama kontrolleri kapalı). Tek yer: `mavlink_takeoff.py` içindeki `SIM_ONLY_PARAMS`; her çalıştırmada iki araca da yazılır, SITL `rootfs/<i>/parameters.bson`'a kaydeder. Geri alma: `python3 mavlink_takeoff.py --uav 0 1 --revert-sim-params` (→ 7). Uçuşta hava hızı zaten geçersiz olmuşsa etkisi bir sonraki PX4 açılışında görülür.
+  - **Açık iş — gerçek düzeltme:** `PX4-Autopilot/src/modules/simulation/gz_plugins/airspeed/AirSpeed.cpp` mesaja sıcaklık yazmalı (`temperature_local` hesaplanıyor ama gönderilmiyor); `src/modules/simulation/gz_bridge/GZBridge.cpp` 0 K'yi geçerli sıcaklık saymamalı. Düzeltme sonrası `ASPD_DO_CHECKS` 7'ye döndürülmeli.
+- **Kalp atışı uyarısı:** uav0 havadayken `mavlink_takeoff.py` durdurulmamalı; ~10 sn kesinti `NAV_DLL_ACT=2` ile RTL'yi tetikliyor ve bağlantı geri gelse de iptal olmuyor (2026-10-29'da yaşandı).
+  - **Geçici önlem — YALNIZCA SİMÜLASYON, gerçek donanıma TAŞINMAYACAK:** `NAV_DLL_ACT=0` (veri bağlantısı kaybında eylem yok), aynı `SIM_ONLY_PARAMS` içinde; `--revert-sim-params` 2'ye döndürür. Gerçek uçakta veri bağlantısı kaybı eylemi açık kalmalı.
+- Kalkışta hız 57 m/s'ye çıkıyor (`FW_AIRSPD_MAX=20`); incelenmedi.
+- **Sıcaklık hatasının ikinci etkisi:** rüzgar kestiricisi TAS açığını hava hızı ölçeği (~1,185) olarak öğreniyor; `ASPD_SCALE_APPLY=2` bunu uçuşta uyguluyor → CAS %18 yüksek, uçak trim 15 m/s yerine ~13 m/s uçuyor. Disarm'da `ASPD_SCALE_1`'e kaydedilebilir (uav1'de 1,0273 bulundu, 2026-10-29'da 1,0'a çekildi).
+  - **Geçici önlem — YALNIZCA SİMÜLASYON, gerçek donanıma TAŞINMAYACAK:** `ASPD_SCALE_APPLY=0` (ölçek tahmini uygulanmaz/kaydedilmez), `SIM_ONLY_PARAMS` içinde; `--revert-sim-params` 2'ye döndürür. Gerçek uçakta ölçek kalibrasyonu açık kalmalı.
+  - **Geçici önlem — YALNIZCA SİMÜLASYON, gerçek donanıma TAŞINMAYACAK:** `FW_AIRSPD_TRIM=14` (Hold'da yer hızını orbit setpoint hızı 15 m/s'ye yaklaştırmak için; trim 15'te ~16 m/s ölçüldü). `SIM_ONLY_PARAMS` içinde; `--revert-sim-params` 15'e döndürür.
+- Orbit girişi: `orbit_approach.py` (merkezde Hold, teğet) → `v2_orbit_mission.py` → `orbit_watch.py`.
+  - **Varsayılan `--mode rabbit` çalışıyor:** uav0 4 dk, yarıçap hatası +6,0 ± 0,2 m, irtifa ±1,3 m (2026-10-29). +6 m sabit dışa kayma lookahead geometrisinden.
+  - `--mode time` kararsız: uçak geride kalınca dışa kayıyor (41. ve 57. sn'de abort). Tavşan modunda iki araç arası 180° korunmaz; ayrı aralık denetimi gerekir.
+  - **İki İHA çalışıyor (2026-10-29, 4 dk):** uav0 +5,7 ± 0,2 m, uav1 +6,5 ± 0,2 m; açı farkı 206–217° (−0,023 °/sn kayma), en küçük 3B mesafe 180 m. Akış: uav0 `orbit_approach` + düğüm → uav1 `ros_takeoff.py` (DDS) → `orbit_approach --uav 1 --opposite-of 0` → uav1 düğümü → `orbit_watch.py --uav 0 1`.
+  - Çerçeveler: her PX4 kendi doğduğu noktayı orijin alır (uav1 = uav0 + N15 E−15 m). Merkez uav0 çerçevesinde verilir, araçlar global referanstan çevirir (`center_frame_uav`, `--frame-uav`).
+  - uav1 merkezde Hold'dayken (r 80 m, 120 m) orbit'teki uav0'a (r 106 m, 100 m) 33 m'ye kadar yaklaşabilir.
+  - 6 dk testi (2026-10-29 18:33) başarılı; açı farkı +0,124 °/sn doğrusal kaydı (167 → 212°). Aralık denetimi olmadan ~20 dk'dan uzun iki İHA uçuşunda 40 m kuralına yaklaşılır.
+- **Açık sorun — periyodik duraklama:** zaman zaman ~33 sn'de bir ~3 sn tüm süreçler (DDS'siz olanlar dahil) ve simülasyon donuyor, RTF ~0,91'e düşüyor; ardından ROS'taki PX4 zaman damgaları ~3 sn atlıyor. 16:10'dan sonra kendiliğinden kesildi; sonda (dirty/writeback/steal) bir neden göstermedi. PX4 `timestamp`'ını zaman tabanı olarak kullanma.
+- **Açık sorun — ivmeölçer ofseti:** uzun uçuşta (~15–25 dk sonra) "Preflight Fail: High Accelerometer Bias"; bir kez pusula hatası ve "Land now" ile birlikte görüldü.
+- **Açık sorun — px4_msgs uyumsuz:** `~/ros2_ws/src/px4_msgs` PX4 derlemesinden yeni; `VehicleStatus` v3 ↔ PX4 v2 → `vehicle_status_v2` ROS'a ulaşmaz ("payload size 88 > 87" hatası). Mod/arm için `vehicle_control_mode` kullan. Gerçek düzeltme: px4_msgs'i PX4 `msg/` ile eşleyip yeniden derlemek.
+- Orbit: `v2_orbit_mission.py` (parametreli, Offboard yeniden deneme, çıkışta yeniden girmez), acil durum `~/iha_sim_v2/orbit_abort [uav_id]`, test `orbit_watch.py`. TrajectorySetpoint'te kullanılmayan alanlar NaN olmalı (ROS varsayılanı 0 = PX4'te geçerli değer).
+- Arka plan süreç başlatırken `cd … && setsid cmd &` zinciri `$!`'a alt kabuğu yazar; `/tmp/iha_sim.pgids`'e gerçek PID'i yaz. `pgrep -f`/`pkill -f` desenleri kendi komut satırıyla eşleşip kabuğu öldürebilir.
+- Eski açık sorun (5 Mayıs, 40 m'de Offboard'a geçmeme): `State.WAITING` eksikliği düzeltildi (2026-10-25), doğrulanmadı. Eski kayıtlar: `rootfs/{log,1/log}/2026-05-05/*.ulg`; yeni `-d` çalıştırmada uav0 kaydı `rootfs/0/log/` altında (büyük, tamamını ekrana dökme).
+- Çalışıyor: DDS zinciri, iki İHA ayrı konumda doğuyor, uav0 QGC'siz 100 m LOITER.
+- Kanıtsız: orbit düğümü ile uçuş, iki araçla orbit, tespit/takip entegrasyonu, uav1 kamerası.
+
+## Nereden devam edilecek (2026-10-30, 18:15)
+QR hedefi arenada ve pencereden doğrulandı; `CAM=T` aşağı bakan 16 mm kamera + `camera_bridge.yaml` ile görüntü ROS'ta (yerde test edildi). **Uçuşta QR denemesi yapılmadı.**
+1. **uav0'ı 80 m'de QR üzerinden düz geçirmek ve çözümü denemek:** `CAM=T ./launch_all.sh` + köprü; QGC'siz kalkış (`mavlink_takeoff.py`), QR'a (−60, −60; PX4 NED'de N −60, E −60, uav0 çerçevesi) doğru, burun hat yönünde, sabit irtifa 80 m düz geçiş (Offboard + TrajectorySetpoint; orbit değil). Öngörü (iğne deliği): GSD 1,73 cm/px, kod 58 px, **modül 2,76 px** (çözüm sınırda; olmazsa 60–70 m ya da daha büyük QR), kaplama 25,1 m (yanal) × 18,8 m (ileri), 15 m/s'de ~1,2 sn / ~36 kare görüşte, yanal tolerans ±11,9 m. ROS'ta `/uav0/camera/image` → OpenCV `QRCodeDetector` (ve `QRCodeDetectorAruco`) düğümü; çözülen kareleri ve uçağın konumunu kaydet. Kamera çalışırken RTF ~0,83 (sınır 0,8'e yakın; pencere açmadan uç). Hareket bulanıklığı/global shutter modellenmiyor.
+2. **Sonra:** uav1 kamerası ve köprüsü (`/uav1/camera/...`), gerekirse ROS tarafında küçültme; YOLO düğümü (yol haritası 5).
+
+## Yol haritası
+1. `.ulg` analiziyle 40 m / Offboard hatasını bul → 2. tek İHA orbit → 3. iki İHA orbit → 4. iki kamera köprüsü → 5. YOLO tek başına → 6. tracker + Kalman → 7. tespitten uçuş komutuna kontrol katmanı.

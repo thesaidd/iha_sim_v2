@@ -1,0 +1,38 @@
+T+   0.0  hedef (uav1 NED) (-75.0, -45.0); dalış planı {"hedef": [-75.0, -45.0], "baslangic_yatay_m": 50.0, "gelis_yonu_deg": 180.0, "tercih_yon_deg": 180.0, "geo": {"durma_mesafesi_m": 20.0, "durma_irtifa_m": 15.0, "x_durma_m": 13.228756555322953, "aci_istenen_deg": 12.0, "aci_sinir_deg": 6.84, "aci_etkin_deg": 6.84, "aci_kirpildi": true, "egim": 0.12000000000000001, "alcalma_m_s": 1.8, "hat_uzunlugu_m": 250.0, "duz_giris_m": 75.0, "dalis_yatay_m": 161.77124344467705, "dalis_irtifa_kaybi_m": 19.4, "giris_irtifa_m": 34.412549213361245, "dalis_sn": 10.8, "hiz": 15.0, "irtifa_onalma_sn": 3.5, "min_irtifa_m": 8.0, "pullup_dip_tahmin_m": 12.3, "alcalma_siniri_etkin_m_s": 2.0, "uygun": true, "nedenler": []}, "uygun": true, "yon_deg": 280.0, "yon_sapma_deg": 100.0, "ilk_red": "hizalanma çemberi ↔ kule (-4.9 m)", "giris": "hizalan", "giris_detay": {"s": 8.7, "x": 49.2, "gerekli_m": 1113.2}, "ara_noktalar": [], "A": [-118.4, 201.2], "H": [-39.6, 215.1], "S": [-77.3, -32.0], "C": [15.8, -559.8], "cikis_m": 536.0, "gecis_m": 260.5, "en_kucuk_aciklik_m": {"uav0_bekleme": 1.0, "direk_D": 1.7, "direk_B": 3.7}, "sure_sn": {"gecis": 17.4, "cember": 57.1, "hat": 15.8, "dalis": 10.8, "tirmanma": 34.2, "toplam": 124.4}}
+T+   0.0  UYARI: istenen dalış açısı 12.0° → 6.84° (alçalma sınırı 2.0 m/s = min(PX4 2.0, süzülme 2.4) × pay 0.9, hız 15.0 m/s)
+T+   0.0  DO_REPOSITION → H (-40, 215), 120 m: kabul
+T+   0.1  geçiş: (-24, -45, 120 m)
+T+   5.0  geçiş: (16, 6, 120 m)
+T+  10.0  geçiş: (-3, 79, 120 m)
+T+  11.5  H çemberinde giriş irtifasına alçalma: 120 → 34 m
+T+  11.6  hizalama: s=-132 m  x=+90.3 m  rota hatası=-176.0°  irtifa=120.0 m  bekleyen: rota
+T+  16.5  hizalama: s=-189 m  x=+133.4 m  rota hatası=+133.7°  irtifa=115.1 m  bekleyen: rota
+T+  21.5  hizalama: s=-257 m  x=+159.9 m  rota hatası=-175.5°  irtifa=106.4 m  bekleyen: rota
+T+  26.5  hizalama: s=-318 m  x=+122.1 m  rota hatası=-121.9°  irtifa=96.7 m  bekleyen: rota
+T+  31.5  hizalama: s=-324 m  x=+50.1 m  rota hatası=-68.3°  irtifa=86.8 m  bekleyen: rota
+T+  36.5  hizalama: s=-270 m  x=+2.4 m  rota hatası=-14.6°  irtifa=76.8 m  bekleyen: irtifa
+T+  41.5  hizalama: s=-199 m  x=+18.0 m  rota hatası=+39.0°  irtifa=66.8 m  bekleyen: rota
+T+  46.5  hizalama: s=-170 m  x=+84.1 m  rota hatası=+92.7°  irtifa=56.8 m  bekleyen: rota
+T+  51.5  hizalama: s=-206 m  x=+146.9 m  rota hatası=+146.3°  irtifa=46.8 m  bekleyen: rota
+T+  56.5  hizalama: s=-278 m  x=+155.2 m  rota hatası=-160.0°  irtifa=38.1 m  bekleyen: rota
+T+  61.5  hizalama: s=-327 m  x=+102.3 m  rota hatası=-106.4°  irtifa=35.3 m  bekleyen: rota
+T+  66.5  hizalama: s=-314 m  x=+31.2 m  rota hatası=-52.7°  irtifa=34.7 m  bekleyen: rota
+T+  71.5  hizalama: s=-248 m  x=-0.0 m  rota hatası=+0.9°  irtifa=34.5 m  bekleyen: uav0 konumu yok
+T+  76.5  hizalama: s=-185 m  x=+33.9 m  rota hatası=+54.6°  irtifa=34.4 m  bekleyen: rota
+T+  81.5  hizalama: s=-174 m  x=+105.4 m  rota hatası=+108.2°  irtifa=34.4 m  bekleyen: rota
+T+  86.5  hizalama: s=-225 m  x=+156.3 m  rota hatası=+161.9°  irtifa=34.4 m  bekleyen: rota
+T+  91.5  hizalama: s=-297 m  x=+145.0 m  rota hatası=-144.5°  irtifa=34.4 m  bekleyen: rota
+T+  96.5  hizalama: s=-330 m  x=+80.8 m  rota hatası=-90.8°  irtifa=34.4 m  bekleyen: rota
+T+ 101.5  hizalama: s=-298 m  x=+16.0 m  rota hatası=-37.2°  irtifa=34.4 m  bekleyen: rota
+T+ 106.5  hizalama: s=-227 m  x=+3.3 m  rota hatası=+16.5°  irtifa=34.4 m  bekleyen: rota
+T+ 111.5  hizalama: s=-175 m  x=+53.2 m  rota hatası=+70.1°  irtifa=34.4 m  bekleyen: rota
+T+ 116.5  hizalama: s=-184 m  x=+124.9 m  rota hatası=+123.8°  irtifa=34.4 m  bekleyen: rota
+T+ 121.5  hizalama: s=-247 m  x=+160.1 m  rota hatası=+177.4°  irtifa=34.4 m  bekleyen: rota
+T+ 126.5  hizalama: s=-313 m  x=+130.0 m  rota hatası=-128.9°  irtifa=34.4 m  bekleyen: rota
+T+ 131.5  hizalama: s=-327 m  x=+59.3 m  rota hatası=-75.2°  irtifa=34.4 m  bekleyen: rota
+T+ 136.5  hizalama: s=-279 m  x=+5.4 m  rota hatası=-21.6°  irtifa=34.4 m  bekleyen: rota
+T+ 141.5  hizalama: s=-207 m  x=+12.3 m  rota hatası=+32.1°  irtifa=34.4 m  bekleyen: rota
+T+ 146.5  hizalama: s=-170 m  x=+74.4 m  rota hatası=+85.7°  irtifa=34.4 m  bekleyen: rota
+T+ 151.5  hizalama: s=-198 m  x=+141.1 m  rota hatası=+139.4°  irtifa=34.4 m  bekleyen: rota
+T+ 156.5  hizalama: s=-268 m  x=+158.0 m  rota hatası=-167.0°  irtifa=34.4 m  bekleyen: rota
+T+ 161.5  NO-GO: hizalama zaman aşımı (150 sn; engel: uav0 konumu yok) — uav1 Hold'da bırakıldı

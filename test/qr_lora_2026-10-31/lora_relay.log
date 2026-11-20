@@ -1,0 +1,27 @@
+17:36:05  lora_relay hazır: /hedef_konum → /hedef_konum_role | gecikme 50.0±20.0 ms (Gauss, kırpılı), kayıp %3
+17:38:35  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:38:50  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:39:05  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:39:20  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:39:35  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:39:50  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:40:05  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:40:20  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:40:35  istatistik: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+17:40:38  ÖZET: {"alinan": 8, "gonderilen": 8, "kayip": 0, "kayip_orani_gerceklesen_%": 0.0, "gecikme_ort_ms": 51.97, "gecikme_min_ms": 38.88, "gecikme_maks_ms": 64.97}
+Traceback (most recent call last):
+  File "/home/yusuf22_04/iha_sim_v2/lora_relay.py", line 141, in <module>
+    main()
+  File "/home/yusuf22_04/iha_sim_v2/lora_relay.py", line 130, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

@@ -1,0 +1,32 @@
+  bilgi [pay 40]: NO-GO hedeflerinin en yakın direğe uzaklığı [40, 41, 45]; uygun planlı hedeflerde en küçük 45 m
+✔ [pay 40] 45 durumun 42'inde uygun plan, 3 NO-GO (uav1 Hold'da kalır); NO-GO hedeflerinin direğe uzaklığı medyan 41 m, en uzak 45 m
+✔ [pay 40] uygun planların hepsi direklerden ≥ 40 m (bağımsız denetim; en küçük 41.5 m)
+✔ [pay 40] 100 m altındaki her yol noktası uav0'ın GERÇEK çıkış çemberinden ≥ 60 m dışarıda (en küçük 60.7 m)
+  bilgi [pay 40]: 4/42 planda bir Hold merkezi koridorun üstünde (≥ 80 m irtifada); 40 m altında koridora düşen yol noktası 321
+✔ [pay 40] NO-GO'lar nedenli: ['hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-1.5 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-4.4 m))', 'hiçbir yön açık değil (ilk ret: hizalanma çemberi ↔ direk_D ']
+  bilgi [pay 20]: NO-GO hedeflerinin en yakın direğe uzaklığı [20, 22, 23, 28, 28, 28, 28, 34, 35, 39, 39, 40, 40, 51, 53, 54, 60, 61, 64, 66, 69, 80, 122]; uygun planlı hedeflerde en küçük 48 m
+✔ [pay 20] 80 durumun 57'inde uygun plan, 23 NO-GO (uav1 Hold'da kalır); NO-GO hedeflerinin direğe uzaklığı medyan 40 m, en uzak 122 m
+✔ [pay 20] uygun planların hepsi direklerden ≥ 40 m (bağımsız denetim; en küçük 41.3 m)
+✔ [pay 20] 100 m altındaki her yol noktası uav0'ın GERÇEK çıkış çemberinden ≥ 60 m dışarıda (en küçük 62.4 m)
+  bilgi [pay 20]: 11/57 planda bir Hold merkezi koridorun üstünde (≥ 80 m irtifada); 40 m altında koridora düşen yol noktası 580
+✔ [pay 20] NO-GO'lar nedenli: ['hiçbir yön açık değil (ilk ret: geçiş yolu yok)', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_B (-3.4 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-0.0 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-0.2 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-0.5 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-1.1 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-1.3 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-1.6 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-2.0 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-2.1 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_D (-3.6 m))', 'hiçbir yön açık değil (ilk ret: hat ↔ direk_G (-0.6 m))', 'hiçbir yön açık değil (ilk ret: hizalanma çemberi ↔ direk_D ', 'hiçbir yön açık değil (ilk ret: tırmanış ↔ direk_B (-3.9 m))']
+✔ eski sabit ön-hesap (31 uygun plan): gerçek uav0 çemberine < 60 m giren 0; devralma kapısında takılan 16; hayalet çember yüzünden yönü gereksiz değişen 10; gereksiz NO-GO 11
+✔ Uav0Izleyici: düz uçan uav0 → Hold yok
+✔ Uav0Izleyici: Hold'a yeni girmiş (6 sn) → henüz kararlı değil
+✔ Uav0Izleyici: 18 sn Hold → kararlı, merkez (300, 130)
+✔ Uav0Izleyici: merkez kaydı (DO_REPOSITION) → kararlılık sayacı sıfırlandı
+✔ Uav0Izleyici: veri bayat → kararlı sayılmaz
+✔ Z1 batı şeridi, kuzeye uçuş → kuzey çıkış: zincir tamam (3B 19.5 m, dip 14.18 m, Hold)
+✔ Z1 batı şeridi, kuzeye uçuş → kuzey çıkış: plan uav0'ın ÖLÇÜLEN çemberine göre (merkez hatası 0.0 m, tespitten 37 sn sonra)
+✔ Z1 batı şeridi, kuzeye uçuş → kuzey çıkış: gerçekleşen iz — uav0'a en küçük 3B 310 m (≥ 40), direklere 42 m
+✔ Z2 doğu şeridi, güneye uçuş → güney çıkış: zincir tamam (3B 19.92 m, dip 14.24 m, Hold)
+✔ Z2 doğu şeridi, güneye uçuş → güney çıkış: plan uav0'ın ÖLÇÜLEN çemberine göre (merkez hatası 0.0 m, tespitten 37 sn sonra)
+✔ Z2 doğu şeridi, güneye uçuş → güney çıkış: gerçekleşen iz — uav0'a en küçük 3B 147 m (≥ 40), direklere 43 m
+✔ Z3 gerçek QR (−60, −60), E −55 şeridi, kuzeye → kuzey çıkış: zincir tamam (3B 19.87 m, dip 14.23 m, Hold)
+✔ Z3 gerçek QR (−60, −60), E −55 şeridi, kuzeye → kuzey çıkış: plan uav0'ın ÖLÇÜLEN çemberine göre (merkez hatası 0.0 m, tespitten 37 sn sonra)
+✔ Z3 gerçek QR (−60, −60), E −55 şeridi, kuzeye → kuzey çıkış: gerçekleşen iz — uav0'a en küçük 3B 140 m (≥ 40), direklere 43 m
+✔ üç senaryoda dalış hat yönleri farklı ([284, 344, 349]°) — tek tarihi hat değil
+✔ uav0 hiç Hold'a oturmuyor → NO-GO, hiçbir komut yok (uav0 kararlı Hold'a geçmedi (zaman aşımı (uav0 Hold bekleniyor, 60 sn))
+✔ uav0 verisi yok → NO-GO, komut yok
+
+26 doğrulama geçti; çıktı /home/yusuf22_04/iha_sim_v2/test/zincir_genel_2026-11-11/zincir_kuru.md

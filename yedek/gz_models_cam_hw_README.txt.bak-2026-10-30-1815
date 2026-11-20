@@ -1,0 +1,9 @@
+Gerçek donanım kamera modelleri (2026-10-30). Kaynak: gz_models_cam_tests/A (= PX4 advanced_plane orijinali).
+Kamera: Raspberry Pi Global Shutter Camera, Sony IMX296, 1456x1088, 3,45 µm piksel (sensör 5,023 x 3,754 mm).
+Yalnızca kamera bloğu farklı (model.sdf satır 129-131):
+  T: 16 mm telefoto (CGL, C bağlantı)    -> horizontal_fov 0.3114 rad (17,84°), 1456x1088
+  W: 6 mm geniş açı (CGL, CS bağlantı)   -> horizontal_fov 0.7929 rad (45,43°), 1456x1088
+update_rate 30, clip 0,1-1000 m, pose (ileri bakar) A ile aynı. Bozulma (distortion) modellenmedi.
+Kullanım (yalnızca test): PX4_GZ_MODELS=<bu klasör>/T|W, GZ_SIM_SERVER_CONFIG_PATH=~/iha_sim_v2/server_nogst.config
+hw_monitor.py: gz_models_cam_tests/cam_leak_monitor.py + RSS ilk ölçümden 100 MB artarsa ya da RTF < 0,8 olursa durur.
+Ölçüm: sonuclar_2026-10-30.txt

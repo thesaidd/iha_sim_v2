@@ -1,0 +1,7 @@
+06:38:23  [geçiş 92] hedef (-60, -60), ψ=210°, irtifa 60 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (-481, -278, 60 m)
+06:38:23  DO_REPOSITION → ara nokta (329, -120), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 43 m (denetlendi ≥ 40), koridor serbest
+06:39:19  DO_REPOSITION → H (543, 196), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 152 m (denetlendi ≥ 40), koridor serbest
+06:39:19  taşıma: H'ye 474 m, irtifa 60.5 m, direk 161 m
+06:39:29  taşıma: H'ye 355 m, irtifa 60.2 m, direk 179 m
+06:39:39  taşıma: H'ye 217 m, irtifa 60.2 m, direk 258 m
+06:39:46  TAŞIMA TAMAM (--transit-only): H'ye 120 m, irtifa 60.5 m, Hold'da

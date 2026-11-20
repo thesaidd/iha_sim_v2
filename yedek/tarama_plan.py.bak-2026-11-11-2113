@@ -1,0 +1,513 @@
+#!/usr/bin/env python3
+"""
+tarama_plan.py — alan taraması planlayıcısı: atlamalı sıralı (skip-lane / interlaced) tek yönlü boustrophedon.
+Saf geometri (ROS düğümü: alan_tarama.py; kuru test: alan_tarama_test.py). Yalnız qr_pass.py'nin sabit engel
+yardımcılarını (PYLONS, in_corridor, pylon_dist) içe aktarır → ROS ortamı gerekir (qr_pass_test.py gibi).
+
+Fikir: tespit şeridi W (≈ 16 m) dönüş yarıçapından (NAV_LOITER_RAD 80 m) çok dar. Hatlar sensöre göre
+dar aralıkla (d ≤ W, kapsama C ≈ 1) yerleştirilir ama NUMARA SIRASIYLA uçulmaz: ardışık uçulan iki hat arası
+yanal mesafe D ≥ 2·R_dönüş olacak biçimde atlanır; böylece her U dönüşü "yay 90° + düz + yay 90°" (stadyum)
+olur, hiçbir dönüş R_dönüş'ten sıkı değildir. D < 2·R_dönüş kaçınılmazsa (kutunun ortasındaki hatlar) dönüş
+"ampul" (dışarı açıl – geniş dön – geri gel; üç yay, hepsi R_dönüş) ile yapılır: daha uzun ama yine geniş.
+
+Çerçeve: uav0 yerel NED (N, E). Hat çerçevesi: t = hat boyunca (birim d = (cos ψ0, sin ψ0)), c = yanal
+(birim r = (−sin ψ0, cos ψ0), sağ +). Kutu: |t| ≤ yari, |c| ≤ yari (ψ0 yalnız 0° ya da 90°; eksenlere paralel).
+Her hat t ∈ [−T, +T], T = yari + uzatma (uzatma = kutu dışında giriş/taşma payı; dönüşler |t| ≥ T'de).
+
+Yol ilkelleri (alan_tarama.py bunları PX4 Offboard yol setpoint'ine çevirir):
+  {"tur": "hat", "a": (n, e), "b": (n, e), "psi": yön, "uzunluk": L}
+  {"tur": "yay", "merkez": (n, e), "R": R, "s": +1 sağa (saat yönü) / −1 sola, "psi0": giriş yönü,
+   "tarama": dönülen açı (> 0), "uzunluk": R·tarama}
+"""
+import math
+from dataclasses import dataclass, field
+
+from qr_pass import LOITER_R, PYLONS, TRACK_MARGIN, in_corridor, pylon_dist
+
+
+@dataclass
+class Param:
+    psi0: float = 0.0            # "ileri" hat yönü [°] (0 → hatlar K–G, yanal eksen = Doğu)
+    yari: float = 150.0          # kutu yarı kenarı [m] (300 × 300, arena merkezli)
+    merkez: tuple = (0.0, 0.0)
+    W: float = 16.0              # güvenilir tespit şeridi [m] (Adım 1)
+    hat_araligi: float = 16.0    # en büyük hat aralığı [m] (≤ W → C ≈ 1)
+    r_min: float = LOITER_R      # en küçük dönüş yarıçapı (NAV_LOITER_RAD) [m]
+    r_donus: float = 85.0        # dönüş yayı yarıçapı = r_min + pay [m] → atlama eşiği D ≥ 2·r_donus
+    uzatma: float = 40.0         # hat uçlarında kutu dışı giriş/taşma payı [m] (≥ hat aralığı kuralı)
+    hat_payi: float = 40.0       # düz hat – direk en küçük yatay mesafe [m]
+    donus_payi: float = 55.0     # dönüş bağlantısı – direk en küçük yatay mesafe [m] (40 + yay iz payı 15)
+    hold_payi: float = 40.0 + TRACK_MARGIN   # Hold çemberi – direk (çember kenarından) [m]
+    hiz: float = 15.0            # yer hızı [m/s]
+    irtifa: float = 60.0
+    on_mesafe: float = 150.0     # ilk hat: hizalama Hold'unun teğet noktası hat başından bu kadar geride [m]
+    koridor_hat: bool = True     # hatlar kalkış koridorunu kesebilir (öteki araç havadaysa; düğüm denetler)
+    alan_siniri: float = 450.0   # dönüşler |N|, |E| bu sınırın içinde kalmalı [m] (dokulu zemin ±350; ötesi düz zemin)
+    ek_listesi: tuple = (0.0, 20.0, 40.0, 60.0, 80.0, 120.0)     # dönüşü dışarı öteleme adayları [m]
+    cikis_listesi: tuple = (60.0, 100.0, 150.0, 200.0, 250.0)    # hat sonu → Hold'a geçiş mesafesi adayları [m]
+    isin_genisligi: int = 4000   # sıra aramasında katman başına tutulan durum sayısı
+
+    @property
+    def T(self):
+        return self.yari + self.uzatma
+
+    def d(self, g=1):
+        p = math.radians(self.psi0) + (0.0 if g > 0 else math.pi)
+        return (math.cos(p), math.sin(p))
+
+    def r(self, g=1):
+        p = math.radians(self.psi0) + (0.0 if g > 0 else math.pi)
+        return (-math.sin(p), math.cos(p))
+
+    def nokta(self, t, c):
+        d, r = self.d(), self.r()
+        return (self.merkez[0] + t * d[0] + c * r[0], self.merkez[1] + t * d[1] + c * r[1])
+
+    def tc(self, n, e):
+        d, r = self.d(), self.r()
+        dn, de = n - self.merkez[0], e - self.merkez[1]
+        return dn * d[0] + de * d[1], dn * r[0] + de * r[1]
+
+
+# ── Yol ilkelleri ────────────────────────────────────────────────────────────────────────────────
+def _sag(psi):
+    return (-math.sin(psi), math.cos(psi))
+
+
+def hat(a, b):
+    return {"tur": "hat", "a": a, "b": b, "psi": math.atan2(b[1] - a[1], b[0] - a[0]), "uzunluk": math.dist(a, b)}
+
+
+def yay(p0, psi, s, tarama, R):
+    """p0'dan psi yönünde başlayan, s yönüne (±1) 'tarama' rad dönen yay → (ilkel, bitiş noktası, bitiş yönü)."""
+    rr = _sag(psi)
+    m = (p0[0] + s * R * rr[0], p0[1] + s * R * rr[1])
+    pr = {"tur": "yay", "merkez": m, "R": R, "s": s, "psi0": psi, "tarama": tarama, "uzunluk": R * tarama}
+    n, e, psi1 = ilkel_nokta(pr, R * tarama)
+    return pr, (n, e), psi1
+
+
+def ilkel_nokta(pr, ilerleme):
+    """İlkel üzerinde 'ilerleme' m'deki (n, e, yön[rad])."""
+    if pr["tur"] == "hat":
+        k = 0.0 if pr["uzunluk"] == 0 else ilerleme / pr["uzunluk"]
+        a, b = pr["a"], pr["b"]
+        return a[0] + k * (b[0] - a[0]), a[1] + k * (b[1] - a[1]), pr["psi"]
+    psi = pr["psi0"] + pr["s"] * ilerleme / pr["R"]
+    rr = _sag(psi)
+    return pr["merkez"][0] - pr["s"] * pr["R"] * rr[0], pr["merkez"][1] - pr["s"] * pr["R"] * rr[1], psi
+
+
+def ilkel_ilerleme(pr, n, e, onceki=0.0):
+    """(n, e)'ye en yakın noktanın ilkel üzerindeki ilerlemesi [m] ve işaretli yanal sapma (sağ +).
+    Yayda açı sarmalı 'onceki' ilerlemeye en yakın dala açılır (ilerleme −yarım tur … +tam tur aralığında)."""
+    if pr["tur"] == "hat":
+        d = (math.cos(pr["psi"]), math.sin(pr["psi"]))
+        dn, de = n - pr["a"][0], e - pr["a"][1]
+        return dn * d[0] + de * d[1], -dn * d[1] + de * d[0]
+    s, R = pr["s"], pr["R"]
+    dn, de = n - pr["merkez"][0], e - pr["merkez"][1]
+    psi = math.atan2(s * dn, -s * de)                       # konum = merkez − s·R·sağ(psi)
+    aci = s * (psi - pr["psi0"])
+    hedef = onceki / R
+    aci += 2 * math.pi * round((hedef - aci) / (2 * math.pi))
+    return aci * R, s * (R - math.hypot(dn, de))            # sağa dönüşte dışarıda (r > R) → solda (−)
+
+
+def ilkel_setpoint(pr, ilerleme, hiz, irtifa):
+    """PX4 FW Offboard yol setpoint'i: konum (yol üzerindeki nokta), hız (teğet), ivme (yayda merkezcil → eğrilik)."""
+    L = pr["uzunluk"]
+    if pr["tur"] == "hat":
+        # düz ilkelde nokta hattın sonsuz uzantısında da geçerli (geçişlerde ileri-geri çekme olmasın)
+        n, e, psi = (pr["a"][0] + ilerleme * math.cos(pr["psi"]), pr["a"][1] + ilerleme * math.sin(pr["psi"]), pr["psi"])
+        ivme = (math.nan, math.nan, math.nan)
+    else:
+        n, e, psi = ilkel_nokta(pr, max(0.0, min(L, ilerleme)))
+        rr = _sag(psi)
+        a = hiz * hiz / pr["R"]
+        ivme = (pr["s"] * a * rr[0], pr["s"] * a * rr[1], 0.0)
+    return (n, e, -irtifa), (hiz * math.cos(psi), hiz * math.sin(psi), 0.0), ivme
+
+
+def ornekle(ilkeller, adim=5.0):
+    out = []
+    for pr in ilkeller:
+        k = max(1, int(math.ceil(pr["uzunluk"] / adim)))
+        out += [ilkel_nokta(pr, pr["uzunluk"] * i / k)[:2] for i in range(k + 1)]
+    return out
+
+
+def uzunluk(ilkeller):
+    return sum(pr["uzunluk"] for pr in ilkeller)
+
+
+def en_yakin_direk(noktalar):
+    return min(pylon_dist(q) for q in noktalar)
+
+
+# ── Hat yerleşimi ───────────────────────────────────────────────────────────────────────────────
+def bloklu_bantlar(p, pay=None):
+    """Direklerin kapattığı yanal aralıklar [(c_alt, c_üst, ad)]: düz hat (t ∈ [−T, T]) direğe < hat_payi geçer."""
+    pay = p.hat_payi if pay is None else pay
+    out = []
+    for ad, (pn, pe) in PYLONS.items():
+        t, c = p.tc(pn, pe)
+        dis = max(0.0, abs(t) - p.T)
+        if dis < pay:
+            h = math.sqrt(pay * pay - dis * dis)
+            out.append((c - h, c + h, ad))
+    return sorted(out)
+
+
+def hat_yerlestir(p):
+    """Serbest yanal aralıklara ≤ hat_araligi adımla hat yerleştirir. Bloklu bant kenarına (direğe tam hat_payi)
+    ve kutu kenarına (kenardan W/2 içeride) hat konur → kapsama, direk yasağının izin verdiği en büyük değerdir.
+    Dönüş: sıralı c listesi, serbest aralıklar."""
+    lo, hi = -p.yari + p.W / 2, p.yari - p.W / 2
+    kesim = [lo]
+    serbest = []
+    for a, b, _ in bloklu_bantlar(p):
+        if b <= lo or a >= hi:
+            continue
+        if a > kesim[-1]:
+            serbest.append((kesim[-1], a))
+        kesim.append(max(kesim[-1], b))
+    if kesim[-1] <= hi:
+        serbest.append((kesim[-1], hi))
+    hatlar = []
+    for a, b in serbest:
+        if b - a < p.W / 4:                     # çok dar aralık: tek hat (ortası)
+            hatlar.append((a + b) / 2)
+            continue
+        n = int(math.ceil((b - a) / p.hat_araligi - 1e-9)) + 1
+        hatlar += [a + (b - a) * i / (n - 1) for i in range(n)]
+    return hatlar, serbest
+
+
+def kapsama(p, hatlar):
+    """Geometrik kapsama: şeritlerin (c ± W/2) kutu yanal ekseninde birleşim oranı; ve Koopman kapsama faktörü
+    C = W · (kutu içi hat uzunluğu) / alan."""
+    ar = sorted((max(-p.yari, c - p.W / 2), min(p.yari, c + p.W / 2)) for c in hatlar)
+    top, son = 0.0, -p.yari
+    for a, b in ar:
+        a = max(a, son)
+        if b > a:
+            top += b - a
+            son = b
+    C = p.W * len(hatlar) * 2 * p.yari / (2 * p.yari) ** 2
+    return top / (2 * p.yari), C
+
+
+# ── Dönüş bağlantıları ──────────────────────────────────────────────────────────────────────────
+def u_donus(S, psi, y, R, ek=0.0):
+    """S noktasına psi yönünde gelen uçağı, yanal y (sağ +) ötedeki paralel hatta ters yönde çıkaran yol.
+    |y| ≥ 2R: stadyum (yay 90° + düz + yay 90°). |y| < 2R: ampul (dışa α, içe π + 2α, dışa α; hepsi R).
+    ek > 0: dönüş hat doğrultusunda ek m dışarı ötelenir (direkten uzaklaşmak için)."""
+    s = 1 if y >= 0 else -1
+    D = abs(y)
+    out, p0 = [], S
+    if ek > 0:
+        p1 = (S[0] + ek * math.cos(psi), S[1] + ek * math.sin(psi))
+        out.append(dict(hat(S, p1), ek=True))
+        p0 = p1
+    if D >= 2 * R - 1e-9:
+        y1, p1, h1 = yay(p0, psi, s, math.pi / 2, R)
+        out.append(y1)
+        if D - 2 * R > 1e-6:
+            p2 = (p1[0] + (D - 2 * R) * math.cos(h1), p1[1] + (D - 2 * R) * math.sin(h1))
+            out.append(hat(p1, p2))
+            p1 = p2
+        y2, p3, h3 = yay(p1, h1, s, math.pi / 2, R)
+        out.append(y2)
+        tur = "stadyum"
+    else:
+        alfa = math.acos((R + D / 2) / (2 * R))
+        y1, p1, h1 = yay(p0, psi, -s, alfa, R)
+        y2, p2, h2 = yay(p1, h1, s, math.pi + 2 * alfa, R)
+        y3, p3, h3 = yay(p2, h2, -s, alfa, R)
+        out += [y1, y2, y3]
+        tur = "ampul"
+    if ek > 0:
+        out.append(dict(hat(p3, (p3[0] + ek * math.cos(h3), p3[1] + ek * math.sin(h3))), ek=True))
+    return out, tur
+
+
+def yol_uygun(p, ilkeller, pay, koridor_yasak=True):
+    """(uygun, en yakın direk, neden). Dönüşü dışarı öteleyen düz parçalar (ek=True) hattın uzantısıdır → hat_payi;
+    ötekiler (yaylar ve aradaki düz) verilen pay ile denetlenir. Hat ucuna değen ilk/son 10 m de hat sayılır."""
+    nk = ornekle(ilkeller)
+    dm = en_yakin_direk(nk)
+    for pr in ilkeller:
+        if pr.get("ek"):
+            d1 = en_yakin_direk(ornekle([pr]))
+            if d1 < p.hat_payi - 1e-6:
+                return False, d1, f"öteleme parçası direğe {d1:.0f} m (< {p.hat_payi:.0f})"
+            continue
+        ic = ornekle([pr])
+        if pr is ilkeller[0] or pr is ilkeller[-1] or ilkeller[0].get("ek") and pr is ilkeller[1] \
+                or ilkeller[-1].get("ek") and pr is ilkeller[-2]:
+            # yay hattın ucunda başlar/biter; uç nokta hat_payi ile zaten denetli — uçtan 10 m'den uzak kısım
+            uc = [ornekle([q])[k] for q, k in ((ilkeller[0], 0), (ilkeller[-1], -1))]
+            if ilkeller[0].get("ek"):
+                uc = [ornekle([ilkeller[0]])[-1], ornekle([ilkeller[-1]])[0]]
+            ic = [q for q in ic if min(math.dist(q, u) for u in uc) > 10.0] or ic[:1]
+            if min(pylon_dist(q) for q in ornekle([pr])) < p.hat_payi - 1e-6:
+                d1 = min(pylon_dist(q) for q in ornekle([pr]))
+                return False, d1, f"direğe {d1:.0f} m (< {p.hat_payi:.0f})"
+        d1 = en_yakin_direk(ic)
+        if d1 < pay:
+            return False, d1, f"direğe {d1:.0f} m (< {pay:.0f})"
+    if koridor_yasak and any(in_corridor(*q) for q in nk):
+        return False, dm, "kalkış koridoruna giriyor"
+    if any(abs(q[0]) > p.alan_siniri or abs(q[1]) > p.alan_siniri for q in nk):
+        return False, dm, f"alan sınırı ±{p.alan_siniri:.0f} m dışına çıkıyor"
+    return True, dm, ""
+
+
+def baglanti(p, c_a, c_b, taraf):
+    """c_a hattının taraf (+1: t = +T, −1: t = −T) ucundan c_b hattının aynı uçtaki başına dönüş.
+    Direk / koridor / alan sınırı denetimli; gerekirse dışarı ötelenir. Yoksa None."""
+    psi = math.radians(p.psi0) + (0.0 if taraf > 0 else math.pi)
+    S = p.nokta(taraf * p.T, c_a)
+    y = (c_b - c_a) * taraf                     # ters yönde uçarken hat çerçevesinin sağı solda kalır
+    son_neden = ""
+    for ek in p.ek_listesi:
+        ilk, tur = u_donus(S, psi, y, p.r_donus, ek)
+        ok, dm, neden = yol_uygun(p, ilk, p.donus_payi)
+        if ok:
+            return {"ilkeller": ilk, "tur": tur, "ek": ek, "D": abs(c_b - c_a), "uzunluk": uzunluk(ilk), "direk_m": dm,
+                    "taraf": taraf}
+        son_neden = neden
+    return {"ilkeller": None, "neden": son_neden, "D": abs(c_b - c_a)}
+
+
+def hat_ilkeli(p, c, g):
+    """c hattı, g = +1 ileri (t: −T → +T) / −1 geri."""
+    return hat(p.nokta(-g * p.T, c), p.nokta(g * p.T, c))
+
+
+def giris(p, c, g):
+    """İlk hat için hizalama Hold merkezi (qr_pass deseni: saat yönü Hold, hattın 80 m sağında; rota hat yönüne
+    döndüğü an uçak hattın üzerinde, hat başının on_mesafe m gerisinde). Uygun değilse None."""
+    d, r = p.d(g), p.r(g)
+    S = p.nokta(-g * p.T, c)
+    teget = (S[0] - p.on_mesafe * d[0], S[1] - p.on_mesafe * d[1])
+    H = (teget[0] + LOITER_R * r[0], teget[1] + LOITER_R * r[1])
+    cember = [(H[0] + (LOITER_R + TRACK_MARGIN) * math.cos(a), H[1] + (LOITER_R + TRACK_MARGIN) * math.sin(a))
+              for a in [i * math.pi / 18 for i in range(36)]]
+    if pylon_dist(H) - LOITER_R < p.hold_payi or in_corridor(*H) or any(in_corridor(*q) for q in cember):
+        return None
+    if not yol_uygun(p, [hat(teget, S)], p.hat_payi)[0]:
+        return None
+    return {"H": H, "teget": teget, "bas": S}
+
+
+def cikis(p, c, g):
+    """Hat sonundan (tespit ya da tarama bitişi) güvenli Hold: hat doğrultusunda L m daha düz, P'de Hold moduna
+    geçiş (PX4 o an bulunduğu noktayı merkez alır), sonra açık merkez M = P + 80·sağ'a DO_REPOSITION.
+    İki çember de (yarıçap 80 + iz payı) direklerden ≥ 40 m, koridor dışı, alan içi. Yoksa None."""
+    d, r = p.d(g), p.r(g)
+    E = p.nokta(g * p.T, c)
+    for L in p.cikis_listesi:
+        P = (E[0] + L * d[0], E[1] + L * d[1])
+        M = (P[0] + LOITER_R * r[0], P[1] + LOITER_R * r[1])
+        ok = yol_uygun(p, [hat(E, P)], p.hat_payi)[0]
+        for mk in (P, M):
+            cember = [(mk[0] + (LOITER_R + TRACK_MARGIN) * math.cos(a), mk[1] + (LOITER_R + TRACK_MARGIN) * math.sin(a))
+                      for a in [i * math.pi / 18 for i in range(36)]]
+            ok = ok and pylon_dist(mk) - LOITER_R >= p.hold_payi and not any(in_corridor(*q) for q in cember + [mk])
+            ok = ok and all(abs(q[0]) <= p.alan_siniri + 60 and abs(q[1]) <= p.alan_siniri + 60 for q in cember)
+        if ok:
+            return {"P": P, "M": M, "L": L, "direk_m": min(pylon_dist(P), pylon_dist(M)) - LOITER_R}
+    return None
+
+
+def hat_uygun(p, c):
+    """Düz hat (uzatmalar dahil) direklerden ≥ hat_payi mi; koridoru kesiyor mu."""
+    pr = hat_ilkeli(p, c, 1)
+    nk = ornekle([pr])
+    return en_yakin_direk(nk) >= p.hat_payi - 1e-6, en_yakin_direk(nk), any(in_corridor(*q) for q in nk)
+
+
+# ── Sıra ────────────────────────────────────────────────────────────────────────────────────────
+def sira_bul(p, hatlar, baslangic=None, sirali=False):
+    """Uçuş sırası: hatların her biri bir kez, yön her hatta değişir (tek yönlü boustrophedon), toplam dönüş
+    uzunluğu en küçük. Katmanlı arama (durum = (uçulan küme, son hat)); n ≤ ~13'te tam, üstünde ışın genişliği
+    ile kırpılır — metasezgisel değil, deterministik. sirali=True: numara sırası (karşılaştırma için).
+    Dönüş: (sıra [hat indeksi], ilk yön g0, bağlantılar) ya da None."""
+    n = len(hatlar)
+    bag = {}
+
+    def b(i, j, taraf):
+        k = (i, j, taraf)
+        if k not in bag:
+            bag[k] = baglanti(p, hatlar[i], hatlar[j], taraf)
+        return bag[k]
+
+    onbellek = {}
+
+    def cik(j, g):
+        if (j, g) not in onbellek:
+            onbellek[(j, g)] = cikis(p, hatlar[j], g) is not None
+        return onbellek[(j, g)]
+
+    en_iyi = None
+    for g0 in (1, -1):
+        katman = {}
+        for i in (([0, n - 1] if n > 1 else [0]) if sirali else range(n)):
+            gi = giris(p, hatlar[i], g0)
+            if gi is None or not cik(i, g0):
+                continue
+            m0 = 0.0 if baslangic is None else math.dist(baslangic, gi["H"])
+            katman[(1 << i, i)] = (m0, (i,))
+        for k in range(1, n):
+            g = g0 if (k - 1) % 2 == 0 else -g0            # az önce uçulan hattın yönü = dönüşün yapıldığı uç
+            yeni = {}
+            for (mask, i), (mal, yol) in katman.items():
+                if sirali:
+                    adaylar = [j for j in (i - 1, i + 1) if 0 <= j < n and not mask >> j & 1]
+                else:
+                    adaylar = [j for j in range(n) if not mask >> j & 1]
+                for j in adaylar:
+                    if not cik(j, -g):
+                        continue
+                    bg = b(i, j, g)
+                    if bg["ilkeller"] is None:
+                        continue
+                    anahtar = (mask | 1 << j, j)
+                    m = mal + bg["uzunluk"]
+                    if anahtar not in yeni or m < yeni[anahtar][0]:
+                        yeni[anahtar] = (m, yol + (j,))
+            if len(yeni) > p.isin_genisligi:
+                yeni = dict(sorted(yeni.items(), key=lambda kv: kv[1][0])[:p.isin_genisligi])
+            katman = yeni
+            if not katman:
+                break
+        for (mask, i), (mal, yol) in katman.items():
+            if len(yol) == n and (en_iyi is None or mal < en_iyi[0]):
+                en_iyi = (mal, yol, g0)
+    if en_iyi is None:
+        return None
+    _, yol, g0 = en_iyi
+    baglar = [b(yol[k], yol[k + 1], g0 if k % 2 == 0 else -g0) for k in range(n - 1)]
+    return list(yol), g0, baglar
+
+
+def kitap_sirasi(n, k):
+    """Ders kitabı atlamalı sıra: 0, k, 1, k+1, 2, … (ileri k, geri k−1); sığmayan hatlar sona eklenir."""
+    sira, i = [], 0
+    while len(sira) < n and i < n:
+        for j in (i, i + k):
+            if j < n and j not in sira:
+                sira.append(j)
+        i += 1
+    return sira
+
+
+@dataclass
+class Plan:
+    p: Param
+    hatlar: list                 # yanal konumlar c (sıralı)
+    sira: list                   # uçuş sırası (hatlar indeksleri)
+    g0: int                      # ilk hattın yönü
+    baglar: list                 # sira[k] → sira[k+1] bağlantıları
+    serbest: list = field(default_factory=list)
+    ad: str = ""
+
+    def yon(self, k):
+        return self.g0 if k % 2 == 0 else -self.g0
+
+    def hat_ilkeli(self, k):
+        return hat_ilkeli(self.p, self.hatlar[self.sira[k]], self.yon(k))
+
+    def giris(self):
+        return giris(self.p, self.hatlar[self.sira[0]], self.g0)
+
+    def cikis(self, k):
+        return cikis(self.p, self.hatlar[self.sira[k]], self.yon(k))
+
+    def ilkeller(self):
+        out = []
+        for k in range(len(self.sira)):
+            out.append(self.hat_ilkeli(k))
+            if k < len(self.baglar):
+                out += self.baglar[k]["ilkeller"]
+        return out
+
+    def ozet(self):
+        p = self.p
+        n = len(self.sira)
+        hat_uz = n * 2 * p.T
+        don_uz = sum(b["uzunluk"] for b in self.baglar)
+        oran, C = kapsama(p, self.hatlar)
+        D = [b["D"] for b in self.baglar]
+        return {"ad": self.ad, "hat_sayisi": n, "hat_uzunlugu_m": round(hat_uz), "donus_uzunlugu_m": round(don_uz),
+                "toplam_m": round(hat_uz + don_uz), "sure_sn": round((hat_uz + don_uz) / p.hiz),
+                "kutu_ici_m": n * 2 * p.yari, "geometrik_kapsama": round(oran, 3), "C": round(C, 3),
+                "POD_koopman": round(1 - math.exp(-C), 3),
+                "en_kucuk_D_m": round(min(D), 1) if D else None, "en_buyuk_D_m": round(max(D), 1) if D else None,
+                "stadyum": sum(b["tur"] == "stadyum" for b in self.baglar),
+                "ampul": sum(b["tur"] == "ampul" for b in self.baglar),
+                "otelenen_donus": sum(b["ek"] > 0 for b in self.baglar),
+                "donus_direk_min_m": round(min(b["direk_m"] for b in self.baglar), 1) if self.baglar else None,
+                "hat_direk_min_m": round(min(hat_uygun(p, c)[1] for c in self.hatlar), 1)}
+
+    def dogrula(self):
+        """Planın sayısal denetimi → hata listesi (boş = uygun)."""
+        p, hata = self.p, []
+        if sorted(self.sira) != list(range(len(self.hatlar))):
+            hata.append("her hat tam bir kez uçulmuyor")
+        if self.giris() is None:
+            hata.append("ilk hat için hizalama Hold'u uygun değil")
+        for k in range(len(self.sira)):
+            c = self.hatlar[self.sira[k]]
+            ok, dm, _ = hat_uygun(p, c)
+            if not ok:
+                hata.append(f"hat c={c:+.1f} direğe {dm:.1f} m")
+            if self.cikis(k) is None:
+                hata.append(f"hat c={c:+.1f} yön {self.yon(k):+d}: güvenli çıkış Hold'u yok")
+        il = self.ilkeller()
+        for a, b in zip(il, il[1:]):                         # süreklilik: konum ve yön
+            n1, e1, h1 = ilkel_nokta(a, a["uzunluk"])
+            n2, e2, h2 = ilkel_nokta(b, 0.0)
+            if math.hypot(n1 - n2, e1 - e2) > 1e-3 or abs(math.remainder(h1 - h2, 2 * math.pi)) > 1e-6:
+                hata.append(f"süreksizlik ({n1:.1f}, {e1:.1f}) → ({n2:.1f}, {e2:.1f})")
+        for k, b in enumerate(self.baglar):
+            if any(pr["tur"] == "yay" and pr["R"] < p.r_min - 1e-6 for pr in b["ilkeller"]):
+                hata.append(f"dönüş {k}: yarıçap < r_min")
+            if b["tur"] == "stadyum" and b["D"] < 2 * p.r_donus - 1e-6:
+                hata.append(f"dönüş {k}: stadyum ama D {b['D']:.1f} < 2R")
+            if not yol_uygun(p, b["ilkeller"], p.donus_payi)[0]:
+                hata.append(f"dönüş {k}: {yol_uygun(p, b['ilkeller'], p.donus_payi)[2]}")
+        return hata
+
+
+def planla(p, baslangic=None, sirali=False, ad=""):
+    hatlar, serbest = hat_yerlestir(p)
+    if not hatlar:
+        return None
+    s = sira_bul(p, hatlar, baslangic, sirali)
+    if s is None:
+        return None
+    return Plan(p, hatlar, s[0], s[1], s[2], serbest, ad)
+
+
+def planla_seyrek(p, baslangic=None, ad=""):
+    """Atlamasız karşılaştırma: hat aralığı dönüşe göre geniş (≥ 2·r_donus), numara sırasıyla uçulur → gerçek
+    boşluklu tarama. Hat sayısını en çok yapan (eşitlikte direklerden en uzak) kaydırma seçilir."""
+    S = 2 * p.r_donus
+    lo, hi = -p.yari + p.W / 2, p.yari - p.W / 2
+    en_iyi = None
+    k = 0
+    while lo + k * 1.0 < lo + S:
+        ofs = lo + k * 1.0
+        hl = [c for c in [ofs + i * S for i in range(int((hi - ofs) // S) + 1)] if hat_uygun(p, c)[0]]
+        skor = (len(hl), min((hat_uygun(p, c)[1] for c in hl), default=0.0))
+        if hl and (en_iyi is None or skor > en_iyi[0]):
+            en_iyi = (skor, hl)
+        k += 1
+    if en_iyi is None:
+        return None
+    hatlar = en_iyi[1]
+    s = sira_bul(p, hatlar, baslangic, sirali=True)
+    return None if s is None else Plan(p, hatlar, s[0], s[1], s[2], [], ad)

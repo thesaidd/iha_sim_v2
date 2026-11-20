@@ -1,0 +1,1301 @@
+# İHA Sim V2 - Proje Günlüğü
+
+> **Proje:** İşbirlikçi Otonom Keşif ve Kamikaze İHA Sistemi (V2)
+> **Platform:** ROS 2 Humble + PX4 SITL (MicroXRCE-DDS Agent)
+> **Mimari Kural:** Sadece standart Offboard modu ve TrajectorySetpoint. L1/TECS/APF/PurePursuit YASAK.
+
+---
+
+## Kayıtlar
+
+### [2026-11-11 20:50] - Alan taraması tasarımı: atlamalı sıralı boustrophedon — statik tespit karakterizasyonu + plan + düğüm + kuru test (UÇUŞ YOK)
+**Adım 1 — eğik geçiş tespiti (statik `kamera_test`, 60 m).** `test/tarama_tasarim_2026-11-11/egik_gecis.py`: 4 yön (0/45/90/135°) × 19 yanal kaydırma (−15…+15 m) × hat boyunca 13 kare (1,5 m adım = 15 m/s @10 Hz); uçuş boru hattı (`qr_online.QrIsleyici`) + tam kare dedektörler. Dokulu zemin, 796 poz: **±8,5 m'ye kadar tam kadraj, geçiş başına 9/9 bulma ve ≥ 7/9 çözme (toplam 386/396 = %97,5); 9 m'de 0.** Yöne göre kare başı çözme %100 / 97 / 98 / 95 — geçiş sonucu yönden bağımsız. Kısmi kadrajda çözme 0/212, yanlış içerik 0. Tam kare `QRCodeDetector` 357/396, Aruco 249/396 (ROI adımı fark yaratıyor). Düz zeminde aynı sınır, çözme 389/396 (%98,2) — doku şeridi değiştirmiyor. Önceki uçuş testiyle (±7,5 m 9/9; +9,5 m yarım pencere) tutarlı; sınır keskin. **W = 16 m.** Statik tarama sırasında RTF 0,80 (10 Hz 1,58 MP kamera, bilinen).
+Not: ilk dokulu koşunun sonunda simülatör süreçleri dışarıdan kapandı (oturum kesintisi); veriler tamdı, düz zemin için yeniden başlatıldı.
+
+**Adım 2 — geometri.** Direkler (r 140 m, boy 140 m) 300×300 kutunun **içinde** (K/G/B kenardan 10 m, D 29 m). Tarama 60 m'de → düz hatların kendisi kapanıyor. K–G hatlar (yön 0°) seçildi; D–B hatlarda dönüşler kalkış koridoruna giriyor, plan çıkmıyor. k = ceil(160/16) = 10, paylı (R_dönüş 85 m, eşik 170 m) 11; 2k = 22 hat gerekirken kutuya 18–19 sığıyor (300 m < 4R) → tam atlamalı sıra kuramsal olarak yok; D < 170 m geçişler "ampul" (üç yay, R 85 m) ile.
+
+| direk payı | hat | geometrik kapsama | C | POD Koopman | toplam m | süre sn | stadyum / ampul |
+|---|---|---|---|---|---|---|---|
+| 40 (varsayılan) | 9 | %44,4 | 0,48 | %38 | 6622 | 441 | 1 / 7 |
+| 25 | 13 | %64,4 | 0,69 | %50 | 9566 | 638 | 3 / 9 |
+| 20 | 16 | %76,4 | 0,85 | %57 | 11497 | 766 | 6 / 9 |
+| 15 | 17 | %85,0 | 0,91 | %60 | 11847 | 790 | 9 / 7 |
+
+| yöntem (pay 40) | hat | kapsama | POD Koopman | toplam m | süre sn |
+|---|---|---|---|---|---|
+| atlamalı | 9 | %44,4 | %38 | 6622 | 441 |
+| sıralı dar (aynı hatlar, numara sırası) | 9 | %44,4 | %38 | 8183 | 546 |
+| atlamasız seyrek (170 m aralık) | 2 | %10,7 | %10 | 1027 | 68 |
+
+Pay 20'de aynı üçlü: 11497 / 15117 / 1027 m. Varsayılan sıra (E, m): −40↑ +40↓ −70↑ +67↓ −100↑ +81↓ −85↑ +54↓ −55↑; giriş Hold'u (−340, 40). Hat–direk ≥ 40,0 m, dönüş–direk ≥ 64 m, çıkış Hold çemberleri direklere ≥ 65 m. uav1 kalkış Hold'una dikey boşluk 49 m. Kule (24 m) kuzey dönüş bölgesinin altında (dikey 36 m).
+
+**Adım 3 — kod.** `tarama_plan.py` (hat yerleşimi, stadyum/ampul bağlantıları, deterministik katmanlı sıra araması, `Plan.dogrula()`), `alan_tarama.py` (`Yurutucu` + `ucus()`; yaylar TrajectorySetpoint konum + hız + merkezcil ivme — PX4 `FixedWingModeManager` bunu eğriliğe çeviriyor, kaynak okundu), `alan_tarama_test.py` (**43 doğrulama ✔**; sahte kinematik uçak: plan sırası, izden ölçülen kapsama %42,4, tespit → hat bitişi → kutu dışı Hold, ayrım erteleme/ret, koridor, OFFBOARD kaybı/reddi, taşıma reddi). `ayrim_test.py` 18 ✔, `qr_pass_test.py` 23 ✔. `launch_all.sh` stop desenine `alan_tarama.py` eklendi.
+
+**Açık:** yay izleme uçuşta ölçülmedi; `lora_yaklasma.py` uav0'ı sabit yerde varsayıyor; direk payı kararı kullanıcıda. Simülatör kapatıldı.
+
+**Yedekler:** `yedek/launch_all.sh.bak-2026-11-11-2047`, `CLAUDE.md.bak-2026-11-11-2048`, `v2_proje_gunlugu.md.bak-2026-11-11-2048`.
+
+---
+
+### [2026-11-11 08:05] - Dokulu zemin (`iha_arena_v2.sdf`) + iki araç arası ayrım denetimi (`ayrim.py`) — kuru + uçuş (1/2 deneme, abort yok)
+**İş 1 — zemin dokusu (uçuşsuz).**
+- `gz_worlds/make_zemin_doku.py` (yeni): numpy FFT ile dikişsiz prosedürel çim/toprak dokusu → `zemin_doku.png` (2048², 6,6 MB; indirme yok; `--kontrast`, `--parlaklik`).
+- `make_iha_arena.py`: `--zemin {duz,dokulu}` + `--out`. `dokulu` → **`iha_arena_v2.sdf`**: `ground_plane` link'indeki tek görsel 2×2 karoyla (350 m, aynı dokuyu paylaşır, PBR albedo — QR levhasıyla aynı yöntem) değişir; çarpışma düzlemi, dünya adı (`default`), `spherical_coordinates` aynı. Varlık 138 → **141** (sınır 150). `gz sdf -k` Valid. `duz` çıktısı özgün `iha_arena.sdf` ile **birebir** (cmp; özgün dosyaya yazılmadı, md5 değişmedi).
+- `launch_all.sh`: `CAM=T*` artık `WORLD=iha_arena_v2`'yi kabul ediyor; `WORLD` verilmezse eskisi gibi `iha_arena`.
+| Ölçüm | `iha_arena` (düz) | `iha_arena_v2` (dokulu) |
+|---|---|---|
+| Test 1: `CAM=T10`, yerde, 60 sn etkin RTF | 1,000 | **1,000** |
+| gz sunucu RSS | 623 MB | 672 MB |
+| Statik `kamera_test` eklendiğinde RTF (2 kamera) | 0,91–0,93 | 0,87–0,88 |
+| Uçuşta RTF (iki araç, uav0 60–100 m) | (önceki turlar 0,93–1,0) | **1,000** (30 sn) |
+| Test 2: QR @60 m — QRCodeDetector / Aruco (20 kare) | 20/20 bul, 20/20 çöz | **20/20 bul, 20/20 çöz** |
+| QR @80 m | 20/20, 20/20 | 20/20, 20/20 |
+| QR @100 m | bul 20/20, çöz 0 | bul 20/20, çöz 0 |
+| QR @120 m | QRCodeDetector bul 20/20 (çöz 0), Aruco 0 | **bul 0** (tek fark; çalışma irtifası değil) |
+- Kare ortalama grisi 197 → 57 (zemin koyulaştı); QR levhasının beyaz kenarı kontrastı koruyor. Doku ayarı gerekmedi. Çıktı `test/zemin_doku_2026-11-11/` (kareler, json, `qr_statik.py`).
+- Doku çözünürlüğü 17 cm/texel (kamera 60 m'de 1,3 cm/px) → yakından bulanık; daha ince ayrıntı için karo sayısı artırılabilir (varlık payı 9).
+
+**İş 2 — iki araç arası ayrım.**
+- **`ayrim.py` (yeni, ortak yardımcı):** saf fonksiyonlar (`hold_tahmini`, `bacak_ayrimi`, `cember_ayrimi`, `kendi_hold_merkezi`, `cerceve_cevir`) + `AyrimDenetimi` (ROS'suz) + `DigerAracIzleyici` (öteki aracın `vehicle_local_position`'ını doğrudan topic'ten dinler, kendi çerçeveye çevirir, gerçekleşen en küçük 3B ayrımı kaydeder). Model: öteki araç Hold'daysa bölgesi = çember merkezi (hızdan kestirilir, 5 sn tutarlılık) çevresinde 80 + 20 m disk, irtifa ± 10 m; hareketli/bayatsa yalnız dikey ayrım yetiyorsa kabul. Kendi bacak = düz hat ± iz payı 25 m, irtifa aralığı [başlangıç, hedef]. En kötü durum 3B ≥ `--min-ayrim` (40 m).
+- **`qr_pass.transit(…, ayrim=…)`:** her bacak ve varılacak Hold çemberi denetlenir. Yetmiyorsa: (a) hedef irtifada bacak uygunsa ve dikey ayrım artan yöndeyse önce **yerinde irtifa değişimi** (kendi Hold merkezine `DO_REPOSITION`), sonra yeniden denetim; (b) değilse çemberde bekleme → `--replan-wait` dolunca rota reddi (kod 3, güvenli geri çekilme deseni). Yeni argümanlar `--min-ayrim` (0 = kapalı), `--diger-uav`. Öteki araç hiç görülmezse (tek araç) denetim kapalı + log. Sonuç JSON'unda `ayrim_en_kucuk`.
+- Kuru test: **`ayrim_test.py`** (yeni, 18 doğrulama; 06:49 olayı **kayıtlı izden** oynatılır: uav1 Hold merkezi (46, 330) bulunur, olaydaki bacak @100 m reddedilir, @60 m kabul) + `qr_pass_test.py` 23 doğrulama (yeni bölüm 10: sentetik olay → bekle + ret, komut yok; @60 m → yerinde alçalma + H; uav1 160 m'de → gereksiz ret yok; uav1 hareketli → ret).
+- **Uçuş (dokulu dünya, `CAM=T10 WORLD=iha_arena_v2`, deneme 1/2):** veri `test/ayrim_2026-11-11/`.
+| Koşu | Sonuç | Gerçekleşen en küçük 3B (uav0–uav1) |
+|---|---|---|
+| Kalkış Hold'ları + `--alt 100` taşıma (olayın tekrarı) | uav1 Hold merkezi (45, 334) @118 m bulundu; bacak "en kötü 3B 8–10 m" → 60 sn bekleme → **ROTA REDDEDİLDİ**, komut yok | 55,5 m (yatay 52 / dikey 20) — araçlar yalnızca kendi kalkış Hold'larında dönerken |
+| `--alt 60` taşıma | **yerinde alçalma 100 → 60 m** (merkez (−30, 290), 21 sn) → H bacağı kabul (en kötü 3B 46 m) → H ✔ | taşıma bacağında **88,8 m** (yatay 68 / dikey 57); direk en yakın 98 m |
+- **40 m'nin altına inilmedi.** Geçen turdaki olay da 3B 58 m idi (eşiğin üstünde); denetim en kötü durumu (Hold çemberinin tamamı) hesapladığı için o bacağı reddediyor.
+- **Bulgu:** iki aracın kalkış Hold çemberleri komşu — hiçbir taşıma yokken bile 3B 55 m'ye yaklaşıyorlar (dikey yalnız 20 m). Kalkış Hold'larını ayırmak (irtifa ya da konum) ayrı bir iş.
+- **Sınırlar:** denetim planlama anında; taşıma sürerken canlı ihlalde otomatik manevra yok (yalnız en küçük ayrım kaydı). uav1 tarafı (`lora_yaklasma.py`) hâlâ kendi `uav0_kapisi` mantığını kullanıyor; `ayrim.py`'ye taşınmadı. Hizalama/OFFBOARD geçiş hattı ayrıca denetlenmiyor (H çemberi denetleniyor).
+
+### [2026-11-11 06:58] - `qr_pass.py` denetimsiz H gidişi DÜZELTİLDİ (kuru + uçuş) + pencereli dalış gösterimi BAŞARILI
+**Adım 1 — düzeltme (`qr_pass.py`, yedekler `yedek/qr_pass.py.bak-2026-11-11-0622` = oturum başı özgün, `-0641`, `-0652`):**
+- Hata: geçiş döngüsü 3 ara noktadan sonra `via = None` → **denetimsiz** `DO_REPOSITION → H`; ayrıca `plan_via` RuntimeError yakalanmıyordu. Tetikleyici: ara noktaya 120 m kala yeniden planlamada düz yol kapalı çıkıyor, aynı ara nokta yeniden seçilip haklar anında tükeniyordu.
+- Yeni tasarım: taşıma `transit()` fonksiyonuna alındı; **her bacak komuttan önce uçağın gerçek konumundan denetlenir** (`next_leg` → "H" | "via" | "reject"). Ret (düz yol kapalı ve hak bitti / ara nokta yok / H çemberi direğe < clear): `--replan-wait` (60 sn) boyunca Hold çemberinde açık an beklenir, çıkmazsa **H'ye gidilmez**; son kabul edilen ara nokta varsa oraya `DO_REPOSITION` yinelenir (güvenli geri çekilme), yoksa hiçbir komut gönderilmez (uçak mevcut Hold'da). Çıkış kodu **3**, sonuç `rota_reddedildi`. Aynı ara nokta yeniden çıkarsa hak harcanmaz.
+- `plan_via`: ara nokta merkezi direklerden ≥ clear + 80 (Hold çemberi de ≥ clear; önce clear + 60 → çember 20 m'ye inebiliyordu); önce "sağlam" adaylar (w → H bacağı clear + 120 paylı → varış çemberinin her noktasından H'ye yol açık).
+- Yeni argümanlar: `--max-hops` (3), `--replan-wait` (60), `--track-margin` (25), `--transit-only` (yalnız H'ye taşı, hizalama/OFFBOARD yok).
+- Kuru test **`qr_pass_test.py`** (yeni; sahte düğüm, ROS düğümü yok): 17 doğrulama + 2622 koşuluk tarama (ızgara × 2 varış modeli × hak 0/1/3) ✔ — komut edilen tüm bacaklar ≥ 65 m ve rota kapısı içinde, hiçbir ret H komutu içermiyor. Karşılaştırma: **eski mantık aynı ızgarada 953 koşuda 35 denetimsiz < 40 m bacak (en küçük 0,7 m)** üretiyordu.
+
+**Adım 2 — uçuş doğrulaması (deneme 1 + aynı uçuşta yeniden doğrulama = 2/3 hak; abort yok).** `CAM=T10 LORA=1` (**YAKLASMA'sız** — taşıma yolu hedefin üzerinden geçiyor, tespit uav1'i gereksiz yere tetiklemesin diye bilinçli sapma). uav0 60 m'de arenanın karşı tarafına, P = (−406, −260)'a alındı (qr_pass `--end 400` geçiş sonu), oradan H = (543, 196)'ya taşındı. Ham veri `test/qr_tasima_2026-11-11/` (pasif iz kaydı `iz.csv`, loglar, `sonuc.jsonl`).
+| Koşu | Sonuç |
+|---|---|
+| 1a `--max-hops 0` (zorlanmış ret) | **ROTA REDDEDİLDİ**, kod 3, komut yok; uçak P çemberinde kaldı (77–81 m). Düz yol direğe 12–26 m idi — eski kod buradan doğrudan giderdi |
+| 1b varsayılan (iz payı henüz yok) | 1 ara nokta (329, −120) → H ✔. **Bulgu: planlanan bacak direğe 43 m, GERÇEK İZ 30,1 m** (B direği) |
+| 2a H → P (düzeltilmiş) | 1 ara nokta (−61, −345), plan 96 / 126 m, gerçek en küçük 122 m |
+| 2b `--max-hops 0` | ROTA REDDEDİLDİ, komut yok |
+| 2c P → H (düzeltilmiş) | 1 ara nokta (303, −175), plan 94 m, **gerçek en küçük 88,4 m** ✔ |
+- **1b bulgusunun nedeni (izden):** PX4 `DO_REPOSITION`'da komut anındaki konumdan hedefe düz hattı izliyor, ama Hold çemberinden çıkış dönüşü (rota 292° → bacak 11°) uçağı hattın 27 m soluna düşürdü, sonra 15 m sağına taştı ve yavaş yakınsadı. Düz-hat denetimi tek başına yetmiyor. **Düzeltme:** (1) bacaklar `clear + iz payı` (40 + 25 = 65 m) ile planlanır/denetlenir, (2) **rota kapısı**: komut, uçağın rotası bacak yönüne ±45° içindeyken verilir (çemberde beklenir). 2a/2c'de plan–gerçek farkı ≤ 6 m.
+- RTF 0,93–1,0. uav0–uav1 en küçük yatay ayrım 348 m (dikey ~58 m).
+
+**Adım 3 — pencereli gösterim (3/3 hak; kullanıcı onayıyla aynı uçuşta 2. tetikleme).** `--ucus-dinamigi` kalkış; uav0 `--transit-only --alt 100` ile H'ye; pencere `gui_kayit.config` (900×560) + `viz_trails.py`; sabit kamera ENU (560, 0, 300) → bakış (−60, 0, 50) (doğudan batıya, tüm arena; `test/dalis_gosterim_2026-11-11/gui.sh`). Düğüm: `--profil dalis --alcalma-siniri 4.0 --guvenli-irtifa 120 --uav0-gecis-bitis 400 --bekleme-asimi 900`. Hold'da RTF 0,94.
+- **İlk tetikleme (06:51) BAŞLAMADI:** `qr_pass` kod 3 — rota kapısı hatası (benim): uçak zaten H çemberindeyken merkez hep rotanın 90° sağında → kapı 60 sn tutmadı → ret (komut yok, araçlar Hold'da). Düzeltme: kapı yalnız hedefe > 120 m uzaktayken aranır (+ kuru test 3c). Kullanıcıya soruldu → "yeniden tetikle".
+- **İkinci tetikleme (06:53:31) — zincir BAŞARILI:**
+| Olay | Saat | Değer |
+|---|---|---|
+| uav0 OFFBOARD (32 sn hizalama) | 06:54:03 | s −668 m, x +5,1 m |
+| Tespit + röle → uav1 plan | 06:55:08 | HEDEF-01, (−55,0, −65,0); röle 16/16, ort. 45 ms |
+| uav0 hedef üstü | 06:55:09 | yanal +0,95 m; direklere en yakın 47 m |
+| uav1 ara nokta (176, 176) → H (183, −121), 119 → 49 m | 06:55:08–06:56:40 | hizalama 92 sn, hat yönü 182° (geliş 247°) |
+| uav1 OFFBOARD | 06:56:40 | s −267 m, x +4,2 m, 49,8 m |
+| **DURDU** | 06:57:02 | **3B 19,9 m**, yatay 8,3 m, irtifa 18,1 m; düğüm ölçümü 8,9° / 26,1 m / 14,2 sn (1,84 m/s) |
+| Tırmanış tamam → Hold | 06:57:38 | dip **17,3 m**, 115,0 m (35,9 sn), AUTO_LOITER ✔; toplam 150,3 sn |
+- Önceki Aşama 3 ile tutarlı (19,9 m / dip 17,0 m). RTF geçiş sırasında 0,69'a indi (uav0 arena üstünde, pencere açık), sonra 0,78. Video kaydedilmedi (öncelik canlı izleme; eski kayıt betiği scratchpad'de kalmamış). Ekran görüntüleri `pencere_baslangic.png` (kurduğum sabit kadraj, 899×512), `pencere_bitis.png` (1907×939, farklı bakış — pencere gösterim sırasında büyütülmüş/kamera elle çevrilmiş; ben kamera komutu göndermedim. RTF düşüşünde payı olabilir).
+- **Açık notlar:** (a) `transit()` öteki aracı denetlemiyor — kalkıştan hemen sonra uav0 H'ye giderken uav1'e yatay 54 m / dikey 21 m yaklaştı (06:49:18). (b) İz payı 25 m tek ölçüme dayanıyor (rota kapısıyla 2 bacakta sapma ≤ 6 m). (c) `launch_all.sh` BAŞLATIRKEN de `pkill -f "gz sim"` yapıyor: komut metnimde "gz sim" geçtiği için kabuk iki kez öldü (başlatma yarıda kaldı, stop + sade komutla yeniden başlatıldı). (d) `mavlink_takeoff.py` kalkıştan sonra çıkmıyor (izlemede kalıyor) → arka planda çalıştır.
+
+### [2026-11-11 01:40] - dalis profili UÇUŞ doğrulaması: 3/3 aşama BAŞARILI (3/4 deneme, abort yok); gerçek açı 5,5° / 5,5° / 7,8° — sınır artık parametre değil süzülme oranı
+
+**Kurallar:** PX4 ağacı, `model.sdf`/`server.config`/`iha_arena.sdf` değişmedi; abort yalnız düğüm içinde; sudo/apt yok. Aşama 1–2 tek oturumda (10 Kas 21:10–21:24), aşama 3 temiz başlatmayla (11 Kas 01:32–01:38). Ham veri `test/lora_dalis_ucus_2026-11-10/` (düğüm logları, sonuç JSONL, `ulg_dalis.py`, `tasi0.py`).
+
+**Adım 0:** `mavlink_takeoff.py`'ye `UCUS_DINAMIGI_PARAMS` eklendi — `SIM_ONLY_PARAMS`'tan AYRI, "uçuş dinamiği ayarı — simülatör hatası değil, gerçek donanımda da ayrıca doğrulanmalı" yorumuyla; yalnızca uav1: `FW_T_SINK_R_SP` 4,0 (geri alma 2,0), `FW_T_SINK_MAX` 5,0 (geri alma 2,7). `--ucus-dinamigi` ile AYAR, bayraksız her çalıştırmada GERİ ALMA değeri yazılır (bson kalıcı → durum her başlatmada belli). Yedek `yedek/mavlink_takeoff.py.bak-2026-11-10-2109`. **Şu an diskteki değer AYAR (4,0 / 5,0)** — bir sonraki bayraksız `mavlink_takeoff.py --uav 0 1` geri alır. uav0: `qr_pass.py --end 400` (dosya değişmedi) + düğüme `--uav0-gecis-bitis 400` → açık yön sayısı 32–63°, üç koşuda da geliş yönüne yakın bir hat seçildi.
+
+| | Aşama 1 (40 / 30, sınır 2,0) | Aşama 2 (20 / 15, sınır 2,0) | Aşama 3 (20 / 15, sınır 4,0) | Kuru test tahmini |
+|---|---|---|---|---|
+| Geliş → seçilen hat yönü | 244° → 184° (ara noktalı) | 12,5° → 2,5° | 246° → 181° (ara noktalı) | — |
+| Hizalama süresi | 101 sn | 76 sn | 66 sn | 77 / 62 / 76 sn |
+| Devralma: yanal / irtifa | +2,7 m / 48,4 m | +5,9 m / 35,6 m | +4,1 m / 48,7 m | giriş 47,8 / 34,4 / 49,4 m |
+| **Alçalma açısı** (hat başı → durma) | **5,5°** | **5,5°** | **7,8°** | 6,84° / 6,84° / **12,0°** |
+| Alçalma hızı: ort / en büyük | 1,24 / 1,53 m/s | 1,18 / 1,91 m/s | 1,89 / 2,70 m/s | 1,8 / 1,8 / 3,19 m/s |
+| Dalışta irtifa kaybı (hat başından) | 14,5 m | 16,0 m | 22,6 m | 17,8 / 19,4 / 34,4 m |
+| Yer hızı (CAS) | 13,8 → 14,7 (CAS 13,7 sabit) | 13,0 → 15,0 (13,1 → 13,8) | 15,1 → 16,7 (CAS maks 16,4) | sabit 15 |
+| Pitch ort / min; gaz ort | −5,6° / −9,6°; 0,10 | −8,2° / −12,7°; 0,09 | −3,5° / −8,3°; 0,11 | — |
+| **3B durma** / irtifa / yatay | **39,8 m** / 31,1 / 24,9 m | **20,0 m** / 17,3 / 10,0 m | **19,9 m** / 17,7 / 9,1 m | 40 / 30; 20 / 15; 20 / 15 |
+| Pull-up kaybı → **dip** | 1,1 m → **30,0 m** | 1,4 m → **15,9 m** | 0,7 m → **17,0 m** | plan 27,3 / 12,3 / 10,2 m |
+| Tırmanış (→ 115 m) | 27,3 sn (3,1 m/s) | 29,1 sn (3,4 m/s) | 30,7 sn (3,2 m/s) | plan 4 m/s |
+| Toplam manevra (tespitten Hold'a) | 147 sn | 127 sn | 114 sn | 114 / 112 / 127 sn |
+| Hat üstü en büyük yanal | 3,1 m | 9,4 m | 0,6 m | — |
+| Son mod | AUTO_LOITER ✔ | AUTO_LOITER ✔ | AUTO_LOITER ✔ | — |
+
+**Model–gerçek karşılaştırması:**
+- **Açı / alçalma hızı — model İYİMSER.** Sınır 2,0'da 6,84° beklenirken 5,5° (−%20): gerçek alçalma hızı basamak gibi oturmuyor, ~1,0 m/s'ye 2–3 sn'de çıkıp 13 sn boyunca yavaşça 1,5–1,9'a tırmanıyor. Sınır 4,0'da 12° beklenirken **7,8°** (−%35): alçalma 2,1 → 2,7 m/s'de doydu. **Neden parametre değil aerodinamik:** dalışta gaz zaten rölantide (ort 0,10; `FW_THR_MIN` 0,05), pitch sınıra dayanmadı (min −8,3°; sınır −15°), hız 15,1 → 16,7 m/s arttı → uçak rölanti süzülüş zarfında; TECS hızı korumak için daha fazla burun aşağı vermiyor. Bu uçakta TECS ile sürdürülebilir alçalma **~2,5 m/s ≈ 8–9°**. 12° ancak hız artışına izin vererek (TECS hız ağırlığı / `FW_AIRSPD_MAX`) ya da sürükleme ekleyerek olur — ayrı bir uçuş dinamiği çalışması, yapılmadı.
+- **Pull-up kaybı — plan KÖTÜMSER** (2,7–4,8 m varsayıldı, gerçek 0,7–1,4 m); benzetim (0,5–1 m) yakın. Dip her aşamada hedef durma irtifasının ÜSTÜNDE kaldı (uçak dalış sonunda profilin 1–3 m üstünde).
+- **Durma irtifası:** hedef 15 m, gerçek 17,3–17,7 m (uçak profilin üstünde bitiyor); 3B tetik yine tam 20 m'de (yatay 9–10 m). Hiçbir koşuda "hedef geçildi" yedeğine düşülmedi.
+- **Öne alma:** 3,5 sn ile aşama 1–2'de sonda 1,3–3,1 m üstte (ölçülen gecikme 4,4–5,2 sn). Aşama 3'te 5,0 sn denendi: alçalma düz girişin başında başladı, uçak dalışın ortasında profilin 9 m ALTINDA, sonda 2 m üstünde — yani gecikme sabit bir süre değil (başta hızlı, sonda yavaş); sabit öne alma profili kaydırıyor ama şekli düzeltmiyor. Varsayılan 3,5 bırakıldı.
+- **Hız artışı:** sınır 2,0'da yok (CAS sabit); sınır 4,0'da +1,6 m/s (tahmin +4…6 idi → model kötümser).
+- **Tırmanış — plan iyimser:** 3,1–3,4 m/s (plan 4) → `--tirmanma-hizi` varsayılanı 3,0'a çekildi (çıkış yolu denetimi daha uzun/temkinli). Süreler plandan %0–30 uzun (hizalama çemberinde alçalma belirleyici).
+- Kuru testin doğru çıkanları: hizalanma + devralma kapısı (3/3 ilk denemede, rota −15°), ara noktalı geçiş, 3B durma tetiği, uav0 kapısı, şekil değişmezliği (üç farklı başlangıç/yön, aynı profil).
+
+**Diğer:** RTF 0,91–1,0 (uav0 +400 m'de Hold'dayken 0,97) — uav0'ı arena dışında tutmak RTF sorununu da çözüyor. Accel bias 0×, failsafe yok. uav0'ı H'ye geri alma yeni `tasi0.py` ile (her bacak denetimli, mevcut irtifada geçiş → H'de tırmanış; uav1 ile dikey ayrım için). **Operasyonel hata (benim):** kapatma komutunun metninde betik adları geçti → `stop`'un `pkill -f`'i kabuğu öldürdü, kayıt yazımı yarıda kaldı (sim temiz kapandı, veri kaybı yok). Kapatma komutu metninde hiçbir betik adı geçmemeli.
+
+### [2026-11-10 21:04] - uav1 "dalis" profili: sabit son yaklaşma hattı + sabit açılı alçalma + 3B durma (TASARIM + KOD + KURU TEST; UÇUŞ YOK)
+
+**Kurallar:** uçuş yok, simülasyon başlatılmadı; PX4 ağacı yalnızca OKUNDU; `model.sdf`/`server.config`/`iha_arena.sdf`'ye dokunulmadı; sudo/apt yok. Yedek `yedek/lora_yaklasma.py.bak-2026-11-10-2050`.
+
+**Sorun:** `duz` profilde alçalma toplam mesafeyle orantılıydı; yakın Hold'dan (80–110 m) başlayınca alçalma olmuyordu (belgeleme koşusu: 114 → 106 m).
+
+**Tasarım (`lora_yaklasma.py --profil dalis`; varsayılan profil `duz` KALDI — dalis uçuşta doğrulanmadı):**
+- Hedefin çevresinde SABİT hat (uav1 NED; s = hat boyu, hedefte 0): **A** hizalanma noktası (s = −250 m) → düz giriş 75 m → sabit açılı alçalma 161,8 m → **S** durma noktası (hedefe 3B 20 m, irtifa 15 m → hedefin 13,2 m gerisi) → hat yönünde 120 m'ye tırmanış → Hold. A'dan sonrası her başlangıçta AYNI (kuru testte assert).
+- **Hizalanma (qr_pass deseni):** Hold modunda `DO_REPOSITION` ile A'nın 80 m sağındaki H çemberine (başlangıç irtifasında; sonra çemberde giriş irtifasına alçalma), devralma kapısı: rota hatası ∈ [−15°, +5°], |x| < 20 m, irtifa ±5 m, konum, RTF, **canlı uav0 kapısı**. Yakın başlangıç önce UZAKLAŞIR. Uçak hattın uzantısında ve yeterince gerideyse (`dogrudan`; bugünkü parametrelerle ≥ ~1100 m) çembere dolanmaz, aynı eğimle ön-alçalarak girer.
+- **Yön:** tercih = geliş yönü (başlangıç → hedef kerterizi) ya da `--yaklasma-yonu`; sabit yol + geçiş, arena engelleri (4 direk 140 m, 6 bina) ve **uav0'ın geçiş sonrası Hold çemberi** (hedefin 150 m ilerisi @210°, 60 m, r 80 + 20 pay, yatay/dikey ayrım 40 m) açısından açık değilse en küçük sapmayla döndürülür; açık yön yoksa **NO-GO** (uav1 Hold'da kalır). Geçişte en fazla TEK ara nokta; son bacak da denetlenir, bulunamazsa NO-GO (qr_pass'teki "3 hop sonra denetimsiz düz gidiş" hatası burada yok).
+- **Durma:** 3B ≤ 20 m (asıl) | irtifa < 8 m | hedef geçildi (ıskalama) | son hatta |x| > 40 m | abort (RTF, RTL, uav0 3B < 40 m) → hepsi tırmanış + Hold. Hedef plan anında kilitlenir (hat alçalırken kaydırılmaz).
+- **Varsayılan gerekçeleri:** hat 250 m = istenen 150–250 aralığının üst ucu, çünkü 150 ve 200 m'de bu arenada (uav0 varken) **hiç açık yön yok**; 250 m'de 280–282°. Durma irtifası 15 m = eski `--yaklasma-irtifa` varsayılanı; hedefe nişan alınsaydı (S hattı hedefte biterdi) durma irtifası 20·sin γ = 2–4 m olurdu → pull-up payı yok. Bu yüzden hat hedefin ÜSTÜNDEN geçer (S'de 15 m), "hedefe 3B 20 m" yine sağlanır.
+
+**KRİTİK BULGU — dalış açısı PX4 TECS ile sınırlı (kaynak incelemesi, `FixedWingModeManager.cpp` + `lib/tecs/TECS.cpp`):** konum+hız Offboard (`AUTO_PATH`) `height_rate = NAN` yayınlar → **vz setpoint'i yok sayılır**; irtifa referansı `min(FW_T_SINK_R_SP, FW_T_SINK_MAX)` ile alçalır. uav1'de (ulg 2026-11-01): `FW_T_SINK_R_SP 2,0`, `FW_T_SINK_MAX 2,7`, `FW_P_LIM_MIN −15°`, `FW_T_ALT_TC 5`, `FW_T_HRATE_FF 0,3`, `FW_T_CLMB_R_SP 5`. → **bugünkü parametrelerle sürdürülebilir alçalma 2,0 m/s ≈ 7,6° (15 m/s); %90 payla 6,84°.** İstenen 10–20° için uav1'de çalışma-anı parametresi gerekir (PX4 ağacı değil): öneri `FW_T_SINK_R_SP 4,0` + `FW_T_SINK_MAX 5,0` → 12° (3,2 m/s; pitch ≈ −9…−12°, −15° sınırının içinde). **UYGULANMADI.** 15°+ için pitch sınırı ve dalışta hız artışı (rölantide denge hızı tahmini ~19–21 m/s ≈ `FW_AIRSPD_MAX 20`) belirleyici → 12° varsayılan. Düğüm istenen açıyı `--alcalma-siniri`'nin (varsayılan 2,0) izin verdiğine KIRPAR ve loglar; TECS gecikmesi (≈ 0,7·5 = 3,5 sn) için irtifa komutu hattın `--irtifa-onalma` ilerisinden okunur.
+
+**Kuru test (`lora_dalis_test.py`, çıktı `test/lora_dalis_2026-11-10/`):** 53 birim assert ✔; 8 başlangıç × 2 sınır; kinematik benzetim; sahte düğümle uçtan uca akış duman testi (7 durum).
+
+| başlangıç | yatay | geliş° | yön° | sapma° | giriş | ara nokta | toplam sn (2,0 / 4,0) |
+|---|---|---|---|---|---|---|---|
+| S1 çok yakın (50 m K) | 50 | 180 | 280 | +100 | hizalan | — | 116 / 106 |
+| S2 belgeleme koşusu | 81 | 227 | 282 | +55 | hizalan | — | 108 / 99 |
+| S3 gösterim koşusu | 105 | 20 | 280 | −100 | hizalan | (−232, 140) | 124 / 115 |
+| S4 orta (250 m GD) | 250 | 315 | 280 | −35 | hizalan | — | 114 / 104 |
+| S5 deneme 2 (410 m D) | 409 | 255 | 280 | +25 | hizalan | — | 110 / 100 |
+| S6 uzak (600 m B) | 600 | 90 | 280 | −170 | hizalan | (−76, −330) | 156 / 146 |
+| S7 uzak (600 m KD) | 600 | 225 | 280 | +55 | hizalan | — | 127 / 117 |
+| S8 çok uzak, hat üstünde | 1300 | 280 | 280 | 0 | dogrudan | — | 112 / 112 |
+
+Profil (hepsinde aynı): **bugünkü PX4** → açı 6,84°, alçalma 1,8 m/s, giriş irtifası 34,4 m, dalışta −19,4 m / 10,8 sn. **Önerilen sim param** → 12,0°, 3,19 m/s, giriş 49,4 m, −34,4 m / 10,8 sn. Durma 3B 20 m @ 15 m; pull-up dip tahmini 12,3 / 10,2 m (taban 8). Hiçbir senaryo 25° "uçulamaz" sınırına yaklaşmıyor (azami 20°'ye kırpma kodda). En küçük açıklıklar pay ÜSTÜ +0,2…+3,7 m (direk payı 40 m, uav0 ayrımı 40 m zaten içinde).
+Benzetim (MODEL): nominalde 3B 19,8 m @ 14,9–15,4 m'de durma, ölçülen açı 6,1° / 10,4°; öne alma kapatılınca 4,0 m/s'de 3B hiç tetiklenmiyor → "hedef geçildi" kuralı devreye giriyor (öne almanın gerekliliği + ıskalama kuralının çalıştığı). Duman testi: D1–D4 tamam (ara noktalı ve `dogrudan` dahil), D5 uav0 hedefin üstünde → kapı geçilmez NO-GO, D6 uav0 verisi yok → NO-GO, D7 açık yön yok → plan NO-GO; hiçbir NO-GO'da OFFBOARD istenmedi.
+**Testlerin yakaladığı hatalar (düzeltildi):** (1) geometri sözlüğünde yuvarlama → profilde 5 cm basamak; (2) `dogrudan` girişte ters rotada devralma → dönüşte 40 m'den fazla sapma → hedefe 1,3 km varken "hat dışı" abort'u; kapıya rota/yanal/mesafe koşulu eklendi, "hat dışı" yalnız son hatta geçerli; (3) zaman aşımı mesajı asıl engeli (uav0/RTF) göstermiyordu.
+**Regresyon:** `lora_yaklasma_test.py` çıktısı yedek sürümle birebir aynı; ROS ortamında tüm tembel import'lar ✔; `duz` akışında fark yalnızca plan satırının `if args.profil == "duz"` altına alınması. `--guvenli-irtifa` varsayılanı 100 → 120 (tüm uçuşlar zaten 120 veriyordu).
+
+**ARENA KISITI (önemli):** bu arenada "geliş yönü" pratikte belirleyici değil — açık yön penceresi 280–282° (3°). Belirleyenler: direklere 40 m pay (özellikle 120 m'ye tırmanış ve son Hold çemberi, direk tepesi 140 m) ve uav0'ın hedefin 150 m ilerisindeki Hold çemberi. 1° tarama (açık yön sayısı, 2,0 / 4,0 m/s): L=250 uav0 varken 3° / 3°; uav0 400 m ileride Hold'a girerse (`qr_pass --end 400`) 32° / 63°; uav0 yokken 47° / 91°; L=300: 8° (99–102°, 279–282°). → Geliş yönüne gerçekten uyan dalış isteniyorsa en ucuz kaldıraç uav0'ın geçiş sonrası Hold yerini uzaklaştırmak.
+
+**Doğrulanmayanlar (uçuş gerekir):** gerçek alçalma hızı/açısı ve TECS gecikmesi; pull-up'ta kaybedilen irtifa (model iyimser: 0,5–1 m; plan 2,7–4,8 m varsayıyor); dalışta hız artışı; `DO_REPOSITION` ile çemberde irtifa değişimi süresi; Hold çemberinde devralma penceresinin (rota −15…+5°) uav1'de tuttuğu; tırmanış hızı (plan 4 m/s) ve çıkış mesafesi (~380 m).
+
+**Hazır dünya araştırması (yalnızca okuma; hiçbir dosya değişmedi):**
+
+| Dünya | Dünya adı | Orijin (spherical_coordinates) | İçerik | Bizimle uyum | Yazılım render (llvmpipe) beklentisi |
+|---|---|---|---|---|---|
+| `default.sdf` (bugünkü taban) | default | 47,39797 / 8,54616 / 0 m | 500×500 m düz gri zemin | ✔ referans | ölçüldü: RTF 1,0 (kamerasız), 0,83–0,97 (T10 kamera) |
+| `iha_arena.sdf` (bizim) | default | aynı | default + 138 basit varlık | ✔ kullanımda | ölçüldü: Hold 0,95; arena merkezi geçişinde 0,6–0,7 |
+| `lawn.sdf` | lawn | **aynı** | 400×400 m düz yeşil zemin (doku YOK, yalnız renk) | ad farklı → `/world/default/...` kullanan 13 dosya kırılır; orijin aynı | default ile aynı (tahmin) — ama görsel kazanç yalnızca renk |
+| `forest.sdf` | forest | **aynı** | 37 Fuel modeli (çim yamaları + ağaçlar; önbellekte YOK → indirme gerekir) | ad farklı; ağaçlar ~±30 m'lik küçük alanda (çok-rotor ölçeği), sabit kanat için anlamsız | orta–ağır (tahmin); alfa dokulu yapraklar llvmpipe'ta pahalı |
+| `baylands.sdf` | baylands | **FARKLI: 37,41217 / −121,99888 / 38 m** | Fuel arazisi (önbellekte VAR, 393 MB): 3 DAE ≈ 300 MB, **870 602 üçgen**, 25 doku ≈ 65 MP; çarpışma da aynı üçgen ağ; model (205, 155, −1) kaydırılmış + su | ad ve orijin farklı (yerel NED kodu çalışır ama home/GPS farklı, QR/direk/koridor geometrisi geçersiz); pist kalkışı (RWTO) düz olmayan üçgen ağ zeminde riskli | **çok ağır (tahmin, ölçülmedi):** bugün 138 basit varlık + 1,58 MP kamera ile 0,6–0,8; 870 k üçgen + 65 MP doku ile 0,5 abort eşiğinin altı beklenir; bellek +0,5–1 GB |
+| `windy`, `walls`, `aruco`, `rover`, `kthspacelab`, `underwater`, `moving_platform`, `frictionless` | çoğu farklı (`frictionless` = default) | aynı (Zürih) | özel amaçlı (rüzgâr, duvar, iç mekân, su altı) | bizim senaryoya uygun değil | — |
+
+**Mevcut zemini dokuyla kaplamak — teknik olarak MÜMKÜN, önerilen yol bu:** QR levhası zaten aynı mekanizmayı kullanıyor (`<plane>` + PBR `albedo_map`, mutlak yol; hem kamera sensöründe hem pencerede doğrulandı). Dünya adı `default` ve orijin aynı kalır. Kısıtlar: (1) `iha_arena.sdf`'ye dokunulamaz → `make_iha_arena.py`'nin kopyasıyla **yeni dosya** (örn. `iha_arena_dokulu.sdf`) üretilir, `launch_all.sh` `WORLD=` zaten destekliyor; CAM=T* yolu WORLD'ü `iha_arena`'ya sabitlediği için orada küçük bir seçenek gerekir. (2) gz düzleminde doku tek sefer gerilir (tekrar yok): 500 m'lik tek levhada 4096² doku = 12 cm/px (60 m'den kamera 1,3 cm/px görür → bulanık); çözüm aynı 1024² dokuyu paylaşan N×N karo (örn. 100 m'lik 25 karo = 10 cm/px, tek doku belleği ~4 MB). (3) Riskler ölçülmeli: llvmpipe'ta doku örnekleme maliyeti (beklenti küçük–orta; QR levhası ölçülebilir fark yaratmamıştı ama alanı 2 m²), ve **dokulu arka planın QR/ArUco algılayıcısına etkisi** (yanlış aday sayısı, işlem süresi) — önce kayıtlı karelerle çevrimdışı, sonra uçuşsuz Hold RTF ölçümü.
+
+**Nereden devam edilecek:** CLAUDE.md'de güncellendi.
+
+### [2026-11-01 11:03] - Sabit kamerayla belgeleme videosu (1/1 deneme, zincir BAŞARILI) — `test/qr_belgeleme_2026-11-01/`
+**Kayıt:** Gazebo VideoRecorder (gz-sim 8) yalnızca arayüz düğmesiyle tetikleniyor (`/gui/record_video` servisi yok), ffmpeg/xdotool yok → `/gui/screenshot` periyodik (2 paralel `gz service`, 2,84 Hz) + OpenCV 10 fps gerçek zamanlı mp4 (aşama etiketli). Pencere yapılandırması `gui_kayit.config` (yeni; `~/.gz/sim/8/gui.config` kopyası, 900×560, yan paneller yok). **Pencere boyutu RTF'i belirliyor:** ilk açılış 1907×939 (HiDPI) geniş kadrajda RTF 0,694 (kayıt payı ~0) → 899×512'de 0,826/0,832. Sabit kamera (212, −148, 190) → bakış (−30, −8, 70), hatta dik. Çıktı `qr_belgeleme.mp4` 130,1 sn / 7,1 MB, `qr_belgeleme.csv`, `kilit_anlar.jpg`, `ozet.md` (zaman çizelgesi + video zamanları; hedef konumu önceden verildi, arama değil).
+**Zincir:** uav0 H'den hizalama 36 sn (devralma x +9,1 m; hat yanal std 3,9 / maks 16 m — önceki geçişlerden kötü), hedef üstü −0,73 m. Tespit 11:00:10,9 → uav1 OFFBOARD **1,03 sn** → durma yatay **19,77 m** (3B 107,9 @106 m) → 115,0 m (3,5 sn) → Hold, manevra 11,5 sn (başlangıç 82 m). Üç koşuda (1,07/1,09/1,03 sn; 19,9/19,86/19,77 m; 115 m) tutarlı. RTF 0,84 → 0,69 (geçişte).
+**Güvenlik bulgusu (taşıma):** uav0'ı arena içinden H'ye taşırken (`uav0_tasi.py` = qr_pass hop mantığı) ara noktaya 120 m kala yeniden planlamada `plan_via` aynı ara noktayı döndürdü, 3 hop dolunca **denetimsiz doğrudan H** → yol–direk **30 m** (< 40 m kuralı). Çarpışma yok. Aynı mantık `qr_pass.py`'de de var → düzeltilmeli (son hop'ta da leg_ok, yoksa ara noktaya varmayı bekle).
+
+### [2026-11-01 10:41] - Canlı gösterim (pencere + işaretçi) BAŞARILI, 1/2 deneme — zincir tekrarlandı
+**Hazırlık:** uav0 arena içinde ~60 m Hold'dan qr_pass hizalama merkezine H=(543, 196) 100 m'ye `DO_REPOSITION` ile taşındı (scratchpad `uav0_tasi.py`, qr_pass `plan_via`/`reposition` kullanır). İlk çalıştırmada ara noktaya (246, −43) giderken yeniden planlamada **`plan_via` RuntimeError** (bilinen hata) — uçak Hold'da güvendeydi; konum (198, −111)'den doğrudan H'ye yol temizdi (direk 121 m), ikinci çalıştırma doğrudan H. RTF: penceresiz 0,908, **pencere + viz + `cam uav0` 0,842** (≥ 0,75 ✔). → Önceki 0,677'nin nedeni pencere değil uav0'ın arena içi alçak Hold'uydu (doğrulandı).
+**Zincir (geçiş 3, kaydırma 0, 60 m):** uav0 hizalama 24 sn (H'den başladığı için), hedef üstü x 1,79 m. Tespit 10:39:00 (qr_online 4 yayın, ort (−55,6, −62,5)), röle 12/12 toplam, kayıp 0, ort 47,5 ms. uav1 (yaklaşma düğümü elle yeniden başlatıldı, `/tmp/iha_sim.pgids`'e yazıldı): **OFFBOARD tespitten 1,09 sn**, plan yatay 109,5 m (uav1 hedefe yakın Hold'daydı, (−174, −82)), **durma yatay 19,86 m / 3B 113,8 m @112 m**, pull-up 3,9 sn → **115,0 m**, Hold ✔ AUTO_LOITER, **toplam manevra 19,2 sn**. Latch yok, abort yok, accel bias 0×. Kamera olaylarda otomatik (plan → `cam uav1`, Hold → `cam uav0`).
+**Deneme 2 ile karşılaştırma:** tespit→devralma 1,07 / 1,09 sn, yatay durma 19,9 / 19,86 m, irtifa 115,0 / 115,0 m → **tekrarlanabilir**. Toplam süre 54,9 / 19,2 sn ve kapanan mesafe farklı: başlangıç mesafesi 410 / 110 m (geometri farkı, davranış farkı değil); 3B durma 106 / 114 m yaklaşma irtifasına inememekten (kısa yaklaşmada 112 m).
+**RTF seyri (15 sn, pencere açık):** 0,840 → 0,832 → 0,772 → 0,636 → 0,611 → 0,614 → 0,607 → 0,659; geçiş/arena merkezi penceresinde ~0,61 (0,5 abort eşiğinin üstünde). Geçiş sonrası uav0 yine arena içinde 60 m Hold'da → RTF 0,605.
+
+### [2026-11-01 10:32] - Canlı gösterim (pencere) RTF eşiğinde durduruldu, geçiş yapılmadı (0/2 deneme)
+Çalışan sunucuya `gz sim -g` (sunucunun /proc/environ ortamıyla) + `viz_trails.py` bağlandı, `/gui/track NONE`, `cam.sh uav0`. Hold'da 30 sn etkin RTF **0,677** (< 0,75 eşiği) → pencere ve işaretçiler kapatıldı (işaretçiler silindi=True). **Penceresiz yeniden ölçüm 0,736** → pencerenin payı yalnızca ~0,06; asıl yük araçların konumu: uav0 önceki geçişten sonra arena içinde ~51–63 m'de Hold'da ((−135, −118), aşağı bakan kamera arenayı yakından render ediyor), uav1 QR hedefinin hemen üstünde ((−74, −56), 113 m). Kalkış öncesi taban 0,964 idi. Öneri: gösterimden önce uav0'ı arenadan uzak ve 100 m'ye (DO_REPOSITION) almak, sonra RTF'i yeniden ölçmek.
+
+### [2026-11-01 10:01] - TAM ZİNCİR İLK KEZ UÇTAN UCA DOĞRULANDI (2/2 deneme); OFFBOARD engelinin gerçek nedeni `lora_yaklasma.py` engage döngüsündeki hata
+**Adım 0 (kameralı kalkış, CAM=T10, zincir yok):** uav0 276 m / 11,0 sn, uav1 328 m / 12,3 sn (95/115 m'ye yatay), rotasyon 15,8 / 15,7 m/s, elevatör doymadı, maks yer hızı ~43 m/s, RTF 1,000. Kamerasızla (275 / 331 m) fark yok → kamera yükü kalkışı bozmuyor.
+**Deneme 1 (CAM=T10 LORA=1 YAKLASMA=1, YAKLASMA_ARGS rtf-min'siz):** uav0 geçiş 1 kusursuz (hedef üstü x 0,9 m), QR tespit → röle → uav1 plan (09:52:20, yatay 405 m, iniş 2,4°) ✔, **OFFBOARD'a geçilemedi** (30 sn engage aşımı). `px4_1.log`'da High Accelerometer Bias **0×**, red satırı yok. **Kök neden (kod):** engage döngüsünde `if e > 1.0 * (1 + int(e))` (e = geçen süre) matematiksel olarak hiç doğru olmuyor → `DO_SET_MODE(OFFBOARD)` **hiç gönderilmemiş**. Hata ilk sürümden (`yedek/lora_yaklasma.py.orig-2026-10-31`) beri var → 2026-10-31 23:45'teki "accel bias OFFBOARD'u reddediyor" teşhisi büyük olasılıkla zamanlama çakışmasıydı. **Düzeltme:** 1 sn akıştan sonra saniyede bir DO_SET_MODE + ack loglama (yedek `yedek/lora_yaklasma.py.bak-2026-11-01-0956`); `py_compile` + `lora_yaklasma_test.py` ✔.
+**Deneme 2 (temiz başlatma, düzeltilmiş düğüm):** uav0 geçiş 2 (hedef üstü x 0,7 m, x_std 0,05). qr_online ilk yayın 09:57:58 (8 bulunan/8 çözülen/8 yayın; konum ~(−57,7, −61,9), gerçek (−60, −60)), röle 8/8, kayıp 0, gecikme ort 46,7 ms. uav1: **OFFBOARD ✔ tespitten 1,07 sn sonra**; yaklaşma 105 m'de, kapanan mesafe 342 m; **DURDU yatay 19,9 m / 3B 106,0 m / irtifa 104,1 m**; pull-up 8,6 sn → 115,0 m (tolerans içi), **Hold ✔ nav_state AUTO_LOITER**, Hold'da ~116,5 m. Toplam manevra 54,9 sn (plan tahmini 31 sn). Latch-and-wait **tetiklenmedi** (`rtf_latch_bekleme_sn` yok). Sonuç JSONL `"sonuc": "tamam"`. role_yaşı yaklaşma sonunda 45 sn (`--zaman-asimi 60` gerekli; hedef statik).
+**Accel bias:** `EKF2_IMU_CTRL=5` ile `estimator_sensor_bias.accel_bias` 0 (öğrenme kapalı); iki denemede de (deneme 1'de uav1 ~8 dk Hold) "High Accelerometer Bias" 0×.
+**Not:** iki araç arena merkezi yakınında Hold'dayken etkin RTF 0,767 (kalkış öncesi 0,964) — rtf-min 0,5'in üstünde, ama izlenmeli.
+
+### [2026-11-01 01:25] - Kalkış-only seri (4/5 deneme): `RWTO_MAX_THR=0,85` iki araçta da güvenli; "uav1 dönüş sorunu" uav1'e özgü değil, 0,80 eşik altı
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`, `iha_arena.sdf` değişmedi; sudo/apt yok; abort süreci araca bağlanmadı; CAM/LORA/YAKLASMA kullanılmadı (kamerasız model, yalnızca iki PX4). Yedekler: `yedek/{mavlink_takeoff.py,CLAUDE.md,v2_proje_gunlugu.md}.bak-2026-11-01-0124`.
+
+**Adım 1 (yalnızca okuma, önceki deneme 2 ulg'leri `rootfs/{0,1}/log/2026-10-31/21_4*.ulg`):**
+- Parametreler: `RWTO_MAX_THR` (0,6 → 0,8 çalışma anında), `FW_TKO_PITCH_MIN` 20, `EKF2_IMU_CTRL` 5 iki araca da aynı zamanda yazılmış; `RWTO_*`, `FW_AIRSPD_MIN` 10, `FW_AIRSPD_STALL` 7, `FW_P_LIM_MAX` 32 vb. aynı. Başlangıç parametre farkı yalnızca `CAL_ACC0_{X,Y,Z}OFF` (uav1 0,054/−0,057/0,004; uav0 0), `CAL_ACC0_PRIO`, `CAL_MAG0_*`, `CAL_BARO0_*`, `MAV_SYS_ID`, `MIS_TAKEOFF_ALT`, DDS anahtarı.
+- Spawn: `UAV_POSES` "0,0,0.5,0,0,0" / "-15,15,0.5,0,0,0" → yaw ikisinde 0. Model: ikisi de aynı `PX4_GZ_MODELS` dizininden (tek dosya); nocam ve T_nadir_10 inertial blokları aynı (base_link 1 kg, ixx 0,1976, iyy 0,1459), nocam = orijinal. Çarpışma: base_link kutu 0,47×0,47×0,11 + pervane silindir r 0,1.
+- Belirti (uav1): gaz 0,8 → 2 sn'de 13,0 m/s; rotasyon tetiklenince pitch_sp 30°, elevatör 0,61 → 1,0 doygun (+3,5 sn), **pitch −1,0 → −0,1° (kalkmıyor)**, hız 13 → 7,5 m/s'ye düşüp 25 sn sabit. uav0 aynı anda 13,4 m/s'de elevatör 0,73'te pitch 26°'ye kalktı. Yani: pitch sıfırda kalıyor, elevatör doygun, hız rotasyon için yetersiz kalacak kadar düşüyor (elevatör sürüklemesi + zemin yükü) → kararlı tuzak. Durağan EKF pitch uav1 −0,4…−1,0°, uav0 +0,3° (CAL_ACC ofsetiyle uyumlu; kestirici farkı).
+
+**Adım 2 (her deneme: temiz `launch_all.sh` + `tko_thr.py THR -- --uav 0 1 --watch 20`, sonra stop, ulg'den `tko_ozet.py`):**
+
+| # | THR | Dünya | uav0 rotasyon | uav0 → 95 m | uav1 rotasyon | uav1 → 115 m | Sonuç |
+|---|---|---|---|---|---|---|---|
+| 1 | 0,85 | default | +3,6 sn, 15,5 m/s, 20 m | 11,0 sn, **275 m**, maks 42,7 m/s | +3,6 sn, 15,8 m/s, 21 m | 12,3 sn, **331 m**, maks 43,0 | ✔ ikisi |
+| 2 | 0,85 | iha_arena | 16,0 m/s | 11,0 sn, 277 m | 15,4 m/s | 12,3 sn, 329 m | ✔ ikisi |
+| 3 | 0,80 | default | yok, elevatör doygun +4,9 sn | — | yok, doygun +5,0 sn | — | ✘ **ikisi de** pistte ~7 m/s |
+| 4 | 0,825 | default | +4,0 sn, 14,2 m/s | 11,7 sn, 272 m | 13,9 m/s | 13,0 sn, 323 m | ✔ ikisi (sınıra yakın) |
+
+`param show` (px4-param --instance i) her denemede iki araçta aynı değer. Hold'a geçişte irtifa aşımı ~+17 m (117 / 137 m), 60 sn Hold dahil maks yatay ~400 / ~455 m. Elevatör 0,825/0,85'te hiç doymadı. 5. deneme kullanılmadı.
+
+**Çıkarım:** uav1'e özgü asimetri yok; deneme 3'te iki araç da aynı tuzağa düştü. Önceki uav0 başarısı gazın 0,6 → 0,8'e çalışma anında değiştirilmesinin geçiş etkisi. Arena dünyası etkisiz (deneme 2). Eşik 0,80–0,825 → **0,85** (savrulma 0,825'e göre ~+3 m, rotasyon payı ~+1,5 m/s). `mavlink_takeoff.py` `SIM_ONLY_PARAMS["RWTO_MAX_THR"] = (0.85, 1.0)`. Eski 1,0/pitch 10 ile uav0 420 m → şimdi 275 m; uav1 ~560 m → 331 m.
+
+**Nereden devam:** CLAUDE.md'de — bu parametrelerle tam zincir testi.
+
+---
+
+### [2026-11-01 00:48] - Adım 3 uygulandı + uçuş (2/2 deneme): kalkış savrulması uav0'da −%37 ölçüldü; uav1 kalkamadı → zincir/OFFBOARD/bias DOĞRULANAMADI
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`, `iha_arena.sdf` değişmedi; sudo/apt yok; abort süreci araca bağlanmadı. Yedekler: `yedek/{lora_yaklasma.py,mavlink_takeoff.py}.bak-2026-11-01-0043`, `yedek/CLAUDE.md.bak-*`, `yedek/v2_proje_gunlugu.md.bak-*`.
+
+**Uygulananlar:** `lora_yaklasma.py --rtf-min` varsayılanı 0,7→**0,5** (qr_watch 0,7 kaldı; `--rtf-min 0.3` artık verilmedi). `mavlink_takeoff.py` `SIM_ONLY_PARAMS`: `RWTO_MAX_THR`, `FW_TKO_PITCH_MIN (20.0, 10.0)`, `EKF2_IMU_CTRL (5, 7)`. Sözdizimi ✔. Başlatma: `CAM=T10 LORA=1 YAKLASMA=1`, `YAKLASMA_ARGS="--mesafe-turu yatay --yaklasma-irtifa 105 --guvenli-irtifa 120 --bekleme-asimi 600 --zaman-asimi 60 --devralma-bekleme 30"`. Kalkış öncesi etkin RTF (30 sn) **0,959**.
+
+**Deneme 1 (RWTO_MAX_THR=0,6): kalkış olmadı.** İki araç arm + TAKEOFF modunda, runway durumu 1 (CLAMPED_TO_RUNWAY), motor 0,60, ~1 dk hareketsiz (v≈0). 0,6 gazla yer sürtünmesi aşılamıyor. (Önceden "gaz kısmak yeterli" varsayımı yanlıştı; zemin yuvarlanması CLIMBOUT ile aynı parametreyi kullanıyor.)
+
+**Deneme 2 (RWTO_MAX_THR çalışma-anı `px4-param` ile 0,8):**
+- **uav0 kalktı:** 95 m'ye 11,3 sn'de, **yatay 265 m** (eski, thr 1,0/pitch 10: 9,9 sn, **420 m**) → **−%37**; maks yer hızı 39,8 m/s (eski 57,9). Hold merkezi ≈ (N−41, E254), maks |E| 376 (100 m irtifa). Kalkış rotasyonunda pitch tepe 39° (TECS pitch_sp 30° sınırı). 100 m'de Hold'a geçti.
+- **uav1 kalkamadı:** 0,8 gazda t=2 sn'de 10,8 m/s'ye çıktı, sonra 7,5 m/s'de 25 sn sabit kaldı; elevatör 1,0'a doymuş, pitch −0,3° (rotasyon yok). uav0 aynı ayarda ~12 m/s'de rotasyon yaptı; zemin dengesi sınırda (0,8 marjinal). Gaz 1,0'a çıkarıldığında araç zaten E≈268 m'de arena engeline çarpıp 1,2 m/s'ye düşmüştü. **uav1'in 120 m / savrulma ölçümü ALINAMADI** (eski ~560 m ile karşılaştırma yok; yalnızca uav0 100 m'de −%37).
+- Zincir (devralma → yaklaşma → standoff → tırmanış → Hold), OFFBOARD geçişi ve "High Accelerometer Bias" kontrolü **test edilemedi** (uav1 havada değil; uav0 geçişi yapılmadı). `px4_1.log`'da bias uyarısı 0× ama araç hiç havalanmadı — anlamsız. uav0 accel_bias maks 0,042 (yalnızca ~1 dk uçuş; 400+ sn sürüklenme testi yapılmadı).
+- Sonuç: bütçe (2 deneme) doldu → durdum, sistem kapatıldı (`launch_all.sh stop`, kalıntı süreç yok).
+
+**Düzeltme:** `mavlink_takeoff.py` `RWTO_MAX_THR` → **(1.0, 1.0)** (0,6 araçları hiç kaldırmıyor; çalışma-anı değerleri 0,8/1,0 SITL bson'unda kalmıştı, bir sonraki çalıştırma ensure_param ile 1,0'a eşitler). Savrulmayı `FW_TKO_PITCH_MIN=20` tek başına kısaltır (model: 1,0 gaz/pitch 20 → ~51 m/s, ~235–300 m). Gaz 0,8–1,0 arası (örn. 0,9) denenmedi.
+
+**Çıkarımlar / yöntem notu:** `launch_all.sh stop` içindeki `pkill -f "gz sim"` benim komut metnimde "gz sim" geçince kabuğu öldürüyor (çıkış 144) → başlat/durdur/izleme komutlarını dosyaya koy (scratchpad `start.sh/stop.sh/procs.sh`).
+
+**Nereden devam:** CLAUDE.md'de.
+
+---
+
+### [2026-11-01 00:32] - RTF ölçüm düzeltmesi (uygulandı) + uav1 kalkış hızı kök neden analizi (yalnızca okuma); Adım 3 onay bekliyor
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`, `iha_arena.sdf` değişmedi; uçuş/sim yok; sudo/apt yok. Yedekler: `yedek/{qr_watch.py,lora_yaklasma.py}.bak-2026-11-01-0027`, `yedek/CLAUDE.md.bak-2026-11-01-0027`, `yedek/v2_proje_gunlugu.md.bak-2026-11-01-0027`.
+
+**Adım 1 — `rtf_ort()`/`rtf5()` etkin RTF'e çevrildi (sözdizimi + import testi geçti, sentetik testte 0,950 beklenen = 0,950):**
+- Yöntem: pencere (5 sn) boyunca `/world/default/stats` mesajlarının **kendi** `sim_time Δ / real_time Δ` değeri. Seçim nedeni: sim ve real aynı gz-damgalı mesajdan geliyor, pencere mesaj içi `real_time` ile kesiliyor → abonelik kaybı/geç teslim/duraklama sonrası yakalama tepeleri sonucu bozmuyor. `/world/default/clock` yöntemi iki ayrı örnek + okuyucunun duvar saatine bağlı (aynı asenkron teslim artefaktına açık); bağımsız doğrulama olarak kalıyor (0,945 vs 0,958 uyumlu).
+- Not: `qr_watch.py` zaten sim/real Δ kullanıyordu (artefakt yalnızca `lora_yaklasma.py`'deydi); qr_watch'a yalnızca mesaj-içi pencere + bayat veri (>5 sn) / <2 sn pencere → nan koruması eklendi. `lora_yaklasma.py` anlık `real_time_factor` ortalamasından etkin RTF'e geçti (bayat/yetersiz pencere → None, abort tetiklemez).
+- `--rtf-min` varsayılanları (0,7) DEĞİŞTİRİLMEDİ — kullanıcıya soruldu.
+
+**Adım 2 — uav1 ~560 m savrulma kök nedeni (`rootfs/1/log/2026-10-31/20_22_20.ulg`):**
+- Kalkış betikleri (`mavlink_takeoff.py`, `ros_takeoff.py`) hız/ivme parametresi ayarlamıyor; yalnızca `MIS_TAKEOFF_ALT` ve `SIM_ONLY_PARAMS` (`FW_AIRSPD_TRIM` 14 vb.) — savrulma airframe 4008 + PX4 pist-kalkış mantığından.
+- Neden: airframe 4008 `RWTO_TKOFF=1` (pist kalkışı). CLIMBOUT durumunda PX4 `throttle = RWTO_MAX_THR` (=**1,0**) ile `MIS_TAKEOFF_ALT`'a (120 m) kadar **TECS'i atlayarak tam gaz** veriyor (log: motor 1,00 t=1–12 sn, TECS throttle_sp 0,05); pitch `FW_TKO_PITCH_MIN` (10°) tabanına yapışık. Sonuç: yer hızı 57,8 m/s (FW_AIRSPD_MAX 20), γ≈9,4°, 12,9 sn'de 120 m → ~560 m doğuya; loiter merkezi irtifaya ulaşılan konuma kuruluyor (E≈560), 80 m yarıçap + dönüşte 700 m'ye taşma. Hava hızı geçerli (CAS=57), yani airspeed-sensör sorunu değil.
+- Kaba nokta-kütle modeli (log'a kalibre; baz durumu 56,8 m/s/9,4°/558 m'yi yeniden üretiyor): **yalnızca gazı kısmak savrulmayı kısaltmaz** (RWTO_MAX_THR 0,6 → 30 m/s ama ~580 m, 25 sn); mesafeyi tırmanma açısı belirliyor → `FW_TKO_PITCH_MIN` artırılmalı. Öneri: `RWTO_MAX_THR 1.0→0.6` + `FW_TKO_PITCH_MIN 10→20` → ~24 m/s, γ≈19°, ~16 sn, ~275–355 m. Alternatif sert: pitch 25 / thr 0,7 → ~210–270 m ama 29 m/s.
+- **ÖNEMLİ DÜZELTME (accel bias):** Aynı log'da `estimator_sensor_bias` — kalkış patlaması değil, **loiter'da yavaş sürüklenme**: uav1 accel_bias Y: 0,01 (t=10 sn) → −0,23 (300 sn) → −0,40 (600 sn, EKF2_ABL_LIM=0,4'e dayandı); preflight eşiği 0,75·0,4 = 0,30 + 3σ ≈ t≈400 sn'de aşılıyor. uav0 da aynı sürüklenmeyi gösteriyor (Y maks 0,29 — eşiğin hemen altında; px4_0'da uyarı çıkmaması şans/zamanlama). Yani uav1'in 15 dk Hold'da beklemesi kök neden; kalkış yumuşatma tek başına bunu çözmeyebilir. Ayrıca `COM_ARM_EKF_AB` bu PX4 sürümünde yok (eşik `EKF2_ABL_LIM`'e bağlı, 0,0–0,8). Kontrol `armingCheckFailure` (mod gruplarına bağlı) → OFFBOARD geçişini engellemesi tutarlı, ancak açık "rejected" satırı doğrulanmadı.
+- Adım 3 önerileri: (a) kalkış: `SIM_ONLY_PARAMS`'a `RWTO_MAX_THR (0.6, 1.0)`, `FW_TKO_PITCH_MIN (20.0, 10.0)`; (b) bias: `EKF2_ABL_LIM (0.8, 0.4)` (eşiği 0,60'a çıkarır) ve/veya `EKF2_IMU_CTRL (5, 7)` (SITL'de accel-bias kestirimi kapalı — sim IMU'da gerçek bias yok, sürüklenme kestirici artefaktı); (c) uav1'i engage'den önce uzun Hold'da bekletmemek (devralma ≤ ~5 dk). Henüz UYGULANMADI.
+
+**Durum:** ⏸ Adım 3 kullanıcı onayı bekliyor. Sistem çalışmıyordu (kapatılacak süreç yok).
+
+---
+
+### [2026-10-31 23:45] - Adım 1 uçuş (2/2 deneme): zincir OFFBOARD devralmaya kadar doğrulandı; yeni blokaj uav1 "High Accelerometer Bias" preflight → OFFBOARD reddi
+
+**Bağlam:** WSL restart sonrası temiz oturum. Hiçbir proje dosyası değiştirilmedi (yalnızca CLI argümanları). Yedekler alındı: `yedek/CLAUDE.md.bak-2026-10-31-2345`, `yedek/v2_proje_gunlugu.md.bak-2026-10-31-2345`.
+
+**Adım 0 — RTF ön kontrolü (GEÇTİ):** `CAM=T10 LORA=1 YAKLASMA=1 ./launch_all.sh`, uav0 100 m Hold. 30 sn ölçüm — **gerçek (etkin) RTF = 0,945** (stats sim_time Δ / gerçek Δ), `/world/default/clock` ile bağımsız doğrulama **0,958**. Önceki oturumun 0,38–0,47 düşüklüğü GEÇTİ. **Kritik:** anlık `real_time_factor` örneklerinin ortalaması (qr_watch/lora_yaklasma `rtf_ort` metriği) ~0,69 ort / 0,43 medyan / maks 2,8–3,3 okuyor — **ölçüm artefaktı** (gz-transport aboneliği ağır yükte kayıplı; duraklama→yakalama tepeleri). Eşik 0,85 kararı etkin-RTF ile verildi → uçuşa devam.
+
+**Adım 1 — Deneme 1:** uav1 120 m Hold'a kaldırıldı (not: kalkışta spawn'dan ~515–561 m doğuya fırlıyor). uav0 geçiş 1 (`qr_pass.py --pass-id 1 --alt 60 --bias 0`) mükemmel: x_ort −0,23 m, QR `HEDEF-01` (−60,7,−60,0) tespit, qr_online 9 yayın, relay 8 iletildi (%11 kayıp). **Devralma olmadı:** yaklaşma düğümü (launch varsayılanı, `--bekleme-asimi` 120 sn) role gelmeden zaman aşımına uğradı — uav0 reposition ~673 m + hizalama + geçiş uzun sürdü (düğüm-hazır 23:26:12, tespit 23:29:34, aradaki fark 82 sn > kalan bütçe). Sequencing sorunu, RTF değil.
+
+**Adım 1 — Deneme 2 (son):** yaklaşma düğümü `--mesafe-turu yatay --yaklasma-irtifa 105 --guvenli-irtifa 120 --bekleme-asimi 600 --zaman-asimi 60 --rtf-min 0.3 --devralma-bekleme 30` ile yeniden başlatıldı (hepsi CLI, dosya değişmedi). uav0 geçiş 2 OK (x_ort −0,31 m, tespit). **Düğüm role'yi 161 sn'de aldı (bekleme-asimi içinde), GEÇERLİ GÜVENLİ PLAN hesapladı:** iniş 1,5°, yatay 599,3 m, 20 m standoff, durma irtifa 105 m, tırmanış 120 m, toplam 43,6 sn. **`--rtf-min 0.3` artefakt yanlış-abort'unu önledi; latch-and-wait HİÇ tetiklenmedi** (`rtf_latch_bekleme_sn` yok — etkin RTF sağlıklı). **Ama `OFFBOARD'a geçilemedi`** (`--engage-asimi` 30 sn doldu, düğüm çıkış 1). uav1 hareket etmedi, LOITER'da güvende.
+
+**Kök neden (OFFBOARD reddi):** `px4_1.log` engage anında **`Preflight Fail: High Accelerometer Bias` (3×)**; `px4_0.log`'da **0×** → uav1'e özgü. PX4'te aktif preflight hatası mod geçişini (OFFBOARD) engeller. Muhtemelen uav1'in aşırı agresif kalkışı (~560 m yüksek hızlı fırlama) + sim zamanlama jitter'ı → EKF accel bias yükseliyor. uav0 kontrollü geçiş uçtuğundan etkilenmiyor (qr_pass ile OFFBOARD'a sorunsuz giriyor).
+
+**Kritik latch-and-wait bulgusu:** patch yalnızca engage döngüsünü kapsıyor; **yaklaşma (3. adım) döngüsünün RTF abort'u hâlâ anında** ve aynı `rtf_ort` artefakt metriğini kullanıyor (satır 229–231/287–290). Anlık metrik sürekli <0,7 olan altyapıda engage geçse bile yaklaşma yanlış-abort eder. → Monitörler etkin-RTF (sim/wall) hesaplamalı.
+
+**Kapanış:** sistem temiz kapatıldı (`./launch_all.sh stop`), kalıntı süreç yok, pgids silindi. `free -m`: used 933 MB, available 13,9 GB, swap 0 (sızıntı yok). Sonuç dosyaları: `/tmp/lora_yaklasma_sonuc2.jsonl`, `/tmp/qr_pass_result.jsonl` (geçiş 1 & 2 `sonuc: tamam`). **Nereden devam:** CLAUDE.md güncellendi — birincil iş uav1 OFFBOARD engage blokajı (accel bias); sonra etkin-RTF monitör + launch YAKLASMA güvenli varsayılan + uçtan uca.
+
+### [2026-10-31 23:00] - `lora_yaklasma.py` latch-and-wait (Adım 1) + kuru RTF analizi; uçuş doğrulaması ortam RTF anomalisiyle durduruldu
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`/`iha_arena.sdf`'e dokunulmadı; sudo/apt yok; abort düğüm içinde (ayrı abort süreci uçan araca test amaçlı bağlanmadı — qr_watch/orbit_abort yalnızca önceden doğrulanmış güvenlik ağı olarak kullanıldı). Bu turda en fazla 2 uçuş denemesi kuralı vardı; **0/2 kullanıldı** (aşağıdaki nedenle uçuşa hiç girilmedi). Yedek: `yedek/lora_yaklasma.py.orig-2026-10-31`.
+
+**Adım 1 — latch-and-wait (`lora_yaklasma.py`):** Devralma (hazırlık/engage) döngüsünde RTF(5s) < `--rtf-min` artık anında abort değil: hedef kilitli kalır (zaten her role mesajıyla güncelleniyor), `--devralma-bekleme` (varsayılan 15 sn) içinde RTF toparlanmasını bekler; dolarsa gerçek abort+Hold. Kritik (abort-file/nav RTL/iniş) nedenler hâlâ anında abort. Yaklaşma (3. adım) döngüsünün RTF abort'u değiştirilmedi (veri yalnızca devralma anında düşüyordu, orada değil). Sözdizimi (`ast.parse`) ✔, tüm lazy import'lar (rclpy, px4_msgs, gz.transport13 dahil) ✔, `lora_yaklasma_test.py` regresyon ✔.
+
+**Adım 3 — kuru test / RTF düşüş analizi:** Önceki oturumun `ucus_sonuc.jsonl` + `yaklasma{2,3,5}.log` + `rtf.log`'undan çıkarıldı (`test/lora_yaklasma_devralma_2026-10-31/rtf_dusus_analizi.md`). Düğüm içi abort değerleri (RTF(5s) 0,677 ve 0,585) 5 sn'lik pencerenin neredeyse tamamen düşük kaldığını gösteriyor; dış 5 sn örnekleme (bağımsız süreç) bunu doğrulayamadı (muhtemelen ağır yükte kayıplı/asenkron örnekleme). Düşüşün üst süresi kanıtlanamadı (yalnızca ≥~5 sn alt sınırı var). **Karar: Adım 2 (kamera hız azaltma) bu kanıtla uygulanmadı** — yetersizlik kanıtlanmadı ve kök neden muhtemelen uav0'ın arena-merkezi render yükü, qr_online hızı değil.
+
+**Adım 4 — uçuş: BAŞLATILAMADI.** `CAM=T10 LORA=1 YAKLASMA=1 ./launch_all.sh` ile temiz başlatıldı, uav0/uav1 `mavlink_takeoff.py --uav 0 1` ile kalktı (100/120 m Hold, telemetriyle doğrulandı: z −100,3 / −120,1 m). Ancak Hold'da, **hiçbir manevra yokken** RTF ort 0,38–0,47 / min 0,21–0,29 ölçüldü — önceki oturumun aynı yapılandırmada ölçtüğü 0,942/0,824'ün çok altında. Teşhis: 16 çekirdek, `vmstat` %100 boşta, cgroup CPU kotası yok, gz sim iş parçacıkları tek çekirdeğe yığılı değil → yerel kaynak darboğazı değil. Temiz `./launch_all.sh stop` + sıfırdan yeniden başlatma (araçlar havalanmadan önce bile) RTF'yi değiştirmedi (0,46 ort) → kalıntı süreç/kod kaynaklı değil, **bu oturumun altyapısına (muhtemelen VM/hypervisor zamanlama gecikmesi) özgü** görünüyor. Bu tabanda gerçek bir deneme latch-and-wait'i anlamlı test edemezdi (RTF 0,7'ye hiç yaklaşmıyor, 15 sn her zaman zaman aşımına uğrar) → bilinçli olarak **uçuşa girilmedi**, bütçe (2 deneme) harcanmadı, sistem temiz kapatıldı (`pgrep`/`pgids` boş, `free -m`: used 780 MB, available 14,1 GB, sızıntı yok).
+
+**Operasyonel not (kendi hatam, düzeltildi):** İlk `mavlink_takeoff.py --uav 0 1` başlatma denemesinde `cd … && VAR=... && setsid cmd &` kalıbı kullanıldı (CLAUDE.md'nin uyardığı tuzak — `$!` yanlış PID yazdı) ve ikinci (doğru) başlatmayla çakışıp **iki eş zamanlı heartbeat süreci** oluştu; fark edilip ilk (yanlış izlenen) süreç `kill` ile temizlendi, `pgids` düzeltildi. Her iki araç etkilenmeden Hold'da kaldı (NAV_DLL_ACT=0 sim parametresi heartbeat kesintisinde eylemsiz olduğundan risk oluşmadı). Sonraki başlatmalarda `setsid cmd < /dev/null > log 2>&1 &` + `echo $!` ayrı, zincirsiz komut satırında tutuldu.
+
+**Nereden devam edilecek:** CLAUDE.md'de güncellendi — önce yeni bir oturumda RTF taban çizgisini erken doğrula (Hold'da 10 sn örnekle, <0,7 ise uçma); normalse Adım 4'ü bu notlarla aynen tekrarla. RTF kalıcı düşükse kalıcı çözüm seçenekleri: kamera hızı azaltma, arena render yükünü düşürme, tek-PX4 referans ölçüm, ya da `--devralma-bekleme`'yi uzatma (yalnızca geçici çöküşü tolere eder, kalıcı tabanı çözmez).
+
+---
+
+### [2026-10-31 18:35] - uav1 kontrollü yaklaşma düğümü (`lora_yaklasma.py`) + kuru test + launch entegrasyonu + uçuş (zincir doğrulandı, yürütme RTF sınırlı)
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`/`iha_arena.sdf`'e dokunulmadı; yalnızca uav0+uav1 kalktı; abort düğüm içinde (global kural: uçan araca ayrı abort süreci bağlama → kontrol eden düğüm Hold'u kendi verir, süreçler arası yarış yok); `px4-param` yalnızca çalışma-anı parametresi yazar (PX4 ağacı değil); sudo/apt yok. Genel not uygulandı: tüm parametreler CLI argümanı, çıktı `test/<konu>_<tarih>/` aynı CSV/JSON şemasıyla. Yedekler `yedek/*-1731..2228`.
+
+**Amaç:** uav1, `/hedef_konum_role`'den gelen hedefe Offboard ile KONTROLLÜ YAKLAŞMA (kamikaze değil: temas yok, dalış yok), ~standoff kala durup güvenli irtifaya yükselip Hold.
+
+## Adım 1 — `lora_yaklasma.py` (yeni)
+`/hedef_konum_role` dinler; ilk geçerli mesajda (--esik-mesaj) uav1'i Offboard'a alır, hedefe **düz çizgi** yaklaşım (setpoint=hedef, hız=V·birim, ivme NaN; qr_pass kanıtlı yöntemi, zamandan bağımsız — tavşan yerine, çünkü hedef nokta ve tavşan orbit'te +6 m dışa kayma yapıyordu). Çerçeve: hedef uav0 NED → uav1 NED = (x_kuzey−ΔN, y_dogu−ΔE), ΔN=15 ΔE=−15 (uav1=uav0+N15 E−15; doğrulandı −60,−60 → −75,−45). Durma: `--mesafe-turu` {3b|yatay}, `--durma-mesafesi`, pull-up → `--guvenli-irtifa`, nav_state AUTO_LOITER doğrula. Tolerans: `--zaman-asimi` mesaj gelmezse ekstrapolasyon yok son hedefe sürdür, 2× → Hold. Abort (düğüm içi): nav_state RTL, irtifa tabanı, RTF (5 sn pencereli ort), RSS. **ROS 2 ASCII topic → `role`.** py_compile+import OK (çalıştırılmadı).
+
+## Adım 2 — kuru test (`lora_yaklasma_test.py`, yeni; simülasyonsuz)
+Kayıtlı `/hedef_konum_role` (qr_lora online CSV, 8 yayın, ort uav0 NED −60,4/−60,0 → uav1 NED −75,4/−45,0) + 4 varsayımsal başlangıç → plan + **iniş açısı (güvenlik göstergesi)**. **Kritik bulgu:** hedef yerde olduğundan "3B 20 m" standoff ancak ~15 m irtifada tetiklenir; **uav1'in gerçek yakın spawn'ından (~88 m) bu 54,6° dalış = sabit kanat için uçulamaz**, yalnızca uzak başlangıçtan (S3 500 m → 12,2°) uçulabilir. → Güvenli/uçulabilir uyarlama: **`--mesafe-turu yatay`** (yatay 20 m standoff) + yaklaşma irtifası 105 m (minimal iniş): S0 iniş açısı **12,5°**, uçulabilir. Çıktı `test/lora_yaklasma_2026-10-31/` (kuru_sonuc.json, per_mesaj.csv).
+
+## Adım 3 — launch entegrasyonu (`launch_all.sh`)
+**`YAKLASMA=1`** (LORA=1 gerektirir): LORA akışına ek olarak `lora_yaklasma.py --uav 1` başlar (uav1 Hold'da olunca devralır; düğüm uav1 hazır olana kadar bekler). Opt-in, varsayılan değişmez; parametreler `YAKLASMA_ARGS`; `stop` desenine eklendi. `bash -n` ✔ (sim başlatılarak çalıştırılmadı).
+
+## Adım 4 — uçuş (`CAM=T10 LORA=1 YAKLASMA=1`, safe YAKLASMA_ARGS)
+- **RTF kapısı** (uav0 100 m Hold, LORA yığını aktif): **ort 0,942 / min 0,824** → 0,8 üstü.
+- **uav1 kalkış**: `mavlink_takeoff --uav 1 --params-only` (SIM_ONLY_PARAMS) + `px4-param --instance 1 set MIS_TAKEOFF_ALT 120` + `ros_takeoff --uav 1` → 120 m Hold. **Not:** kalkış aşırı hızı (56 m/s) uav1'i spawn'dan ~500–650 m doğuya taşıdı; Hold hedefe ~570–660 m uzakta.
+- **Zincir DEVRALMAYA KADAR TAM DOĞRULANDI:** uav0 QR tespit → `/hedef_konum` → `lora_relay` → `/hedef_konum_role` → `lora_yaklasma` alır (düğüm başından role'ye 105–147 s, uav0 overflight'ında), uav1 NED'ine çevirir, **geçerli güvenli plan hesaplar** (iniş açısı 1,5–1,7°, yatay 570–660 m, 20 m standoff, 120 m'ye tırmanış, ~42–48 s). Oturum relay: 27 alınan / 26 iletilen / 1 kayıp (%3,7), gecikme 48,4 ms.
+- **Yaklaşmanın YÜRÜTÜLMESİ RTF ile engellendi (4 deneme):** (1) role-bekleme 120 s çok kısa (uav0 geçişi QR'a geç varıyor) — düzeltildi (--bekleme-asimi↑); (2) RTF 0,170 **anlık** yanlış abort — düzeltildi (RTF 5 sn pencereli ort); (3) RTF(5s) **0,677 < 0,7** (gerçek); (4) qr_pass `plan_via` planlayıcı çökmesi (uav0 Hold konumundan direk-kaçışlı ara nokta yok) → role yok; (5) RTF(5s) **0,585 < 0,6** (gerçek, eşik 0,6'ya indirilmişti). **Bulgu:** iki tam PX4 + kamera + arena-merkezi render + relay/online birlikte, uav0'ın tam overflight anında (role'nin geldiği an) sürdürülen RTF **0,58–0,68**'e düşüyor; role tam bu en-kötü anda geldiğinden uav1 güvenle devralamıyor → abort kuralı tasarım gereği doğru çalışıyor. uav1 yaklaşması kendisi hafif (kamerası yok); yalnızca devralma anı RTF çukuruna denk geliyor. İki İHA da uçuş boyunca Hold'da güvende (uav1 hiç hareket etmedi).
+- **Düğüm düzeltmeleri (oturum içi):** RTF kontrolü anlık → 5 sn pencereli ort (yanlış abortu önler, min 3 örnek); YAKLASMA=1 için uav1-hazır bekleme döngüsü (çıkmaz); `--hazir-asimi/--mesafe-turu/--zaman-asimi` ayarları.
+
+**Kapanış:** sistem kapatıldı (stop deseni `lora_yaklasma` dahil; online+relay SIGTERM ile özet), kalan süreç 0, pgids silindi. `free -m`: used 706 MB, available 14,2 GB (sızıntı yok). (Sistem saati uçuş sırasında 18:3x→22:2x atladı — WSL saat kayması, sonuçları etkilemez.)
+
+**Nereden devam edilecek:**
+1. **Yaklaşmayı tamamla (RTF çözümü):** role, overflight RTF çukuruna (0,58–0,68) denk geliyor. Seçenekler: (a) düğüm hedefi **latch edip RTF toparlanana kadar bekle** (uav0 arena merkezini geçince ~0,79), abort yerine; (b) yük azalt (kamera 5 Hz, ya da uav0'ı arena merkezinden uzakta Hold'a alıp uav1 öyle yaklaşsın); (c) sürekli tespit (uav0 QR üzerinde loiter) → role akışı sürsün. uav1 yaklaşması zaten hafif.
+2. **Arama stratejisi:** role gelmezse uav1 genişleyen kare ya da merkezde Hold+bekle; bağ sağlığı `/hedef_konum_role_stat`'tan (kayıp oranı).
+3. **Uçtan uca görev:** RTF çözülünce tam tespit→relay→yaklaşma→standoff→tırmanış→Hold; sonra hareketli/çoklu hedef.
+4. **qr_pass planlayıcı sağlamlığı:** `plan_via` bazı uav0 Hold konumlarından RuntimeError veriyor (geçiş 3); ara nokta aramasını genişlet.
+5. Önceki açık: GUI RTF darboğazı; headless 50/70 m sağlamlık; uav1 kamerası.
+
+---
+
+### [2026-10-31 17:41] - LoRa taklit aktarma düğümü (uav0 → uav1) + çevrimdışı test + launch entegrasyonu + doğrulama uçuşu
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`/`iha_arena.sdf`'e dokunulmadı; yalnızca uav0 kalktı (uav1 yerde, arm edilmedi); abort yalnızca tasarım gereği `qr_watch`; sudo/apt yok. Yedekler `yedek/*-1731` (launch_all, lora_relay, lora_relay_test), `*-1733` (lora_uav1_dinle), `*-1741` (CLAUDE.md, günlük).
+
+**Amaç:** `qr_online.py`'nin `/hedef_konum`'unu LoRa ağını taklit eden bir röle ile uav1'e iletmek.
+
+## Adım 1 — `lora_relay.py` (yeni)
+`/hedef_konum` (std_msgs/String JSON) dinler, kayıp olmayanı gecikmeyle `/hedef_konum_role`'ye yeniden yayınlar.
+- **Gecikme:** sabit değil, **Gauss(ort, σ=yarı/2.5)** olup `[ort−yarı, ort+yarı]`'ya kırpılır (varsayılan ort 50 ms, yarı 20 → **[30, 70] ms**). **Gerekçe:** gerçek LoRa gecikmesi = time-on-air (SF/BW/yük; kısa paket için onlarca ms) + MAC/duty-cycle + işleme/kuyruk jitter'ı; paket başına değişir. Gauss seçildi çünkü jitter tipik değer çevresinde kümelenir (düzgün dağılım değil).
+- **Kayıp:** Bernoulli, varsayılan **%3** (başarı %97). Parametreler `--gecikme-ort`, `--gecikme-yari`, `--kayip-orani` (yüzde), `--seed`, `--stat-sn`.
+- Röle, yüke `role` alt nesnesi ekler: `alinan_duvar` (röle alım = uav0 yayınının vekili), `role_duvar` (yeniden yayın), `gecikme_ms`, `damga_sim`, `kayip_toplam`, `alinan_toplam`, `gonderilen_toplam`. İstatistik ayrıca `/hedef_konum_role_stat`'a periyodik + loglanır.
+- **Topic adı:** ROS 2 yalnızca ASCII `[a-zA-Z0-9_]` kabul ettiğinden `/hedef_konum_röle` ("ö") geçersiz → **`/hedef_konum_role`** kullanıldı. py_compile + import testi geçti (çalıştırılmadı).
+
+## Adım 2 — çevrimdışı test (`lora_relay_test.py`, yeni; simülasyonsuz)
+Tek süreçte gerçek `LoraRole` düğümü + test koşumcusu (MultiThreadedExecutor); her mesaja `test_seq` eklenir, röle yükü koruduğundan alıcıda eşleşir.
+
+| Test | Gönderilen | Alınan | Kayıp | Gerçekleşen kayıp | Gecikme ort / min / maks / p95 |
+|---|---|---|---|---|---|
+| Sentetik (seed 1) | 1000 | 972 | 28 | **%2,80** (hedef %3) | 49,91 / 30,0 / 70,0 / 63,9 ms |
+| Gerçek 33 (seed 1) | 33 | 32 | 1 | **%3,03** | 50,85 / 38,5 / 66,2 ms |
+
+Gerçek veri: 4 geçişin `(QR_bulma & kadrajda)` = **9/9/9/6 = 33** tespiti (kayıt analiz CSV'leri), her geçiş kendi sim-zamanı aralıklarıyla. Geçiş başına: G1 9→9 (0 kayıp), G2 9→8 (1), G3 9→9 (0), G4 6→6 (0). Uçtan uca (alıcı−gönderici duvar) sentetik 52,4 ms (uygulanan + ~2,5 ms ROS taşıma). **Sonuç istenen değerlere yakın → Adım 4 haklı.**
+
+## Adım 3 — launch entegrasyonu (`launch_all.sh`)
+**`LORA=1` opt-in seçeneği** eklendi (CAM=T/T10/T15 gerekir): sim ayağa kalkınca kamera köprüsü + `qr_online` + `lora_relay` birlikte `start_bg` ile başlar (PGID_FILE'a yazılır, stop temizler). **Neden ayrı `LORA=1` (CAM'e gömmek yerine):** `CAM` kamera modeli/dünya seçimi, `LORA` ROS uygulama katmanı — ayrı kaygılar; gömmek kamera seçimini röleye bağlardı. Varsayılan davranış değişmez (LORA tanımsız → atlanır). Röle parametreleri `LORA_ARGS` ile. `stop` deseni genişletildi (`lora_relay.py` eklendi). `bash -n` ✔; simülasyon başlatılarak çalıştırılmadı (Adım 3 talebi).
+
+## Adım 4 — doğrulama uçuşu (`CAM=T10`, headless, yalnız uav0)
+Akış: `CAM=T10` → kalkış 100 m Hold → **RTF 60 sn (kamera yok): ort 1,000 / min 1,000** (0,8 üstü) → köprü + `qr_online` + `lora_relay --seed 1` + **uav1 dinleyici `lora_uav1_dinle.py`** (yeni; yalnızca `/hedef_konum_role` dinler, hareket yok) → `qr_pass` bias 0, 60 m.
+
+**Geçiş temiz bitti** (headless → RTF min 0,744 > 0,7 eşiği, abort yok): hedef üstü x −0,46, **nav_bitis AUTO_LOITER** (nav_state doğrulandı). OFFBOARD 80 sn.
+
+**LoRa zinciri (uçuşta):**
+| Metrik | Değer |
+|---|---|
+| uav0 `/hedef_konum` yayını | **8** (bu geçişte 8 tespit) |
+| uav1 `/hedef_konum_role` aldı | **8** |
+| Kayıp | **0** (/8; %3 beklenen ≈ 0,24) |
+| Gecikme ort / min / maks | **51,97 / 38,88 / 64,97 ms** |
+| Varış gecikmesi (ROS taşıma) | < 2 ms |
+
+İçerik `HEDEF-01`, konumlar korundu. uav0 Hold'da bırakıldı, sistem kapatıldı (online+relay SIGTERM ile özet yazdı; kalan süreç 0, pgids silindi). `free -m`: used 720 MB, available 14,2 GB (sızıntı yok).
+
+**Nereden devam edilecek:**
+1. **uav1 yaklaşma mantığı (sıradaki):** uav1 `/hedef_konum_role`'den hedef dünya konumunu alır (çok mesaj ortalaması; her mesajda `ort_x_kuzey/ort_y_dogu`). Offboard ile hedefe yönelir ama **işaretçiye ~20 m kala durur, irtifa alır (yüksel), Hold'a geçer** (kamikaze değil, güvenli yaklaşma; gerçek hedef temasından kaçın). Hedef uav1 çerçevesine `center_frame_uav` mantığıyla çevrilmeli (uav1 = uav0 + N15 E−15). Röle gecikmesi (~50 ms) + kaybı (%3) yaklaşma döngüsünde tolere edilmeli: son geçerli konumu tut, kayıpta ekstrapolasyon yok, zaman aşımında Hold.
+2. **Arama stratejisi:** uav0 hiç tespit yayınlamazsa / uav1 role alamazsa uav1 arama deseni (ör. genişleyen kare ya da arena merkezinde Hold + bekle). Röle `/hedef_konum_role_stat`'tan bağ sağlığı (kayıp oranı) izlenebilir.
+3. Röle sağlamlığı: daha yüksek kayıp/gecikme senaryoları (--kayip-orani 10, --gecikme-ort 100) ile yaklaşma mantığının dayanıklılığı.
+4. Önceki açık işler: GUI RTF darboğazı; headless 50/70 m sağlamlık; uav1 kamerası.
+
+---
+
+### [2026-10-31 14:16] - Kayıttan açıklamalı video (`qr_video.py`) + pencereli/canlı kameralı geçiş denemesi (GUI RTF darboğazı)
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`/`iha_arena.sdf`'e dokunulmadı; yalnızca uav0 kalktı (uav1 yerde); sudo/apt yok; abort için yalnızca tasarım gereği `qr_watch` kullanıldı. Yedekler `yedek/*-1337` (qr_video, CLAUDE.md), `yedek/*-1416` (CLAUDE.md, günlük, qr_live, batarya_monitor).
+
+## Bölüm 1 — kayıttan video (simülasyonsuz)
+
+`qr_video.py` (yeni): `test/qr_kadraj_2026-10-31/kayit/gecis_01..04` karelerinden + `kayit/analiz/*_kareler.csv`'den açıklamalı mp4. Her geçiş 728×544 (yarı): `gecis_NN_tam.mp4` (tüm kareler, 10 fps) ve `gecis_NN_yavas.mp4` (QR kadraj penceresi, 2 fps). Üstte bilgi şeridi (geçiş/bias/sim zamanı/irtifa/yanal sapma); QR bulununca dörtgen + "HEDEF-01" (yeşil) / "bulundu, cozulemedi" (sarı), yoksa "QR yok", geometrik kadrajda ama bulunamadıysa "kadrajda, bulunamadi". `karsilastirma.png` 4 geçişi en yakın (en büyük QR) karede 2×2 yan yana. Codec **mp4v çalıştı** (avc1/XVID yedeği var ama gerekmedi). cv2 Hershey yalnızca ASCII → Türkçe karakter yok. Analiz CSV'sinde png adı yok → `kare` numarasından kuruldu (`kare_NNNN.png`).
+
+Çıktı `test/qr_kadraj_2026-10-31/video/` (toplam 3,2 MB):
+
+| Geçiş | tam (10 fps) | süre | yavaş (2 fps) | süre |
+|---|---|---|---|---|
+| 1 (bias 0) | 0,72 MB | 23,7 sn | 0,052 MB | 5,0 sn |
+| 2 (+7,5) | 0,71 MB | 23,9 sn | 0,055 MB | 4,5 sn |
+| 3 (−7,5) | 0,71 MB | 24,0 sn | 0,054 MB | 4,5 sn |
+| 4 (+9,5) | 0,67 MB | 20,9 sn | 0,054 MB | 4,5 sn |
+
+`karsilastirma.png` 1456×1088, 0,10 MB. En büyük QR kenarı: G1 77,4 / G2 78,5 / G3 76,6 / G4 75,7 px.
+
+## Bölüm 2 — pencereli + canlı kameralı geçiş (`GUI=1 VIZ=1 CAM=T10`)
+
+gz penceresi + işaretçiler (viz_trails) + PX4×2 (uav1 yerde); pencere takibi önleyici NONE yapıldı; uav0 100 m Hold. Canlı kamera penceresi `qr_live.py` (yeni): `/uav0/camera/image` → yarı çözünürlük OpenCV penceresi, QR dörtgen + metin (cv2 QT5 GUI; imshow :0'da çalışıyor). Batarya izleyici `batarya_monitor.sh` (yeni).
+
+**RTF ölçümleri (100 m Hold, 60 sn):**
+
+| Aşama | Koşul | RTF ort | RTF min |
+|---|---|---|---|
+| Faz A | pencere + işaretçi (kamera yok) | **0,985** | 0,915 |
+| Faz B | + kamera köprüsü + qr_online + qr_live (arkadan takip) | **0,855** | 0,823 |
+| Overview | cam genel, kamera **kapalı** | ~0,71 | 0,655 |
+
+Faz B 0,8 üstü → canlı kamera kuralı gereği açık kaldı. **Önemli: overview'da kamera kapalıyken bile RTF ~0,71** → darboğaz kamera değil, **GUI'nin 138 varlıklı arenayı WSLg'de GPU'suz yazılımla render etmesi**; görüş açısı yük belirliyor (arkadan yakın takip 0,85, tüm arena overview 0,71).
+
+**Geçiş (bias 0, 60 m, GUI arkadan takip + canlı kamera + online):** devralma s −670 m, x +2,7. OFFBOARD'da arena merkezine inince RTF 5 sn ort **0,699 < 0,7** → `qr_watch` `orbit_abort` ile Hold verdi (abort kuralı tam da bunun için; `qr_pass` çıkış 2, `qr_watch` çıkış 2). **Hold doğrulandı: nav_state AUTO_LOITER** (`HOLD ✔ NAV 4`). Uçak AUTO_LOITER'da ~100 m'ye çıkıp güvenli kaldı. (Headless aynı hat 0,78–0,82'de koşuyordu — fark GUI render yükü.) Abort sonrası `cam genel`; canlı kamera + online + köprü kapatıldı (görev bitti; PID ile, pkill self-match'ten kaçınarak).
+
+**Post-geçiş Hold izleme (20 dk):** `batarya_monitor.sh` 60 sn'de bir batarya + irtifa/mod logladı (`batarya.log`); batarya **boyunca sabit %50** (SITL bataryası düşmüyor — sabit değer), uav0 ~100 m LOITER, gz RSS 648 MB sabit, anormallik yok. t=1205 sn'de **"20 dk doldu" tetiğiyle kendi kapandı** (`launch_all.sh stop`). Monitörün komut satırında "mavlink.log" var ama "mavlink_takeoff.py" yok → stop'un pkill deseni monitörü erken öldürmedi, stop temiz tamamlandı.
+
+**Kapanış:** kalan süreç 0, `/tmp/iha_sim.pgids` silindi. `free -m`: used 973 MB, available 13,9 GB (taban ~870; sızıntı yok).
+
+**Nereden devam edilecek:**
+1. **GUI RTF darboğazı:** pencereli/işaretçili canlı uçuşta RTF < 0,8 (arena merkezinde geçiş 0,70, abort). Yazılım render (WSLg/llvmpipe) sınırı. Seçenekler: GUI'siz uçup sadece `qr_live`/kayıttan video ile izleme; ya da D3D12/GPU hızlandırmayı araştırma; ya da arenayı hafifletme (overview yerine takip). Canlı pencereli demo için abort eşiğini düşürmek değil, yükü azaltmak gerekir.
+2. Sağlamlık (headless): 50 ve 70 m irtifa geçişleri, farklı yönler, yan rüzgar, kamera gürültüsü/bulanıklığı.
+3. OFFBOARD penceresinde (headless) RTF 0,78–0,82 düşüşünün nedeni; 15 Hz gz sıçramaları.
+4. Sonra: uav1 kamerası + köprüsü, YOLO düğümü (yol haritası 4–5).
+
+---
+
+### [2026-10-31 13:18] - QR kadraj toleransı testi tamamlandı (geçiş −7,5 ve +9,5 m uçuşta eklendi) + `stop` düzeltmesi doğrulandı
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config`/`iha_arena.sdf`'e dokunulmadı; yalnızca uav0 kalktı (uav1 yerde, arm edilmedi); pencere/işaretçi kapalı; kalp atışı tek açılış; sudo/apt yok. Kalan iki geçiş (−7,5 ve +9,5 m) temiz bir oturumda (`CAM=T10`) uçuruldu; 0 ve +7,5 m önceki oturumdan (12:33–12:39). Yedekler `yedek/*-1318`.
+
+**Akış:** `CAM=T10 ./launch_all.sh` (Agent + gz penceresiz + PX4 ×2) → kamera köprüsü (`camera_bridge.yaml`) → RTF kaydedici (`rtf_kayit.py`, eşiksiz) → `qr_online.py` (log `online_34/`) + `qr_recorder.py` (`kayit/`'e gecis_03/04 ekler) → `mavlink_takeoff.py --uav 0` (100 m Hold, kalp atışı uçuş boyunca canlı) → her geçiş `gecis.sh <no> <bias>` → kapanış `./launch_all.sh stop` → `qr_analyze.py`.
+
+**RTF kapısı (100 m Hold, 60 sn, kamera abonesiyle):** ort **0,967**, min 0,868 — 0,8 kapısının üstünde, devam edildi. OFFBOARD geçiş penceresinde RTF 0,78–0,82 (önceki gibi; qr_watch 0,7 eşiği tetiklenmedi). gz RSS 654–655 MB sabit. Hava hızı Hold'da 14,6 m/s, kalkış tırmanışında 40–54 m/s (bilinen `FW_AIRSPD_MAX` aşımı).
+
+**Dört geçiş de temiz bitti:** hepsi OFFBOARD → AUTO_LOITER (nav_state ile doğrulandı), failsafe/RTL yok. Devralma s ≈ −670 m, x ≈ +3 m (dördü de). Kayıt: 237/239/240/209 kare, düşen 0.
+
+## Kadraj toleransı tablosu (kayıttan, `qr_analyze.py`; QR = QRCodeDetector ham)
+
+| Geçiş | Bias (m) | Hedef üstü yanal gerçek (m) | QR'a en küçük yanal (m) | Kadrajda kare | Kadraj s aralığı (m) | Kadraj süresi | QR bul/çöz | Modül px | Konum hata PX4-tam ort/maks (m) | Gerçek-poz (m) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 0 | −0,57 | 0,40 | 9 | [−7,11, +4,52] | 0,8 sn | 10/9 | 3,52 | 0,93 / 1,71 | 0,088 |
+| 2 | +7,5 | +7,38 | 7,02 | 9 | [−7,08, +4,54] | 0,8 sn | 9/9 | — | 1,81 / 2,04 | 0,060 |
+| 3 | −7,5 | −7,96 | 7,76 | 9 | [−7,75, +3,73] | 0,8 sn | 9/9 | 3,64 | 0,95 / 1,71 | 0,058 |
+| 4 | +9,5 | +9,51 | 9,04 | **6** | [−7,61, **−0,4**] | **0,5 sn** | 9/7 | 3,58 | 2,10 / 2,24 | 0,060 |
+
+Yanlış içerik 0 (tüm geçişler). Çevrimiçi düğüm (`qr_online`, gerçek zamanlı) ile uyumlu: oturumda (geçiş 3+4) 18 bulma / 17 çözme / 18 yayın (geçiş 4'ün son karesi çözülemedi), işlem p95 4,5 ms, atlanan 0, köprü kaybı 210/4934 (~%4; 10 Hz'de kabul edilir). Çözüm süresi/kare ham QR ~70 ms, Aruco ~11 ms.
+
+**Kadrajdan çıkış sınırı:** 60 m irtifada T (16 mm) nadir kamerada (hfov 0,3114 rad, 1456 px) yarı-FOV genişliği = 60·tan(0,1557) = **9,41 m**. ±7,5 m kaydırmaya kadar (yanal ~7–8 m) QR tam kadrajda, 0,8 sn / 9 kare penceresi, 9/9 çözme — bozulma yok. **+9,5 m'de (yanal 9,51 m, QR'a en küçük 9,04 m) pencere yarıya düşüyor** (6 kare / 0,5 sn) ve kadraj aralığı s ∈ [−7,6, −0,4]'e kayıyor: QR, hedef üstü geçişten (s=0) **önce** kadrajı terk ediyor. Yani pratik sınır ~9 m yanal (teorik 9,41 m ile birebir); güvenli tam-kadraj marjı ≈ ±8 m. Daha geniş kadraj için irtifa ya da W (6 mm) geniş açı kamera gerekir.
+
+**Konum tahmini:** gerçek-poz (Gazebo) yöntemi tüm kaydırmalarda ~6 cm (yöntem doğru). PX4-tam yönelimle hata kaydırmayla büyüyor (0 m'de 0,93 → +7,5'te 1,81 → +9,5'te 2,10 m; eğik bakış geometrisi + PX4 ~1,1–1,2 m yatay konum hatası). Asimetri: −7,5 (0,95 m) ile +7,5 (1,81 m) farkı PX4 EKF yanlılığı + sistemin ~0,5 m sabit yanal ofsetinden; yalnızca-yaw sürümü tesadüfen bazen daha küçük, tam yönelim kullanılmalı.
+
+**`launch_all.sh stop` düzeltmesi DOĞRULANDI:** kapanışta `qr_online` ve `qr_recorder` SIGTERM aldı, kuyruklarını boşaltıp **özetlerini yazdı** (kaydedici "durduruluyor — kuyruk boşaltılıyor", online ÖZET) — eski stop'ta bunlar yetim kalıyordu. Kapanış sonrası kalan süreç 0, `/tmp/iha_sim.pgids` silindi. **Not (pkill -f tuzağı):** `stop`'u, komut satırında yardımcı betik adlarını (qr_online, camera_bridge, rtf_kayit…) içeren bir sarmalayıcıdan çağırınca `pkill -f` sarmalayıcının kendisini de eşleştirip öldürdü (çıkış 144). Normal `./launch_all.sh stop` çağrısında kabuğun komut satırı bu adları içermez, güvenli; yalnızca izleme sarmalayıcısının artığı. `rtf_kayit.py` kalıba dahil değil (eşiksiz salt-okuma izleyici) — end-file (`rtf_bitti`) ile temiz durduruldu.
+
+**Bellek:** `free -m` kapanış sonrası used 970 MB, available 13,9 GB (taban 870 MB; sızıntı yok). Klasör `test/qr_kadraj_2026-10-31/` **38 MB** (geçiş 3/4 kayıtları + `online_34/` + `kayit/analiz/`).
+
+**Nereden devam edilecek:**
+1. Kadraj toleransı **tamam** (0, ±7,5, +9,5 m; sınır ~9 m yanal / 60 m). Sıradaki sağlamlık: 50 ve 70 m irtifa geçişleri (yarı-FOV 7,8 / 11,0 m), farklı yönler, yan rüzgar, kamera gürültüsü/bulanıklığı (SDF `<noise>`).
+2. OFFBOARD penceresinde RTF 0,78–0,82 düşüşünün nedeni (yerde kontrollü ölçüm); 15 Hz'de gz %480 sıçraması hâlâ açık.
+3. uav1 kamerası + köprüsü, YOLO düğümü (yol haritası 4–5).
+
+---
+
+### [2026-10-31 12:55] - nav_state ham okuması + çevrimiçi QR düğümü + düzeltilmiş Hold bitişi (uçuşta doğrulandı) + kadraj toleransı (geçiş 0 ve +7,5 m)
+
+**Durum:** Bu oturum önceki (yarıda kesilmiş) oturumun diske yazdığı ama günlüğe işlenmemiş işleri kayıt altına alıyor; yeni uçuş yapılmadı (yalnızca okuma + doküman + `launch_all.sh` düzeltmesi). PX4 ağacına, orijinal `model.sdf`/`server.config`/`iha_arena.sdf`'e dokunulmadı. Yedekler `yedek/*-1250` (launch_all), `yedek/*-1253` (CLAUDE.md, günlük).
+
+**Yeni/güncel dosyalar (hepsi 2026-10-31 ~12:24–12:30):**
+- `px4_durum_sabit.py` (yeni): nav_state sabitleri (`NAV_NAMES`, `AUTO_LOITER=4`, `AUTO_RTL=5`, `OFFBOARD=14`); rclpy içe aktarmaz.
+- `fastdds_dinamik.xml` (yeni): `historyMemoryPolicy DYNAMIC` (okuyucu + yazıcı). px4_msgs `VehicleStatus` (v3, ≤87 bayt) ↔ PX4 v2 (88 bayt) uyumsuzluğunda varsayılan önceden ayrılmış okuyucu geçmişi 88 baytlık örneği reddediyordu; DYNAMIC örnek başına ayırıyor.
+- `px4_durum.py` (yeni): `vehicle_status_v2`'yi **ham (serileştirilmiş) abonelikle** okur, CDR'den `nav_state`/`user_intention`/`arming_state` baytlarını ayıklar (`nav_state` @45, intention @44, arming @28). `RMW_FASTRTPS_USE_QOS_FROM_XML=1` süreçteki tüm ROS QoS'u devre dışı bıraktığından **yalnızca alt süreç olarak** çalıştırılır; komut yayınlayan süreçler (orbit_abort, qr_pass, qr_watch) onu `--tek`/`--izle` ile çağırır. Yerde doğrulandı: nav_state 4 (LOITER), arming 1.
+- `nav_izleyici.py` (yeni): `NavIzleyici` sınıfı — `px4_durum.py --izle` alt sürecinin çıktısını sürekli okur (`nav`, `history`, `fresh()`, `wait_first()`, `changes_text()`). Ortam değişkenine dokunmaz. qr_pass/qr_watch kullanır.
+- `orbit_abort.py` (güncel): DO_SET_MODE(AUTO,LOITER) + ACK/AUTO sonrası nav_state'i `px4_durum.py` ile okur; **yalnızca nav_state=AUTO_LOITER ise "HOLD ✔"**, AUTO_RTL ise Hold yeniden gönderilir. (2026-10-30'da `vehicle_control_mode` RTL'yi de AUTO gösterip "HOLD ✔" demişti — çözüldü.)
+- `qr_watch.py` (güncel): OFFBOARD kuralları `vehicle_control_mode`'dan (önceki gibi); **bitiş doğrulaması nav_state ile** — done-file sonrası 10 sn içinde AUTO_LOITER görülmezse veya AUTO_RTL görülürse abort (çıkış 4).
+- `qr_pass.py` (güncel): düzeltilmiş Hold bitişi — Hold'u **kendi düğümünden** (DO_SET_MODE) verir, setpoint akışını **mod değişene kadar sürdürür** (akış kesilince Offboard kaybı failsafe'i → RTL oluyordu). Uçuşta kullanılan sürüm `yedek/qr_pass.py.ucus-2026-10-30-1925`.
+- `qr_online.py` (yeni): çevrimiçi QR algılama + dünya konumu düğümü. `/uav0/camera/image` + `/fmu/out/vehicle_odometry` (ROS'a **varış** zamanıyla eşleşir) + gz `/clock` → `/hedef_konum` (JSON String). Algılama: tam karede `QRCodeDetectorAruco.detect` (QR yok 3,6 ms / var 21 ms) → bulununca ROI'de `QRCodeDetector.detectAndDecode` (7,9 ms) → çözülemezse ROI Aruco → yedek tam kare QR detect. İşleme ayrı iş parçacığı, kuyruk(2) dolunca kare atlanır. `--cevrimdisi` kayıtlı karelerde aynı mantık.
+
+**Düzeltilmiş Hold bitişi UÇUŞTA DOĞRULANDI.** İki geçiş de temiz bitti: OFFBOARD → AUTO_LOITER, failsafe/RTL yok, STATUSTEXT temiz. `qr_watch` her ikisinde de Hold'u nav_state ile 0,0 sn'de doğruladı. (Önceki oturumun 1. açık işi kapandı; 2026-10-30 geçiş 2 failsafe sorunu çözüldü.)
+
+**Çevrimiçi konum tahmini UÇUŞTA DOĞRULANDI.** `qr_online` iki geçişi de yakaladı; işlem ort 3,8 ms, p95 4,8 ms, maks 39,9 ms (10 Hz'de rahat); atlanan kare 0, köprü/DDS kaybı 50/4072 (~%1,2). Kadrajdaki 27 kareden 26'sı bulundu+çözüldü (tek kaçan: yeniden konumlanma sırasında kadraj kenarındaki kare 1620).
+
+## Kadraj toleransı testi (`test/qr_kadraj_2026-10-31/`, 12:33–12:39)
+
+`CAM=T10` + iha_arena, yalnızca uav0 (100 m kalkış → 60 m geçiş hattı, ψ 210°, 15 m/s), uav1 yerde. Akış `gecis.sh <no> <bias>` (qr_watch arka plan + qr_pass). Kaydedici+online elle başlatıldı (PID yerel `*.pid`).
+
+| Geçiş | Bias | Hedef üstü yanal (PX4) | Gerçek (Gz) | Devralma (s,x) | nav bitiş | QR kadrajda | online bulma/çözme/yayın | Kadrajda modül |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 0 | −0,64 m | — | −669,6 m, +2,9 m | **AUTO_LOITER** | evet, merkezde | 9 / 9 / 9 | ~3,7 px |
+| 2 | +7,5 | +7,26 m | — | −670,0 m, +3,1 m | **AUTO_LOITER** | evet, kadraj kenarına yakın | 9 / 9 / 9 | ~3,7 px |
+
+Dikey sapma hedef üstü: geçiş 1 +0,37 m, geçiş 2 −0,22 m. Yer/hava hızı ~14,6 / 14,2 m/s. Kayıt: geçiş 1 237 kare, geçiş 2 239 kare, düşen 0, 17 MB; klasör toplam **20 MB**.
+
+**Çevrimiçi konum (PX4 tam yönelim, geçiş başına yayınların ortalaması):**
+
+| Geçiş | n | Ort tahmin (N,E) | Yatay hata (ort / maks) | Gerçek-poz yöntemi (kontrol) |
+|---|---|---|---|---|
+| 1 (bias 0) | 9 | (−60,39, −60,08) → **0,40 m** | 0,84 / 1,52 m | 0,059 m |
+| 2 (bias +7,5) | 9 | (−61,27, −61,23) → **1,77 m** | 1,81 / 2,03 m | 0,058 m |
+
+Not: yeniden konumlanma sırasında QR tekrar kadraja girip 8 kare daha yayınlandı (ort tahmin (−59,31, −59,66) → 0,77 m). Gerçek-poz (Gazebo) yöntemi her durumda ~6 cm → yöntem doğru; uçuş hatası PX4 konum hatası baskın (bias +7,5'te eğik bakış + pitch ile ~1,8 m'ye çıkıyor). Yanlış içerik 0, kadraj dışı yayın 0.
+
+**RTF:** Hold (kamera abonesiyle, kayıt öncesi) ~0,98; OFFBOARD geçiş penceresinde **0,78–0,82'ye düşüyor** (gz CPU artışı; her iki geçişte de böyle, en düşük 0,785/0,791). qr_watch'ın 0,7 eşiği tetiklenmedi ama 0,8 sınırına yakın. gz RSS 645 → 653 MB sabit.
+
+**`launch_all.sh stop` düzeltmesi:** eski `stop_all()` yalnızca `/tmp/iha_sim.pgids`'teki süreç gruplarını ve `px4`/`MicroXRCEAgent`/`gz sim` ad kalıplarını öldürüyordu. `qr_recorder.py` ve `qr_online.py` **elle** başlatıldığından (PID'leri yerel `kaydedici.pid`/`online.pid`'e, paylaşılan pgids dosyasına değil) ve hiçbir pkill kalıbına uymadığından stop onları yetim bırakıyordu — bu oturumda loglar bunu doğruluyor (sim 12:41:45'te durdu, kaydedici+online 12:44:26'ya kadar sürdü). **Düzeltme (uygulandı, `bash -n` ✔):** `stop_all()`'a hedefli ERE pkill eklendi — `qr_recorder.py|qr_online.py|qr_pass.py|qr_watch.py|mavlink_takeoff.py|camera_bridge.yaml`; önce SIGTERM (kaydedici kuyruğunu boşaltıp özet yazsın), 5 sn, sonra SIGKILL. Kalıp "launch_all.sh stop" komut satırına uymaz. Yedek `yedek/launch_all.sh.bak-2026-10-31-1250`.
+
+**Nerede kesildi:** geçiş 2 (+7,5) temiz bittikten sonra sim ~12:41:45'te kapatıldı, kaydedici/online yetim kaldı, bir uyarıyla oturum yarıda kesildi. Diskte geçiş 1 (bias 0) ve geçiş 2 (bias +7,5) tam; **talimatta istenen üç geçişten +7,5 zaten yapılmış**; kalan: **−7,5 ve +9,5 m**.
+
+**Nereden devam edilecek:**
+1. Kadraj toleransını tamamla: kalan geçişler −7,5 ve +9,5 m (aynı ψ 210°, 60 m). Tabloyu doldur, kadrajdan çıkış sınırını yaz (60 m'de FOV yarı-genişliği ~9,4 m; +9,5 sınıra çok yakın, çıkış beklenir). Her geçişte Hold doğrula; RTF 0,8 sınırına dikkat.
+2. 50/70 m, farklı yön, yan rüzgar, kamera gürültüsü/bulanıklığı.
+3. OFFBOARD penceresindeki RTF düşüşünün (0,78–0,82) nedeni; yerde kontrollü ölçüm.
+4. Sonra uav1 kamerası + köprüsü, YOLO düğümü (yol haritası 4–5).
+
+---
+
+### [2026-10-30 19:30] - QR üzerinden düz geçiş (uav0, 60 m) + kayıt + çevrimdışı analiz
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config` ve `iha_arena.sdf`'e dokunulmadı; yalnızca uav0 kalktı, uav1 yerde; pencere/işaretçi kapalı; kalp atışı süreci her uçuşta bir kez başlatıldı (15 Hz denemesi ve 10 Hz uçuşu ayrı sistem açılışları). Yedekler `yedek/*-1900`, `*-1912`, `*-1917`, `*-1925`.
+
+**Adım 1:** `gz_models_cam_hw/T_nadir_15` (T_nadir'den tek fark `update_rate` 15), `gz sdf -k` T_nadir ile aynı; `launch_all.sh` `CAM=T15` (sonra `CAM=T10` + `T_nadir_10`); `bash -n` ✔, diğer seçenekler aynı.
+
+**15 Hz denemesi (`deneme1_15hz/`):** kalkışta RTF 0,693; Hold 60 sn ort 0,862 (iki örnek 0,76) → devam edildi; 1. geçişte hat üzerinde (yanal ±0,4 m) s ≈ −430 m'de gz CPU %220 → %480, RTF 0,692 → `qr_watch` abort, Hold ✔. Kayıt başlamamıştı. → 10 Hz ile temiz yeniden başlatma (talimat: RTF < 0,8 → T_nadir_10). Ayrıca iki planlama kusuru düzeltildi: ara noktadan sonra plan gerçek konumdan yeniden kurulmuyordu; koridor kutusu sınırsızdı (uçak arenadan 720 m dolaştırıldı) → 0 < E < 300.
+
+**Yaklaşma yönü:** 0–345° tarandı; başlangıç Hold çemberi (merkez hedefin 650 m gerisinde, hatta 80 m sağda), hat ve bitiş Hold çemberi (hedefin 150 m ötesi, r 80 m) direklerden ≥ 30 m ve koridor dışı olan tek yön **ψ = 210°** (hat K direğine 48 m, E = 0'da N = 44).
+
+**Komut yöntemi (neden):** her döngüde setpoint = hattın uçağa en yakın noktası, hız = 15 m/s·d, ivme NaN. PX4 FW Offboard konum + sonlu hızı yol parçası olarak NPFG ile izler; en yakın nokta → ileri-geri çekme ve eğrilik kaynaklı sapma yok; zamandan bağımsız (zaman tabanlı mod RTF/damga sıçramalarında kararsızdı). Hizalama: saat yönü Hold'da rota ψ'ye döndüğü an uçak hatta olacak şekilde Hold merkezi kaydırıldı; devralma rota hatası −15…+5°.
+
+Akış: `CAM=T10 ./launch_all.sh` → `camera_bridge.yaml` köprüsü → eşiksiz RTF kaydı (`uzun_monitor.py` kopyası,
+5 sn) → `mavlink_takeoff.py --uav 0` (bir kez; 100 m Hold) → `qr_recorder.py` → her geçişte `qr_watch.py` +
+`qr_pass.py` → `qr_analyze.py kayit`. 15 Hz ile ilk deneme RTF 0,692 < 0,7 ile abort edildi (`deneme1_15hz/`).
+
+## Uçuş (PX4 tahmini, `gecis_sonuclari.jsonl`)
+
+| Geçiş | Bias | Devralma (s, x) | Hedef üstü yanal / dikey | s ∈ [−400, +150] yanal ort ± std, maks | Dikey ort, maks | Yer / hava hızı |
+|---|---|---|---|---|---|---|
+| 1 | 0 | −670 m, +3,0 m | −0,30 / +0,21 m | −0,25 ± 0,05, 0,33 m | +0,26, 0,67 m | 14,7 / 14,2 m/s |
+| 2 | 0 | −670 m, +2,9 m | −0,47 / +0,41 m | −0,46 ± 0,04, 0,55 m | +0,36, 0,47 m | 14,4 / 14,0 m/s |
+| 3 | +0,4 | −670 m, +3,0 m | +0,22 / −0,26 m | +0,23 ± 0,05, 0,36 m | −0,39, 0,73 m | 14,5 / 14,0 m/s |
+
+Gerçek (Gazebo) yanal sapma hedef üstünde: −0,18 / −0,36 / +0,35 m.
+
+## Görüntü (`kayit/analiz/ozet.json`)
+
+| Geçiş | Kare | Kadrajda | QRCodeDetector bulma / çözme | Aruco bulma / çözme | İlk–son çözüm (s, gerçek) | Süre | Modül px | 3B mesafe |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 228 | 9 | 9 / 9 | 9 / 7 | −8,0 … +3,7 m | 0,8 sn | 3,66 | 60,3 m |
+| 2 | 224 | 8 | 8 / 8 | 8 / 6 | −6,1 … +4,0 m | 0,7 sn | 3,67 | 60,5 m |
+| 3 | 226 | 8 | 8 / 8 | 8 / 6 | −7,9 … +3,7 m | 0,8 sn | 3,70 | 60,0 m |
+
+Kadraj dışı bulma 0, yanlış içerik 0. Ortalama süre/kare (tüm kareler): QR 73 ms, Aruco 12 ms.
+Statik tarama (60 m): modül 3,67 px, iki yönde %100 bulma/çözme → uçuşla aynı.
+
+## Konum tahmini (QR merkezi pikselinden, bulunan karelerde)
+
+| Poz kaynağı | Model | n | Ortalama hata (dN, dE) | Yatay ort / RMS / maks |
+|---|---|---|---|---|
+| Gazebo gerçek | tam (roll, pitch, yaw) | 25 | (−0,048, −0,028) m | 0,056 / 0,057 / 0,063 m |
+| Gazebo gerçek | yalnızca yaw | 25 | (+1,661, +0,472) m | 1,73 / 1,74 / 1,97 m |
+| PX4 (geçiş 2–3) | tam | 16 | (−0,815, −0,869) m | 1,29 / 1,32 / 1,82 m |
+| PX4 (geçiş 2–3) | yalnızca yaw | 16 | (+0,649, +0,122) m | 0,82 / 0,85 / 1,21 m |
+
+Geçiş 1'de PX4 odometrisi PX4 damgasıyla eşleştirilmişti (1–2 sn kayık) → PX4 tahmininden çıkarıldı.
+
+## RTF
+
+Hold 0,952 (10 Hz), Offboard kayıt öncesi 0,86–0,88, kayıt penceresi 0,77–0,78 (gz CPU %290 → %390),
+en düşük 0,750 (kayıt dışında). Kaydedici %21 CPU, 151 MB; 678 kare 27 MB, düşen 0.
+
+**Zaman damgası bulgusu:** PX4 `vehicle_odometry.timestamp_sample` ROS'ta Agent duvar saatine çevrilmiş, sim zamanı değil ve RTF < 1'de 1–2 sn geride (geçiş 1'de eşleşme bununla yapıldı → −0,9…−2,2 sn kayık). Kaydedici düzeltildi: odometri ROS'a varış zamanıyla, kare sim damgası gz `/clock` ile duvar saatine çevrilerek eşleşiyor (fark 1–3 ms).
+
+**Konum tahmini yorumu:** yöntem doğru (gerçek pozla 5,6 cm; kalan hata hep uçuş yönünde ≈ 4 ms = bir fizik adımı damga kayması). Hata kaynakları: (1) PX4 yatay konum hatası ~1,1–1,2 m (GNSS/EKF; baskın), (2) pitch ihmali (~1,6° seyir pitch'i → 1,7 m; yalnızca-yaw sürümünde), (3) PX4 dikey hata 0,15–0,24 m (60 m'de ihmal edilebilir), (4) PX4 roll/pitch farkı < 0,5° (≤ 0,5 m), (5) zaman eşleşmesi 1–3 ms (≤ 5 cm), (6) kamera ofseti/asal nokta (birkaç cm), (7) piksel merkezi hatası (3,7 px modülde < 1 px ≈ 1 cm). Yalnızca-yaw sürümünün PX4'le daha küçük çıkması (0,82 vs 1,29 m) pitch hatasının EKF hatasını tesadüfen kısmen götürmesinden; tam yönelim kullanılmalı.
+
+**Failsafe (geçiş 2 bitişi):** Hold `orbit_abort` alt süreciyle verilirken setpoint akışı kesildi → Offboard kaybı failsafe'i → RTL ("Failsafe activated", "RTL: start return at 101 m"); `orbit_abort` RTL'yi de AUTO sayıp "HOLD ✔" dedi; `qr_watch` done-file'ı görüp çıkmıştı. Geçiş 3 RTL tırmanışında (98 m) başladı, DO_REPOSITION Hold'a aldı; geçiş 3 bitişi temiz (LOITER, 60 m). Düzeltme (uçuşta denenmedi): `qr_pass` Hold'u kendi verir, mod değişene kadar akış sürer; `qr_watch` bitişten sonra 10 sn STATUSTEXT izler.
+
+**Kapanış:** sistem kapatıldı, kalan süreç 0.
+
+**Nereden devam edilecek:**
+1. Düzeltilmiş Hold bitişini tek geçişle doğrula (failsafe olmamalı).
+2. Konum tahminini çevrimiçi ROS düğümüne taşı (ROI, çok kare ortalaması, tam yönelim).
+3. 50/70 m, farklı yön, rüzgar, kamera gürültüsü/bulanıklığı.
+4. 15 Hz RTF sıçramalarının ve kayıt penceresindeki düşüşün nedeni (yerde kontrollü ölçüm).
+
+---
+
+### [2026-10-30 18:45] - QR irtifa taraması (sabit test kamerası, uçuşsuz)
+
+**Kurallar:** PX4 ağacı, orijinal `model.sdf`/`server.config` ve `iha_arena.sdf`'e dokunulmadı (test modeli çalışma anında eklendi, sonunda silindi; `gz model --list`'te yok). Yedekler `yedek/*-1845`. Kalkış yok, pencere/işaretçi kapalı, sudo/apt yok. `pyzbar` kurulu değil → atlandı.
+
+**Kurulum:** `gz_models_cam_hw/kamera_test/` — T_nadir kamerası (1456×1088, hfov 0,3114, clip 0,1–1000, pitch +π/2), tek link, statik, yerçekimi/çarpışma yok, 10 Hz; `gz sdf -k` Valid. `CAM=T` ile temiz başlatıldı. Ekleme `/world/default/create`, poz `/world/default/set_pose`, silme `/world/default/remove`, hepsi `gz service` CLI ile — **neden:** gz.transport13 Python bağında abonelik açıkken `request()` yanıt alamıyor, görüntü aboneliği sürekli açık. Görüntü gz.transport13 aboneliğiyle doğrudan (`/world/default/model/kamera_test/link/link/sensor/camera/image`). Ön deneme: statik modelde `set_pose` konum ve yaw'ı uyguluyor (z 50,05, yaw 0,785391).
+
+**Yöntem:** QR (−60, −60) tam üstü, kamera z = 0,05 + irtifa; yaw 0° (görüntü üstü doğu) ve 45°. set_pose yanıtından sonra stamp'i ilerleyen karelerden 5'i atılıp 20'si analiz edildi. Bulma: `detect()` dörtgeni ve merkezi beklenen noktaya ≤ max(10, 0,5 × teorik kenar) px. Çözme: `detectAndDecode() == "HEDEF-01"`. Ön işleme: ham, adaptif eşik (Gauss, blok 51 / 2×'te 101, C 5), 2× kübik büyütme, 2× + adaptif.
+
+Hücre: bulma % / çözme % (20 kare)
+
+| İrtifa | Yön | Modül teorik px | Modül ölçülen px | ham QR | ham Ar | adaptif QR | adaptif Ar | 2x QR | 2x Ar | 2x+adaptif QR | 2x+adaptif Ar |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 20 m | 0° | 11.04 | 11.00 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 20 m | 45° | 11.04 | 11.06 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 30 m | 0° | 7.36 | 7.29 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 30 m | 45° | 7.36 | 7.37 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 40 m | 0° | 5.52 | 5.48 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 40 m | 45° | 5.52 | 5.54 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 50 m | 0° | 4.42 | 4.43 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 50 m | 45° | 4.42 | 4.40 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | 100/0 | **100/100** | **100/100** |
+| 60 m | 0° | 3.68 | 3.67 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 60 m | 45° | 3.68 | 3.66 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | 100/0 |
+| 70 m | 0° | 3.15 | 3.10 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** |
+| 70 m | 45° | 3.15 | 3.17 | **100/100** | 100/0 | **100/100** | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 |
+| 80 m | 0° | 2.76 | 2.71 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | 100/0 | **100/100** | **100/100** |
+| 80 m | 45° | 2.76 | 2.79 | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 |
+| 90 m | 0° | 2.45 | 2.43 | **100/100** | **100/100** | **100/100** | **100/100** | **100/100** | 100/0 | **100/100** | 100/0 |
+| 90 m | 45° | 2.45 | 2.45 | 100/0 | 100/0 | 100/0 | 100/0 | **100/100** | 100/0 | **100/100** | 100/0 |
+| 100 m | 0° | 2.21 | 2.14 | 100/0 | 100/0 | 100/0 | 100/0 | **100/100** | 100/0 | **100/100** | 100/0 |
+| 100 m | 45° | 2.21 | 2.22 | 100/0 | 0/0 | **100/100** | 0/0 | 100/0 | 100/0 | 100/0 | 100/0 |
+| 120 m | 0° | 1.84 | 1.88 | 100/0 | 0/0 | 100/0 | 0/0 | **100/100** | 100/0 | 100/0 | **100/100** |
+| 120 m | 45° | 1.84 | 1.84 | 100/0 | 0/0 | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 | 100/0 |
+
+Merkez sapması ve kenar (ham + QRCodeDetector):
+
+| İrtifa | Yön | Kenar teorik px | Kenar ölçülen px | Fark % | Merkez sapması px | Yanlış içerik (tüm komb.) |
+|---|---|---|---|---|---|---|
+| 20 m | 0° | 231.9 | 231.0 | -0.4 | 0.71 | 0 |
+| 20 m | 45° | 231.9 | 232.3 | +0.2 | 0.79 | 0 |
+| 30 m | 0° | 154.6 | 153.0 | -1.0 | 0.71 | 0 |
+| 30 m | 45° | 154.6 | 154.7 | +0.1 | 0.88 | 0 |
+| 40 m | 0° | 115.9 | 115.0 | -0.8 | 0.71 | 0 |
+| 40 m | 45° | 115.9 | 116.3 | +0.3 | 0.79 | 0 |
+| 50 m | 0° | 92.8 | 93.0 | +0.3 | 0.71 | 0 |
+| 50 m | 45° | 92.8 | 92.5 | -0.3 | 0.88 | 0 |
+| 60 m | 0° | 77.3 | 77.0 | -0.4 | 0.71 | 0 |
+| 60 m | 45° | 77.3 | 76.9 | -0.5 | 0.88 | 0 |
+| 70 m | 0° | 66.3 | 65.0 | -1.9 | 0.71 | 0 |
+| 70 m | 45° | 66.3 | 66.5 | +0.3 | 0.71 | 0 |
+| 80 m | 0° | 58.0 | 57.0 | -1.7 | 0.71 | 0 |
+| 80 m | 45° | 58.0 | 58.5 | +0.9 | 0.88 | 0 |
+| 90 m | 0° | 51.5 | 51.0 | -1.0 | 0.71 | 0 |
+| 90 m | 45° | 51.5 | 51.4 | -0.2 | 0.88 | 0 |
+| 100 m | 0° | 46.4 | 45.0 | -3.0 | 0.71 | 0 |
+| 100 m | 45° | 46.4 | 46.7 | +0.6 | 0.71 | 0 |
+| 120 m | 0° | 38.6 | 39.5 | +2.3 | 1.14 | 0 |
+| 120 m | 45° | 38.6 | 38.7 | +0.2 | 0.88 | 0 |
+
+Ortalama işlem süresi (ön işleme + detect + detectAndDecode, ms, 20 poz × 20 kare):
+
+| Varyant | QRCodeDetector | QRCodeDetectorAruco |
+|---|---|---|
+| ham | 134 | 77 |
+| adaptif | 143 | 92 |
+| 2x | 489 | 335 |
+| 2x+adaptif | 633 | 496 |
+
+Özet — her kombinasyon için iki yönde de çözdüğü en yüksek irtifa (altındaki tüm irtifalar dahil):
+
+- ham + QRCodeDetector: kesintisiz bulma ≤ 120 m, kesintisiz çözme (iki yön) ≤ 70 m
+- ham + QRCodeDetectorAruco: kesintisiz bulma ≤ 90 m, kesintisiz çözme (iki yön) ≤ 60 m
+- adaptif + QRCodeDetector: kesintisiz bulma ≤ 120 m, kesintisiz çözme (iki yön) ≤ 70 m
+- adaptif + QRCodeDetectorAruco: kesintisiz bulma ≤ 90 m, kesintisiz çözme (iki yön) ≤ 60 m
+- 2x + QRCodeDetector: kesintisiz bulma ≤ 120 m, kesintisiz çözme (iki yön) ≤ 60 m
+- 2x + QRCodeDetectorAruco: kesintisiz bulma ≤ 120 m, kesintisiz çözme (iki yön) ≤ 40 m
+- 2x+adaptif + QRCodeDetector: kesintisiz bulma ≤ 120 m, kesintisiz çözme (iki yön) ≤ 60 m
+- 2x+adaptif + QRCodeDetectorAruco: kesintisiz bulma ≤ 120 m, kesintisiz çözme (iki yön) ≤ 50 m
+
+**Yorum:**
+- **Kareler birebir aynı** (statik sahne, gürültüsüz kamera; maks fark 0) → her poz pratikte tek örnek, oranlar 0 ya da 100. Gerçek kamerada gürültü, hareket bulanıklığı ve ışık değişimi olacak; buradaki sınırlar iyimser.
+- **Bulma için en yüksek güvenilir irtifa: 120 m** (test üst sınırı; ham `QRCodeDetector` her pozda, modül 1,84 px). Aruco ham 90 m'ye kadar.
+- **Çözme için en yüksek güvenilir irtifa: 70 m** (ham/adaptif + `QRCodeDetector`, iki yönde; 70 m/45°'de 8 kombinasyondan yalnız bu 2'si). Kombinasyonlardan bağımsız sağlam sınır **60 m** (8'in 7'si iki yönde). 80 m/45°'de hiçbir kombinasyon çözmedi; 90–120 m düzensiz (yön ve varyanta göre değişiyor, güvenilmez). Öngörülen modül sınırı (~3 px) doğrulandı: 3,15 px (70 m) çalışıyor, 2,76 px (80 m) 45°'de çalışmıyor.
+- Ön işleme 70 m altında kazanç sağlamıyor; 2× büyütme 3–5 kat yavaş ve tutarlı kazanç yok. En iyi seçenek ham + `QRCodeDetector` (134 ms tam kare; uçuşta ROI ile hızlandırılmalı).
+- Ölçülen modül/kenar teoriyle ≤ %3 uyumlu, merkez sapması ~0,7 px (yarım piksel kuralı) → kamera modeli ve QR boyutu doğru.
+
+**Bellek ve kararlılık (22 dk, 30 sn aralık, `uzun_izleme_30sn.txt`):** RSS 607 MB (model öncesi) → 681–690 (kamera çalışmaya başlayınca) → 693 (tarama sonu); 90. sn'den sonra 0,21 MB/dk → **sızıntı yok**. Model silindikten sonra 694 MB'ta sabit (bellek geri verilmedi). Tarama sırasında gz CPU ort %403, RTF ort 0,800, min 0,777 (0,7 sınırı tetiklenmedi); silindikten sonra %152, RTF 1,000. Kapanışta gz yine segfault (server_nogst.config ile 5/5).
+
+**Not:** Betikteki poz doğrulaması `gz model -p` çıktısındaki varlık numarasını (227) konum sandı (yalnızca kayıt; konum doğru okundu, yaw kaydedilmedi). Düzeltildi; çalışan sürümün kopyası `yedek/qr_irtifa_tarama.py.calisan-2026-10-30-1820`.
+
+**Nereden devam edilecek:**
+1. uav0'ın seçilen irtifada (**60 m**) QR üzerinden düz geçişi (ROI'li `QRCodeDetector`, çözülen kare + konum kaydı); marj için 50 m.
+2. Kamera kare hızını 15 Hz'e indirmek (T_nadir kopyasında `update_rate`).
+3. RTF ölçümü (15 Hz kamera + köprü + uçuş; sınır 0,7–0,8).
+
+---
+
+### [2026-10-30 18:15] - QR hedefi, aşağı bakan kamera (CAM=T), kamera → ROS köprüsü
+
+**Kurallar:** PX4 ağacına, orijinal `model.sdf`/`server.config`'e dokunulmadı; yedekler `yedek/*-1815`, `yedek/make_iha_arena.py.bak-2026-10-30`, `yedek/iha_arena.sdf.bak-2026-10-30`. Kalkış yok; pencere yalnızca Adım 5'te.
+
+**QR görüntüsü (`gz_worlds/make_qr_hedef.py` → `qr_hedef01.png`):** sürüm 1 (21×21), M (format bitlerinden doğrulandı), "HEDEF-01", 4 modül kenar → 29×29 modül, 16 px/modül, 464×464 RGB, yalnızca 0/255. `cv2.QRCodeDetector` → "HEDEF-01" ✔. İlk deneme 32 px/modüldü: OpenCV 4.9 varsayılan dedektörü ≥ 26 px/modülde kusursuz görüntüyü tespit edemiyor (Aruco dedektörü ediyor) → 16'ya inildi. Tek kanal PNG ogre2'de R8 yüklenebileceği için RGB. **Levha:** kod 1,00 m, modül 4,762 cm, kenarla 1,381 × 1,381 m.
+
+**Arena:** `arena_qr_hedef01` (−60, −60, z 0,05; halkanın içinde, en yakın ızgara çizgisi 10 m), `<plane>` 1,381 m + PBR `albedo_map` (mutlak yol), çarpışma/gölge yok. 138 varlık (önce 135). `gz sdf -k` "Valid"; eski dünyayla fark yalnızca bu model.
+
+**T_nadir + CAM=T:** T'den yalnızca kamera pose'u farklı: `0.5 0 0 0 0 0` → `0.07 0 -0.1 0 1.5708 0` (gövde altı, dik aşağı, görüntü üstü burun). `gz sdf -k` T ile aynı. `launch_all.sh`: `CAM=T` → T_nadir + server_nogst.config + her zaman iha_arena; varsayılan ve CAM=1 değişmedi; `bash -n` ✔.
+
+**Köprü (`camera_bridge.yaml`):** gz topic'leri `gz topic -l` ile doğrulandı (`/world/default/model/advanced_plane_0/link/base_link/sensor/camera/{image,camera_info}`) → `/uav0/camera/{image,camera_info}`. QoS YAML'da yok; `qos_overrides` parametresiyle best_effort (ros2 topic info: BEST_EFFORT/VOLATILE).
+
+**Ölçüm (CAM=T, pencere/işaretçi kapalı, 60 sn, köprü açık):**
+
+| | RSS (başlangıç → bitiş) | CPU | Not |
+|---|---|---|---|
+| gz sunucu | 630 → 630 MB | %299 | RTF 0,826–0,830 |
+| köprü | 59 → 59 MB | %37 | `ros2 topic hz` 24,5 Hz |
+| DDS Agent | 36 → 36 MB | %4 | odometri 84 Hz / araç, log'da hata yok |
+
+Bellek artmıyor. 20 sn ek ölçüm (`cam_probe.py`): 23,9 Hz duvar / ~31 Hz sim (stamp aralığı medyan 32 ms), ~12/490 kare eksik (%2,4, boşluk ≤ 100 ms), uçtan uca gecikme (sim stamp → ROS) medyan 43 ms, p95 50, maks 58 ms. camera_info fx 4637,81 (beklenen 4637,68).
+
+**Yorum:** Kamera sim zamanında ~SDF hızında (30 Hz) üretiyor; sensör sistemi işlemeyi beklediği için bedel RTF'de (0,83, sınıra yakın). **Önceki T/W "RTF 1,000" değerleri yanıltıcıydı:** Gazebo kamerası yalnızca abonesi varken işler, bellek aşaması abonesizdi. Kare kaybı ve gecikme küçük; RTF düşüşünün nedeni yazılım render'ı (llvmpipe) + 1,58 MP kare + ~62 MB/s kopyalama. Olası çözümler (uygulanmadı): kamera `update_rate`'i 10–15 Hz'e indirmek, çözünürlüğü yarıya (728×544, FOV aynı → GSD ×2) ya da ROI kırpma, `lazy: true` (yalnızca dinleyici varken), uav1 kamerasını kapalı tutmak, köprüyü bileşen/intra-process (`ros_gz_bridge` composable) ile çalıştırmak, ROS tarafında küçültme; GPU render (WSLg d3d12) denenebilir.
+
+**Kare:** `gz_models_cam_hw/sonuclar_2026-10-30_T_nadir/uav0_kare_yerde.png` tamamen düz 218 gri. Beklenen zemin/ızgara değil: uçak yerde iken kamera zeminden 2,5 cm yukarıda (base_link z 0,125 − 0,10), `clip near` 0,1 m → zemin, ızgara ve merkez diski kırpılıyor, kamera arka planı (0,7 → sRGB 218) görüyor. Yön hatası değil; uçuşta geçerli. Yerde görüntü için `near` 0,01 gerekir (uygulanmadı).
+
+**Pencere doğrulaması:** Pencere `TRACK` modunda advanced_plane_0'a kilitli açıldı (kaynak bulunamadı) ve `/gui/move_to/pose` birkaç sn sonra bozuldu; `/gui/track` `track_mode: NONE` ile düzeldi. Kamera (−60, −60, 8), dik aşağı, ekran üstü kuzey: `cv2.QRCodeDetector` → **"HEDEF-01"**, kod 92 px (modül 4,4 px), düzleştirilmiş kod dokuyla %100 aynı, **aynasız, kuzey yukarı**. Pencere açıkken RTF ölçümü kaydedilemedi (betik çıktısı kayboldu); gz sunucu %237 CPU, arayüz %717. Pencere kapatıldı (`gz sim -g` kendi oturumunu açıyor, pgid'i ayrı).
+
+**Kapanış:** sistem kapatıldı, kalan süreç 0; gz yine kapanışta segfault (server_nogst.config ile 4/4).
+
+**Nereden devam edilecek:**
+1. uav0'ı 80 m'de QR üzerinden düz geçirmek ve çözümü denemek (bu turda yapılmadı): CAM=T + köprü, Offboard + TrajectorySetpoint düz hat (N −60, E −60 üzerinden). Öngörü: modül 2,76 px (sınırda), görüşte ~1,2 sn / ~36 kare, yanal tolerans ±11,9 m. Çözülmezse 60–70 m ya da daha büyük QR.
+
+---
+
+### [2026-10-30 18:00] - Kamera gerçek donanıma göre: RPi GS Camera + 16 mm / 6 mm lens
+
+**Kurallar:** PX4 ağacına, orijinal `model.sdf`/`server.config`'e dokunulmadı; yedekler `yedek/*.bak-2026-10-30-1755`. Pencere/işaretçi kapalı, kalkış yok.
+
+**Doğrulanan özellikler (resmi RPi GS Camera belgesi, Sony IMX296LQR spesifikasyonu):** Sony IMX296, 1456×1088, 3,45 µm piksel, 6,3 mm köşegen (1/2,9"). Genişlik/yükseklik yayımlanmıyor; hesap 5,023 × 3,754 mm (köşegen 6,27 mm). Lensler (CGL): 16 mm C bağlantı F1.4–16, resmi GS FOV 17,8° × 13,4°; 6 mm CS bağlantı F1.2, 45° × 34°.
+
+**Hesap (iğne deliği, nadir bakış, bozulma yok):**
+
+| | 16 mm (T) | 6 mm (W) |
+|---|---|---|
+| Yatay × dikey FOV | 17,84° × 13,38° | 45,43° × 34,74° |
+| `horizontal_fov` | 0,3114 rad | 0,7929 rad |
+| 100 m yer kaplama / GSD | 31,4 × 23,5 m / 2,16 cm/px | 83,7 × 62,6 m / 5,75 cm/px |
+| 150 m yer kaplama / GSD | 47,1 × 35,2 m / 3,23 cm/px | 125,6 × 93,8 m / 8,62 cm/px |
+| 1×1 m hedef 100 m / 150 m | 46 / 31 px | 17 / 12 px |
+| QR 50 px azami irtifa | 92,8 m | 34,8 m |
+
+**Modeller (`gz_models_cam_hw/T|W`):** A'dan kopya; yalnızca satır 129–131 (`horizontal_fov`, 1456×1088). `gz sdf -k` çıktısı A ile yol hariç aynı (yalnızca önceden var olan LW20/`lw20_link` hataları). camera_info: 1456×1088; W fx 1739,07 px (beklenen f/p 1739,13).
+
+**Ölçüm (server_nogst.config doğrulandı: `Loaded (12) plugins`, maps'te GstCamera yok; 1 dk, 15 sn aralık):**
+
+| Deneme | Başlangıç RSS | Bitiş RSS | Artış | CPU | RTF | Kamera Hz | Hız düşüşü |
+|---|---|---|---|---|---|---|---|
+| A 640×480 (17:37 referans) | 527 | 529 | ~1 MB/dk | %147 | 1,000 | 16,7 / 16,6 | — |
+| T 16 mm, 1456×1088 | 555 | 556 | ~1 MB/dk | %148 | 1,000 | 13,0 / 13,0 | −%22 |
+| W 6 mm, 1456×1088 | 555 | 556 | ~1 MB/dk | %136 | 1,000 | 12,5 / 12,4 | −%25 |
+
+Durdurma koşulları (RSS +100 MB, RTF < 0,8) tetiklenmedi.
+
+**Yorum:** Sızıntı yok. 5,2 kat piksel RTF'yi düşürmüyor, yalnızca kamera kare hızını düşürüyor (SDF 30 Hz; yazılım render). 100 m'de 16 mm lensle bile 1 m QR 46 px; 50 px için ≥ 1,08 m QR ya da ≤ 92,8 m irtifa gerekir. Modeldeki kamera ileri bakıyor; yerdeki hedef için aşağı eğilmeli. Kapanışta gz sunucusu yine segfault verdi (server_nogst.config ile 3/3, `libgcc_s`, ölçüm sonrası). `launch_all.sh` değiştirilmedi; `CAM=1` hâlâ 640×480.
+
+**Not:** Bekleme komutunun komut satırında "gz sim" geçince denemenin `launch_all.sh stop` adımı onu da öldürdü; izleme komutlarında `pgrep -x ruby` kullanıldı.
+
+**Nereden devam edilecek:**
+1. Arenaya QR hedefi: `make_iha_arena.py`'ye dokulu düzlem (kenar ≥ 1,1 m @ 100 m, T lensi), kamerayı aşağı eğen kopya model, OpenCV `QRCodeDetector` testi.
+2. Kamera görüntüsünü `ros_gz_bridge` ile ROS'a almak: iki kamera, `/uav0/camera/image` ve `/uav1/camera/image`; 1456×1088'de kamera başına ~62 MB/s, gecikme ve kare kaybı ölçülecek.
+
+---
+
+### [2026-10-30 17:45] - Kamera sızıntısı çözüldü: GstCameraSystem'siz sunucu yapılandırması
+
+**Hazırlık:** Yedekler `yedek/*.bak-2026-10-30` (launch_all.sh, CLAUDE.md, bu günlük) ve `yedek/server.config.orig-2026-10-30`. PX4 ağacına, orijinal `model.sdf`/`server.config`'e dokunulmadı. Pencere/işaretçi kapalı, kalkış yok, abort süreci bağlanmadı.
+
+**Yapılandırma:** `gz_env.sh` gerçekte `PX4-Autopilot/src/modules/simulation/gz_bridge/server.config`'i yüklüyor (`Tools/simulation/gz/server.config` ile md5 aynı). Kopya `~/iha_sim_v2/server_nogst.config`; tek fark `libGstCameraSystem.so` satırının çıkarılması. `default.sdf`'te world eklentisi yok → sunucu config'i kullanır.
+
+**Doğrulama:** sunucu ortamında `GZ_SIM_SERVER_CONFIG_PATH=.../server_nogst.config`; `--verbose=4` log'da `Loaded (12) plugins from file [/home/yusuf22_04/iha_sim_v2/server_nogst.config]`; `Loaded system` satırlarında ve `/proc/<pid>/maps`'te GstCameraSystem yok (OpticalFlowSystem ve Sensors yüklü).
+
+**Sonuç (A modeli = orijinal kamera 640×480 30 Hz, 2 dk, 15 sn aralık, ogre2):**
+
+| Deneme | Başlangıç RSS | Bitiş RSS | Artış | CPU | RTF | Kamera Hz |
+|---|---|---|---|---|---|---|
+| A orijinal server.config (2026-10-29) | 911 | 3698 | 1393 MB/dk | %328 | 0,871 | 18,0 / 17,9 |
+| A + server_nogst.config | 527 | 529 | ~1 MB/dk | %147 | 1,000 | 16,7 / 16,6 |
+
+**Yorum:** Sızıntı kesildi; kaynağı `GstCameraSystem`. Başlangıç RSS'i de 384 MB düşük (kamerasız modelin 475 MB'ına yakın), CPU yarıya indi, RTF 1,0. Bedeli: GStreamer UDP video akışı (QGC'ye) yok; görüntü gz topic'inden alınacak. Kamera hızı yazılım render'ında ~17 Hz (SDF 30 Hz). Kapanışta (SIGTERM, 17:39:15) sunucu segfault verdi (`libgcc_s.so.1`, kernel log); ölçüm bitmişti, incelenmedi.
+
+**Yapılan Değişiklikler:** `launch_all.sh`: `CAM=1` artık `GZ_SIM_SERVER_CONFIG_PATH=~/iha_sim_v2/server_nogst.config` ile açıyor (dosya yoksa hata verip çıkar), kullanım başlıkta; varsayılan kamerasız aynen. `bash -n` geçti; shellcheck yalnızca önceden var olan iki uyarı. Simülasyon yeniden başlatılarak çalıştırılmadı. CLAUDE.md güncellendi.
+
+**Not:** `launch_all.sh stop`, komut satırında "gz sim" geçen kabuğu da öldürüyor (`pkill -f`, exit 144); kontrol ayrı komutla yapılmalı.
+
+**Nereden devam edilecek:**
+1. Kamerayı gerçek donanıma göre ayarlama: telefoto lens, görüş açısı (`horizontal_fov`), çözünürlük, kare hızı; kopya model klasöründe, hedef mesafede karşı uçağın piksel boyu ölçülerek.
+2. Arenaya QR hedefi: `make_iha_arena.py`'ye dokulu düzlem; OpenCV ile çözülebilirlik testi.
+3. Kamerayı ROS'a bağlama: iki kamera için `ros_gz_bridge`, topic adlarını hizalama (`/uav0/camera/image`, `/uav1/camera/image`), `CAM=1` ile isteğe bağlı başlatma.
+
+---
+
+### [2026-10-29 19:00] - Kamera sızıntısı ayar testleri
+
+**Hazırlık:** Orbit logları + `test/` → `yedek/test_kayitlari_2026-10-29_1845/`. `~/.local/bin/cam` → `cam.sh` sembolik bağ. Sistem planlı kapatıldı.
+
+**Modeller (`gz_models_cam_tests/`, orijinalden yalnızca kamera farkı):** A aynı; B visualize false; C 320×240, update_rate 10; D A ile aynı + sunucu `--render-engine ogre`. `gz sdf -k` dördünde de orijinaldeki önceden var olan `lw20_link` hatasını veriyor (orijinal ve nocam da aynı); yeni hata yok.
+
+**Sonuç (pencere/işaretçi kapalı, kalkış yok, 2 dk, 15 sn aralık):**
+
+| Deneme | Başlangıç RSS | Bitiş RSS | Artış | CPU | RTF | Kamera Hz |
+|---|---|---|---|---|---|---|
+| Referans (kamerasız, 30 sn) | 475 | 475 | 0 MB/dk | %163 | 1,000 | — |
+| A orijinal | 911 | 3698 | 1393 MB/dk | %328 | 0,871 | 18,0 / 17,9 |
+| B visualize kapalı | 901 | 3581 | 1340 MB/dk | %320 | 0,837 | 17,3 / 17,3 |
+| C 320×240, 10 Hz | 669 | 933 | 132 MB/dk | %195 | 0,998 | 8,8 / 8,9 |
+| D ogre (ogre1 yüklendi) | 787 | 3989 | 1601 MB/dk | %223 | 1,000 | 29,5 / 29,6 |
+
+**Yorum:** Hiçbir ayar sızıntıyı kesmiyor. Artış ≈ tek kameranın kare hızı × bir RGB kare boyutu (A 23,2 MB/s ≈ 26 × 0,92 MB; C 2,2 ≈ 8,8 × 0,23; D 26,7 ≈ 29,5 × 0,92); render motorundan ve visualize'dan bağımsız → sızıntı görüntüyü tüketen tarafta. Şüpheli: PX4 `GstCameraSystem` (server.config'te; ilk kamera topic'ine abone, her kareyi appsrc'ye itiyor; appsrc kuyruk sınırı yok). Uygulama yapılmadı.
+
+---
+
+### [2026-10-29 18:40] - İki İHA orbit, 6 dk (arena, pencere + işaretçiler)
+
+**Ön kontrol:** iki uçak Hold, arm, landed=False; ivmeölçer uyarısı dışında WARN/ERROR/failsafe yok.
+
+**Sonuç (360 sn, aynı akış/kurallar):** abort yok, duraklama yok. uav1 17 sn'de karşı konumda hazır (bekleme sırasında en küçük 3B 145,3 m). İkisi de 10. sn'de yakalandı. uav0 +6,5 m (maks 6,9, std 0,1), uav1 +5,2 m (maks 6,5, std 0,6); irtifa 99,0–100,3 / 118,9–120,4 m. Açı farkı 167,2° → 211,8° doğrusal, +0,124 °/sn; en küçük 3B 184,5 m (3B mesafe 213,8 → 203,6 m azalıyor). Sonda Hold ✔. Sunucu 531 MB sabit, arayüz 782 MB.
+
+**Not:** Aralık denetimi yok; bu kayma hızıyla iki uçak ~20 dk sonra aynı açıya yaklaşır (20 m irtifa farkıyla 40 m kuralı ~22 dk'da tetiklenir). Uzun uçuşlar için aralık denetimi gerekli.
+
+---
+
+### [2026-10-29 17:45] - Uçak işaretçileri ve takip kamerası
+
+**Yapılan Değişiklikler:**
+- Yeni `viz_trails.py`: uçak başına yarı saydam küre (8 m, alfa 0,35), 60 sn iz (LINE_STRIP), zemine dikey çizgi; uav0 kırmızı, uav1 mavi; 6 işaretçi, sabit kimlik, 5 Hz; kaynak `/world/default/dynamic_pose/info` (~51,6 Hz), hedef `/marker_array`; yalnızca görsel (GUI), komut göndermez; kapanışta işaretçileri siler.
+- Yeni `cam.sh uav0|uav1|genel`: `/gui/follow/offset` (x −25, z 8) + `/gui/follow`; genel = takibi bırak + `/gui/move_to/pose` (başlangıç kamerası, make_iha_arena.py sabitlerinden).
+- `launch_all.sh`: `VIZ=1` (GUI=1 ile).
+
+**Sorunlar ve çözümler:** gz.transport13 Python bağında abonelik geri çağrısı açıkken engelleyici request() yanıtı teslim alamıyor (aboneliksiz süreçte ~1 ms); 1 sn beklemede hız 1 Hz'e düştü. Python bağında oneway yok → güncellemeler 20 ms beklemeyle gönderiliyor (5,0 Hz, istekler uygulanıyor). `/marker` silme yanıt vermiyor → silme `/marker_array` ile, abonelik kaldırıldıktan sonra (silindi=True, sahne 0 işaretçi doğrulandı). Opak küre takip kamerasında uçağı örtüyordu → yarı saydam. Python çıkışında gz-transport yıkıcısı "terminate called" ile çöküyordu → os._exit.
+
+**Ölçüm:** işaretçiler kapalı (30 sn) RTF 0,992, sunucu 528 MB/%193, arayüz 736 MB/%491; açık (60 sn) RTF 0,995, sunucu 530 MB/%197, arayüz 752 MB/%449; betik %14 CPU, 52 MB.
+
+**İki İHA (180 sn, işaretçiler açık):** abort yok, duraklama yok. uav0 +5,1 m (maks 5,5, std 0,2), uav1 +5,1 m (maks 5,4, std 0,2); ikisi de 10. sn'de yakalandı; açı farkı 171,1° → 170,4° (166,3–172,3°), −0,003 °/sn; en küçük 3B 199,5 m. Bekleme sırasında en küçük 3B 33,8 m. Sonda Hold ✔. ~33 dk uçuştan sonra iki araçta da "High Accelerometer Bias".
+
+---
+
+### [2026-10-29 17:20] - Özel dünya (iha_arena) + iki İHA orbit
+
+**Hazır dünyalar:** baylands 393 MB dokulu Fuel arazisi (farklı dünya adı/konum), forest 37 Fuel ağacı → yazılım render altında ağır; lawn yalnızca zemin. Özel dünya seçildi.
+
+**Yapılan Değişiklikler:**
+- Yeni `gz_worlds/make_iha_arena.py` → `gz_worlds/iha_arena.sdf` (PX4 default.sdf kopyası; ad "default", spherical_coordinates aynı; `gz sdf -k` geçerli). Görsel, çarpışmasız, dokusuz, gölgesiz: halka (60 parça, R 100 m), merkez diski, 4 direk × 8 görsel (140 m, 20 m'de bant; 100 m kırmızı, 120 m mavi), ızgara 26 çizgi (50 m, ±300 m), 6 bina; 5 model + 5 link + 125 görsel = 135 varlık. Zemin görseli 500 → 700 m. `<gui>` bloğu: güneybatıdan 300 m'den merkeze bakan başlangıç kamerası.
+- D direği tam doğu yerine doğudan 30° kuzeyde (121,2; 70,0): kayıtlı izlerde (140, 0) kalkış hattının üstünde (uav1 izine 3,1 m, ~30–40 m irtifa).
+- `launch_all.sh`: `WORLD=iha_arena` (dünya adı SDF'ten; iki PX4 ve saat kontrolü aynı adı kullanır; `GZ_SIM_RESOURCE_PATH`'e gz_worlds eklenir; `PX4_GZ_NO_FOLLOW=1`).
+
+**Ölçüm (pencere açık, uçaklar yerde, 60 sn):** RTF 0,953 (min 0,910; eşik 0,9), sunucu 527 MB sabit (%181), arayüz 668 MB (%588). Varlık azaltmaya gerek olmadı.
+
+**İki İHA (180 sn, aynı akış/kurallar):** abort yok, duraklama yok, PX4 uyarısı yok. uav0 ve uav1 +6,5 m (maks 6,7, std 0,1); ikisi de 10. sn'de yakalandı; açı farkı 172,0° → 194,5° (+0,125 °/sn, ilk 30 sn'de +12°); en küçük 3B 187,4 m. Bekleme sırasında (uav1 merkez Hold'u) en küçük 3B mesafe 33,1 m. Sonda Hold ✔.
+
+---
+
+### [2026-10-29 17:00] - Gazebo penceresi (WSLg) + iki İHA orbit tekrarı
+
+**Referans (pencere yok, 60 sn):** RTF 1,000; gz sunucu 476 MB, %165 CPU; uav0 100,1 m, uav1 120,2 m (Hold).
+
+**Pencere:** Sunucunun ortamıyla (`/proc/<pid>/environ`; GZ_PARTITION/GZ_IP tanımsız, GZ_SIM_RESOURCE_PATH = PX4 models+worlds, GZ_SIM_SERVER_CONFIG_PATH = gz_bridge/server.config, PX4_GZ_MODELS = gz_models_nocam) yalnızca `gz sim -g` başlatıldı; WSLg'de açıldı. Yazılımla işleniyor (swrast_dri + libLLVM-15, d3d12 kullanılmıyor). 60 sn: RTF 0,999 (min 0,984), sunucu 477 MB sabit, %182 CPU; arayüz ~660 MB, ~%406 CPU. Görünen: gri gökyüzü, zemin düzlemi kenarı, ortada tek uçak (kamera bir uçağı takip ediyor gibi); orbit çemberi çizilmiyor.
+
+**İki İHA tekrarı (pencere açık, 180 sn, aynı akış/kurallar; devralma gecikmesi 16 → 2 sn):** abort yok, duraklama yok. uav0 +5,5 m (maks 5,8, std 0,1), uav1 +5,7 m (maks 6,2, std 0,2); ikisi de 10. sn'de yakalandı; açı farkı 166,5° → 165,1° (164,0–167,8°), −0,008 °/sn; en küçük 3B mesafe 185,7 m. Sonda Hold ✔. Sonuç önceki testi tekrarladı.
+
+**Yapılan Değişiklikler:** `launch_all.sh`: `GUI=1` seçeneği (varsayılan kapalı).
+
+---
+
+### [2026-10-29 16:45] - İki İHA orbit BAŞARILI (tavşan modu, 4 dk)
+
+**Yapılan Değişiklikler:**
+- Yeni `ros_takeoff.py`: DDS VehicleCommand ile NAV_TAKEOFF + ARM (çalışan `mavlink_takeoff.py`'ye komut gönderilemiyor: girdi kanalı yok, uav1 portu 14541'i tutuyor). uav1 `MIS_TAKEOFF_ALT=120` (px4-param).
+- `mavlink_takeoff.py`: varsayılan kalkış irtifası araç başına 100 + 20·uav.
+- `v2_orbit_mission.py`: `center_frame_uav` (merkez uav0 çerçevesinde; her PX4 kendi doğduğu noktayı orijin alıyor, uav1 orijini uav0'dan N+15,0 E−15,0 m); ortak `ref_offset_ne`, `ne_to_latlon`, `make_vehicle_command`.
+- `orbit_approach.py`: ortak çerçeve, `--opposite-of` (180° ± 30°), diğer araca 3B mesafe.
+- `orbit_watch.py`: çok araç, 3B mesafe < 40 m ve "biri abort → hepsi abort", açı farkı (0–360°) + 3B mesafe, SIGTERM ile özetli durma (rclpy sinyal işleyicileri kapatıldı).
+
+**Akış:** uav0 giriş + düğüm → izleyici A (uav0, abort → 0 1) → uav1 ros_takeoff (19 sn, tepe yer hızı 57 m/s) → uav1 approach (karşı konumda hazır: 133 sn; beklemede en küçük 3B mesafe 33,2 m — Hold 80 m / orbit 106 m, 20 m irtifa farkı) → izleyici A durduruldu → uav1 düğümü + ortak izleme.
+
+**Sonuç (240 sn, abort yok, duraklama yok):**
+- uav0: yarıçap hatası ort +5,7 m, maks 6,2 m, std 0,2 m; irtifa 99,5–100,6 m.
+- uav1: yarıçap hatası ort +6,5 m, maks 7,0 m, std 0,2 m; irtifa 118,3–120,0 m.
+- Açı farkı 211,9° → 206,4° (en küçük 206,1°, en büyük 217,3°), ortalama −0,023 °/sn; en küçük 3B mesafe 180,2 m. Sonda ikisi de Hold ✔.
+- uav0'da "High Accelerometer Bias" sürüyor (uçuş ~40 dk); uav1'de uyarı yok.
+
+**Durum:** ✅ İki İHA aynı çemberde ~180–217° aralıkla orbit. Açık: aralık denetimi (180°'ye çekme), ivmeölçer ofseti, duraklama kaynağı, kamera.
+
+---
+
+### [2026-10-29 16:25] - Tavşan noktası modu: uav0 4 dk orbit BAŞARILI
+
+**Duraklama sondası (16:14:30–16:17:30, 1 sn, yalnızca okuma):** Bu pencerede duraklama olmadı (döngü 1,00–1,01 sn, ROS mesaj boşluğu ≤ 0,02 sn). Dirty 0,1–0,6 MB, Writeback ≤ 0,26 MB, disk yazma ~0,76 MB/s sabit (PX4 logger, SDLOG_MODE=1, SDLOG_PROFILE=131, ~300 kB/s/araç, birikme yok), steal %0, iowait %0,24, gz RTF 1,000. Duraklamalar 16:09:55'ten sonra kesilmiş (kalkış betiği aralıkları 33 → 30 sn). Önceki duraklamalarda DDS'siz süreçler (pymavlink) dahil hepsi aynı anda gecikiyordu ve RTF ~0,91'e düşüyordu (≈ 30/33) → **belirsiz, ama sistem/VM düzeyine işaret ediyor; disk boşaltma desteklenmiyor.**
+
+**Yapılan Değişiklikler:**
+- `v2_orbit_mission.py`: `--mode rabbit` (varsayılan) — her döngüde uçağın açısı φ, setpoint θ = φ + `lookahead_deg` (varsayılan 4·V/R = 34,4°, ≈ 60 m); teğet hız + merkezcil ivme korunuyor; faz hizalama yalnızca `--mode time`'da.
+- `orbit_watch.py`: tavşan−uçak açı farkı; yarıçap hatası std; döngü boşluğundan duraklama tespiti ve öncesi/sonrası hata karşılaştırması.
+
+**Test (uav0, 100 m, trim 14, 240 sn):** Giriş 18 sn'de hazır (78 m, radyal +0,7 m/s). OFFBOARD 1. denemede, 10. sn'de yakalandı. Yakalama sonrası 46 örnek: yarıçap hatası ort +6,0 m, maks 6,5 m, **std 0,2 m**; tavşan−uçak açı farkı +34,1…+34,4°; irtifa 98,7–100,2 m; yer hızı 14,6 m/s; gz 477 MB sabit. Test sırasında duraklama yok (0). Sonda Hold ✔.
+- Sabit +6 m dışa kayma lookahead geometrisinden (PX4 NPFG noktayı yola en yakın nokta sayıyor); kararlı.
+- "Preflight Fail: High Accelerometer Bias" kalkıştan ~15 dk sonra (16:18) başladı, uçuşta tekrarlıyor; failsafe yok.
+
+**Durum:** ✅ Tek İHA orbit (tavşan modu) çalışıyor. Sırada: iki İHA (aralık denetimi), ivmeölçer ofseti uyarısı, duraklamanın kaynağı.
+
+---
+
+### [2026-10-29 16:10] - Trim 14 ile orbit testi (abort, 57. sn) — zaman tabanı ve faz geri beslemesi
+
+**Ölçüm (Hold, 100 m, 60 sn):** ort. yer hızı 15,09 m/s (aralıkta; 15,36 → 14,87 yavaşça iniyor), CAS 14,60, irtifa 100,2–100,6 m. Kalkış tepe hava hızı 56,0 m/s.
+
+**Yapılan Değişiklikler:** `orbit_watch.py`'ye açı farkı (setpoint açısı − uçak açısı, trajectory_setpoint'ten) ve değişim [°/sn] kolonları; özet açı farkı başlangıç/bitiş.
+
+**Test:** Giriş 38 sn'de hazır (79,6 m, radyal +0,5 m/s). OFFBOARD 1. denemede, 10. sn'de yakalandı. Yakalama sonrası (8 örnek): yarıçap hatası ort 14,9 m, maks 36,4 m; irtifa 100,0–100,3 m; yer hızı 14,7 m/s; açı farkı +11,3° (t=15) → +78,1° (t=50). 57. sn'de +41,0 m (açı farkı +82,7°) → abort, Hold ✔.
+
+**Bulgular:**
+1. **Faz geri beslemesi:** uçak çemberin dışında (r ≈ 106–111 m) uçtuğu için açısal hızı düşük (14,7/108 ≈ 7,8°/sn, setpoint 8,6°/sn) → +0,6…1,1°/sn gecikme → gecikme uçağı daha da dışa itiyor (R/cos Δθ). Zaman tabanlı setpoint, hız tam eşit olsa bile kararsız.
+2. **Zaman tabanı sıçraması:** Sistemde ~33 sn'de bir ~3 sn duraklama var (kalkış betiği, izleyici ve düğüm loglarında 8 sn'lik aralıklar). Ardından ROS'a gelen PX4 zaman damgaları ~3 sn ileri atlıyor (büyük olasılıkla `UXRCE_DDS_SYNCT=1` zaman senkronizasyon ofseti) → setpoint 25. ile 30. sn arasında uçağa göre +28,5° atladı. Önceki testte de aynı (θ 5 sn'de 68°).
+
+**Durum:** 🔴 Zaman tabanlı orbit setpoint'i bu haliyle kullanılamaz; tasarım değişikliği gerekli.
+
+---
+
+### [2026-10-29 16:00] - FW_AIRSPD_TRIM simülasyonda 14'e çekildi
+
+**Yapılan Değişiklikler:**
+- `mavlink_takeoff.py`: `SIM_ONLY_PARAMS`'a `"FW_AIRSPD_TRIM": (14.0, 15.0)` (`--revert-sim-params` 15'e döndürür).
+
+**⚠️ YALNIZCA SİMÜLASYON:** `FW_AIRSPD_TRIM=14` gerçek donanıma taşınmayacak; gerçek uçağın trim hızı kendi kalibrasyonuna göre belirlenmeli.
+
+---
+
+### [2026-10-29 15:58] - Turlama hızı ölçümü (orbit testi yapılmadı)
+
+**Ölçüm (uav0, Hold, 100 m, 60 sn, ASPD_SCALE_APPLY=0):** ort. yer hızı 15,98 m/s, CAS 15,52 m/s, TAS 13,43 m/s, irtifa 100,0–100,5 m. Yer hızı 14,5–15,5 m/s hedef aralığının üstünde → orbit testine geçilmedi.
+- Ölçek uygulaması kapatılınca uçak artık yavaş değil, ~%6,5 hızlı (önceki 13,4 m/s yerine 16,0).
+- Yer hızı/CAS ≈ 1,03; TAS hâlâ CAS'ın 0,865'i (sıcaklık hatası, kontrolü etkilemiyor).
+- Kalkış tepe hava hızı yine 56,0 m/s (incelenmedi).
+
+**Durum:** ⏸ Orbit testi hız aralığı sağlanana kadar bekliyor.
+
+---
+
+### [2026-10-29 15:55] - ASPD_SCALE_APPLY simülasyonda kapatıldı, ASPD_SCALE_1 sıfırlandı
+
+**Yapılan Değişiklikler:**
+- `mavlink_takeoff.py`: `SIM_ONLY_PARAMS`'a `"ASPD_SCALE_APPLY": (0, 2)` (`--revert-sim-params` 2'ye döndürür).
+- İki araçta `ASPD_SCALE_APPLY` 2 → 0; `ASPD_SCALE_1`: uav0 1,0 (değişmedi), uav1 1,0273 → 1,0. `parameters.bson`'a kaydedildi.
+
+**⚠️ YALNIZCA SİMÜLASYON:** `ASPD_SCALE_APPLY=0` gerçek donanıma taşınmayacak; gerçek uçakta hava hızı ölçek kalibrasyonu açık kalmalı.
+
+---
+
+### [2026-10-29 15:50] - Merkezden teğet giriş + uav0 orbit testi (abort, 41. sn)
+
+**Yapılan Değişiklikler:**
+- Yeni `orbit_approach.py`: DO_REPOSITION ile merkezde Hold (NAV_LOITER_RAD 80 m, saat yönü); bant 60–110 m, irtifa ±10 m, |radyal hız| ≤ 5 m/s ve aynı dönüş yönü 5 sn sağlanınca hazır.
+- `v2_orbit_mission.py`: faz hizalama (`phase_ref_deg`; verilmezse devralmada uçağın yönüne hizalanır, değer loglanır).
+- `orbit_watch.py`: yakalama = 10 sn boyunca hata < 30 m; öncesi 90 sn sınırı; sonrası > 40 m abort; yer hızı ve özet.
+
+**Temiz açılış:** Pusula/ivmeölçer uyarısı yok. Hava hızı geçerli (tırmanış 39→56 m/s, turlama 15–17 m/s).
+
+**Test:** Giriş 35 sn'de hazır (79 m, radyal +0,3 m/s). OFFBOARD 1. denemede, 10. sn'de yakalandı (+4…+8 m). 25. sn'den sonra hata dışa doğru büyüdü, 41. sn'de +41,2 m → abort, Hold ✔. İrtifa 100,5–101,4 m, gz 478 MB sabit, uyarı yok.
+
+**Neden:** Uçak 13,4 m/s, setpoint 15 m/s ilerliyor → faz gecikmesi Δθ büyüyor; PX4 yol takibi (AUTO_PATH) uçağı setpoint'teki teğet doğruya çekiyor, bu doğru uçağın konumunda R/cos Δθ uzaklıkta (30. sn ≈ +24 m, 35. sn ≈ +35 m tahmin; ölçülen +19 / +35 m). Hız açığının kaynağı yine sıcaklık hatası: rüzgar kestiricisi TAS'taki %14 açığı ölçek 1,185 olarak öğrendi, `ASPD_SCALE_APPLY=2` bunu uçuşta uyguluyor → sensör IAS 12,9 m/s iken CAS 15,3 m/s raporlanıyor, TECS uçağı gerçekte ~13 m/s'de tutuyor.
+
+**Risk:** `ASPD_SCALE_APPLY>0` iken disarm'da tahmini ölçek `ASPD_SCALE_1`'e (~1,185) kaydedilebilir.
+
+**Durum:** 🟡 Giriş ve yakalama çalışıyor; zaman tabanlı setpoint hız farkına dayanıksız.
+
+---
+
+### [2026-10-29 15:38] - NAV_DLL_ACT simülasyonda kapatıldı, temiz yeniden başlatma
+
+**Yapılan Değişiklikler:**
+- `mavlink_takeoff.py`: `SIM_ONLY_PARAMS`'a `"NAV_DLL_ACT": (0, 2)` eklendi (`--revert-sim-params` 2'ye döndürür); `--takeoff` seçeneği (kalp atışı/parametre tüm araçlara, kalkış yalnızca seçilenlere).
+
+**⚠️ YALNIZCA SİMÜLASYON:** `NAV_DLL_ACT=0` gerçek donanıma taşınmayacak; gerçek uçakta veri bağlantısı kaybında Return açık kalmalı.
+
+---
+
+### [2026-10-29 15:30] - Orbit düğümü yeniden yazıldı, uav0 ilk Offboard orbit testi
+
+**Yapılan Değişiklikler:**
+- `v2_orbit_mission.py`: irtifa/merkez/yarıçap/hız parametre (uav0 100 m, uav1 120 m; merkez (0,0), R 100 m); devralma = irtifa ≥ 40 m + arm; Offboard onayı görülene kadar 2 sn'de bir, en çok 10 deneme; Offboard'dan çıkışta log + yayın durur, yeniden girilmez; faz ortak PX4 saatine bağlı (uav1 tam 180°).
+- Setpoint artık konum + teğet hız + merkezcil ivme; kullanılmayan alanlar NaN. **Eski kod hız/ivmeyi doldurmuyordu → ROS varsayılanı [0,0,0] PX4'te "sıfır hızlı yol" (AUTO_PATH) sayılıyordu.**
+- Yeni: `orbit_abort` (+ `orbit_abort.py`) tek komutla Hold; `orbit_watch.py` test izleyici + abort koşulları.
+
+**Bulgu — px4_msgs uyumsuzluğu:** `vehicle_status_v2` ROS'a hiç ulaşmıyor. `~/ros2_ws/src/px4_msgs` VehicleStatus v3, PX4 derlemesi v2 (+`failure_detector_status`); mesaj 88 bayt, ROS tipi 87 → Fast-DDS "payload size 88 > 87" hatasıyla düşürüyor. Eski düğüm `nav_state`'i hiç görmüyordu. Geçici çözüm: arm/Offboard bilgisi `vehicle_control_mode`'dan. Kullanılan diğer mesajlar (VehicleControlMode, VehicleLocalPosition, AirspeedValidated, TrajectorySetpoint, OffboardControlMode, VehicleCommandAck, VehicleLandDetected) birebir aynı; VehicleCommand yalnızca sabitlerde farklı.
+
+**Test (uav0, 100 m, airspeed nan — bu açılışta geçersiz kalmıştı):** OFFBOARD 1. denemede. Merkezden 405 m'den yaklaştı, 28. sn'de çembere yakalandı (+40,6 m), radyal hızla içeri taştı (−55,3 m) → 36. sn'de abort. `orbit_abort` Hold'u ACK ile doğruladı; düğüm çıkışı logladı, yeniden girmedi. İrtifa 99,6–112,2 m; gz 479 MB sabit.
+
+**Durum:** 🟡 Güvenlik zinciri çalışıyor; uzak noktadan çembere giriş taşması çözülmeli.
+
+---
+
+### [2026-10-29 15:22] - Hava hızı kontrolü simülasyonda kapatıldı, kalkış betiği iki araçlı
+
+**Yapılan Değişiklikler:**
+- `mavlink_takeoff.py`: `SIM_ONLY_PARAMS = {"ASPD_DO_CHECKS": (0, 7)}` — her çalıştırmada araçlara yazılıyor (`--params-only`, `--revert-sim-params` seçenekleri). İki araç desteği (`--uav 0 1`, `--alt 100 120`); uav1 bağlantısı udp 14541 / sysid 2. Havadaki araçta kalkış atlanıyor; arm reddedilirse 5 kez yeniden deneniyor.
+- uav0 ve uav1'de `ASPD_DO_CHECKS` 7 → 0 yazıldı, `parameters.bson`'a kaydedildi.
+
+**⚠️ YALNIZCA SİMÜLASYON:** `ASPD_DO_CHECKS=0` gerçek donanıma taşınmayacak. Gerçek donanımda hava hızı doğrulama kontrolleri açık kalmalı.
+
+**Açık iş:** gz `AirSpeed` eklentisinin sıcaklık hatası. Gerçek düzeltme `src/modules/simulation/gz_plugins/airspeed/AirSpeed.cpp` (sıcaklığı mesaja yaz) ve `src/modules/simulation/gz_bridge/GZBridge.cpp` (0 K'yi geçersiz say). Düzeltilince `--revert-sim-params` ile `ASPD_DO_CHECKS=7`.
+
+**Olay:** Betik değiştirilirken uav0'ın GCS kalp atışı ~11 sn kesildi → "Connection to ground station lost" → Hold 5 sn → bağlantı geri gelmesine rağmen RTL. ROS 2 `VehicleCommand` ile Hold'a alındı; irtifa 81,7 m'ye düşüp ~100 m'ye döndü. Ardından "Compass needs calibration - Land now!", "Compass 0 fault", "High Accelerometer Bias" uyarıları (ivme ofseti uyarısı kesintiden hemen önce başlamıştı).
+
+---
+
+### [2026-10-29 15:08] - Bellek sızıntısı, spawn konumu, QGC'siz kalkış, hava hızı arızası
+
+**Bulgular:**
+- **Kamera sızıntısı:** `advanced_plane` kamerası (640x480, 30 Hz) açıkken gz sim sunucusu QGC olmadan da ~650 MB/30 sn büyüyor (5,5 dk'da 1,4 → 8,0 GB). Kamerasız kopyada 478 MB'ta sabit, CPU %340 → %160, gerçek zaman oranı ~0,74 → ~0,92. Uçakların üst üste doğması sızıntının nedeni değil.
+- **Spawn konumu:** PX4 `PX4_GZ_POSE` değişkenini hiç okumuyor; doğrusu `PX4_GZ_MODEL_POSE`. Önceki tüm çalıştırmalarda iki uçak (0,0)'da üst üste doğuyordu. 2026-10-25 kaydındaki "spawn z'sini orbit irtifasıyla eşleştir" çözümü bu yüzden hiç uygulanmamıştı; havada doğurma da işe yaramıyor (uçak hızsız düşüyor).
+- **QGC'siz kalkış:** `mavlink_takeoff.py` GCS kalp atışı göndererek "No connection to the GCS" engelini aşıyor. uav0 `MIS_TAKEOFF_ALT=100` ile kalktı, 28 sn'de 80 m üstünde LOITER'a geçti, 100 ± 1 m'de ~80 m yarıçaplı daire çiziyor.
+- **Hava hızı arızası (açık sorun):** Kalkıştan ~19 sn sonra "Airspeed sensor failure detected. Return to launch (RTL) is advised." Kök neden: PX4 Gazebo `AirSpeed` eklentisi sıcaklık göndermiyor (0 K) → PX4 ortam sıcaklığını −60 °C'ye kırpıyor → hava yoğunluğu 1,656 kg/m³ → TAS gerçek hızın %86'sı. Rüzgar kestiricisi bu farkı ~8,6 m/s sahte rüzgar olarak öğreniyor, dönüşte yenilik kontrolü (ASPD_FS_INNOV=5, ASPD_FS_INTEG=10) tetikleniyor. `ASPD_FS_T_START=-1` olduğundan hava hızı kalıcı olarak `nan`; TECS hava hızısız modda.
+- Kalkışta hız 57 m/s'ye çıktı (`FW_AIRSPD_MAX=20`, gaz %100); ayrı bir açık nokta.
+
+**Yapılan Değişiklikler:**
+- `launch_all.sh`: varsayılan kamerasız model (`gz_models_nocam`), `CAM=1` ile kameralı; gz sunucusunu kendisi başlatıyor, iki PX4 `-d`; log sınırı 5 MB; `stop` alt komutu.
+- `PX4_GZ_POSE` → `PX4_GZ_MODEL_POSE` (`start_sim.sh`, `launch_all.sh`, `CLAUDE.md`); `start_sim.sh` başına kamera uyarısı.
+- Yeni: `mavlink_takeoff.py`. Yedekler: `yedek/`. Orijinal `model.sdf` değişmedi.
+
+**Durum:** 🟡 Tek İHA QGC'siz uçuyor; hava hızı arızası ve orbit düğümü entegrasyonu açık.
+
+---
+
+2026-10-25 — Sorun tespit edildi: UAV’lar z=0.5 (yerde) spawn ediliyor, kod 40 m eşiğini bekliyor. Sabit kanatlı yerden setpointla kalkamaz. Çözüm: spawn komutlarında z değerini orbit irtifasıyla eşleştir.
+
+### [2026-04-26 14:41] - Proje V2 Başlangıcı & Faz 1 Tamamlandı
+
+**Yapılan İşlemler:**
+- V2 projesi sıfırdan yeniden başlatıldı. Önceki karmaşık prototip tamamen rafa kaldırıldı.
+- `v2_proje_gunlugu.md` oluşturuldu (bu dosya).
+- `v2_orbit_mission.py` adlı Faz 1 ROS 2 düğümü yazıldı.
+
+**Faz 1 Kapsamı:**
+- **Hedef İHA'lar:** `uav0` (Keşif) ve `uav1` (Kamikaze)
+- **Kalkış:** Her iki İHA Offboard moda geçip 30 m irtifaya tırmanıyor.
+- **Yörünge:** (0, 0) merkezi, 50 m yarıçaplı dairesel orbit.
+- **Çarpışma Önleme:** İHA'lar arasında tam 180° (π radyan) faz farkı uygulandı.
+  - `uav0` pozisyonu: `theta`
+  - `uav1` pozisyonu: `theta + π`
+  - Böylece `uav0` kuzey kutbundayken `uav1` güney kutbunda olur.
+
+**Kullanılan ROS 2 Mesajları:**
+- `px4_msgs/VehicleCommand` → Arm, Offboard modu
+- `px4_msgs/OffboardControlMode` → Pozisyon kontrolü aktif
+- `px4_msgs/TrajectorySetpoint` → NED koordinat hedef noktası
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+### [2026-04-26 15:49] - Sabit Kanat Dinamiklerine Geçildi (Faz 1 v2)
+
+**Sorun:** Önceki kod Multicopter (Quadcopter) varsayımıyla yazılmıştı.
+`TrajectorySetpoint` ile doğrudan irtifa hedefi gönderiliyordu; sabit kanatlı
+İHA (advanced_plane) hover yapamadığından Offboard komutunu reddedip takılı kalıyordu.
+
+**Yapılan Değişiklikler:**
+- **Kalkış:** `VEHICLE_CMD_NAV_TAKEOFF` komutu ile PX4'ün kendi otonom kalkış
+  modu kullanıldı. Uçak pistde hızlanıp kendi kendine havalanıyor.
+- **İrtifa takibi:** `VehicleLocalPosition` topic'i abone edildi. Uçak
+  Z ≤ -40 m'ye ulaşana kadar Offboard moduna KESİNLİKLE geçilmiyor.
+- **Hareketli setpoint:** Sabit kanat duraksayamayacağı için orbit setpoint'i
+  statik değil; daire üzerinde sürekli hareket eden bir hedef nokta olarak
+  hesaplanıyor.
+  - R = 100 m, V = 15 m/s, ω = V/R = 0.15 rad/s
+  - θ = (t × ω) + (uav_id × π)  → 180° faz farkı korunuyor.
+
+**Yeni Durum Makinesi:**
+  `PREFLIGHT → TAKEOFF → CLIMB → ORBIT`
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+<!-- Yeni kayıtlar buraya YUKARIDAN eklenir -->
+
+### [2026-05-05 19:12] - Manuel Kalkış ve Havada Offboard Devralma (Mid-Air Takeover)
+
+**Karar:** PX4'ün kalkış güvenlik kilitleriyle vakit kaybetmek yerine kalkış
+QGC üzerinden manuel yapılacak; görev bilgisayarı uçak 40 m'ye ulaştığında
+devreye girecek.
+
+**Durum Makinesi Değişikliği:**
+```
+ESKİ: PREFLIGHT → TAKEOFF → CLIMB → ORBIT  (4 durum)
+YENİ: WAITING → ORBIT                       (2 durum)
+```
+
+**Silinen Metodlar:**
+- `_send_arm_cmd()`
+- `_send_auto_takeoff_mode_cmd()`
+- `_send_takeoff_cmd_once()`
+- `_handle_preflight()`, `_handle_takeoff()`, `_handle_climb()`, `_handle_orbit()`
+- `PREFLIGHT_TICKS` sabiti
+
+**Yeni `_timer_cb` Davranışı (20 Hz, her zaman):**
+1. `OffboardControlMode` heartbeat yayınlar (PX4 Offboard koşulu).
+2. Hareketli orbit setpoint yayınlar (uçak havada olsun olmasın).
+3. WAITING: `local_z <= -40 m` ise **tek seferlik** Offboard komutu gönderir
+   → State: ORBIT.
+4. ORBIT: Saniyede bir θ/x/y/z logu yazar.
+
+**Yeni değişken:** `self.offboard_sent = False` — komutun çift gönderimini önler.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-05-05 18:51] - Test-1 Kayıt Altyapısı (Flight Data Recorder) Eklendi
+
+**Bağlam:** Uçaklar 300 m'de uçuyor fakat 40 m eşiğini algılayamıyor.
+Hata tespitini kolaylaştırmak için kalıcı log altyapısı kuruldu.
+
+**Klasör yapısı:** `test/test-1/`  (script başlarken otomatik oluşturulur)
+
+**v2_orbit_mission.py değişiklikleri:**
+- `logging` + `pathlib` import edildi.
+- `LOG_DIR = pathlib.Path("test/test-1")` sabiti eklendi.
+- `setup_file_logger(uav_id)` fonksiyonu eklendi → `uav{id}_mission.log`
+  dosyasına saat damgalı, `append` modunda yazar.
+- `_log(msg)` instance metodu eklendi: mesajı hem `get_logger().info()`'ya
+  hem de dosya logger'ına iletir.
+- Sınıftaki tüm `get_logger().info()` çağrıları `self._log()` ile değiştirildi.
+
+**v2_telemetry_monitor.py değişiklikleri:**
+- `os.system('clear')` TAMAMEN KALDIRILDI.
+- Ekran güncelleme 2 Hz → **1 Hz** olarak düşürüldü.
+- Tablo görünümü → akan tek satır moduna geçildi.
+  Format: `[HH:MM:SS] UAVx | Conn: OK | ARMED | Mod: AUTO TAKEOFF | Z: +42.3m | ...`
+- `test/test-1/telemetry.log` dosyasına her satır `append` modunda yazılır.
+
+**Test sonunda elde edilecek log dosyaları:**
+  - `test/test-1/uav0_mission.log`
+  - `test/test-1/uav1_mission.log`
+  - `test/test-1/telemetry.log`
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 17:07] - `rcl_shutdown already called` Hatası Düzeltildi
+
+**Başarı Notu:** Telemetri monitörü kusursuz çalıştı — uçakların 300 m'de
+uçtuğu canlı olarak izlendi! 🎉
+
+**Hata:** `rcl_shutdown already called`
+
+**Kök Neden:** `rclpy.spin()` Ctrl+C ile kesildiğinde ROS 2 iç mekanizması
+zaten bir kısmi temizlik başlatır. Ardından `finally` bloğundaki `rclpy.shutdown()`
+ikinci kez çağrılıyordu → hata logu.
+
+**Düzeltme (v2_orbit_mission.py ve v2_telemetry_monitor.py):**
+```python
+finally:
+    node.destroy_node()
+    if rclpy.ok():        # ← yalnızca hâlâ aktifse shutdown çağır
+        rclpy.shutdown()
+```
+`rclpy.ok()` kontrolü, shutdown'ın yalnızca bir kez çalışmasını garanti eder.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 17:00] - Topic Suffix (_v1/_v2) ve Best Effort QoS Düzeltildi
+
+**Sorun 1 — Topic İsimleri:**
+px4_msgs versiyonumuzda DDS Agent bazı out topic'lerini suffix ile yayınlıyor:
+  - `vehicle_status`         → `vehicle_status_v2`
+  - `vehicle_local_position` → `vehicle_local_position_v1`
+
+Yanlış isim yüzünden subscriber'lar hiç mesaj alamıyordu →
+irtifa okunamıyor → Offboard'a geçilemiyor → Telemetri `BAĞLANTI YOK`.
+
+**Sorun 2 — QoS Uyuşmazlığı:**
+PX4 sensör topic'lerini `BEST_EFFORT + VOLATILE` ile yayınlar.
+Subscriber'lar `TRANSIENT_LOCAL` ile abone olmaya çalışınca ROS 2
+QoS uyuşmazlığı nedeniyle mesajları reddediyordu.
+
+**Uygulanan Düzeltmeler (her iki dosya):**
+- Ayrı `SENSOR_QOS` profili eklendi (`BEST_EFFORT + VOLATILE + KEEP_LAST(1)`).
+- Publisher'lar eskisi gibi `PX4_QOS` (TRANSIENT_LOCAL) kullanmaya devam ediyor.
+- `vehicle_status` → `vehicle_status_v2` (subscriber topic'leri)
+- `vehicle_local_position` → `vehicle_local_position_v1` (subscriber topic'leri)
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:53] - DDS Topic Namespace (px4_1) Uyuşmazlığı Çözüldü
+
+**Sorun:** Kodda topic prefix olarak `/uav{id}/fmu/...` kullanılıyordu.
+PX4 SITL + MicroXRCE-DDS Agent varsayılan topic yapısı farklıdır:
+  - `uav_id = 0` → `/fmu/...`
+  - `uav_id = 1` → `/px4_1/fmu/...`
+
+Yanlış prefix yüzünden Python düğümleri PX4 ile aynı topic'te konuşmuyordu
+→ Telemetri monitöründe `BAĞLANTI YOK`, komutlar PX4'e hiç ulaşmıyordu.
+
+**Düzeltme:**
+- Her iki dosyaya `get_fmu_prefix(uav_id)` yardımcı fonksiyonu eklendi:
+  ```python
+  def get_fmu_prefix(uav_id: int) -> str:
+      if uav_id == 0:
+          return "/fmu"
+      return f"/px4_{uav_id}/fmu"
+  ```
+- `v2_orbit_mission.py`: `ns = f"/uav{self.uav_id}/fmu"` →
+  `ns = get_fmu_prefix(self.uav_id)` olarak değiştirildi.
+- `v2_telemetry_monitor.py`: Subscriber döngüsündeki `ns` aynı fonksiyon
+  ile güncellendi. Başlangıçta hangi prefix'e abone olunduğu loglanıyor.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:46] - `_ts` AttributeError Bugı Çözüldü
+
+**Hata:** `AttributeError: 'FixedWingOrbitMission' object has no attribute '_ts'`
+
+**Kök Neden:** Önceki SysID güncellemesinde `_ts()` static metodu kaldırılmıştı.
+Ancak `_publish_offboard_control_mode()` ve `_publish_setpoint()` hâlâ
+`self._ts()` çağırıyordu → script başlarken çökme.
+
+**Düzeltme (v2_orbit_mission.py):**
+- `_ts(self) -> int` yeniden **instance metodu** olarak eklendi
+  (ROS saatini kullanır: `get_clock().now().nanoseconds / 1000`).
+- `_make_cmd()` içindeki inline timestamp ifadesi de `self._ts()` ile
+  değiştirildi → tüm zaman damgaları tek kaynaktan besleniyor.
+- Etkilenen çağrılar: satır 319, 336, 368 (toplam 3 çağrı, 1 tanım).
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:40] - VehicleCommand SysID Eşleşme Sorunu Çözüldü
+
+**Sorun:** Tüm `VehicleCommand` mesajlarında `target_system = 1` sabit kodlanmıştı.
+PX4 SITL çoklu İHA modunda her instance farklı bir System ID alır
+(`uav0 → 1`, `uav1 → 2`). Yanlış `target_system` değeri olan komutlar
+PX4 tarafından **sessizce görmezden geliniyordu** → Arm/Takeoff etkisiz kalıyordu.
+
+**Uygulanan Düzeltmeler (v2_orbit_mission.py):**
+- `_ts()` statik metodu kaldırıldı.
+- Tüm komut metodlarının ortak SysID alanlarını tek yerden dolduran
+  `_make_cmd()` yardımcı metodu eklendi:
+  - `target_system   = uav_id + 1`  → uav0→1, uav1→2
+  - `target_component = 1`
+  - `source_system   = 255`         → GCS / Dış Bilgisayar
+  - `source_component = 1`
+  - `from_external   = True`
+  - `timestamp       = ROS saati`   → `get_clock().now().nanoseconds / 1000`
+- `_send_arm_cmd()`, `_send_auto_takeoff_mode_cmd()`, `_send_offboard_mode_cmd()`
+  metodlarının tamamı `_make_cmd()` kullanacak şekilde sadeleştirildi.
+- Log mesajlarına `target_system` değeri eklendi → doğrulama kolaylığı.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+
+
+### [2026-04-26 16:04] - Takeoff Düzeltmesi & Telemetri Monitörü Eklendi
+
+**Sorun:** `VEHICLE_CMD_NAV_TAKEOFF` komutu PX4 SITL'da sabit kanatlı İHA
+tarafından reddediliyor; uçak Arm oluyor fakat otonom kalkış gerçekleşmiyordu.
+
+**Düzeltme (v2_orbit_mission.py):**
+- `_send_nav_takeoff_cmd()` metodu kaldırıldı.
+- Yerine `_send_auto_takeoff_mode_cmd()` metodu yazıldı.
+- `VEHICLE_CMD_DO_SET_MODE` ile doğrudan mod değişimi yapılıyor:
+  - `param2 = 4.0` → `PX4_CUSTOM_MAIN_MODE_AUTO`
+  - `param3 = 2.0` → `PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF`
+- Bu yöntem QGroundControl'ün Takeoff slider'ıyla birebir aynı komutu gönderir.
+
+**Yeni Dosya (v2_telemetry_monitor.py):**
+- uav0 ve uav1 için `VehicleLocalPosition` ve `VehicleStatus` topic'leri izleniyor.
+- 2 Hz'de terminali temizleyip ANSI renkli tablo yazdırıyor.
+- Gösterilen bilgiler: Bağlantı durumu, Arm, Uçuş Modu, İrtifa, Konum (X/Y), Hız.
+- Bağlantı kesilince veya veri gecikirse renk uyarısı verir.
+
+**Durum:** ✅ Tamamlandı
+
+---
+
+

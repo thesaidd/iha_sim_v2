@@ -1,0 +1,1762 @@
+[
+ {
+  "irtifa": 20,
+  "yaw": 0,
+  "kenar_teorik_px": 231.89050000000003,
+  "modul_teorik_px": 11.042404761904763,
+  "modul_olculen_px": 11.0,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 231.0,
+    "ms": 129.1451421000147
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 231.0,
+    "ms": 90.31560074995468
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 231.0,
+    "ms": 140.63496559990654
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 231.0,
+    "ms": 105.6251375999409
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.35355339059327384,
+    "kenar_px": 231.5,
+    "ms": 484.6571785500146
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.2798711006452008,
+    "kenar_px": 231.12541141983547,
+    "ms": 359.28257064997524
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.35355339059327384,
+    "kenar_px": 231.5,
+    "ms": 630.2087193499347
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.2798711006452008,
+    "kenar_px": 231.12541141983547,
+    "ms": 511.04071459994884
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    20.05
+   ]
+  ],
+  "toplama_sn": 2.167379379272461
+ },
+ {
+  "irtifa": 20,
+  "yaw": 45,
+  "kenar_teorik_px": 231.89050000000003,
+  "modul_teorik_px": 11.042404761904763,
+  "modul_olculen_px": 11.061327268869112,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7915537603801803,
+    "kenar_px": 232.28787264625134,
+    "ms": 132.18827755008533
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.1284882656866349,
+    "kenar_px": 229.80853290695623,
+    "ms": 91.1926726999809
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7492298352957982,
+    "kenar_px": 231.22776681032215,
+    "ms": 145.88086965002276
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.1284882656866349,
+    "kenar_px": 229.80853290695623,
+    "ms": 106.7407347000426
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.625,
+    "kenar_px": 231.76220226899832,
+    "ms": 487.4413569500575
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6425549677253102,
+    "kenar_px": 231.404647815115,
+    "ms": 358.1575111500342
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.625,
+    "kenar_px": 231.76220226899832,
+    "ms": 641.1035786999946
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6425549677253102,
+    "kenar_px": 231.404647815115,
+    "ms": 517.1855964500082
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    20.05
+   ]
+  ],
+  "toplama_sn": 2.4218332767486572
+ },
+ {
+  "irtifa": 30,
+  "yaw": 0,
+  "kenar_teorik_px": 154.59366666666668,
+  "modul_teorik_px": 7.361603174603175,
+  "modul_olculen_px": 7.285714285714286,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 153.0,
+    "ms": 133.9472047500294
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 153.0,
+    "ms": 82.27822755004581
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 153.0,
+    "ms": 140.68305074993077
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 153.0,
+    "ms": 94.45888824998292
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5582937741019197,
+    "kenar_px": 154.75000557995776,
+    "ms": 486.01904534996265
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.36754426624144776,
+    "kenar_px": 153.4964832167879,
+    "ms": 352.2056244999021
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5582937741019197,
+    "kenar_px": 154.75000557995776,
+    "ms": 631.4130185999602
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.842909305937446,
+    "kenar_px": 153.37770506239562,
+    "ms": 515.5521284500082
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    30.05
+   ]
+  ],
+  "toplama_sn": 2.2675342559814453
+ },
+ {
+  "irtifa": 30,
+  "yaw": 45,
+  "kenar_teorik_px": 154.59366666666668,
+  "modul_teorik_px": 7.361603174603175,
+  "modul_olculen_px": 7.3657543685731905,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8824150135908411,
+    "kenar_px": 154.680841740037,
+    "ms": 135.81642989995544
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.1337700106213608,
+    "kenar_px": 153.44036582377117,
+    "ms": 84.6429142000261
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8824150135908411,
+    "kenar_px": 154.680841740037,
+    "ms": 142.6223050499857
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.1337700106213608,
+    "kenar_px": 153.44036582377117,
+    "ms": 92.83086419995925
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.4415794724714191,
+    "kenar_px": 154.41475554074654,
+    "ms": 491.475349600114
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8210306662627238,
+    "kenar_px": 153.52985023311115,
+    "ms": 352.3341590500422
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.4415794724714191,
+    "kenar_px": 154.41475554074654,
+    "ms": 633.0126236500519
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8210306662627238,
+    "kenar_px": 153.52985023311115,
+    "ms": 514.1883258500229
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    30.05
+   ]
+  ],
+  "toplama_sn": 2.2234978675842285
+ },
+ {
+  "irtifa": 40,
+  "yaw": 0,
+  "kenar_teorik_px": 115.94525000000002,
+  "modul_teorik_px": 5.521202380952381,
+  "modul_olculen_px": 5.476190476190476,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 115.0,
+    "ms": 134.98641269998188
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 115.0,
+    "ms": 85.59017405007125
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 115.0,
+    "ms": 146.4752796998937
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 115.0,
+    "ms": 101.7250535498988
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.545425370643647,
+    "kenar_px": 115.73571075006296,
+    "ms": 511.4314889500747
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6731456008918129,
+    "kenar_px": 115.1274349622677,
+    "ms": 366.48739230006413
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.545425370643647,
+    "kenar_px": 115.73571075006296,
+    "ms": 650.3936540500717
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.631732876625241,
+    "kenar_px": 114.76442055739733,
+    "ms": 532.3727340001824
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    40.05
+   ]
+  ],
+  "toplama_sn": 2.2153987884521484
+ },
+ {
+  "irtifa": 40,
+  "yaw": 45,
+  "kenar_teorik_px": 115.94525000000002,
+  "modul_teorik_px": 5.521202380952381,
+  "modul_olculen_px": 5.539321105608363,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7925503955014723,
+    "kenar_px": 116.32574321777562,
+    "ms": 130.30103270002655
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.2474496095834942,
+    "kenar_px": 114.72315968670318,
+    "ms": 79.5660179499464
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7925503955014723,
+    "kenar_px": 116.32574321777562,
+    "ms": 139.22000724992358
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.1391132017425418,
+    "kenar_px": 115.25591198998002,
+    "ms": 92.40805899994484
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5425203349060167,
+    "kenar_px": 115.71878404543808,
+    "ms": 477.7659319500799
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6870774493193001,
+    "kenar_px": 114.89713779054576,
+    "ms": 347.52346780007883
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5425203349060167,
+    "kenar_px": 115.71878404543808,
+    "ms": 609.9661730499975
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8327028258738045,
+    "kenar_px": 115.1689950844416,
+    "ms": 501.7415045999769
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    40.05
+   ]
+  ],
+  "toplama_sn": 2.210876703262329
+ },
+ {
+  "irtifa": 50,
+  "yaw": 0,
+  "kenar_teorik_px": 92.7562,
+  "modul_teorik_px": 4.416961904761905,
+  "modul_olculen_px": 4.428571428571429,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 93.0,
+    "ms": 136.07233224995525
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 91.0,
+    "ms": 84.91241314998206
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.0301137086250378,
+    "kenar_px": 91.75413525390778,
+    "ms": 145.9547666499475
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 91.0,
+    "ms": 97.4845154999457
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5578026640533066,
+    "kenar_px": 92.75000800008306,
+    "ms": 489.41046680006366
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.013172438546820597,
+    "kenar_px": 91.99845291429759,
+    "ms": 362.27091280004515
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5578026640533066,
+    "kenar_px": 92.75000800008306,
+    "ms": 652.3975925000741
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.013172438546820597,
+    "kenar_px": 91.99845291429759,
+    "ms": 529.7238186000186
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    50.05
+   ]
+  ],
+  "toplama_sn": 2.3156850337982178
+ },
+ {
+  "irtifa": 50,
+  "yaw": 45,
+  "kenar_teorik_px": 92.7562,
+  "modul_teorik_px": 4.416961904761905,
+  "modul_olculen_px": 4.402681643594081,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8814242178151226,
+    "kenar_px": 92.45631451547571,
+    "ms": 137.74509514994406
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8863495728296394,
+    "kenar_px": 91.75741823990896,
+    "ms": 85.2428580999458
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8814242178151226,
+    "kenar_px": 92.45631451547571,
+    "ms": 142.64637794999544
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8863495728296394,
+    "kenar_px": 91.75741823990896,
+    "ms": 95.32675580003342
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.44133395102952433,
+    "kenar_px": 92.8966688620078,
+    "ms": 485.4635477499869
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8372691913321264,
+    "kenar_px": 91.83402753357375,
+    "ms": 359.51914345005207
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.44133395102952433,
+    "kenar_px": 92.8966688620078,
+    "ms": 629.122419999976
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8251590304609111,
+    "kenar_px": 92.01107238543796,
+    "ms": 514.1835783000033
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    50.05
+   ]
+  ],
+  "toplama_sn": 2.2676751613616943
+ },
+ {
+  "irtifa": 60,
+  "yaw": 0,
+  "kenar_teorik_px": 77.29683333333334,
+  "modul_teorik_px": 3.6808015873015876,
+  "modul_olculen_px": 3.6666666666666665,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 77.0,
+    "ms": 134.53467674985404
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 77.0,
+    "ms": 82.07665269985682
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 77.0,
+    "ms": 143.34859909997704
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 77.0,
+    "ms": 98.44998300000043
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5575639692342143,
+    "kenar_px": 77.75000880997919,
+    "ms": 497.862761149986
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6873790340926184,
+    "kenar_px": 76.8942868345886,
+    "ms": 321.3516563498615
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5619805343503825,
+    "kenar_px": 77.75501056688545,
+    "ms": 633.0008624999209
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5171860778352719,
+    "kenar_px": 76.37804847958272,
+    "ms": 483.82986354993136
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    60.05
+   ]
+  ],
+  "toplama_sn": 2.3202970027923584
+ },
+ {
+  "irtifa": 60,
+  "yaw": 45,
+  "kenar_teorik_px": 77.29683333333334,
+  "modul_teorik_px": 3.6808015873015876,
+  "modul_olculen_px": 3.661924410048183,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.880922044906997,
+    "kenar_px": 76.90041261101184,
+    "ms": 130.62712264998027
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8930548609283994,
+    "kenar_px": 76.21369517174404,
+    "ms": 81.51557870003217
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.880922044906997,
+    "kenar_px": 76.90041261101184,
+    "ms": 140.3990552499863
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8930548609283994,
+    "kenar_px": 76.21369517174404,
+    "ms": 93.95897384999898
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.28424185715166955,
+    "kenar_px": 77.26743330391498,
+    "ms": 475.5089253499591
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.19405297004966063,
+    "kenar_px": 77.1847634672013,
+    "ms": 313.7531858500097
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.28424185715166955,
+    "kenar_px": 77.26743330391498,
+    "ms": 619.6104677500443
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6941659054556053,
+    "kenar_px": 76.7092636935876,
+    "ms": 470.75745160000224
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    60.05
+   ]
+  ],
+  "toplama_sn": 2.317260503768921
+ },
+ {
+  "irtifa": 70,
+  "yaw": 0,
+  "kenar_teorik_px": 66.25442857142858,
+  "modul_teorik_px": 3.1549727891156465,
+  "modul_olculen_px": 3.0952380952380953,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 65.0,
+    "ms": 131.05129590003344
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 65.0,
+    "ms": 82.36980255005619
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 65.0,
+    "ms": 140.76935969997066
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 65.0,
+    "ms": 96.85600489992794
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.49621960426192235,
+    "kenar_px": 66.25474504442563,
+    "ms": 493.9979694499698
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5303938120473569,
+    "kenar_px": 64.99934678564543,
+    "ms": 316.49985589997414
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7942761697225105,
+    "kenar_px": 67.0120219448939,
+    "ms": 618.8926552499879
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.16939334363816855,
+    "kenar_px": 65.4888790154246,
+    "ms": 475.1290233499958
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    70.05
+   ]
+  ],
+  "toplama_sn": 2.317531108856201
+ },
+ {
+  "irtifa": 70,
+  "yaw": 45,
+  "kenar_teorik_px": 66.25442857142858,
+  "modul_teorik_px": 3.1549727891156465,
+  "modul_olculen_px": 3.1651446395969276,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 66.46803743153548,
+    "ms": 134.6005073500237
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.6250186292103161,
+    "kenar_px": 64.68639761128398,
+    "ms": 83.04666945011832
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 66.46803743153548,
+    "ms": 143.44880280000325
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.6242034890291408,
+    "kenar_px": 64.71470733950949,
+    "ms": 94.85163570009263
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.625,
+    "kenar_px": 66.3190513623351,
+    "ms": 487.40634324997245
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.0557860482399222,
+    "kenar_px": 65.56864294978568,
+    "ms": 325.93644339992807
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.625,
+    "kenar_px": 66.3190513623351,
+    "ms": 642.1395117500197
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6555932301460781,
+    "kenar_px": 65.95072696763148,
+    "ms": 489.81927220002035
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    70.05
+   ]
+  ],
+  "toplama_sn": 2.3097407817840576
+ },
+ {
+  "irtifa": 80,
+  "yaw": 0,
+  "kenar_teorik_px": 57.97262500000001,
+  "modul_teorik_px": 2.7606011904761907,
+  "modul_olculen_px": 2.7142857142857144,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 57.0,
+    "ms": 139.32229115002883
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 57.0,
+    "ms": 86.14855625003202
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 57.0,
+    "ms": 151.49406509992787
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 57.0,
+    "ms": 104.58844059999137
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.4516211459350325,
+    "kenar_px": 58.626696730701156,
+    "ms": 518.6440516000175
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.2809979315864892,
+    "kenar_px": 57.12668090219658,
+    "ms": 339.7938223999972
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6741799502035442,
+    "kenar_px": 58.376696730701156,
+    "ms": 671.2908159000335
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.3464631814936681,
+    "kenar_px": 57.247784185485614,
+    "ms": 513.1729015499786
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    80.05
+   ]
+  ],
+  "toplama_sn": 2.165048122406006
+ },
+ {
+  "irtifa": 80,
+  "yaw": 45,
+  "kenar_teorik_px": 57.97262500000001,
+  "modul_teorik_px": 2.7606011904761907,
+  "modul_olculen_px": 2.78649883354426,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8799683809283622,
+    "kenar_px": 58.516475504429465,
+    "ms": 134.66409244992974
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.6974673427041325,
+    "kenar_px": 56.737566373906475,
+    "ms": 82.88268280000466
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8799683809283622,
+    "kenar_px": 58.516475504429465,
+    "ms": 143.70708765000018
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.6974673427041325,
+    "kenar_px": 56.737566373906475,
+    "ms": 98.06625095009167
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6228603822727233,
+    "kenar_px": 57.9369435664717,
+    "ms": 487.3577422000153
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6582901825268803,
+    "kenar_px": 57.46712774037545,
+    "ms": 318.37373739997474
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6228603822727233,
+    "kenar_px": 57.9369435664717,
+    "ms": 632.5621167000463
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6582901825268803,
+    "kenar_px": 57.46712774037545,
+    "ms": 486.2996846500664
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    80.05
+   ]
+  ],
+  "toplama_sn": 2.2569637298583984
+ },
+ {
+  "irtifa": 90,
+  "yaw": 0,
+  "kenar_teorik_px": 51.531222222222226,
+  "modul_teorik_px": 2.453867724867725,
+  "modul_olculen_px": 2.4285714285714284,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 51.0,
+    "ms": 131.38710504988467
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 51.0,
+    "ms": 81.06196829994587
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 51.0,
+    "ms": 140.84789730002285
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 51.0,
+    "ms": 94.66354615003638
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.35355339059327384,
+    "kenar_px": 51.5,
+    "ms": 471.7244678500265
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.28117230496197465,
+    "kenar_px": 51.126890226051636,
+    "ms": 309.1243021500077
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.35355339059327384,
+    "kenar_px": 51.5,
+    "ms": 610.1527523499271
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.28117230496197465,
+    "kenar_px": 51.126890226051636,
+    "ms": 465.9011271498912
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    90.05
+   ]
+  ],
+  "toplama_sn": 2.2195093631744385
+ },
+ {
+  "irtifa": 90,
+  "yaw": 45,
+  "kenar_teorik_px": 51.531222222222226,
+  "modul_teorik_px": 2.453867724867725,
+  "modul_olculen_px": 2.4498051761666333,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8794239225670598,
+    "kenar_px": 51.4459086994993,
+    "ms": 129.9790523000638
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8979158785533553,
+    "kenar_px": 50.76998260317282,
+    "ms": 79.70775779997439
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8794239225670598,
+    "kenar_px": 51.4459086994993,
+    "ms": 139.06669770003646
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8979158785533553,
+    "kenar_px": 50.76998260317282,
+    "ms": 92.73574839999128
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.44085119097931924,
+    "kenar_px": 51.884898338440806,
+    "ms": 470.3230191500552
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6609041168499394,
+    "kenar_px": 51.104755476916125,
+    "ms": 308.17792655004723
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.635859564533002,
+    "kenar_px": 51.62245730638098,
+    "ms": 609.6241360999784
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6556794492380865,
+    "kenar_px": 51.08115476063116,
+    "ms": 465.40805999991335
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    90.05
+   ]
+  ],
+  "toplama_sn": 2.3125052452087402
+ },
+ {
+  "irtifa": 100,
+  "yaw": 0,
+  "kenar_teorik_px": 46.3781,
+  "modul_teorik_px": 2.2084809523809525,
+  "modul_olculen_px": 2.142857142857143,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 45.0,
+    "ms": 134.30004625006404
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 45.0,
+    "ms": 84.26547125006891
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 45.0,
+    "ms": 142.2722390499075
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 45.0,
+    "ms": 96.26943114999449
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.556588997872747,
+    "kenar_px": 46.75003051040963,
+    "ms": 484.28136855004595
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.512480452792792,
+    "kenar_px": 45.39609839354897,
+    "ms": 320.9390352499895
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.556588997872747,
+    "kenar_px": 46.75003051040963,
+    "ms": 621.7732030500656
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.016656399367004474,
+    "kenar_px": 45.996926832074664,
+    "ms": 481.04695934998745
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    100.05
+   ]
+  ],
+  "toplama_sn": 2.2665750980377197
+ },
+ {
+  "irtifa": 100,
+  "yaw": 45,
+  "kenar_teorik_px": 46.3781,
+  "modul_teorik_px": 2.2084809523809525,
+  "modul_olculen_px": 2.222335598014864,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7071067811865477,
+    "kenar_px": 46.669047558312144,
+    "ms": 133.59314489998724
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 0.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": null,
+    "kenar_px": null,
+    "ms": 51.332605999937186
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.7262314906383829,
+    "kenar_px": 46.14553657962025,
+    "ms": 140.83252494997396
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 0.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": null,
+    "kenar_px": null,
+    "ms": 61.8420716999708
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.625,
+    "kenar_px": 46.531869192626196,
+    "ms": 484.89268684998024
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.0949781488826722,
+    "kenar_px": 45.59245469935388,
+    "ms": 315.9280149500546
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.625,
+    "kenar_px": 46.531869192626196,
+    "ms": 625.6232066499933
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.0949781488826722,
+    "kenar_px": 45.59245469935388,
+    "ms": 474.37957404993085
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    100.05
+   ]
+  ],
+  "toplama_sn": 2.3115644454956055
+ },
+ {
+  "irtifa": 120,
+  "yaw": 0,
+  "kenar_teorik_px": 38.64841666666667,
+  "modul_teorik_px": 1.8404007936507938,
+  "modul_olculen_px": 1.8830707228791983,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.14366788175642,
+    "kenar_px": 39.54448518046316,
+    "ms": 130.47228919995177
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 0.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": null,
+    "kenar_px": null,
+    "ms": 48.26315034995332
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 1.1180339887498945,
+    "kenar_px": 38.5,
+    "ms": 139.12703544997385
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 0.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": null,
+    "kenar_px": null,
+    "ms": 26.408002999892233
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.35355339059327384,
+    "kenar_px": 38.5,
+    "ms": 484.2902934500444
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.03291284015363294,
+    "kenar_px": 37.99557370304528,
+    "ms": 311.60898575008105
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.35355339059327384,
+    "kenar_px": 38.5,
+    "ms": 614.1830278499356
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 100.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.3878359770647358,
+    "kenar_px": 38.53522070905436,
+    "ms": 470.04333124989444
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    120.05
+   ]
+  ],
+  "toplama_sn": 2.3114523887634277
+ },
+ {
+  "irtifa": 120,
+  "yaw": 45,
+  "kenar_teorik_px": 38.64841666666667,
+  "modul_teorik_px": 1.8404007936507938,
+  "modul_olculen_px": 1.8437792477671588,
+  "olcum_kaynagi": "ham|QRCodeDetector",
+  "kareler_arasi_maks_fark": 0,
+  "kare": 20,
+  "sonuc": {
+   "ham|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8779123747988817,
+    "kenar_px": 38.71936420311034,
+    "ms": 140.33607945002586
+   },
+   "ham|QRCodeDetectorAruco": {
+    "bulma_%": 0.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": null,
+    "kenar_px": null,
+    "ms": 15.036150649984847
+   },
+   "adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8779123747988817,
+    "kenar_px": 38.71936420311034,
+    "ms": 149.07162804993277
+   },
+   "adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.9029507030357606,
+    "kenar_px": 38.05469464733481,
+    "ms": 103.0435762499792
+   },
+   "2x|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8710300482136487,
+    "kenar_px": 38.99003368951615,
+    "ms": 514.4373702999474
+   },
+   "2x|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.5487169347412102,
+    "kenar_px": 38.195939038794634,
+    "ms": 345.39753884992024
+   },
+   "2x+adaptif|QRCodeDetector": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.8710300482136487,
+    "kenar_px": 38.99003368951615,
+    "ms": 683.5506237501704
+   },
+   "2x+adaptif|QRCodeDetectorAruco": {
+    "bulma_%": 100.0,
+    "cozme_%": 0.0,
+    "yanlis_icerik": 0,
+    "merkez_px": 0.6687446761490353,
+    "kenar_px": 38.381145568078445,
+    "ms": 510.97133765010767
+   }
+  },
+  "set_pose": true,
+  "poz": [
+   [
+    227.0
+   ],
+   [
+    -60.0,
+    -60.0,
+    120.05
+   ]
+  ],
+  "toplama_sn": 2.17309308052063
+ }
+]

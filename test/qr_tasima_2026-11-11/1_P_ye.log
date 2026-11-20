@@ -1,0 +1,4 @@
+06:36:05  uav0 (-97, 332, 103 m) → P=(-406, -260) 60 m
+06:36:05  DO_REPOSITION → H (-406, -260), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 115 m (denetlendi ≥ 40), koridor serbest
+06:36:05  transit kodu 0: {'bacaklar': [{'tur': 'H', 'nereden': [-97, 332], 'nereye': [-406, -260], 'direk_m': 115.5}], 'ara_nokta': 0, 'ret': None}
+06:36:59  VARDI: P'ye 100 m, irtifa 60.5 m

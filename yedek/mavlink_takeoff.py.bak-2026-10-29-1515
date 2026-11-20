@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""
+mavlink_takeoff.py — QGC olmadan tek bir PX4 aracını pymavlink ile kaldırır ve izler.
+
+Akış:
+  1. GCS kalp atışı gönderir (1 Hz) → PX4'ün "No connection to the GCS" engeli kalkar.
+  2. MIS_TAKEOFF_ALT'ı ayarlar, Takeoff moduna alır, arm eder.
+  3. Her 5 sn'de irtifa / uçuş modu / gz sim belleğini yazar; PX4 STATUSTEXT mesajlarını
+     (failsafe, landing vb.) geldiği anda tam metniyle yazar.
+  4. Uçak hedefin üstünde turlamaya (LOITER) başlayınca --watch sn daha izler.
+  5. Sonra kapanmaz: kalp atışını sürdürür, 30 sn'de bir durum yazar (Ctrl+C / SIGTERM ile biter).
+
+Kullanım:
+  python3 mavlink_takeoff.py                       # uav0, 100 m, 150 sn izleme
+  python3 mavlink_takeoff.py --alt 100 --circle-alt 80 --watch 150
+
+Bağlantı: uav0'ın onboard MAVLink bağlantısı (PX4 → udp 14540). 14550'ye iki araç birden
+yayın yaptığı için kullanılmaz.
+
+Not: Airframe 4008'de NAV_DLL_ACT=2. Script durup kalp atışı kesilirse PX4 veri bağlantısı
+kaybında Return moduna geçer.
+"""
+
+import argparse
+import math
+import signal
+import struct
+import subprocess
+import threading
+import time
+
+from pymavlink import mavutil
+
+LOITER_MODES = ("LOITER", "AUTO_LOITER", "HOLD")
+
+
+def log(msg: str) -> None:
+    print(f"{time.strftime('%H:%M:%S')}  {msg}", flush=True)
+
+
+def gz_rss_mb():
+    """gz sim sunucusunun RSS belleği [MB]; bulunamazsa None."""
+    pids = subprocess.run(["pgrep", "-f", "^gz sim .*-s"],
+                          capture_output=True, text=True).stdout.split()
+    if not pids:
+        return None
+    try:
+        with open(f"/proc/{pids[0]}/status") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    return int(line.split()[1]) // 1024
+    except FileNotFoundError:
+        return None
+    return None
+
+
+class Vehicle:
+    """Tek PX4 aracı: kalp atışı ve okuma iş parçacıkları, son durum alanları."""
+
+    def __init__(self, url: str, sysid: int):
+        self.sysid = sysid
+        self.m = mavutil.mavlink_connection(url, source_system=255, source_component=190)
+        self.send_lock = threading.Lock()
+        self.stop = threading.Event()
+
+        self.alt = float("nan")       # Eve göre irtifa [m]
+        self.airspeed = float("nan")  # [m/s]
+        self.mode = "?"
+        self.armed = False
+        self.heartbeat_seen = threading.Event()
+        self.texts = []               # (zaman, metin)
+        self.acks = {}                # komut → sonuç
+        self.params = {}              # isim → değer
+
+        threading.Thread(target=self._heartbeat_loop, daemon=True).start()
+        threading.Thread(target=self._read_loop, daemon=True).start()
+
+    def _heartbeat_loop(self):
+        while not self.stop.is_set():
+            with self.send_lock:
+                self.m.mav.heartbeat_send(mavutil.mavlink.MAV_TYPE_GCS,
+                                          mavutil.mavlink.MAV_AUTOPILOT_INVALID,
+                                          0, 0, mavutil.mavlink.MAV_STATE_ACTIVE)
+            time.sleep(1.0)
+
+    def _read_loop(self):
+        while not self.stop.is_set():
+            msg = self.m.recv_match(blocking=True, timeout=1.0)
+            if msg is None or msg.get_srcSystem() != self.sysid:
+                continue
+            kind = msg.get_type()
+            if kind == "HEARTBEAT" and msg.get_srcComponent() == 1:
+                self.mode = mavutil.mode_string_v10(msg)
+                self.armed = bool(msg.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED)
+                self.heartbeat_seen.set()
+            elif kind == "GLOBAL_POSITION_INT":
+                self.alt = msg.relative_alt / 1000.0
+            elif kind == "VFR_HUD":
+                self.airspeed = msg.airspeed
+            elif kind == "STATUSTEXT":
+                text = msg.text.rstrip("\x00")
+                self.texts.append((time.time(), text))
+                log(f"PX4 [sev {msg.severity}]: {text}")
+            elif kind == "COMMAND_ACK":
+                self.acks[msg.command] = msg.result
+            elif kind == "PARAM_VALUE":
+                value = msg.param_value
+                # PX4 tamsayı parametreleri float alanında bayt bayt gönderir (2 → 2.8e-45).
+                if msg.param_type == mavutil.mavlink.MAV_PARAM_TYPE_INT32:
+                    value = struct.unpack("<i", struct.pack("<f", value))[0]
+                self.params[msg.param_id.rstrip("\x00")] = value
+
+    def get_param(self, name: str, timeout: float = 5.0):
+        self.params.pop(name, None)
+        with self.send_lock:
+            self.m.mav.param_request_read_send(self.sysid, 1, name.encode(), -1)
+        return self._wait(lambda: self.params.get(name), timeout)
+
+    def set_param(self, name: str, value: float, timeout: float = 5.0):
+        self.params.pop(name, None)
+        with self.send_lock:
+            self.m.mav.param_set_send(self.sysid, 1, name.encode(), value,
+                                      mavutil.mavlink.MAV_PARAM_TYPE_REAL32)
+        return self._wait(lambda: self.params.get(name), timeout)
+
+    def command(self, cmd: int, *params: float, timeout: float = 5.0):
+        """COMMAND_LONG gönderir, COMMAND_ACK sonucunu döndürür (zaman aşımında None)."""
+        p = list(params) + [0.0] * (7 - len(params))
+        self.acks.pop(cmd, None)
+        with self.send_lock:
+            self.m.mav.command_long_send(self.sysid, 1, cmd, 0, *p)
+        return self._wait(lambda: self.acks.get(cmd), timeout)
+
+    @staticmethod
+    def _wait(getter, timeout: float):
+        end = time.time() + timeout
+        while time.time() < end:
+            value = getter()
+            if value is not None:
+                return value
+            time.sleep(0.05)
+        return None
+
+    def status_line(self) -> str:
+        rss = gz_rss_mb()
+        return (f"irtifa={self.alt:7.1f} m  mod={self.mode:<12} "
+                f"{'ARMED' if self.armed else 'disarmed':<8} hava_hızı={self.airspeed:5.1f} m/s  "
+                f"gz_RSS={rss if rss is not None else '?'} MB")
+
+
+def ack_name(result) -> str:
+    if result is None:
+        return "ACK yok (zaman aşımı)"
+    return mavutil.mavlink.enums["MAV_RESULT"][result].name
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--url", default="udpin:0.0.0.0:14540", help="MAVLink bağlantısı (uav0 onboard)")
+    ap.add_argument("--sysid", type=int, default=1, help="Hedef aracın MAVLink sistem kimliği")
+    ap.add_argument("--alt", type=float, default=100.0, help="MIS_TAKEOFF_ALT [m]")
+    ap.add_argument("--circle-alt", type=float, default=80.0, help="Turlama kabul eşiği [m]")
+    ap.add_argument("--climb-timeout", type=float, default=300.0, help="Eşiğe ulaşma süresi sınırı [sn]")
+    ap.add_argument("--watch", type=float, default=150.0, help="Turlama başladıktan sonra izleme [sn]")
+    args = ap.parse_args()
+
+    signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt))
+
+    v = Vehicle(args.url, args.sysid)
+    log(f"Bağlanılıyor: {args.url} (sysid {args.sysid}), GCS kalp atışı 1 Hz gönderiliyor")
+    if not v.heartbeat_seen.wait(15):
+        log("HATA: 15 sn içinde PX4 kalp atışı gelmedi")
+        return 1
+    log(f"PX4 kalp atışı alındı — {v.status_line()}")
+
+    # GCS engeli: PX4 kalp atışımızı görünce "Ready for takeoff!" yayınlar.
+    ready = v._wait(lambda: any("Ready for takeoff" in t for _, t in v.texts) or None, 20)
+    log("GCS engeli kalktı: 'Ready for takeoff' alındı" if ready
+        else "UYARI: 20 sn içinde 'Ready for takeoff' gelmedi; yine de arm denenecek")
+
+    log(f"NAV_DLL_ACT = {v.get_param('NAV_DLL_ACT')}  (veri bağlantısı kaybı eylemi)")
+    log(f"MIS_TAKEOFF_ALT önce = {v.get_param('MIS_TAKEOFF_ALT')}")
+    new_alt = v.set_param("MIS_TAKEOFF_ALT", args.alt)
+    log(f"MIS_TAKEOFF_ALT şimdi = {new_alt}")
+    if new_alt is None or abs(new_alt - args.alt) > 0.01:
+        log("HATA: MIS_TAKEOFF_ALT ayarlanamadı")
+        return 1
+
+    # Önce Takeoff modu (param7 NaN → MIS_TAKEOFF_ALT), sonra arm. Reddedilirse ters sıra.
+    takeoff = v.command(mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 0, 0, math.nan, math.nan, math.nan, math.nan)
+    log(f"NAV_TAKEOFF → {ack_name(takeoff)}")
+    arm = v.command(mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)
+    log(f"ARM → {ack_name(arm)}")
+    if takeoff != mavutil.mavlink.MAV_RESULT_ACCEPTED and arm == mavutil.mavlink.MAV_RESULT_ACCEPTED:
+        takeoff = v.command(mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 0, 0, math.nan, math.nan, math.nan, math.nan)
+        log(f"NAV_TAKEOFF (arm sonrası) → {ack_name(takeoff)}")
+    if arm != mavutil.mavlink.MAV_RESULT_ACCEPTED or takeoff != mavutil.mavlink.MAV_RESULT_ACCEPTED:
+        log("HATA: arm veya kalkış kabul edilmedi")
+        return 1
+
+    # Tırmanış: eşiğin üstünde ve LOITER modunda olana kadar 5 sn'de bir durum.
+    start = time.time()
+    circling_since = None
+    while time.time() - start < args.climb_timeout:
+        log(v.status_line())
+        if v.alt >= args.circle_alt and v.mode in LOITER_MODES:
+            circling_since = time.time()
+            break
+        time.sleep(5)
+    if circling_since is None:
+        log(f"HATA: {args.climb_timeout:.0f} sn içinde {args.circle_alt:.0f} m üstünde turlamaya geçmedi")
+        return 1
+    log(f"Turlama başladı ({time.time() - start:.0f} sn sonra) — {args.watch:.0f} sn izleniyor")
+
+    while time.time() - circling_since < args.watch:
+        time.sleep(5)
+        log(v.status_line())
+    log("İzleme tamamlandı. Kalp atışı sürüyor (durdurmak için SIGTERM / Ctrl+C); 30 sn'de bir durum.")
+
+    while True:
+        time.sleep(30)
+        log(v.status_line())
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        log("Durduruldu — kalp atışı kesildi")

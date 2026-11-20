@@ -1,0 +1,24 @@
+19:17:06  kaydedici hazır: /home/yusuf22_04/iha_sim_v2/test/qr_gecis_2026-10-30/kayit; pencere s ∈ [−250, +100] m, hedef (-60, -60), disk sınırı 3.0 GB, PNG seviye 1
+19:17:36  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:18:06  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:18:36  durum: kayıt=kapalı offboard=False kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:19:06  durum: kayıt=kapalı offboard=True kare=0 düşen=0 kuyruk=0 disk=0 MB
+19:19:36  KAYIT BAŞLADI: geçiş 2, s=-250 m, hedefe yatay 250 m
+19:19:36  durum: kayıt=AÇIK offboard=True kare=2 düşen=0 kuyruk=0 disk=0 MB
+19:20:06  durum: kayıt=AÇIK offboard=True kare=214 düşen=0 kuyruk=0 disk=8 MB
+19:20:08  KAYIT BİTTİ: geçiş 2, 224 kare, 0 düşen, s=+100 m, 31.6 sn, disk toplam 8 MB
+19:20:36  durum: kayıt=kapalı offboard=False kare=224 düşen=0 kuyruk=0 disk=8 MB
+19:21:06  durum: kayıt=kapalı offboard=False kare=224 düşen=0 kuyruk=0 disk=8 MB
+19:21:36  durum: kayıt=kapalı offboard=False kare=224 düşen=0 kuyruk=0 disk=8 MB
+19:22:06  durum: kayıt=kapalı offboard=True kare=224 düşen=0 kuyruk=0 disk=8 MB
+19:22:36  durum: kayıt=kapalı offboard=True kare=224 düşen=0 kuyruk=0 disk=8 MB
+19:22:37  KAYIT BAŞLADI: geçiş 3, s=-250 m, hedefe yatay 250 m
+19:23:06  durum: kayıt=AÇIK offboard=True kare=428 düşen=0 kuyruk=0 disk=16 MB
+19:23:09  KAYIT BİTTİ: geçiş 3, 226 kare, 0 düşen, s=+100 m, 31.6 sn, disk toplam 16 MB
+19:23:36  durum: kayıt=kapalı offboard=False kare=450 düşen=0 kuyruk=0 disk=16 MB
+19:24:06  durum: kayıt=kapalı offboard=False kare=450 düşen=0 kuyruk=0 disk=16 MB
+19:24:36  durum: kayıt=kapalı offboard=False kare=450 düşen=0 kuyruk=0 disk=16 MB
+19:24:38  durduruluyor — kuyruk boşaltılıyor
+19:24:38  ÖZET geçiş 2: 19:19:36–19:20:08, 224 kare, 0 düşen
+19:24:38  ÖZET geçiş 3: 19:22:37–19:23:09, 226 kare, 0 düşen
+19:24:38  ÖZET toplam: 450 kare, 0 düşen, disk 16 MB

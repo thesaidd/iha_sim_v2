@@ -1,0 +1,228 @@
+#!/usr/bin/env python3
+"""
+orbit_watch.py — Orbit testini PX4 topic'lerinden bağımsız izler, gerekirse orbit_abort çağırır.
+
+Araç OFFBOARD'a geçince süre başlar; her --period sn'de mod, irtifa, merkeze uzaklık,
+yarıçap hatası, hava hızı, yer hızı, açı farkı ve gz sim belleğini yazar. Sonunda tabloyu ve
+yakalama sonrası özeti basar, (varsayılan) aracı Hold'a alır.
+
+Açı farkı: düğümün yayınladığı trajectory_setpoint'in merkeze göre açısı − uçağın açısı
+(derece, −180…180). Orbit θ artan yönde döndüğü için pozitif = setpoint önde (uçak geride).
+Değişim: ardışık satırlar arasındaki açı farkı değişimi [°/sn]; sıfırdan uzaksa faz kayıyor.
+
+Kurallar (0,5 sn'de bir denetlenir):
+  Her zaman:   |irtifa − hedef| > --alt-tol (20 m), Offboard'dan beklenmeyen çıkış
+               (failsafe ya da dış komut), iniş algılanması, gz RSS > başlangıç + --mem-growth-mb
+  Yakalama:    |yarıçap hatası| < --capture-tol (30 m), --capture-hold (10 sn) kesintisiz
+  Yakalamadan önce: --capture-timeout (90 sn) içinde yakalanmazsa abort
+  Yakalamadan sonra: |yarıçap hatası| > --track-tol (40 m) ise abort
+Mod bilgisi vehicle_control_mode'dan okunur; vehicle_status_v2 px4_msgs uyumsuzluğu
+nedeniyle ROS'a ulaşmıyor (bkz. v2_orbit_mission.py). Failsafe ayrıntısı (RTL/Land)
+mavlink_takeoff.py logundaki PX4 STATUSTEXT satırlarında görülür.
+
+Kullanım:
+  source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash
+  python3 orbit_watch.py --uav 0 --duration 240
+Çıkış kodu: 0 = başarılı, 2 = abort, 3 = Offboard'a geçilmedi.
+"""
+
+import argparse
+import math
+import os
+import subprocess
+import time
+
+import rclpy
+from rclpy.node import Node
+from px4_msgs.msg import (AirspeedValidated, TrajectorySetpoint, VehicleControlMode, VehicleLandDetected,
+                          VehicleLocalPosition)
+
+from mavlink_takeoff import gz_rss_mb
+from v2_orbit_mission import SENSOR_QOS, control_mode_name, get_fmu_prefix
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+class Watch(Node):
+    def __init__(self, uav_id: int):
+        super().__init__(f"orbit_watch_uav{uav_id}")
+        ns = get_fmu_prefix(uav_id)
+        self.mode = None
+        self.pos = None
+        self.airspeed = math.nan
+        self.landed = None
+        self.setpoint = None
+        self.create_subscription(TrajectorySetpoint, f"{ns}/in/trajectory_setpoint",
+                                 lambda m: setattr(self, "setpoint", m), SENSOR_QOS)
+        self.create_subscription(VehicleControlMode, f"{ns}/out/vehicle_control_mode",
+                                 lambda m: setattr(self, "mode", m), SENSOR_QOS)
+        self.create_subscription(VehicleLocalPosition, f"{ns}/out/vehicle_local_position_v1",
+                                 lambda m: setattr(self, "pos", m), SENSOR_QOS)
+        self.create_subscription(AirspeedValidated, f"{ns}/out/airspeed_validated_v1",
+                                 lambda m: setattr(self, "airspeed", m.calibrated_airspeed_m_s), SENSOR_QOS)
+        self.create_subscription(VehicleLandDetected, f"{ns}/out/vehicle_land_detected",
+                                 lambda m: setattr(self, "landed", m.landed), SENSOR_QOS)
+
+
+def log(msg: str) -> None:
+    print(f"{time.strftime('%H:%M:%S')}  {msg}", flush=True)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--uav", type=int, default=0)
+    ap.add_argument("--alt", type=float, help="Hedef irtifa [m] (varsayılan 100 + 20·uav)")
+    ap.add_argument("--center-n", type=float, default=0.0)
+    ap.add_argument("--center-e", type=float, default=0.0)
+    ap.add_argument("--radius", type=float, default=100.0)
+    ap.add_argument("--duration", type=float, default=240.0, help="OFFBOARD sonrası izleme [sn]")
+    ap.add_argument("--period", type=float, default=5.0)
+    ap.add_argument("--engage-timeout", type=float, default=60.0, help="OFFBOARD bekleme sınırı [sn]")
+    ap.add_argument("--alt-tol", type=float, default=20.0)
+    ap.add_argument("--capture-tol", type=float, default=30.0)
+    ap.add_argument("--capture-hold", type=float, default=10.0)
+    ap.add_argument("--capture-timeout", type=float, default=90.0)
+    ap.add_argument("--track-tol", type=float, default=40.0)
+    ap.add_argument("--mem-growth-mb", type=float, default=100.0)
+    ap.add_argument("--no-hold-at-end", action="store_true", help="Başarıda aracı Hold'a alma")
+    args = ap.parse_args()
+    target_alt = args.alt if args.alt is not None else 100.0 + 20.0 * args.uav
+
+    rclpy.init()
+    w = Watch(args.uav)
+    rss0 = gz_rss_mb()
+    log(f"[uav{args.uav}] izleme: hedef irtifa {target_alt:.0f} m, merkez ({args.center_n:.0f}, "
+        f"{args.center_e:.0f}), R {args.radius:.0f} m, gz RSS başlangıç {rss0} MB")
+
+    def offboard() -> bool:
+        return bool(w.mode and w.mode.flag_control_offboard_enabled)
+
+    def snapshot():
+        p, sp = w.pos, w.setpoint
+        dn, de = p.x - args.center_n, p.y - args.center_e
+        dist = math.hypot(dn, de)
+        phase_diff = math.nan
+        if sp is not None:
+            sp_angle = math.atan2(sp.position[1] - args.center_e, sp.position[0] - args.center_n)
+            phase_diff = math.degrees(math.remainder(sp_angle - math.atan2(de, dn), 2.0 * math.pi))
+        return {
+            "açı_farkı": phase_diff,
+            "zaman": time.strftime("%H:%M:%S"),
+            "mod": control_mode_name(w.mode),
+            "irtifa": -p.z,
+            "merkeze": dist,
+            "yarıçap_hatası": dist - args.radius,
+            "hava_hızı": w.airspeed,
+            "yer_hızı": math.hypot(p.vx, p.vy),
+            "gz_MB": gz_rss_mb(),
+        }
+
+    def abort(reason: str, row) -> int:
+        log(f"[uav{args.uav}] ABORT: {reason} | o an: mod={row['mod']} irtifa={row['irtifa']:.1f} m "
+            f"merkeze={row['merkeze']:.1f} m yarıçap_hatası={row['yarıçap_hatası']:+.1f} m "
+            f"hava_hızı={row['hava_hızı']:.1f} m/s yer_hızı={row['yer_hızı']:.1f} m/s "
+            f"açı_farkı={row['açı_farkı']:+.1f}° gz={row['gz_MB']} MB")
+        subprocess.run([os.path.join(HERE, "orbit_abort"), str(args.uav)])
+        return 2
+
+    # OFFBOARD bekle
+    start = time.monotonic()
+    while time.monotonic() - start < args.engage_timeout:
+        rclpy.spin_once(w, timeout_sec=0.1)
+        if offboard() and w.pos is not None:
+            break
+    else:
+        log(f"[uav{args.uav}] {args.engage_timeout:.0f} sn içinde OFFBOARD'a geçilmedi "
+            f"(mod={control_mode_name(w.mode)})")
+        return 3
+
+    engaged = time.monotonic()
+    log(f"[uav{args.uav}] OFFBOARD başladı — {args.duration:.0f} sn izleniyor")
+    rows, captured, within_since = [], None, None
+    next_row, next_check = engaged, engaged
+    code = 0
+    while True:
+        rclpy.spin_once(w, timeout_sec=0.05)
+        now = time.monotonic()
+        elapsed = now - engaged
+        if now >= next_row:
+            row = snapshot()
+            row["t"] = elapsed
+            row["açı_değişimi"] = math.nan
+            if rows:
+                prev = rows[-1]
+                step = math.remainder(math.radians(row["açı_farkı"] - prev["açı_farkı"]), 2.0 * math.pi)
+                row["açı_değişimi"] = math.degrees(step) / (row["t"] - prev["t"])
+            rows.append(row)
+            log(f"[uav{args.uav}] t={elapsed:5.0f} sn  mod={row['mod']:<8} irtifa={row['irtifa']:6.1f} m  "
+                f"merkeze={row['merkeze']:6.1f} m  yarıçap_hatası={row['yarıçap_hatası']:+6.1f} m  "
+                f"hava_hızı={row['hava_hızı']:5.1f} m/s  yer_hızı={row['yer_hızı']:5.1f} m/s  "
+                f"açı_farkı={row['açı_farkı']:+6.1f}°  değişim={row['açı_değişimi']:+5.2f} °/sn  gz={row['gz_MB']} MB")
+            next_row += args.period
+        if elapsed >= args.duration:
+            break
+        if now < next_check:
+            continue
+        next_check = now + 0.5
+
+        row = snapshot()
+        radius_err = abs(row["yarıçap_hatası"])
+        if not offboard():
+            code = abort("Offboard'dan beklenmeyen çıkış (failsafe ya da dış komut)", row)
+            break
+        if w.landed:
+            code = abort("iniş algılandı", row)
+            break
+        if abs(row["irtifa"] - target_alt) > args.alt_tol:
+            code = abort(f"irtifa hedeften {row['irtifa'] - target_alt:+.1f} m saptı (sınır ±{args.alt_tol:.0f} m)", row)
+            break
+        if rss0 is not None and row["gz_MB"] is not None and row["gz_MB"] > rss0 + args.mem_growth_mb:
+            code = abort(f"gz RSS {row['gz_MB']} MB > {rss0} + {args.mem_growth_mb:.0f} MB", row)
+            break
+        if captured is None:
+            if radius_err < args.capture_tol:
+                within_since = elapsed if within_since is None else within_since
+                if elapsed - within_since >= args.capture_hold:
+                    captured = elapsed
+                    log(f"[uav{args.uav}] YAKALANDI: t={elapsed:.0f} sn (hata {args.capture_hold:.0f} sn "
+                        f"boyunca < {args.capture_tol:.0f} m)")
+            else:
+                within_since = None
+            if captured is None and elapsed > args.capture_timeout:
+                code = abort(f"{args.capture_timeout:.0f} sn içinde yakalanmadı", row)
+                break
+        elif radius_err > args.track_tol:
+            code = abort(f"yakalama sonrası yarıçap hatası {row['yarıçap_hatası']:+.1f} m > {args.track_tol:.0f} m", row)
+            break
+
+    print("\n| t (sn) | zaman | mod | irtifa (m) | merkeze (m) | yarıçap hatası (m) | hava hızı (m/s) | "
+          "yer hızı (m/s) | açı farkı (°) | değişim (°/sn) | gz (MB) |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|")
+    for r in rows:
+        print(f"| {r['t']:.0f} | {r['zaman']} | {r['mod']} | {r['irtifa']:.1f} | {r['merkeze']:.1f} | "
+              f"{r['yarıçap_hatası']:+.1f} | {r['hava_hızı']:.1f} | {r['yer_hızı']:.1f} | "
+              f"{r['açı_farkı']:+.1f} | {r['açı_değişimi']:+.2f} | {r['gz_MB']} |")
+    if captured is not None:
+        after = [r for r in rows if r["t"] >= captured]
+        if after:
+            errs = [abs(r["yarıçap_hatası"]) for r in after]
+            alts = [r["irtifa"] for r in after]
+            gs = [r["yer_hızı"] for r in after]
+            print(f"\nYakalama: {captured:.0f}. sn. Sonrası ({len(after)} örnek): yarıçap hatası ort "
+                  f"{sum(errs)/len(errs):.1f} m, maks {max(errs):.1f} m; irtifa {min(alts):.1f}–{max(alts):.1f} m; "
+                  f"ort. yer hızı {sum(gs)/len(gs):.1f} m/s; açı farkı başlangıç {after[0]['açı_farkı']:+.1f}° "
+                  f"(t={after[0]['t']:.0f}) → bitiş {after[-1]['açı_farkı']:+.1f}° (t={after[-1]['t']:.0f})")
+    else:
+        print("\nYakalama olmadı.")
+
+    if code == 0:
+        log(f"[uav{args.uav}] Test başarılı ({args.duration:.0f} sn).")
+        if not args.no_hold_at_end:
+            subprocess.run([os.path.join(HERE, "orbit_abort"), str(args.uav)])
+    w.destroy_node()
+    rclpy.shutdown()
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

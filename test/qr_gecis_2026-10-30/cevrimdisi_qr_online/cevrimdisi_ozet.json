@@ -1,0 +1,44 @@
+{
+ "gecis_01": {
+  "kare": 228,
+  "kadrajda": 9,
+  "bulunan": 9,
+  "cozulen": 9,
+  "islem_ms_ort": 5.4,
+  "islem_ms_maks": 45.3,
+  "ort_hata_dN_dE": [
+   -1.015,
+   -1.401
+  ],
+  "yatay_ort": 1.795,
+  "yatay_maks": 2.294
+ },
+ "gecis_02": {
+  "kare": 224,
+  "kadrajda": 8,
+  "bulunan": 8,
+  "cozulen": 8,
+  "islem_ms_ort": 4.9,
+  "islem_ms_maks": 43.7,
+  "ort_hata_dN_dE": [
+   -0.74,
+   -0.537
+  ],
+  "yatay_ort": 1.033,
+  "yatay_maks": 1.226
+ },
+ "gecis_03": {
+  "kare": 226,
+  "kadrajda": 8,
+  "bulunan": 8,
+  "cozulen": 8,
+  "islem_ms_ort": 4.8,
+  "islem_ms_maks": 37.9,
+  "ort_hata_dN_dE": [
+   -0.889,
+   -1.203
+  ],
+  "yatay_ort": 1.548,
+  "yatay_maks": 1.813
+ }
+}

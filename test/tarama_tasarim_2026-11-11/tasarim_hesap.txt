@@ -1,0 +1,79 @@
+## Arena
+- direk K: (N +140, E +0.0); kutu kenarına en yakın 10.0 m İÇERİDE; merkezden 140 m
+- direk G: (N -140, E +0.0); kutu kenarına en yakın 10.0 m İÇERİDE; merkezden 140 m
+- direk B: (N +0, E -140.0); kutu kenarına en yakın 10.0 m İÇERİDE; merkezden 140 m
+- direk D: (N +70, E +121.2); kutu kenarına en yakın 28.8 m İÇERİDE; merkezden 140 m
+- bina ev: (N 60, E -200), 8 m → 60 m'de dikey boşluk 52 m; kutu dışında
+- bina depo: (N -100, E -190), 10 m → 60 m'de dikey boşluk 50 m; kutu dışında
+- bina kule: (N 210, E -80), 24 m → 60 m'de dikey boşluk 36 m; kutu dışında
+- bina atolye: (N -230, E 60), 9 m → 60 m'de dikey boşluk 51 m; kutu dışında
+- bina silo: (N -220, E -250), 16 m → 60 m'de dikey boşluk 44 m; kutu dışında
+- bina hangar: (N 220, E 200), 12 m → 60 m'de dikey boşluk 48 m; kutu dışında
+
+## k
+d=16.0: k=ceil(2·80/d)=10 (D=160 m); paylı ceil(170/d)=11 (D=176 m); kutuya sığan hat 18; 2k=22
+
+## Yön ve direk payı
+| yön | direk payı | hat | geometrik kapsama | C | POD Koopman | toplam m | süre sn | stadyum | ampul | en küçük D | hat–direk | dönüş–direk |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0° | 40 | 9 | %44.4 | 0.48 | %38 | 6622 | 441 | 1 | 7 | 80.0 | 40.0 | 64.0 |
+| 0° | 25 | 13 | %64.4 | 0.69 | %50 | 9566 | 638 | 3 | 9 | 64.2 | 25.0 | 55.9 |
+| 0° | 20 | 16 | %76.4 | 0.85 | %57 | 11497 | 766 | 6 | 9 | 40.0 | 20.0 | 53.9 |
+| 0° | 15 | 17 | %85.0 | 0.91 | %60 | 11847 | 790 | 9 | 7 | 30.0 | 15.0 | 52.2 |
+| 90° | 40 | 5 yerleşti | — | — | — | PLAN YOK (dönüşler koridor/alan dışı) | | | | | | |
+| 90° | 25 | 13 yerleşti | — | — | — | PLAN YOK (dönüşler koridor/alan dışı) | | | | | | |
+| 90° | 20 | 14 yerleşti | — | — | — | PLAN YOK (dönüşler koridor/alan dışı) | | | | | | |
+| 90° | 15 | 16 yerleşti | — | — | — | PLAN YOK (dönüşler koridor/alan dışı) | | | | | | |
+
+## Karşılaştırma
+| yöntem | direk payı | hat | hat aralığı | geometrik kapsama | C | POD Koopman | hat m | dönüş m | toplam m | süre sn | dönüşler |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| atlamalı (dar aralık, atlamalı sıra) | 40 | 9 | 13.7–80.0 | %44.4 | 0.48 | %38 | 3420 | 3202 | 6622 | 441 | 1 stadyum + 7 ampul |
+| sıralı dar (aynı hatlar, numara sırası) | 40 | 9 | 13.7–80.0 | %44.4 | 0.48 | %38 | 3420 | 4763 | 8183 | 546 | 0 stadyum + 8 ampul |
+| atlamasız seyrek (aralık 2R) | 40 | 2 | 170.0–170.0 | %10.7 | 0.11 | %10 | 760 | 267 | 1027 | 68 | 1 stadyum + 0 ampul |
+| atlamalı (dar aralık, atlamalı sıra) | 20 | 16 | 13.5–40.4 | %76.4 | 0.85 | %57 | 6080 | 5417 | 11497 | 766 | 6 stadyum + 9 ampul |
+| sıralı dar (aynı hatlar, numara sırası) | 20 | 16 | 13.5–40.4 | %76.4 | 0.85 | %57 | 6080 | 9037 | 15117 | 1008 | 0 stadyum + 15 ampul |
+| atlamasız seyrek (aralık 2R) | 20 | 2 | 170.0–170.0 | %10.7 | 0.11 | %10 | 760 | 267 | 1027 | 68 | 1 stadyum + 0 ampul |
+
+## Sıra ve geçişler (direk payı 40)
+serbest yanal aralıklar: [(-100.0, -40.0), (40.0, 81.2)] bloklu: [(-180, -100, 'B'), (-40, 40, 'G'), (-40, 40, 'K'), (81, 161, 'D')]
+giriş Hold merkezi (-340, 40), çember–direk 124 m
+| # | hat c (E) | yön | sonraki hata D | ≥ 2R_min (160) | ≥ 170 (paylı) | bağlantı | uzunluk | dönüş–direk | çıkış Hold merkezi |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | -40.0 | K | 80.0 | HAYIR | HAYIR | ampul | 520 | 64 | (290, 40) |
+| 2 | +40.0 | G | 110.0 | HAYIR | HAYIR | ampul | 472 | 64 | (-290, -40) |
+| 3 | -70.0 | K | 137.5 | HAYIR | HAYIR | ampul | 417 | 84 | (290, 10) |
+| 4 | +67.5 | G | 167.5 | evet | HAYIR | ampul | 309 | 84 | (-290, -13) |
+| 5 | -100.0 | K | 181.2 | evet | evet | stadyum | 278 | 95 | (290, -20) |
+| 6 | +81.2 | G | 166.2 | evet | HAYIR | ampul | 318 | 95 | (-290, 1) |
+| 7 | -85.0 | K | 138.7 | HAYIR | HAYIR | ampul | 414 | 73 | (290, -5) |
+| 8 | +53.7 | G | 108.7 | HAYIR | HAYIR | ampul | 474 | 73 | (-290, -26) |
+| 9 | -55.0 | K | — | | | | |  | (290, 25) |
+kitap sırası (k=11): [-100, -85, -70, -55, -40, 40, 54, 67, 81]; geçiş D: [15, 15, 15, 15, 80, 14, 14, 14]; < 170 olan 8/8
+dönüşlerin en uzak noktası |N| = 390 m; QR (−60,−60) en yakın hat: -55.0 (sıra 9/9)
+
+## Sıra ve geçişler (direk payı 20)
+serbest yanal aralıklar: [(-120.0, -20.0), (20.0, 101.2), (141.2, 142.0)] bloklu: [(-160, -120, 'B'), (-20, 20, 'G'), (-20, 20, 'K'), (101, 141, 'D')]
+giriş Hold merkezi (-340, 127), çember–direk 157 m
+| # | hat c (E) | yön | sonraki hata D | ≥ 2R_min (160) | ≥ 170 (paylı) | bağlantı | uzunluk | dönüş–direk | çıkış Hold merkezi |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | +47.1 | K | 167.1 | evet | HAYIR | ampul | 312 | 69 | (290, 127) |
+| 2 | -120.0 | G | 180.6 | evet | evet | stadyum | 278 | 79 | (-250, -200) |
+| 3 | +60.6 | K | 166.3 | evet | HAYIR | ampul | 317 | 79 | (290, 141) |
+| 4 | -105.7 | G | 179.8 | evet | evet | stadyum | 277 | 89 | (-250, -186) |
+| 5 | +74.1 | K | 165.6 | evet | HAYIR | ampul | 322 | 89 | (290, 154) |
+| 6 | -91.4 | G | 179.1 | evet | evet | stadyum | 276 | 101 | (-290, -171) |
+| 7 | +87.7 | K | 164.8 | evet | HAYIR | ampul | 327 | 92 | (290, 168) |
+| 8 | -77.1 | G | 178.3 | evet | evet | stadyum | 275 | 92 | (-290, -157) |
+| 9 | +101.2 | K | 164.1 | evet | HAYIR | ampul | 331 | 80 | (250, 181) |
+| 10 | -62.9 | G | 96.4 | HAYIR | HAYIR | ampul | 495 | 60 | (-290, -143) |
+| 11 | +33.5 | K | 82.1 | HAYIR | HAYIR | ampul | 517 | 60 | (290, 114) |
+| 12 | -48.6 | G | 190.2 | evet | evet | stadyum | 287 | 70 | (-290, -129) |
+| 13 | +141.6 | K | 175.9 | evet | evet | stadyum | 273 | 61 | (250, 222) |
+| 14 | -34.3 | G | 54.3 | HAYIR | HAYIR | ampul | 556 | 54 | (-290, -114) |
+| 15 | +20.0 | K | 40.0 | HAYIR | HAYIR | ampul | 575 | 54 | (290, 100) |
+| 16 | -20.0 | G | — | | | | |  | (-290, -100) |
+kitap sırası (k=11): [-120, 61, -106, 74, -91, 88, -77, 101, -63, 142, -49, -34, -20, 20, 34, 47]; geçiş D: [181, 166, 180, 166, 179, 165, 178, 164, 204, 190, 14, 14, 40, 14, 14]; < 170 olan 9/15
+dönüşlerin en uzak noktası |N| = 409 m; QR (−60,−60) en yakın hat: -62.9 (sıra 10/16)
+
+uav1 Hold (45, 334) @119 m, disk 100 m: en yakın tarama noktası yatay 92 m; dikey boşluk 49 m

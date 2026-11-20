@@ -1,0 +1,21 @@
+Gerçek donanım kamera modelleri (2026-10-30). Kaynak: gz_models_cam_tests/A (= PX4 advanced_plane orijinali).
+Kamera: Raspberry Pi Global Shutter Camera, Sony IMX296, 1456x1088, 3,45 µm piksel (sensör 5,023 x 3,754 mm).
+Yalnızca kamera bloğu farklı (model.sdf satır 129-131):
+  T: 16 mm telefoto (CGL, C bağlantı)    -> horizontal_fov 0.3114 rad (17,84°), 1456x1088
+  W: 6 mm geniş açı (CGL, CS bağlantı)   -> horizontal_fov 0.7929 rad (45,43°), 1456x1088
+update_rate 30, clip 0,1-1000 m, pose (ileri bakar) A ile aynı. Bozulma (distortion) modellenmedi.
+Kullanım (yalnızca test): PX4_GZ_MODELS=<bu klasör>/T|W, GZ_SIM_SERVER_CONFIG_PATH=~/iha_sim_v2/server_nogst.config
+hw_monitor.py: gz_models_cam_tests/cam_leak_monitor.py + RSS ilk ölçümden 100 MB artarsa ya da RTF < 0,8 olursa durur.
+Ölçüm: sonuclar_2026-10-30.txt
+
+T_nadir (2026-10-30 18:00): T + yalnızca kamera pose'u: <pose>0.07 0 -0.1 0 1.5708 0</pose> (gövde altı, dik aşağı;
+  görüntü üstü = burun). launch_all.sh CAM=T bu modeli + server_nogst.config + iha_arena ile açar.
+  Yerdeyken kamera zeminden 2,5 cm yukarıda, clip near 0,1 m → zemin kırpılır, kare düz arka plan (218 gri).
+DÜZELTME: Gazebo kamerası yalnızca abonesi varken işler. Yukarıdaki T/W "RTF 1,000" değerleri abonesiz bellek
+  aşamasından; kamera çalışırken (köprü, 1 kamera) RTF 0,83, kamera sim zamanında ~31 Hz, duvarda ~24 Hz.
+sys_monitor.py: gz + köprü + DDS Agent RSS/CPU, RTF (4 GB / RTF 0,8'de durur). cam_probe.py: ROS tarafı hız,
+  kare kaybı, uçtan uca gecikme (gz /clock ile), PNG kaydı. Sonuçlar: sonuclar_2026-10-30_T_nadir/
+
+kamera_test/ (2026-10-30 18:20): T_nadir kamerası tek link, statik, 10 Hz; QR irtifa taraması için dünyaya çalışma anında
+  eklenir (gz service create/set_pose/remove). qr_irtifa_tarama.py <çıktı> <dur_dosyası>; uzun_monitor.py <aralık> <bitiş> <dur>
+  (RSS ≥ 4 GB ya da RTF < 0,7'de dur dosyası yazar). Sonuçlar: sonuclar_2026-10-30_qr_irtifa/ (tablo.md).

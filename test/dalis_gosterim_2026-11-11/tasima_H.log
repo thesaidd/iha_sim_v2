@@ -1,0 +1,8 @@
+06:49:10  [geçiş 95] hedef (-60, -60), ψ=210°, irtifa 100 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (-88, 236, 99 m)
+06:49:10  bekleme: (-88, 236)'den rota kapısı tutmadı (rota farkı -123°, sınır ±45°) — Hold çemberinde uygun an bekleniyor (en fazla 60 sn)
+06:49:14  DO_REPOSITION → H (543, 196), 100 m: kabul (1. deneme); uçaktan yol–direk mesafesi 87 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı -5°
+06:49:14  taşıma: H'ye 583 m, irtifa 98.5 m, direk 142 m
+06:49:24  taşıma: H'ye 457 m, irtifa 97.9 m, direk 88 m
+06:49:34  taşıma: H'ye 332 m, irtifa 98.4 m, direk 164 m
+06:49:44  taşıma: H'ye 205 m, irtifa 98.7 m, direk 279 m
+06:49:50  TAŞIMA TAMAM (--transit-only): H'ye 120 m, irtifa 98.8 m, Hold'da

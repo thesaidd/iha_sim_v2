@@ -1,0 +1,6 @@
+#!/bin/bash
+# Güvenlik düğmesi: araç(lar)ı tek komutla Hold (AUTO_LOITER) moduna alır.
+# Kullanım: ~/iha_sim_v2/orbit_abort [uav_id ...]   (varsayılan: 0 1)
+source /opt/ros/humble/setup.bash
+source ~/ros2_ws/install/setup.bash
+exec python3 "$(dirname "$(readlink -f "$0")")/orbit_abort.py" "$@"

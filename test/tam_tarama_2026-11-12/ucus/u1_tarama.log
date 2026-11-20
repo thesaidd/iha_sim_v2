@@ -1,0 +1,145 @@
+22:28:23  zincir: qr_online yayıncı 1, kamera köprüsü 1, lora_relay dinleyici 1, /hedef_konum_role dinleyici (uav1) 1
+22:28:29  ayrım denetimi: uav1 hold, irtifa 119 m; eşik 3B 40 m
+22:28:29  PLAN: 9 hat (aralık ≤ 16.0 m, W 16.0 m), yön 0°, toplam 7702 m ≈ 513 sn; geometrik kapsama %44.4, C 0.48; dönüşler: 1 stadyum + 7 ampul, R 85 m; direk: hat ≥ 40.0 m, dönüş ≥ 117.0 m
+22:28:29    sıra (yanal c, m): -40↑ → +40↓ → -70↑ → +67↓ → -100↑ → +81↓ → -85↑ → +54↓ → -55↑
+22:28:29    giriş: hizalama Hold merkezi (-400, 40), hat başı (-250, -40)
+22:28:29    doğrulama: uygun
+22:28:29  AYRIM: bacak: öteki araç hold, en kötü durum yatay boşluk 17 m, dikey boşluk 10 m → 3B 20 m < 40 m. Hedef irtifada (60 m) bacak uygun → önce YERİNDE irtifa değişimi 99 → 60 m (kendi Hold merkezi (-27, 296)): kabul
+22:28:54  AYRIM: yerinde irtifa değişimi tamam: irtifa 64.0 m
+22:28:54  DO_REPOSITION → H (-400, 40), 60 m: kabul (1. deneme); uçaktan yol–direk mesafesi 211 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı +4°; ayrım: bacak: öteki araç hold, en kötü durum yatay boşluk 8 m, dikey boşluk 44 m → 3B 45 m ≥ 40 m
+22:28:54  HAT 1/9: c=-40.0 m, yön ileri (kalan 8)
+22:28:54  hizalama: H'ye   439 m  s=  +163  x=+387.3 m  rota hatası=-131.2°  irtifa= 64.0 m  mod=AUTO
+22:28:59  hizalama: H'ye   376 m  s=  +120  x=+341.3 m  rota hatası=-135.1°  irtifa= 62.3 m  mod=AUTO
+22:29:04  hizalama: H'ye   316 m  s=   +80  x=+297.5 m  rota hatası=-134.3°  irtifa= 61.7 m  mod=AUTO
+22:29:10  hizalama: H'ye   257 m  s=   +40  x=+252.6 m  rota hatası=-133.7°  irtifa= 61.8 m  mod=AUTO
+22:29:15  hizalama: H'ye   197 m  s=    +1  x=+207.8 m  rota hatası=-135.5°  irtifa= 62.1 m  mod=AUTO
+22:29:20  hizalama: H'ye   139 m  s=   -42  x=+167.7 m  rota hatası=-146.2°  irtifa= 62.3 m  mod=AUTO
+22:29:25  hizalama: H'ye    92 m  s=  -101  x=+157.8 m  rota hatası=+174.0°  irtifa= 57.4 m  mod=AUTO
+22:29:30  hizalama: H'ye    80 m  s=  -185  x=+151.7 m  rota hatası=-155.8°  irtifa= 56.2 m  mod=AUTO
+22:29:35  hizalama: H'ye    82 m  s=  -230  x= +96.6 m  rota hatası= -97.4°  irtifa= 61.0 m  mod=AUTO
+22:29:40  hizalama: H'ye    78 m  s=  -208  x= +27.9 m  rota hatası= -49.9°  irtifa= 59.1 m  mod=AUTO
+22:29:43  DO_SET_MODE → OFFBOARD (deneme 1): s=-169 m, x=+2.7 m, rota hatası=-15.0°
+22:29:43  OFFBOARD ✔ (48 sn hizalama): s=-169 m, x=+2.6 m, irtifa=58.4 m
+22:29:43  hat   hat      0/500 m  x= +2.49 m  irtifa= 58.41 m  yer_hızı=15.67  direk=281 m
+22:29:45  hat   hat      0/500 m  x= -1.92 m  irtifa= 59.36 m  yer_hızı=14.98  direk=251 m  ayrım_min=527 m
+22:29:47  hat   hat      0/500 m  x= -3.03 m  irtifa= 60.53 m  yer_hızı=14.31  direk=223 m  ayrım_min=527 m
+22:29:49  hat   hat      0/500 m  x= -3.19 m  irtifa= 60.99 m  yer_hızı=14.11  direk=198 m  ayrım_min=527 m
+22:29:51  hat   hat      0/500 m  x= -2.88 m  irtifa= 61.15 m  yer_hızı=14.05  direk=174 m  ayrım_min=527 m
+22:29:53  hat   hat      0/500 m  x= -2.21 m  irtifa= 61.27 m  yer_hızı=13.97  direk=151 m  ayrım_min=527 m
+22:29:55  hat   hat      0/500 m  x= -1.49 m  irtifa= 61.40 m  yer_hızı=13.93  direk=129 m  ayrım_min=527 m
+22:29:57  hat   hat     11/500 m  x= -0.84 m  irtifa= 61.49 m  yer_hızı=13.90  direk=107 m  ayrım_min=527 m
+22:29:59  hat   hat     35/500 m  x= -0.21 m  irtifa= 61.61 m  yer_hızı=13.84  direk=85 m  ayrım_min=527 m
+22:30:01  hat   hat     59/500 m  x= +0.43 m  irtifa= 61.72 m  yer_hızı=13.82  direk=65 m  ayrım_min=525 m
+22:30:03  hat   hat     83/500 m  x= +0.97 m  irtifa= 61.84 m  yer_hızı=13.78  direk=48 m  ayrım_min=510 m
+22:30:05  hat   hat    106/500 m  x= +1.36 m  irtifa= 61.92 m  yer_hızı=13.77  direk=39 m  ayrım_min=491 m
+22:30:07  hat   hat    129/500 m  x= +1.71 m  irtifa= 62.01 m  yer_hızı=13.74  direk=43 m  ayrım_min=469 m
+22:30:09  hat   hat    152/500 m  x= +1.80 m  irtifa= 62.08 m  yer_hızı=13.82  direk=57 m  ayrım_min=444 m
+22:30:11  hat   hat    175/500 m  x= +1.79 m  irtifa= 62.09 m  yer_hızı=13.89  direk=76 m  ayrım_min=418 m
+22:30:14  hat   hat    199/500 m  x= +1.66 m  irtifa= 62.00 m  yer_hızı=14.00  direk=97 m  ayrım_min=391 m
+22:30:16  hat   hat    222/500 m  x= +1.38 m  irtifa= 61.91 m  yer_hızı=14.07  direk=105 m  ayrım_min=367 m
+22:30:18  hat   hat    246/500 m  x= +1.05 m  irtifa= 61.77 m  yer_hızı=14.19  direk=101 m  ayrım_min=345 m
+22:30:20  hat   hat    269/500 m  x= +0.61 m  irtifa= 61.62 m  yer_hızı=14.33  direk=102 m  ayrım_min=327 m
+22:30:22  hat   hat    292/500 m  x= +0.38 m  irtifa= 61.47 m  yer_hızı=14.41  direk=105 m  ayrım_min=314 m
+22:30:24  hat   hat    316/500 m  x= +0.28 m  irtifa= 61.32 m  yer_hızı=14.44  direk=84 m  ayrım_min=307 m
+22:30:26  hat   hat    340/500 m  x= +0.43 m  irtifa= 61.19 m  yer_hızı=14.47  direk=64 m  ayrım_min=307 m
+22:30:28  hat   hat    364/500 m  x= +0.66 m  irtifa= 61.05 m  yer_hızı=14.50  direk=47 m  ayrım_min=307 m
+22:30:30  hat   hat    388/500 m  x= +0.77 m  irtifa= 61.00 m  yer_hızı=14.49  direk=39 m  ayrım_min=307 m
+22:30:32  hat   hat    412/500 m  x= +0.87 m  irtifa= 60.93 m  yer_hızı=14.52  direk=45 m  ayrım_min=307 m
+22:30:34  hat   hat    437/500 m  x= +0.95 m  irtifa= 60.85 m  yer_hızı=14.58  direk=61 m  ayrım_min=307 m
+22:30:36  hat   hat    461/500 m  x= +0.98 m  irtifa= 60.77 m  yer_hızı=14.61  direk=81 m  ayrım_min=307 m
+22:30:38  hat   hat    486/500 m  x= +1.02 m  irtifa= 60.74 m  yer_hızı=14.59  direk=103 m  ayrım_min=307 m
+22:30:39  DÖNÜŞ → c=+40.0 m: ampul, D 80 m, uzunluk 520 m, direk ≥ 117 m
+22:30:40  donus yay     10/63 m  x= +1.66 m  irtifa= 60.67 m  yer_hızı=14.81  direk=126 m  ayrım_min=307 m
+22:30:42  donus yay     32/63 m  x= +8.26 m  irtifa= 60.50 m  yer_hızı=13.99  direk=149 m  ayrım_min=307 m
+22:30:44  donus yay     53/63 m  x=+12.15 m  irtifa= 60.88 m  yer_hızı=13.68  direk=173 m  ayrım_min=307 m
+22:30:46  donus yay     14/394 m  x=+10.72 m  irtifa= 60.75 m  yer_hızı=13.65  direk=195 m  ayrım_min=307 m
+22:30:49  donus yay     36/394 m  x= -2.27 m  irtifa= 60.40 m  yer_hızı=16.24  direk=215 m  ayrım_min=307 m
+22:30:51  donus yay     59/394 m  x= -9.30 m  irtifa= 60.58 m  yer_hızı=15.26  direk=239 m  ayrım_min=307 m
+22:30:53  donus yay     85/394 m  x=-12.16 m  irtifa= 58.47 m  yer_hızı=15.51  direk=267 m  ayrım_min=307 m
+22:30:55  donus yay    114/394 m  x=-12.65 m  irtifa= 55.74 m  yer_hızı=16.41  direk=291 m  ayrım_min=307 m
+22:30:57  donus yay    143/394 m  x=-15.41 m  irtifa= 54.66 m  yer_hızı=16.93  direk=312 m  ayrım_min=307 m
+22:30:59  donus yay    172/394 m  x=-18.72 m  irtifa= 54.97 m  yer_hızı=16.92  direk=326 m  ayrım_min=307 m
+22:31:01  donus yay    199/394 m  x=-20.89 m  irtifa= 56.62 m  yer_hızı=16.23  direk=331 m  ayrım_min=307 m
+22:31:03  donus yay    224/394 m  x=-20.95 m  irtifa= 58.72 m  yer_hızı=15.23  direk=327 m  ayrım_min=307 m
+22:31:05  donus yay    247/394 m  x=-19.14 m  irtifa= 60.20 m  yer_hızı=14.60  direk=317 m  ayrım_min=307 m
+22:31:07  donus yay    271/394 m  x=-16.77 m  irtifa= 60.91 m  yer_hızı=14.33  direk=301 m  ayrım_min=307 m
+22:31:09  donus yay    294/394 m  x=-15.05 m  irtifa= 61.19 m  yer_hızı=14.29  direk=281 m  ayrım_min=307 m
+22:31:11  donus yay    318/394 m  x=-14.05 m  irtifa= 61.33 m  yer_hızı=14.32  direk=258 m  ayrım_min=307 m
+22:31:13  donus yay    342/394 m  x=-13.45 m  irtifa= 61.35 m  yer_hızı=14.37  direk=233 m  ayrım_min=307 m
+22:31:15  donus yay    363/394 m  x=-13.05 m  irtifa= 61.30 m  yer_hızı=14.38  direk=209 m  ayrım_min=307 m
+22:31:17  donus yay    384/394 m  x=-12.64 m  irtifa= 61.14 m  yer_hızı=14.50  direk=185 m  ayrım_min=307 m
+22:31:19  donus yay     15/63 m  x= -9.99 m  irtifa= 60.88 m  yer_hızı=14.92  direk=163 m  ayrım_min=307 m
+22:31:22  donus yay     37/63 m  x= +2.52 m  irtifa= 60.09 m  yer_hızı=14.29  direk=143 m  ayrım_min=307 m
+22:31:24  donus yay     59/63 m  x=+11.35 m  irtifa= 60.42 m  yer_hızı=14.37  direk=119 m  ayrım_min=307 m
+22:31:24  HAT 2/9: c=+40.0 m, yön geri (kalan 7)
+22:31:26  hat   hat     20/500 m  x=+13.18 m  irtifa= 61.19 m  yer_hızı=14.19  direk=94 m  ayrım_min=307 m
+22:31:28  hat   hat     44/500 m  x= +7.33 m  irtifa= 61.84 m  yer_hızı=14.16  direk=74 m  ayrım_min=307 m
+22:31:30  hat   hat     67/500 m  x= +3.48 m  irtifa= 61.79 m  yer_hızı=14.18  direk=57 m  ayrım_min=307 m
+22:31:32  hat   hat     90/500 m  x= +2.32 m  irtifa= 61.45 m  yer_hızı=14.21  direk=43 m  ayrım_min=307 m
+22:31:34  hat   hat    115/500 m  x= +2.57 m  irtifa= 61.15 m  yer_hızı=14.27  direk=38 m  ayrım_min=295 m
+22:31:36  hat   hat    139/500 m  x= +2.89 m  irtifa= 61.24 m  yer_hızı=14.25  direk=47 m  ayrım_min=262 m
+22:31:38  hat   hat    163/500 m  x= +3.00 m  irtifa= 61.38 m  yer_hızı=14.22  direk=64 m  ayrım_min=239 m
+22:31:40  hat   hat    187/500 m  x= +3.00 m  irtifa= 61.58 m  yer_hızı=14.18  direk=84 m  ayrım_min=232 m
+22:31:42  hat   hat    211/500 m  x= +2.98 m  irtifa= 61.68 m  yer_hızı=14.19  direk=90 m  ayrım_min=232 m
+22:31:44  hat   hat    235/500 m  x= +2.88 m  irtifa= 61.78 m  yer_hızı=14.20  direk=100 m  ayrım_min=232 m
+22:31:46  hat   hat    258/500 m  x= +2.76 m  irtifa= 61.85 m  yer_hızı=14.23  direk=115 m  ayrım_min=232 m
+22:31:48  hat   hat    282/500 m  x= +2.53 m  irtifa= 61.87 m  yer_hızı=14.29  direk=115 m  ayrım_min=232 m
+22:31:50  hat   hat    304/500 m  x= +2.23 m  irtifa= 61.89 m  yer_hızı=14.36  direk=94 m  ayrım_min=232 m
+22:31:52  hat   hat    328/500 m  x= +1.90 m  irtifa= 61.84 m  yer_hızı=14.43  direk=73 m  ayrım_min=232 m
+22:31:55  hat   hat    351/500 m  x= +1.63 m  irtifa= 61.76 m  yer_hızı=14.50  direk=54 m  ayrım_min=232 m
+22:31:57  hat   hat    375/500 m  x= +1.29 m  irtifa= 61.67 m  yer_hızı=14.58  direk=41 m  ayrım_min=232 m
+22:31:59  hat   hat    399/500 m  x= +0.98 m  irtifa= 61.58 m  yer_hızı=14.65  direk=40 m  ayrım_min=232 m
+22:32:01  hat   hat    423/500 m  x= +0.68 m  irtifa= 61.46 m  yer_hızı=14.71  direk=52 m  ayrım_min=232 m
+22:32:03  hat   hat    447/500 m  x= +0.68 m  irtifa= 61.33 m  yer_hızı=14.75  direk=69 m  ayrım_min=232 m
+22:32:05  hat   hat    471/500 m  x= +0.77 m  irtifa= 61.21 m  yer_hızı=14.81  direk=90 m  ayrım_min=232 m
+22:32:07  hat   hat    495/500 m  x= +0.77 m  irtifa= 61.14 m  yer_hızı=14.85  direk=112 m  ayrım_min=232 m
+22:32:07  DÖNÜŞ → c=-70.0 m: ampul, D 110 m, uzunluk 472 m, direk ≥ 117 m
+22:32:09  donus yay     19/51 m  x= +3.78 m  irtifa= 60.82 m  yer_hızı=15.06  direk=135 m  ayrım_min=232 m
+22:32:11  donus yay     41/51 m  x=+10.23 m  irtifa= 61.37 m  yer_hızı=14.38  direk=159 m  ayrım_min=232 m
+22:32:13  donus yay     14/370 m  x=+10.48 m  irtifa= 61.09 m  yer_hızı=13.92  direk=182 m  ayrım_min=232 m
+22:32:15  donus yay     37/370 m  x= -3.39 m  irtifa= 58.57 m  yer_hızı=16.59  direk=205 m  ayrım_min=232 m
+22:32:17  donus yay     62/370 m  x=-12.48 m  irtifa= 58.19 m  yer_hızı=16.35  direk=233 m  ayrım_min=232 m
+22:32:19  donus yay     89/370 m  x=-16.98 m  irtifa= 57.02 m  yer_hızı=16.34  direk=262 m  ayrım_min=232 m
+22:32:21  donus yay    116/370 m  x=-18.43 m  irtifa= 56.48 m  yer_hızı=16.51  direk=284 m  ayrım_min=232 m
+22:32:23  donus yay    143/370 m  x=-19.25 m  irtifa= 56.89 m  yer_hızı=16.29  direk=300 m  ayrım_min=232 m
+22:32:25  donus yay    169/370 m  x=-19.61 m  irtifa= 57.92 m  yer_hızı=15.84  direk=309 m  ayrım_min=232 m
+22:32:27  donus yay    194/370 m  x=-19.10 m  irtifa= 59.20 m  yer_hızı=15.32  direk=311 m  ayrım_min=232 m
+22:32:29  donus yay    218/370 m  x=-17.78 m  irtifa= 60.21 m  yer_hızı=14.85  direk=306 m  ayrım_min=232 m
+22:32:31  donus yay    242/370 m  x=-15.90 m  irtifa= 60.33 m  yer_hızı=14.71  direk=296 m  ayrım_min=232 m
+22:32:33  donus yay    268/370 m  x=-14.19 m  irtifa= 59.92 m  yer_hızı=14.87  direk=280 m  ayrım_min=232 m
+22:32:35  donus yay    293/370 m  x=-13.84 m  irtifa= 59.44 m  yer_hızı=15.06  direk=259 m  ayrım_min=232 m
+22:32:37  donus yay    319/370 m  x=-14.37 m  irtifa= 59.11 m  yer_hızı=15.22  direk=235 m  ayrım_min=232 m
+22:32:39  donus yay    341/370 m  x=-15.26 m  irtifa= 59.12 m  yer_hızı=15.24  direk=211 m  ayrım_min=232 m
+22:32:41  donus yay    363/370 m  x=-16.06 m  irtifa= 59.42 m  yer_hızı=15.09  direk=186 m  ayrım_min=232 m
+22:32:43  donus yay     21/51 m  x=-11.81 m  irtifa= 59.86 m  yer_hızı=15.13  direk=160 m  ayrım_min=232 m
+22:32:45  donus yay     45/51 m  x= +0.85 m  irtifa= 59.97 m  yer_hızı=14.88  direk=136 m  ayrım_min=232 m
+22:32:46  HAT 3/9: c=-70.0 m, yön ileri (kalan 6)
+22:32:47  hat   hat     18/500 m  x= +6.73 m  irtifa= 59.49 m  yer_hızı=15.19  direk=111 m  ayrım_min=232 m
+22:32:49  hat   hat     45/500 m  x= +3.81 m  irtifa= 59.48 m  yer_hızı=15.01  direk=93 m  ayrım_min=232 m
+22:32:51  hat   hat     71/500 m  x= +1.71 m  irtifa= 59.83 m  yer_hızı=14.76  direk=79 m  ayrım_min=232 m
+22:32:53  hat   hat     97/500 m  x= +0.95 m  irtifa= 59.99 m  yer_hızı=14.67  direk=70 m  ayrım_min=232 m
+22:32:55  hat   hat    122/500 m  x= +0.83 m  irtifa= 60.17 m  yer_hızı=14.54  direk=70 m  ayrım_min=232 m
+22:32:57  hat   hat    148/500 m  x= +0.88 m  irtifa= 60.38 m  yer_hızı=14.47  direk=79 m  ayrım_min=232 m
+22:33:00  hat   hat    172/500 m  x= +0.98 m  irtifa= 60.63 m  yer_hızı=14.37  direk=93 m  ayrım_min=232 m
+22:33:01  TESPİT: {'x_kuzey': -57.658, 'y_dogu': -59.578, 'icerik': 'HEDEF-01', 'damga_sim': 389.2, 'kare_no': 3449} — faz hat; uçulan hat bitirilip çıkış Hold'una gidilecek
+22:33:02  hat   hat    197/500 m  x= +1.06 m  irtifa= 60.85 m  yer_hızı=14.28  direk=89 m  ayrım_min=232 m
+22:33:04  hat   hat    221/500 m  x= +1.10 m  irtifa= 61.11 m  yer_hızı=14.21  direk=77 m  ayrım_min=232 m
+22:33:06  hat   hat    245/500 m  x= +1.11 m  irtifa= 61.28 m  yer_hızı=14.18  direk=71 m  ayrım_min=232 m
+22:33:08  hat   hat    269/500 m  x= +1.09 m  irtifa= 61.40 m  yer_hızı=14.11  direk=74 m  ayrım_min=232 m
+22:33:10  hat   hat    293/500 m  x= +1.10 m  irtifa= 61.50 m  yer_hızı=14.10  direk=83 m  ayrım_min=232 m
+22:33:12  hat   hat    316/500 m  x= +1.04 m  irtifa= 61.57 m  yer_hızı=14.14  direk=97 m  ayrım_min=232 m
+22:33:14  hat   hat    340/500 m  x= +0.95 m  irtifa= 61.62 m  yer_hızı=14.15  direk=85 m  ayrım_min=232 m
+22:33:16  hat   hat    364/500 m  x= +0.83 m  irtifa= 61.62 m  yer_hızı=14.22  direk=74 m  ayrım_min=232 m
+22:33:18  hat   hat    388/500 m  x= +0.69 m  irtifa= 61.56 m  yer_hızı=14.22  direk=69 m  ayrım_min=232 m
+22:33:20  hat   hat    412/500 m  x= +0.52 m  irtifa= 61.49 m  yer_hızı=14.31  direk=73 m  ayrım_min=232 m
+22:33:22  hat   hat    436/500 m  x= +0.37 m  irtifa= 61.41 m  yer_hızı=14.36  direk=84 m  ayrım_min=232 m
+22:33:24  hat   hat    460/500 m  x= +0.36 m  irtifa= 61.30 m  yer_hızı=14.37  direk=99 m  ayrım_min=232 m
+22:33:26  hat   hat    484/500 m  x= +0.38 m  irtifa= 61.24 m  yer_hızı=14.44  direk=117 m  ayrım_min=232 m
+22:33:27  TARAMA DURDU (tespit) → çıkış: 60 m düz, Hold'a geçiş (310, -70), Hold merkezi (310, 10), çember–direk ≥ 90 m
+22:33:28  cikis hat      8/60 m  x= +0.42 m  irtifa= 61.17 m  yer_hızı=14.43  direk=137 m  ayrım_min=232 m
+22:33:30  cikis hat     33/60 m  x= +0.45 m  irtifa= 61.08 m  yer_hızı=14.47  direk=159 m  ayrım_min=232 m
+22:33:33  cikis hat     57/60 m  x= +0.47 m  irtifa= 61.02 m  yer_hızı=14.54  direk=181 m  ayrım_min=232 m
+22:33:33  Hold: ✔ (nav_state AUTO_LOITER; akış mod değişene kadar sürdü)
+22:33:33  DO_REPOSITION → çıkış Hold merkezi (310, 10), 60 m: kabul
+22:33:33  ÖZET: tespit — 3/9 hat, tarama 224 sn; neden: tespit; tespit {'x_kuzey': -57.658, 'y_dogu': -59.578, 'icerik': 'HEDEF-01', 'damga_sim': 389.2, 'kare_no': 3449, 'hat': 2, 'faz': 'hat', 'ucus_sirasi': 3, 'tarama_sn': 192.9, 'ucak': [-66.8, -69.0, 60.7]}
+22:33:33  AYRIM ÖZETİ: uav1 ile gerçekleşen en küçük 3B ayrım {'3b_m': 65.7, 'yatay_m': 61.5, 'dikey_m': 22.9, 'saat': '22:28:33'}

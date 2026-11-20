@@ -1,0 +1,392 @@
+#!/usr/bin/env python3
+"""
+v2_orbit_mission.py  (Faz 1 v2 — Mid-Air Takeover / Havada Devralma)
+============================================================
+Hedef platform: PX4 advanced_plane (SITL) — hover yapamaz, sürekli ileri hareket ister.
+
+Durum Makinesi (2 aşama):
+  WAITING  → Kalkış QGC'den manual; script heartbeat + orbit setpoint akışı yapar
+  ORBIT    → Z ≤ -40 m eşiğinde Offboard devralınır; dairesel setpoint aktarılır
+
+Orbit parametreleri:
+  R   = 100 m       (yarıçap)
+  V   = 15 m/s      (uçuş hızı)
+  ω   = V/R = 0.15 rad/s
+  θ   = (t × ω) + (uav_id × π)   ← uav1 tam 180° geride (çarpışma önleme)
+
+Kullanım:
+  python3 v2_orbit_mission.py --ros-args -p uav_id:=0   # keşif
+  python3 v2_orbit_mission.py --ros-args -p uav_id:=1   # kamikaze
+
+Koordinat sistemi: PX4 NED
+  X → Kuzey | Y → Doğu | Z → Aşağı (negatif = yukarı)
+
+Bağımlılıklar:
+  - ROS 2 Humble
+  - px4_msgs  (https://github.com/PX4/px4_msgs)
+"""
+
+import math
+import time
+import logging
+import pathlib
+import rclpy
+from rclpy.node import Node
+from rclpy.qos import (
+    QoSProfile,
+    QoSReliabilityPolicy,
+    QoSHistoryPolicy,
+    QoSDurabilityPolicy,
+)
+
+from px4_msgs.msg import (
+    OffboardControlMode,
+    TrajectorySetpoint,
+    VehicleCommand,
+    VehicleLocalPosition,
+    VehicleStatus,
+)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Log altyapısı
+# ──────────────────────────────────────────────────────────────────────────────
+LOG_DIR = pathlib.Path("test/test-1")
+
+
+def setup_file_logger(uav_id: int) -> logging.Logger:
+    """
+    Her İHA için ayrı bir dosya loggerı oluşturur.
+    Çıkış: test/test-1/uav{uav_id}_mission.log
+    """
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    log_path = LOG_DIR / f"uav{uav_id}_mission.log"
+
+    logger = logging.getLogger(f"uav{uav_id}_mission")
+    logger.setLevel(logging.DEBUG)
+
+    if not logger.handlers:   # çoklu init'te handler çiftlenmesini önle
+        fh = logging.FileHandler(log_path, mode="a", encoding="utf-8")
+        fh.setLevel(logging.DEBUG)
+        fh.setFormatter(logging.Formatter(
+            fmt="%(asctime)s  %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        ))
+        logger.addHandler(fh)
+
+    return logger
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Uçuş sabitleri
+# ──────────────────────────────────────────────────────────────────────────────
+ORBIT_ALTITUDE_M     = 40.0    # Offboard'a geçiş için minimum irtifa [m]
+ORBIT_ALTITUDE_NED   = -ORBIT_ALTITUDE_M   # NED: -40 m (yukarı)
+
+ORBIT_RADIUS_M       = 100.0   # Orbit yarıçapı [m]
+ORBIT_SPEED_MS       = 15.0    # Uçuş hızı [m/s]
+ORBIT_OMEGA          = ORBIT_SPEED_MS / ORBIT_RADIUS_M   # Açısal hız [rad/s] = 0.15
+
+LOOP_HZ              = 20      # Ana döngü frekansı [Hz]
+
+# PX4 Publisher QoS (Offboard komutlar — TRANSIENT_LOCAL)
+PX4_QOS = QoSProfile(
+    reliability=QoSReliabilityPolicy.BEST_EFFORT,
+    durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    depth=1,
+)
+
+# Sensor / Telemetri Subscriber QoS (PX4 sensör topic'leri — VOLATILE)
+# PX4 DDS Agent sensör verilerini BEST_EFFORT + VOLATILE ile yayınlar.
+# TRANSIENT_LOCAL ile abone olmak mesajın reddedilmesine neden olur.
+SENSOR_QOS = QoSProfile(
+    reliability=QoSReliabilityPolicy.BEST_EFFORT,
+    durability=QoSDurabilityPolicy.VOLATILE,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    depth=1,
+)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Durum etiketleri
+# ──────────────────────────────────────────────────────────────────────────────
+class State:
+    WAITING   = "WAITING"     # QGC'den manuel kalkış bekleniyor; heartbeat + setpoint akışı
+    PREFLIGHT = "PREFLIGHT"   # Arm/Offboard öncesi ön setpoint akışı
+    TAKEOFF   = "TAKEOFF"     # NAV_TAKEOFF komutu gönderildi, kalkış beklenıyor
+    CLIMB     = "CLIMB"       # PX4 kalkış modunda; irtifa takibi yapılıyor
+    ORBIT     = "ORBIT"       # Offboard modu aktif; hareketli dairesel setpoint
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Ana Node
+# ──────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# PX4 SITL DDS Topic Prefix Yardımcısı
+# ──────────────────────────────────────────────────────────────────────────────
+
+def get_fmu_prefix(uav_id: int) -> str:
+    """
+    PX4 SITL (MicroXRCE-DDS Agent) çoklu İHA topic namespace kuralı:
+      uav_id == 0  →  /fmu            (varsayılan instance)
+      uav_id >= 1  →  /px4_{uav_id}/fmu
+
+    Örnekler:
+      get_fmu_prefix(0)  →  "/fmu"
+      get_fmu_prefix(1)  →  "/px4_1/fmu"
+    """
+    if uav_id == 0:
+        return "/fmu"
+    return f"/px4_{uav_id}/fmu"
+
+
+
+class FixedWingOrbitMission(Node):
+    """
+    Sabit kanatlı İHA için Faz-1 görev düğümü.
+
+    uav_id = 0  →  /fmu/...          faz ofseti = 0
+    uav_id = 1  →  /px4_1/fmu/...    faz ofseti = π  (180° geride, tam karşı tarafta)
+    """
+
+    def __init__(self):
+        super().__init__("fixed_wing_orbit_mission")
+
+        # ── Parametre ────────────────────────────────────────────────────────
+        self.declare_parameter("uav_id", 0)
+        self.uav_id: int = self.get_parameter("uav_id").value
+        ns = get_fmu_prefix(self.uav_id)
+
+        self.phase_offset: float = math.pi * self.uav_id  # 0 veya π
+
+        # ── Dosya loggerı başlat ──────────────────────────────────────────
+        self._flog = setup_file_logger(self.uav_id)
+
+        self._log(
+            f"[uav{self.uav_id}] Başlatıldı — "
+            f"Faz ofseti: {math.degrees(self.phase_offset):.0f}°  |  "
+            f"FMU prefix: {ns}  |  "
+            f"Log: {LOG_DIR}/uav{self.uav_id}_mission.log"
+        )
+
+        # ── İç durum ─────────────────────────────────────────────────────────
+        self.state          = State.WAITING
+        self.tick           = 0        # Ana döngü sayacı
+        self.nav_state      = 0        # PX4 nav_state
+        self.local_z        = 0.0     # VehicleLocalPosition'dan anlık Z [m NED]
+        self.offboard_sent  = False   # Offboard komutunun tek seferliğini garantiler
+        self.orbit_start_t  = None    # Orbit başlangıç zamanı [s]
+
+        # ── Publisher'lar ────────────────────────────────────────────────────
+        self.pub_offboard_mode = self.create_publisher(
+            OffboardControlMode,
+            f"{ns}/in/offboard_control_mode",
+            PX4_QOS,
+        )
+        self.pub_trajectory = self.create_publisher(
+            TrajectorySetpoint,
+            f"{ns}/in/trajectory_setpoint",
+            PX4_QOS,
+        )
+        self.pub_vehicle_cmd = self.create_publisher(
+            VehicleCommand,
+            f"{ns}/in/vehicle_command",
+            PX4_QOS,
+        )
+
+        # ── Subscriber'lar ───────────────────────────────────────────────────
+        # NOT: PX4 DDS Agent sensör topic'lerini _v1/_v2 suffix ile yayınlar.
+        #      SENSOR_QOS (BEST_EFFORT + VOLATILE) zorunludur; aksi halde
+        #      ROS 2 QoS uyuşmazlığı nedeniyle mesajlar reddedilir.
+        self.sub_status = self.create_subscription(
+            VehicleStatus,
+            f"{ns}/out/vehicle_status_v2",          # ← _v2 suffix
+            self._vehicle_status_cb,
+            SENSOR_QOS,                              # ← VOLATILE
+        )
+        self.sub_local_pos = self.create_subscription(
+            VehicleLocalPosition,
+            f"{ns}/out/vehicle_local_position_v1",  # ← _v1 suffix
+            self._local_position_cb,
+            SENSOR_QOS,                              # ← VOLATILE
+        )
+
+        # ── Ana döngü ────────────────────────────────────────────────────────
+        self.timer = self.create_timer(1.0 / LOOP_HZ, self._timer_cb)
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Log yardımcısı
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _log(self, msg: str) -> None:
+        """
+        Mesajı hem ROS 2 logger'a hem de dosyaya (uav{id}_mission.log) yazar.
+        Kod içindeki tüm get_logger().info() çağrıları bu metotla yapılır.
+        """
+        self.get_logger().info(msg)
+        self._flog.info(msg)
+
+
+    def _vehicle_status_cb(self, msg: VehicleStatus):
+        self.nav_state = msg.nav_state
+
+    def _local_position_cb(self, msg: VehicleLocalPosition):
+        """Anlık NED Z yüksekliğini günceller."""
+        self.local_z = msg.z  # Negatif = yukarıda
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Ana döngü
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _timer_cb(self):
+        """
+        Mid-Air Takeover döngüsü (20 Hz):
+          1. OffboardControlMode her zaman yayınlanır (PX4 Offboard kalp atışı).
+          2. Orbit setpoint’i her zaman yayınlanır:
+             – Ulan doğal olarak ucuşu sürdürür.
+             – PX4 Offboard'a geçmeden önce setpoint geşmişi görmek ister.
+          3. WAITING: Z ≤ -40 m ise ve komut henüz gönderilmediyse
+             tek seferlik Offboard komutu gönderilir → ORBIT.
+        """
+        self.tick += 1
+
+        # ─ Daima: Offboard kalp atışı ─────────────────────────────────────
+        self._publish_offboard_control_mode()
+
+        # ─ Daima: Hareketli orbit setpoint yayınla ────────────────────────
+        # orbit_start_t None iken t=0 (sabit başlangıç noktası) kullanılır.
+        t = 0.0 if self.orbit_start_t is None else time.monotonic() - self.orbit_start_t
+
+        theta = t * ORBIT_OMEGA + self.phase_offset
+        sp_x  = ORBIT_RADIUS_M * math.cos(theta)
+        sp_y  = ORBIT_RADIUS_M * math.sin(theta)
+        sp_z  = ORBIT_ALTITUDE_NED
+        sp_yaw = math.atan2(-math.sin(theta), -math.cos(theta))
+        self._publish_setpoint(x=sp_x, y=sp_y, z=sp_z, yaw=sp_yaw)
+
+        # ─ WAITING: irtifa dinle, Offboard'u devral ────────────────────────
+        if self.state == State.WAITING:
+            if self.local_z <= ORBIT_ALTITUDE_NED and not self.offboard_sent:
+                self._log(
+                    f"[uav{self.uav_id}] ✅ Hedef irtifaya ulaşıldı "
+                    f"(Z={self.local_z:.1f} m). "
+                    f"Görev Bilgisayarı kontrolü (OFFBOARD) devralıyor!"
+                )
+                self._send_offboard_mode_cmd()
+                self.offboard_sent  = True
+                self.orbit_start_t  = time.monotonic()
+                self.state          = State.ORBIT
+            elif self.tick % LOOP_HZ == 0:   # saniyede bir bilgi
+                self._log(
+                    f"[uav{self.uav_id}] QGC üzerinden kalkış bekleniyor... "
+                    f"İrtifa: {-self.local_z:.1f} m  (hedef ≥ {ORBIT_ALTITUDE_M:.0f} m)"
+                )
+            return
+
+        # ─ ORBIT: saniyede bir log ──────────────────────────────────────
+        if self.tick % LOOP_HZ == 0:
+            self._log(
+                f"[uav{self.uav_id}] ORBIT "
+                f"θ={math.degrees(theta):7.2f}°  "
+                f"x={sp_x:+8.2f} m  y={sp_y:+8.2f} m  z={sp_z:.1f} m"
+            )
+
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Yardımcı yayın fonksiyonları
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _publish_offboard_control_mode(self):
+        """
+        Offboard modunu canlı tutmak için zorunlu heartbeat mesajı.
+        Kesilmezse PX4 ~0.5 s içinde Offboard'dan çıkar.
+        """
+        msg = OffboardControlMode()
+        msg.timestamp    = self._ts()
+        msg.position     = True   # Pozisyon kontrolü
+        msg.velocity     = False
+        msg.acceleration = False
+        msg.attitude     = False
+        msg.body_rate    = False
+        self.pub_offboard_mode.publish(msg)
+
+    def _publish_setpoint(
+        self,
+        x: float,
+        y: float,
+        z: float,
+        yaw: float = float("nan"),
+    ):
+        """NED pozisyon + isteğe bağlı yaw setpoint'i yayınlar."""
+        msg = TrajectorySetpoint()
+        msg.timestamp = self._ts()
+        msg.position  = [float(x), float(y), float(z)]
+        msg.yaw       = float(yaw)
+        self.pub_trajectory.publish(msg)
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # VehicleCommand yardımcısı — SysID kuralları
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _ts(self) -> int:
+        """
+        PX4'ün beklediği mikrosaniye cinsinden zaman damgası.
+        ROS saatini kullanır — _publish_* ve _make_cmd() için ortak kaynak.
+        """
+        return int(self.get_clock().now().nanoseconds / 1000)
+
+    def _make_cmd(self) -> VehicleCommand:
+        """
+        Tüm VehicleCommand mesajları için zorunlu SysID alanlarını önceden
+        doldurulmuş şekilde döndürür.
+
+        SysID Kuralları (PX4 çoklu İHA):
+          target_system   = uav_id + 1   → uav0→1, uav1→2
+                            PX4 SITL instance ID'leri 1'den başlar.
+                            Yanlış ID'li komutlar sessizce görmezden gelinir!
+          target_component = 1           → Otopilot bileşeni
+          source_system   = 255          → GCS / Dış Bilgisayar kimliği
+          source_component = 1
+          from_external   = True         → Komutun dışarıdan geldiğini bildirir
+          timestamp       = ROS saati    → Mikrosaniye (PX4 beklentisi)
+        """
+        msg = VehicleCommand()
+        msg.timestamp        = self._ts()
+        msg.target_system    = self.uav_id + 1   # uav0→1, uav1→2
+        msg.target_component = 1
+        msg.source_system    = 255   # GCS / Offboard bilgisayar
+        msg.source_component = 1
+        msg.from_external    = True
+        return msg
+
+    def _send_offboard_mode_cmd(self):
+        """Offboard mod komutu — tek seferlik, SysID doğru."""
+        msg         = self._make_cmd()
+        msg.command = VehicleCommand.VEHICLE_CMD_DO_SET_MODE
+        msg.param1  = 1.0   # MAV_MODE_FLAG_CUSTOM_MODE_ENABLED
+        msg.param2  = 6.0   # PX4_CUSTOM_MAIN_MODE_OFFBOARD
+        self.pub_vehicle_cmd.publish(msg)
+        self._log(
+            f"[uav{self.uav_id}] ✈ DO_SET_MODE → OFFBOARD | target_system={msg.target_system}"
+        )
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Giriş noktası
+# ──────────────────────────────────────────────────────────────────────────────
+def main(args=None):
+    rclpy.init(args=args)
+    node = FixedWingOrbitMission()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        # rclpy.spin() zaten Ctrl+C'yi yakalar; burada sadece kullanıcıya bilgi.
+        node.get_logger().info(f"[uav{node.uav_id}] Kullanıcı tarafından durduruldu.")
+    finally:
+        # destroy_node güvenlidir; shutdown yalnızca rclpy hâlâ aktifse çağrılır.
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()

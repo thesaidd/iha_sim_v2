@@ -1,0 +1,86 @@
+[
+ {
+  "etiket": "dokulu",
+  "irtifa": 60.0,
+  "kare": 20,
+  "rtf": 0.882,
+  "teorik_kenar_px": 77.3,
+  "QRCodeDetector": {
+   "bulma": 20,
+   "cozme": 20,
+   "ms_ort": 85.3,
+   "kenar_px": 77.5
+  },
+  "QRCodeDetectorAruco": {
+   "bulma": 20,
+   "cozme": 20,
+   "ms_ort": 53.9,
+   "kenar_px": 77.0
+  },
+  "kare_gri_ort": 57.0,
+  "kare_gri_std": 11.4
+ },
+ {
+  "etiket": "dokulu",
+  "irtifa": 80.0,
+  "kare": 20,
+  "rtf": 0.869,
+  "teorik_kenar_px": 58.0,
+  "QRCodeDetector": {
+   "bulma": 20,
+   "cozme": 20,
+   "ms_ort": 83.7,
+   "kenar_px": 57.0
+  },
+  "QRCodeDetectorAruco": {
+   "bulma": 20,
+   "cozme": 20,
+   "ms_ort": 52.0,
+   "kenar_px": 57.0
+  },
+  "kare_gri_ort": 59.5,
+  "kare_gri_std": 19.6
+ },
+ {
+  "etiket": "dokulu",
+  "irtifa": 100.0,
+  "kare": 20,
+  "rtf": 0.869,
+  "teorik_kenar_px": 46.4,
+  "QRCodeDetector": {
+   "bulma": 20,
+   "cozme": 0,
+   "ms_ort": 83.7,
+   "kenar_px": 45.0
+  },
+  "QRCodeDetectorAruco": {
+   "bulma": 20,
+   "cozme": 0,
+   "ms_ort": 53.3,
+   "kenar_px": 45.0
+  },
+  "kare_gri_ort": 62.0,
+  "kare_gri_std": 23.7
+ },
+ {
+  "etiket": "dokulu",
+  "irtifa": 120.0,
+  "kare": 20,
+  "rtf": 0.881,
+  "teorik_kenar_px": 38.6,
+  "QRCodeDetector": {
+   "bulma": 0,
+   "cozme": 0,
+   "ms_ort": 77.4,
+   "kenar_px": null
+  },
+  "QRCodeDetectorAruco": {
+   "bulma": 0,
+   "cozme": 0,
+   "ms_ort": 29.9,
+   "kenar_px": null
+  },
+  "kare_gri_ort": 62.1,
+  "kare_gri_std": 24.1
+ }
+]
