@@ -16,10 +16,17 @@ Gazebo dünya çerçevesi ENU: x = Doğu, y = Kuzey (PX4 NED: N = y, E = x).
   - Binalar: en çok 6, merkezden > 186 m (Hold dönüşleri r ≤ 186 m), doğu koridorunun dışında
   - QR hedefi: (−60, −60) zeminde düz levha (plane), doku qr_hedef01.png (PBR albedo, make_qr_hedef.py);
     kod 1,00 m, kenarla 29/21 m. Kalkış koridoru (doğu), direkler ve binaların dışında. Tek dokulu varlık.
+  - ArUco hedefi (--hedef aruco → iha_arena_aruco.sdf, make_aruco_hedef.py): DICT_4X4_50 id 0, siyah dış kenar
+    2,00 m + 1 modül (1/3 m) beyaz boşluk → 2,667 m levha, QR ile aynı yer (−60, −60), z = ARUCO_Z = 0,02 m
+    (ızgara çizgileri ≤ 0,022 m ama ±50 m katlarında; hedef çizgi üstünde değil). Yaw 0: dokunun üstü kuzey.
+  - Doku yolları göreli yazılır (SDF'nin klasörüne göre; gz-sim malzeme URI'lerini SDF dosyasının yoluna göre
+    çözer) → depo başka bir kullanıcı/klasörde de çalışır. --mutlak-yol eski davranış.
   - <gui>: kullanıcı gui.config eklentileri + güneybatıdan, 300 m'den merkeze bakan kamera
 Zemin görseli 500 → 700 m (ızgara ±300 m'yi kapsasın); çarpışma düzlemi zaten sonsuz.
 
 Kullanım: python3 make_iha_arena.py   → iha_arena.sdf (aynı klasör), varlık sayıları ekrana
+          python3 make_iha_arena.py --zemin dokulu --hedef aruco   → iha_arena_aruco.sdf
+PX4 kaynağı: $PX4_DIR (varsayılan ~/PX4-Autopilot)/Tools/simulation/gz/worlds/default.sdf
 """
 
 import argparse
@@ -27,7 +34,9 @@ import math
 import os
 import re
 
-SRC = os.path.expanduser("~/PX4-Autopilot/Tools/simulation/gz/worlds/default.sdf")
+PX4_DIR = os.path.expanduser(os.environ.get("PX4_DIR", "~/PX4-Autopilot"))
+SRC = os.path.join(PX4_DIR, "Tools/simulation/gz/worlds/default.sdf")
+HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "iha_arena.sdf")
 
 RING_RADIUS = 100.0
@@ -48,13 +57,18 @@ BUILDINGS = [   # (ad, x, y, boyut x, boyut y, yükseklik, renk)
 QR_POS = (-60.0, -60.0)
 QR_SIZE = 29.0 / 21.0                    # 21 modül kod = 1,00 m, 4 modül kenar → 1,381 m
 QR_Z = 0.05                              # zemin (0) ve ızgara (≤ 0,022) üstünde, z-fighting olmasın
-QR_TEXTURE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "qr_hedef01.png")
+QR_TEXTURE = os.path.join(HERE, "qr_hedef01.png")
+ARUCO_POS = (-60.0, -60.0)              # ENU (x = Doğu, y = Kuzey) → NED N = −60, E = −60
+ARUCO_SIZE = 2.0 * 8.0 / 6.0            # 2,00 m marker + 1 modül beyaz boşluk (make_aruco_hedef.py varsayılanı)
+ARUCO_Z = 0.02                          # zemin (0) üstünde, z-fighting olmasın
+ARUCO_TEXTURE = os.path.join(HERE, "aruco_hedef.png")
 # Dokulu zemin (--zemin dokulu → iha_arena_v2.sdf): zemin görseli GROUND_TILES × GROUND_TILES karoya bölünür,
 # hepsi aynı dikişsiz dokuyu (make_zemin_doku.py, PBR albedo — QR levhasıyla aynı yöntem) paylaşır. Karolar
 # ground_plane link'inin içinde, özgün tek görselin yerine geçer (üst üste binme yok, çarpışma düzlemi aynı).
 GROUND_SIZE = 700.0
 GROUND_TILES = 2                         # 2×2 → 350 m karo; 2048 px doku ile 17 cm/texel
-GROUND_TEXTURE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "zemin_doku.png")
+GROUND_TEXTURE = os.path.join(HERE, "zemin_doku.png")
+TEXTURE_ABS = False                      # main(): --mutlak-yol
 CAMERA_POSE = (-300.0, -300.0, 300.0)   # güneybatı, 300 m
 CAMERA_TARGET = (0.0, 0.0, 60.0)
 
@@ -77,13 +91,18 @@ def cylinder_visual(name, x, y, z, radius, length, rgb):
             f"</cylinder></geometry>{material(rgb)}</visual>")
 
 
+def tex_uri(path):
+    """Doku URI'si: varsayılan göreli (SDF ile aynı klasör), --mutlak-yol ile mutlak."""
+    return path if TEXTURE_ABS else os.path.relpath(path, HERE)
+
+
 def textured_plane_visual(name, x, y, z, size, texture):
     # Doku resmi kuzey yukarı olacak şekilde; yaw 0. Ayna/ters durumu pencereden doğrulanır.
     return (f"<visual name='{name}'><pose>{x:.3f} {y:.3f} {z:.3f} 0 0 0</pose>"
             f"<cast_shadows>false</cast_shadows><geometry><plane><normal>0 0 1</normal>"
             f"<size>{size:.4f} {size:.4f}</size></plane></geometry>"
             "<material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0 0 0 1</specular>"
-            f"<pbr><metal><albedo_map>{texture}</albedo_map><metalness>0</metalness><roughness>1</roughness>"
+            f"<pbr><metal><albedo_map>{tex_uri(texture)}</albedo_map><metalness>0</metalness><roughness>1</roughness>"
             "</metal></pbr></material></visual>")
 
 
@@ -92,7 +111,7 @@ def static_model(name, visuals):
             + "".join(visuals) + "</link></model>")
 
 
-def build():
+def build(hedef="qr"):
     models = {}
 
     seg = 2.0 * RING_RADIUS * math.sin(math.pi / RING_SEGMENTS) + 0.2
@@ -120,9 +139,14 @@ def build():
 
     models["arena_binalar"] = [box_visual(n, x, y, h / 2, 0.0, sx, sy, h, rgb) for n, x, y, sx, sy, h, rgb in BUILDINGS]
 
-    if not os.path.isfile(QR_TEXTURE):
-        raise SystemExit(f"QR dokusu yok: {QR_TEXTURE} (önce make_qr_hedef.py)")
-    models["arena_qr_hedef01"] = [textured_plane_visual("levha", *QR_POS, QR_Z, QR_SIZE, QR_TEXTURE)]
+    if hedef == "qr":
+        if not os.path.isfile(QR_TEXTURE):
+            raise SystemExit(f"QR dokusu yok: {QR_TEXTURE} (önce make_qr_hedef.py)")
+        models["arena_qr_hedef01"] = [textured_plane_visual("levha", *QR_POS, QR_Z, QR_SIZE, QR_TEXTURE)]
+    else:
+        if not os.path.isfile(ARUCO_TEXTURE):
+            raise SystemExit(f"ArUco dokusu yok: {ARUCO_TEXTURE} (önce make_aruco_hedef.py)")
+        models["arena_aruco_hedef"] = [textured_plane_visual("levha", *ARUCO_POS, ARUCO_Z, ARUCO_SIZE, ARUCO_TEXTURE)]
     return models
 
 
@@ -186,9 +210,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--zemin", choices=["duz", "dokulu"], default="duz",
                     help="duz = özgün gri zemin (iha_arena.sdf); dokulu = çim/toprak dokulu karolar (iha_arena_v2.sdf)")
-    ap.add_argument("--out", default=None, help="çıktı dosyası (varsayılan: zemine göre iha_arena.sdf / iha_arena_v2.sdf)")
+    ap.add_argument("--hedef", choices=["qr", "aruco"], default="qr",
+                    help="qr = 1 m QR (HEDEF-01); aruco = 2 m DICT_4X4_50 marker (aruco_hedef.png)")
+    ap.add_argument("--mutlak-yol", action="store_true", help="doku yollarını mutlak yaz (eski davranış)")
+    ap.add_argument("--out", default=None,
+                    help="çıktı dosyası (varsayılan: iha_arena.sdf / iha_arena_v2.sdf; --hedef aruco → iha_arena_aruco.sdf)")
     args = ap.parse_args()
-    out = args.out or (OUT if args.zemin == "duz" else OUT.replace("iha_arena.sdf", "iha_arena_v2.sdf"))
+    global TEXTURE_ABS
+    TEXTURE_ABS = args.mutlak_yol
+    if args.hedef == "aruco":
+        out = args.out or OUT.replace("iha_arena.sdf", "iha_arena_aruco.sdf")
+    else:
+        out = args.out or (OUT if args.zemin == "duz" else OUT.replace("iha_arena.sdf", "iha_arena_v2.sdf"))
     text = open(SRC, encoding="utf-8-sig").read()
     if "<world name=\"default\">" not in text:
         raise SystemExit("default.sdf beklenen <world name=\"default\"> içermiyor")
@@ -209,7 +242,7 @@ def main():
             raise SystemExit("zemin görseli bloğu bulunamadı")
         extra_visuals = len(tiles) - 1
 
-    models = build()
+    models = build(args.hedef)
     gui, pitch, yaw = gui_block()
     extra = "\n    ".join(static_model(name, vis) for name, vis in models.items())
     text = text.replace("  </world>", f"    {gui}\n    {extra}\n  </world>", 1)

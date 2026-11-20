@@ -55,8 +55,9 @@ class Yurutucu:
     adim(n, e) → (konum, hız, ivme) setpoint'i. faz: "hat" | "donus" | "cikis" | "hold" (hold = setpoint'i
     çıkış hattı boyunca sürdür, çağıran Hold komutunu verir)."""
 
-    def __init__(self, plan, ayrim=None, koridor_serbest=None, kayit=log):
+    def __init__(self, plan, ayrim=None, koridor_serbest=None, kayit=log, tam_tarama=False):
         self.plan, self.p = plan, plan.p
+        self.tam_tarama = tam_tarama           # True: tespit kaydedilir ama tarama tüm hatlar bitene dek sürer (haritalama)
         self.ayrim, self.kayit = ayrim, kayit
         self.koridor_serbest = koridor_serbest or (lambda: True)
         self.kalan = list(plan.sira)            # henüz uçulmamış hatlar (plan sırasıyla)
@@ -107,7 +108,7 @@ class Yurutucu:
         return True, ""
 
     def _hat_bitti(self):
-        if self.tespit is not None:
+        if self.tespit is not None and not self.tam_tarama:
             return self._cikisa_gec("tespit")
         if self.ayrim is not None and self.ayrim.en_kucuk is not None and self.ayrim.en_kucuk[0] < self.ayrim.min_ayrim:
             return self._cikisa_gec(f"canlı ayrım ihlali (3B {self.ayrim.en_kucuk[0]:.0f} m < {self.ayrim.min_ayrim:.0f} m)")
@@ -148,7 +149,8 @@ class Yurutucu:
         if self.tespit is not None:
             return False
         self.tespit = dict(d, hat=self.hat_no, faz=self.faz, ucus_sirasi=len(self.ucuslar))
-        self.kayit(f"TESPİT: {d} — faz {self.faz}; uçulan hat bitirilip çıkış Hold'una gidilecek")
+        self.kayit(f"TESPİT: {d} — faz {self.faz}; " + ("tam tarama: kalan hatlar uçulacak" if self.tam_tarama
+                                                         else "uçulan hat bitirilip çıkış Hold'una gidilecek"))
         return True
 
     # ── her döngü ──
@@ -158,13 +160,13 @@ class Yurutucu:
         self.ilerleme = max(self.ilerleme, min(il, pr["uzunluk"] + 200.0))
         if self.faz == "hat":
             u = self.ucuslar[-1]
-            t, _ = self.p.tc(n, e)
-            if abs(t) <= self.p.yari:
+            alanda = tp.alan_icinde(self.p, n, e)
+            if alanda:
                 if u["x_giris_m"] is None:
                     u["x_giris_m"] = round(x, 2)
                 u["x_maks_m"] = round(max(u["x_maks_m"], abs(x)), 2)
             u["direk_min_m"] = round(min(u["direk_min_m"], q.pylon_dist((n, e))), 1)
-            if abs(t) > self.p.yari and u["x_giris_m"] is None:
+            if not alanda and u["x_giris_m"] is None:
                 u["x_uzatma_maks_m"] = round(max(u.get("x_uzatma_maks_m", 0.0), abs(x)), 2)   # kutuya girmeden önceki 40 m
         elif self.faz == "donus":
             dn_ = self.donusler[-1]
@@ -199,10 +201,10 @@ def tespit_gecerli(d, p, icerik):
     if icerik and d.get("icerik") != icerik:
         return False
     try:
-        t, c = p.tc(float(d["x_kuzey"]), float(d["y_dogu"]))
+        n, e = float(d["x_kuzey"]), float(d["y_dogu"])
     except (KeyError, TypeError, ValueError):
         return False
-    return abs(t) <= p.yari + 20 and abs(c) <= p.yari + 20
+    return tp.alan_icinde(p, n, e, 20.0)
 
 
 def ucus(node, plan, args, ayr=None, spin=None, saat=time.monotonic, res=None, kayit=log):
@@ -215,12 +217,14 @@ def ucus(node, plan, args, ayr=None, spin=None, saat=time.monotonic, res=None, k
     S = gi["bas"]
 
     def koridor_serbest():
+        if getattr(args, "koridor_yok", False):    # öteki araç uzak üste (yerden kalkış senaryosu): doğu koridoru kullanılmıyor
+            return True
         if ayr is None or not ayr.goruldu:
             return True
         dg = ayr.diger()
         return dg["tur"] in ("hold", "hareketli") and dg.get("irtifa", 0.0) > 30.0
 
-    yur = Yurutucu(plan, ayr, koridor_serbest, kayit)
+    yur = Yurutucu(plan, ayr, koridor_serbest, kayit, tam_tarama=getattr(args, "tam_tarama", False))
     res["plan"] = plan.ozet()
     # ── 0. İlk hat canlı denetimi (ayrım / koridor) ──
     c0 = plan.hatlar[plan.sira[0]]
@@ -292,7 +296,7 @@ def ucus(node, plan, args, ayr=None, spin=None, saat=time.monotonic, res=None, k
     iz, iz_t = None, t_tarama
     if getattr(args, "iz", None):
         iz = open(args.iz, "w")
-        iz.write("t,n,e,irtifa,vn,ve,faz,ilkel,hat_sirasi,yanal\n")
+        iz.write("t,n,e,irtifa,vn,ve,faz,ilkel,hat_sirasi,yanal,t_duvar\n")
     sonraki_log = t_tarama
     islenen = 0
     while yur.faz != "hold":
@@ -315,7 +319,7 @@ def ucus(node, plan, args, ayr=None, spin=None, saat=time.monotonic, res=None, k
         if iz is not None and saat() >= iz_t:
             iz_t += 0.2
             iz.write(f"{saat() - t_tarama:.2f},{ps.x:.2f},{ps.y:.2f},{-ps.z:.2f},{ps.vx:.2f},{ps.vy:.2f},{yur.faz},"
-                     f"{yur.ilkeller[yur.i]['tur']},{len(yur.ucuslar)},{getattr(yur, 'son_x', 0.0):.2f}\n")
+                     f"{yur.ilkeller[yur.i]['tur']},{len(yur.ucuslar)},{getattr(yur, 'son_x', 0.0):.2f},{time.time():.3f}\n")
         if saat() >= sonraki_log:
             sonraki_log += 2.0
             pr = yur.ilkeller[yur.i]
@@ -368,16 +372,60 @@ def ucus(node, plan, args, ayr=None, spin=None, saat=time.monotonic, res=None, k
     return 0 if hold_ok else 1
 
 
-def param_olustur(args):
-    return tp.Param(psi0=args.yon, yari=args.kutu / 2, merkez=(args.merkez_n, args.merkez_e), W=args.serit,
-                    hat_araligi=args.hat_araligi if args.hat_araligi else args.serit, r_min=args.r_min,
+def serit_kameradan(args, kayit=print):
+    """--serit-kamera: tespit şeridi W ve hat aralığı kamera modelinden (kamera_geometri.tespit_seridi, en kötü
+    durum marker yaw'ı × roll ±roll_pay × pitch ±pitch_pay); --yan-ortusme > 0 → komşu hatların görüntüleri en az
+    bu oranda örtüşür (görüntü birleştirme). Verilmezse elle --serit / --hat-araligi. Dönüş (W, hat_araligi)."""
+    if not getattr(args, "serit_kamera", None):
+        if getattr(args, "yan_ortusme", 0.0) > 0:
+            kayit("UYARI: --yan-ortusme yalnız --serit-kamera ile uygulanır; yok sayıldı")
+        return args.serit, (args.hat_araligi if args.hat_araligi else args.serit)
+    import kamera_geometri as kg
+    kam = kg.Kamera.json_oku(args.serit_kamera)
+    s = kg.tespit_seridi(kam, args.alt, roll_pay=args.roll_pay, pitch_pay=args.pitch_pay, kenar_px=args.kenar_px,
+                         min_kenar_px=args.min_kenar_px)
+    if s["W"] <= 0:
+        raise SystemExit(f"HATA: {args.alt:g} m'de tespit şeridi yok (marker < {args.min_kenar_px:g} px?)")
+    W = s["W"]
+    d, Wg = kg.hat_araligi(kam, args.alt, W, args.yan_ortusme, args.roll_pay)
+    if args.hat_araligi:
+        d = min(d, args.hat_araligi)
+    kayit(f"ŞERİT (kamera {os.path.basename(args.serit_kamera)}, {args.alt:g} m, roll ±{args.roll_pay:g}°, pitch "
+          f"±{args.pitch_pay:g}°, kenar {args.kenar_px:g} px): tespit şeridi W {W:.1f} m [{s['alt']:+.1f}, {s['ust']:+.1f}], "
+          f"marker ≥ {s['min_kenar_px']:.0f} px; görüntü şeridi {Wg:.1f} m → hat aralığı ≤ {d:.1f} m"
+          + (f" (yan örtüşme ≥ %{100 * args.yan_ortusme:.0f})" if args.yan_ortusme > 0 else ""))
+    return W, d
+
+
+def param_olustur(args, kayit=print):
+    W, d = serit_kameradan(args, kayit)
+    yari = args.daire if args.daire > 0 else args.kutu / 2
+    return tp.Param(psi0=args.yon if args.yon is not None else 0.0, yari=yari, daire=args.daire,
+                    merkez=(args.merkez_n, args.merkez_e), W=W, hat_araligi=d, r_min=args.r_min,
                     r_donus=args.r_donus, uzatma=args.uzatma, hat_payi=args.hat_payi, donus_payi=args.donus_payi,
                     hiz=args.speed, irtifa=args.alt, on_mesafe=args.on_mesafe)
 
 
+def plan_kur(p, args, baslangic, kayit=print):
+    """Plan: sıra türü (--sira; daire → cim) ve daire modunda --yon verilmemişse yön seçimi (tp.planla_yon_sec)."""
+    # Varsayılan: dönüş yolu en kısa sıra (atlamali arama tüm sıraları, çim sırası dahil, dener → hiçbir zaman daha
+    # uzun değil). 2026-11-20 R 100 daire, 3 hat: çim 2300 m, en kısa 2207 m (0 → −59 → +59; dönüşler 550 + 457 m).
+    sira = args.sira or "atlamali"
+    sirali = sira == "cim"
+    if p.daire > 0 and args.yon is None and not args.hat_sec and args.ilk_hat is None:
+        plan, aday = tp.planla_yon_sec(p, range(0, 180, 15), baslangic, sirali)
+        kayit("  yön adayları (yön: kapsama, toplam m, hata): " + "; ".join(
+            f"{y}°: " + ("—" if k is None else f"%{100 * k:.1f}, {t}") + (f" [{h}]" if h else "") for y, k, t, h in aday))
+        return plan
+    if p.daire == 0 and p.psi0 not in (0.0, 90.0):
+        kayit("HATA: kutu modunda --yon 0 ya da 90 olmalı")
+        return None
+    return tp.planla(p, baslangic, sirali, sec=args.hat_sec, ilk=args.ilk_hat)
+
+
 def plan_yazdir(plan, kayit=print):
     p, o = plan.p, plan.ozet()
-    kayit(f"PLAN: {o['hat_sayisi']} hat (aralık ≤ {p.hat_araligi:.1f} m, W {p.W:.1f} m), yön {p.psi0:.0f}°, "
+    kayit(f"PLAN ({o['alan']}): {o['hat_sayisi']} hat (aralık ≤ {p.hat_araligi:.1f} m, W {p.W:.1f} m), yön {p.psi0:.0f}°, "
           f"toplam {o['toplam_m']} m ≈ {o['sure_sn']} sn; geometrik kapsama %{100 * o['geometrik_kapsama']:.1f}, "
           f"C {o['C']:.2f}; dönüşler: {o['stadyum']} stadyum + {o['ampul']} ampul, R {p.r_donus:.0f} m; "
           f"direk: hat ≥ {o['hat_direk_min_m']} m, dönüş ≥ {o['donus_direk_min_m']} m")
@@ -395,8 +443,29 @@ def arguman():
     ap.add_argument("--kutu", type=float, default=300.0, help="Kare kutu kenarı [m]")
     ap.add_argument("--merkez-n", type=float, default=0.0)
     ap.add_argument("--merkez-e", type=float, default=0.0)
-    ap.add_argument("--yon", type=float, default=0.0, choices=(0.0, 90.0), help="Hat yönü [°] (0: K–G hatlar)")
+    ap.add_argument("--yon", type=float, default=None,
+                    help="Hat yönü [°] (0: K–G hatlar). Kutu: 0 ya da 90 (verilmezse 0). Daire: herhangi; verilmezse "
+                         "0–165° (15° adım) arasından kapsaması en iyi, yolu en kısa doğrulanmış plan seçilir")
+    ap.add_argument("--daire", type=float, default=0.0,
+                    help="> 0: arama alanı (merkez-n, merkez-e) çevresinde bu yarıçaplı daire [m] (arena halkası 100); "
+                         "--kutu yok sayılır")
+    ap.add_argument("--sira", choices=("atlamali", "cim"), default=None,
+                    help="atlamali: dönüş yolu en kısa sıra (varsayılan; tüm sıraları dener, çim sırası dahil); cim: çim "
+                         "biçme makinesi — komşu hatlar sırayla, gidiş-dönüş (dar dönüşler ampul)")
     ap.add_argument("--serit", type=float, default=16.0, help="Güvenilir tespit şeridi W [m] (60 m irtifa, Adım 1)")
+    ap.add_argument("--serit-kamera", default=None, metavar="JSON",
+                    help="W'yi ve hat aralığını bu kamera kalibrasyonundan hesapla (kamera_geometri.py; --serit yok "
+                         "sayılır, --hat-araligi üst sınır olur). Ör. kalibrasyon/w_nadir_10_sim.json")
+    ap.add_argument("--roll-pay", type=float, default=2.0,
+                    help="--serit-kamera: düz hatta roll payı [°] (sim 2026-11-20: p99 1,5°; rüzgârda ölçülmeli)")
+    ap.add_argument("--pitch-pay", type=float, default=2.0, help="--serit-kamera: pitch payı [°]")
+    ap.add_argument("--kenar-px", type=float, default=5.0, help="--serit-kamera: marker köşesi–görüntü kenarı en az [px]")
+    ap.add_argument("--min-kenar-px", type=float, default=20.0, help="--serit-kamera: marker kenarı en az [px]")
+    ap.add_argument("--yan-ortusme", type=float, default=0.0,
+                    help="--serit-kamera: komşu hat görüntüleri en az bu oranda örtüşsün (0–0,9; görüntü birleştirme "
+                         "için ~0,3 en az, fotogrametri 0,6–0,7). 0 = yalnız tespit şeridi")
+    ap.add_argument("--tam-tarama", action="store_true",
+                    help="Tespit taramayı kesmez: kaydedilir, tüm hatlar uçulur (haritalama / kapsama ölçümü)")
     ap.add_argument("--hat-araligi", type=float, default=0.0, help="En büyük hat aralığı [m]; 0 = W")
     ap.add_argument("--alt", type=float, default=60.0)
     ap.add_argument("--speed", type=float, default=15.0)
@@ -424,6 +493,10 @@ def arguman():
     ap.add_argument("--hat-sec", type=float, nargs="+", default=None, metavar="C",
                     help="Dilim uçuşu: yalnız bu yanal konumlara (m) en yakın hatlar uçulur")
     ap.add_argument("--ilk-hat", type=float, default=None, help="İlk uçulacak hat (yanal konum, m); verilmezse en kısa sıra")
+    ap.add_argument("--koridor-yok", action="store_true",
+                    help="Doğu kalkış koridoru (qr_pass.in_corridor; öteki araç orijin pistinde) denetimini kapat — öteki "
+                         "araç uzak üsteyken (IHA_UAV1_SPAWN_NE, ör. 200,−950). Eskiden --hat-sec ile hedef hattı seçilerek "
+                         "aşılıyordu (2026-11-20).")
     ap.add_argument("--iz", help="Tarama izini (5 Hz, PX4 kestirimi) bu CSV'ye yaz")
     ap.add_argument("--yalniz-plan", action="store_true", help="Planı yazdır ve çık (ROS düğümü açılmaz)")
     ap.add_argument("--done-file")
@@ -434,9 +507,9 @@ def arguman():
 
 def main() -> int:
     args = arguman().parse_args()
-    p = param_olustur(args)
+    p = param_olustur(args, print if args.yalniz_plan else log)
     if args.yalniz_plan:
-        plan = tp.planla(p, tuple(args.baslangic) if args.baslangic else None, sec=args.hat_sec, ilk=args.ilk_hat)
+        plan = plan_kur(p, args, tuple(args.baslangic) if args.baslangic else None)
         if plan is None:
             print("PLAN YOK: bu parametrelerle uçulabilir hat/sıra bulunamadı")
             return 1
@@ -529,6 +602,12 @@ def main() -> int:
                 rclpy.spin_once(node, timeout_sec=0.2)
             yay_n = node.count_publishers("/hedef_konum")
             log(f"qr_online.py bu düğümce başlatıldı (pid {qr_proc.pid}); /hedef_konum yayıncısı: {yay_n}")
+        # DDS keşfi düğüm açılır açılmaz tamamlanmamış olabilir (2026-11-20: yayıncı varken 0 sayıldı → tarama HATA).
+        t = time.monotonic()
+        while (node.count_publishers("/hedef_konum") == 0 or node.count_publishers("/uav0/camera/image") == 0) \
+                and time.monotonic() - t < 15.0:
+            rclpy.spin_once(node, timeout_sec=0.2)
+        yay_n = node.count_publishers("/hedef_konum")
         zincir = {"qr_online": yay_n, "kamera": node.count_publishers("/uav0/camera/image"),
                   "role_dinleyen": node.count_subscribers("/hedef_konum") - 1,
                   "yaklasma_dinleyen": node.count_subscribers("/hedef_konum_role")}
@@ -552,7 +631,7 @@ def main() -> int:
             log("ayrım denetimi: " + (f"uav{args.diger_uav} {dg['tur']}, irtifa {dg.get('irtifa', float('nan')):.0f} m; "
                                       f"eşik 3B {args.min_ayrim:.0f} m" if ayr.goruldu
                                       else f"uav{args.diger_uav} verisi YOK — denetim kapalı (tek araç?)"))
-        plan = tp.planla(p, tuple(args.baslangic) if args.baslangic else (node.pos.x, node.pos.y), sec=args.hat_sec, ilk=args.ilk_hat)
+        plan = plan_kur(p, args, tuple(args.baslangic) if args.baslangic else (node.pos.x, node.pos.y), log)
         if plan is None or not plan_yazdir(plan, log):
             log("HATA: uygun plan yok")
             res.update(sonuc="plan_yok")

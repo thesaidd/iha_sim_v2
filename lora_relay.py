@@ -20,19 +20,29 @@ ROS 2 topic adları yalnızca ASCII [a-zA-Z0-9_] kabul ettiğinden "röle" yerin
   /hedef_konum_role_stat  (std_msgs/String, JSON): periyodik istatistik (alinan, gonderilen, kayip,
         kayip_orani_gerceklesen_%, gecikme ort/min/maks). Ayrıca aynı özet loglanır.
 
+Paket modu (--mod paket; bapp aruco_geolocator ile, 2026-11-20):
+  /bap/hedef_rapor (std_msgs/UInt8MultiArray, 24 bayt TargetReport) → /bap/hedef_rapor_role (aynı tip, aynı bayt).
+  Gerçek LoRa'ya daha yakın: gecikme = time-on-air (Semtech AN1200.13; --sf/--bw/--cr/--preamble, yük = rapor +
+  --cerceve-bayt adres/CRC çerçevesi) + Gauss işleme jitter'ı (--isleme-ms ± --isleme-sigma). Tek kanal, yarı
+  çift yönlü: verici meşgulken gelen rapor bekleyen tek paketin yerine geçer (en yeni rapor gider; eskiler
+  düşer, --mesgul-dus). Kayıp Bernoulli (--kayip-orani). Görev döngüsü (duty cycle) sınırı --duty (%) ile:
+  bir paketten sonra kanal ToA·(100/duty − 1) kapalı. Yük baytları değiştirilmez.
+
 Kullanım:
-  source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash
+  source /opt/ros/jazzy/setup.bash && source ~/ros2_ws/install/setup.bash
   python3 lora_relay.py [--gecikme-ort 50] [--gecikme-yari 20] [--kayip-orani 3] [--seed N] [--stat-sn 10]
+  python3 lora_relay.py --mod paket [--sf 7 --bw 125 --cr 1] [--duty 10] [--kayip-orani 3]
 """
 import argparse
 import json
+import math
 import random
 import threading
 import time
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from std_msgs.msg import String, UInt8MultiArray
 
 
 def log(msg):
@@ -116,6 +126,85 @@ class LoraRole(Node):
             log(f"istatistik: {json.dumps(ozet, ensure_ascii=False)}")
 
 
+def lora_toa_ms(payload_bayt, sf=7, bw_khz=125.0, cr=1, preamble=8, crc=True, acik_baslik=True, ldro=None):
+    """LoRa time-on-air [ms] (Semtech AN1200.13). cr: 1..4 → 4/5..4/8. ldro None → T_sym > 16 ms ise açık."""
+    t_sym = (2 ** sf) / (bw_khz * 1e3)
+    de = (t_sym > 0.016) if ldro is None else bool(ldro)
+    ih = 0 if acik_baslik else 1
+    pay = 8 + max(math.ceil((8 * payload_bayt - 4 * sf + 28 + 16 * int(crc) - 20 * ih) / (4 * (sf - 2 * int(de))))
+                  * (cr + 4), 0)
+    return ((preamble + 4.25) + pay) * t_sym * 1e3
+
+
+class LoraPaketRole(Node):
+    """Bayt yükü taşıyan LoRa taklidi (bkz. modül notu, paket modu)."""
+
+    def __init__(self, a):
+        super().__init__("lora_relay")
+        self.a = a
+        self.rng = random.Random(a.seed)
+        self.lock = threading.Lock()
+        self.alinan = self.gonderilen = self.kayip = self.ezilen = 0
+        self.gecikmeler = []
+        self.bekleyen = None                 # (bayt, alinan_duvar) — verici meşgulken en yeni rapor
+        self.kanal_serbest = 0.0             # monotonic: verici (ToA + duty beklemesi) bitişi
+        self.create_subscription(UInt8MultiArray, a.giris, self.on_msg, 10)
+        self.pub = self.create_publisher(UInt8MultiArray, a.cikis, 10)
+        self.stat_pub = self.create_publisher(String, a.cikis + "_stat", 10)
+        self.create_timer(float(a.stat_sn), self.stat_yayinla)
+        self.create_timer(0.005, self.kanal_dongusu)
+        toa = lora_toa_ms(24 + a.cerceve_bayt, a.sf, a.bw, a.cr, a.preamble)
+        log(f"lora_relay (paket) hazır: {a.giris} → {a.cikis} | SF{a.sf} BW{a.bw:g} kHz CR4/{a.cr + 4} "
+            f"→ 24+{a.cerceve_bayt} B için ToA {toa:.1f} ms | duty %{a.duty:g} | kayıp %{a.kayip_orani:g}")
+
+    def on_msg(self, msg):
+        with self.lock:
+            self.alinan += 1
+            if self.bekleyen is not None:
+                self.ezilen += 1             # verici meşgul: eski bekleyen rapor yerini yenisine bırakır
+            self.bekleyen = (bytes(msg.data), time.time())
+
+    def kanal_dongusu(self):
+        now = time.monotonic()
+        with self.lock:
+            if self.bekleyen is None or now < self.kanal_serbest:
+                return
+            data, alinan_duvar = self.bekleyen
+            self.bekleyen = None
+            toa = lora_toa_ms(len(data) + self.a.cerceve_bayt, self.a.sf, self.a.bw, self.a.cr, self.a.preamble)
+            bekleme = toa * (100.0 / self.a.duty - 1.0) if self.a.duty < 100 else 0.0
+            self.kanal_serbest = now + (toa + bekleme) / 1000.0
+            kayip = self.rng.random() < self.a.kayip_orani / 100.0
+            if kayip:
+                self.kayip += 1
+                return
+        gecikme = toa + max(0.0, self.rng.gauss(self.a.isleme_ms, self.a.isleme_sigma))
+        t = threading.Timer(gecikme / 1000.0, self.gonder, args=(data, gecikme))
+        t.daemon = True
+        t.start()
+
+    def gonder(self, data, gecikme):
+        self.pub.publish(UInt8MultiArray(data=list(data)))
+        with self.lock:
+            self.gonderilen += 1
+            self.gecikmeler.append(gecikme)
+
+    def stat_ozet(self):
+        with self.lock:
+            g = list(self.gecikmeler)
+            a, s, k, e = self.alinan, self.gonderilen, self.kayip, self.ezilen
+        return {"alinan": a, "gonderilen": s, "kayip": k, "ezilen_mesgul": e,
+                "gecikme_ort_ms": round(sum(g) / len(g), 2) if g else None,
+                "gecikme_min_ms": round(min(g), 2) if g else None,
+                "gecikme_maks_ms": round(max(g), 2) if g else None}
+
+    def stat_yayinla(self):
+        ozet = self.stat_ozet()
+        self.stat_pub.publish(String(data=json.dumps(ozet, ensure_ascii=False)))
+        if ozet["alinan"]:
+            log(f"istatistik: {json.dumps(ozet, ensure_ascii=False)}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--gecikme-ort", type=float, default=50.0, help="ortalama gecikme [ms] (varsayılan 50)")
@@ -123,9 +212,24 @@ def main():
     ap.add_argument("--kayip-orani", type=float, default=3.0, help="paket kayıp oranı [%%] (varsayılan 3 → %%97 başarı)")
     ap.add_argument("--seed", type=int, default=None, help="RNG tohumu (yinelenebilirlik)")
     ap.add_argument("--stat-sn", type=float, default=10.0, help="istatistik yayın/log periyodu [sn]")
+    ap.add_argument("--mod", choices=("json", "paket"), default="json",
+                    help="json: /hedef_konum String (eski); paket: bapp 24 bayt TargetReport")
+    ap.add_argument("--giris", default="/bap/hedef_rapor", help="paket modu giriş konusu")
+    ap.add_argument("--cikis", default="/bap/hedef_rapor_role", help="paket modu çıkış konusu")
+    ap.add_argument("--sf", type=int, default=7, help="LoRa yayılma çarpanı (paket modu)")
+    ap.add_argument("--bw", type=float, default=125.0, help="LoRa bant genişliği [kHz]")
+    ap.add_argument("--cr", type=int, default=1, choices=(1, 2, 3, 4), help="kodlama oranı 4/(4+cr)")
+    ap.add_argument("--preamble", type=int, default=8)
+    ap.add_argument("--cerceve-bayt", type=int, default=4, help="adres + uygulama CRC'si [bayt]")
+    ap.add_argument("--duty", type=float, default=10.0, help="görev döngüsü sınırı [%%] (433 MHz ISM tipik %%10)")
+    ap.add_argument("--isleme-ms", type=float, default=8.0, help="UART/MCU işleme gecikmesi ort. [ms]")
+    ap.add_argument("--isleme-sigma", type=float, default=3.0)
     args = ap.parse_args()
     rclpy.init()
-    node = LoraRole(args.gecikme_ort, args.gecikme_yari, args.kayip_orani, args.seed, args.stat_sn)
+    if args.mod == "paket":
+        node = LoraPaketRole(args)
+    else:
+        node = LoraRole(args.gecikme_ort, args.gecikme_yari, args.kayip_orani, args.seed, args.stat_sn)
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

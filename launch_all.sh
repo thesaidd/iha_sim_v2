@@ -2,16 +2,16 @@
 # Tüm süreçleri arka planda başlatır, logları /tmp/ altına yazar
 #
 # Kullanım:
-#   ./launch_all.sh          → kamerasız model (~/iha_sim_v2/gz_models_nocam), varsayılan
+#   ./launch_all.sh          → kamerasız model ($SIM_DIR/gz_models_nocam), varsayılan
 #   CAM=1 ./launch_all.sh    → orijinal kameralı model (PX4-Autopilot/Tools/simulation/gz/models);
 #                              varsayılan kapalı. Sunucu GstCameraSystem'siz server.config kopyasıyla
-#                              açılır (~/iha_sim_v2/server_nogst.config, GZ_SIM_SERVER_CONFIG_PATH):
+#                              açılır ($SIM_DIR/server_nogst.config, GZ_SIM_SERVER_CONFIG_PATH):
 #                              2026-10-30 ölçümü sızıntı yok (527 → 529 MB / 2 dk), RTF 1,000, kamera ~16,7 Hz.
 #                              Kamera görüntüsü yalnızca gz topic'inde; GStreamer UDP video (QGC 5600) yok.
 #                              Kullanım: CAM=1 ./launch_all.sh  (GUI=1 / WORLD=... ile birleştirilebilir)
 #   CAM=T ./launch_all.sh    → gerçek kamera modeli: RPi Global Shutter + 16 mm telefoto (1456×1088,
 #                              horizontal_fov 0,3114 rad), uçağın altından DİK AŞAĞI bakar
-#                              (~/iha_sim_v2/gz_models_cam_hw/T_nadir). server_nogst.config ile ve her zaman
+#                              ($SIM_DIR/gz_models_cam_hw/T_nadir). server_nogst.config ile ve her zaman
 #                              WORLD=iha_arena (QR hedefi (−60, −60)) açılır; başka WORLD yok sayılır.
 #                              GUI=1 ile birleştirilebilir. ROS köprüsü ayrı: camera_bridge.yaml (CLAUDE.md).
 #   CAM=T15 ./launch_all.sh  → CAM=T ile aynı, kamera kare hızı 15 Hz (gz_models_cam_hw/T_nadir_15;
@@ -23,7 +23,7 @@
 #                              2026-10-29 ölçümü: RTF 0,999, sunucu belleği sabit. CAM=1 ile birleştirilebilir.
 #   WORLD=iha_arena_v2 ./launch_all.sh → aynı arena, çim/toprak dokulu zemin (gz_worlds/iha_arena_v2.sdf);
 #                              CAM=T* ile de seçilebilir: CAM=T10 WORLD=iha_arena_v2 (WORLD verilmezse iha_arena).
-#   WORLD=iha_arena ./launch_all.sh → ~/iha_sim_v2/gz_worlds/iha_arena.sdf (halka, direkler, ızgara);
+#   WORLD=iha_arena ./launch_all.sh → $SIM_DIR/gz_worlds/iha_arena.sdf (halka, direkler, ızgara);
 #                              varsayılan PX4 default.sdf. Dünya adı SDF'ten okunur ("default" kalır),
 #                              iki PX4 örneği ve ros_gz aynı adı kullanır. Bu dünyada PX4'ün kamera
 #                              takibi kapalı (PX4_GZ_NO_FOLLOW=1), pencere dünyanın genel bakış
@@ -31,7 +31,7 @@
 #   GUI=1 VIZ=1 ./launch_all.sh → penceredeki uçak işaretçilerini de başlat (viz_trails.py: küre, 60 sn iz,
 #                              zemine dikey çizgi; uav0 kırmızı, uav1 mavi; 5 Hz, yalnızca görsel).
 #                              Varsayılan kapalı; GUI=1 olmadan çalışmaz (işaretçileri pencere çizer).
-#                              Kamera: ~/iha_sim_v2/cam.sh uav0|uav1|genel
+#                              Kamera: $SIM_DIR/cam.sh uav0|uav1|genel
 #   LORA=1 CAM=T10 ./launch_all.sh → ek olarak kamera köprüsü + qr_online (/hedef_konum) + lora_relay
 #                              (/hedef_konum_role; LoRa taklidi, varsayılan gecikme ~50 ms, kayıp %3) başlatır.
 #                              CAM=T/T10/T15 gerekir; opt-in, varsayılan kapalı. Röle parametreleri LORA_ARGS
@@ -39,6 +39,16 @@
 #   YAKLASMA=1 (LORA=1 gerektirir) → uav1 yaklaşma düğümü (lora_yaklasma.py) de başlar: uav1 120 m Hold'da
 #                              olunca /hedef_konum_role'ye göre hedefe yönelir, standoff'ta durur, yükselir, Hold.
 #                              Parametreler YAKLASMA_ARGS ile. Opt-in, varsayılan kapalı.
+#   CAM=W10 ./launch_all.sh  → BAP gerçek kamerası: RPi GS (IMX296) + 6 mm CS lens (hfov 45,4°), 1456×1088, 10 Hz,
+#                              dik aşağı, Gauss gürültü + Brown distorsiyonu (gz_models_cam_hw/W_nadir_10, PX4 v1.17
+#                              advanced_plane + kamera bloğu). WORLD verilmezse iha_arena_aruco (2 m ArUco, (−60,−60)).
+#   ARUCO=1 CAM=W10 ./launch_all.sh → kamera köprüsü + gs_kamera.py (renkli sensör/Bayer taklidi) + bapp
+#                              aruco_geolocator (BAPP, varsayılan ~/bapp; /bap/hedef_rapor 24 bayt + /hedef_konum JSON)
+#                              + lora_relay.py --mod paket (/bap/hedef_rapor_role; LoRa ToA/duty/kayıp). YAKLASMA=1 ile
+#                              uav1 lora_yaklasma.py --girdi paket (enlem/boylam → kendi EKF origin'i). PX4'e
+#                              UXRCE_DDS_SYNCT=0 verilir (damgalar sim saatinde kalsın; kare damgasıyla aynı saat).
+#                              Ek argümanlar: ARUCO_ARGS (geolocator), LORA_ARGS (röle), YAKLASMA_ARGS.
+#   GPU=1 ./launch_all.sh    → WSLg'de Windows GPU'su (Mesa D3D12; GPU_ADI=NVIDIA|AMD); varsayılan yazılım render.
 #   Birleştirilebilir:  GUI=1 VIZ=1 WORLD=iha_arena ./launch_all.sh
 #   ./launch_all.sh stop     → hepsini durdur
 #
@@ -47,15 +57,29 @@
 #      Konum değişkeni PX4_GZ_MODEL_POSE'dur; PX4_GZ_POSE PX4 tarafından okunmaz.
 #      PX4 derlenmez; derleme gerekiyorsa önce: cd ~/PX4-Autopilot && make px4_sitl
 
-PX4_DIR=~/PX4-Autopilot
+SIM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # depo kökü (eski: ~/iha_sim_v2 sabit)
+PX4_DIR=${PX4_DIR:-~/PX4-Autopilot}
+ROS_SETUP_FILE=/opt/ros/${ROS_DISTRO:-jazzy}/setup.bash   # 24.04: jazzy (eski: humble sabit)
+ROS_WS=${ROS_WS:-~/ros2_ws}
+# Jazzy: /opt/ros/jazzy/setup.bash gz_tools_vendor'ın `gz`'sini ve GZ_CONFIG_PATH'i öne koyar; orada sim8.yaml
+# yok → `gz sim` "komut yok" der (2026-11-20). Sistem Harmonic yapılandırmasını öne al (ROS kaynaklansa da çalışsın).
+export GZ_CONFIG_PATH=/usr/share/gz${GZ_CONFIG_PATH:+:$GZ_CONFIG_PATH}
+# GPU=1: WSLg Mesa varsayılanı yazılım render (llvmpipe); D3D12 sürücüsü Windows GPU'sunu kullanır (sunucu kamerası +
+# pencere). GPU_ADI: MESA_D3D12_DEFAULT_ADAPTER_NAME (varsayılan NVIDIA; bu laptopta RTX 4050 / Radeon 780M). 2026-11-20.
+if [[ $GPU == 1 ]]; then
+    export GALLIUM_DRIVER=d3d12 MESA_D3D12_DEFAULT_ADAPTER_NAME=${GPU_ADI:-NVIDIA}
+fi
+BAPP=${BAPP:-~/bapp}                                     # bapp deposu (aruco_geolocator düğümü, ARUCO=1)
 PX4_BUILD=$PX4_DIR/build/px4_sitl_default
-NOCAM_MODELS=~/iha_sim_v2/gz_models_nocam
-CAM_SERVER_CONFIG=~/iha_sim_v2/server_nogst.config   # PX4 gz_bridge/server.config kopyası, GstCameraSystem çıkarılmış
-CAM_T_MODELS=~/iha_sim_v2/gz_models_cam_hw/T_nadir   # RPi GS Camera + 16 mm, 1456×1088, kamera dik aşağı
-CAM_T15_MODELS=~/iha_sim_v2/gz_models_cam_hw/T_nadir_15   # T_nadir ile aynı, update_rate 15
-CAM_T10_MODELS=~/iha_sim_v2/gz_models_cam_hw/T_nadir_10   # T_nadir ile aynı, update_rate 10
-ARENA_WORLDS=~/iha_sim_v2/gz_worlds
-VIZ_SCRIPT=~/iha_sim_v2/viz_trails.py
+NOCAM_MODELS=$SIM_DIR/gz_models_nocam
+CAM_SERVER_CONFIG=$SIM_DIR/server_nogst.config   # PX4 gz_bridge/server.config kopyası, GstCameraSystem çıkarılmış
+CAM_T_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir   # RPi GS Camera + 16 mm, 1456×1088, kamera dik aşağı
+CAM_T15_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir_15   # T_nadir ile aynı, update_rate 15
+CAM_T10_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir_10   # T_nadir ile aynı, update_rate 10
+CAM_W10_MODELS=$SIM_DIR/gz_models_cam_hw/W_nadir_10   # BAP: 6 mm, dik aşağı, 10 Hz, gürültü + distorsiyon
+PY_BAPP=${PY_BAPP:-$BAPP/.venv-ros/bin/python}         # OpenCV 5 + bap_geo (ARUCO=1 düğümleri)
+ARENA_WORLDS=$SIM_DIR/gz_worlds
+VIZ_SCRIPT=$SIM_DIR/viz_trails.py
 PGID_FILE=/tmp/iha_sim.pgids
 LOG_MAX_BYTES=$((5 * 1024 * 1024))   # Log başına sınır; aşınca .1'e döner (tek yedek)
 
@@ -85,6 +109,19 @@ start_bg() {
     echo $! >> "$PGID_FILE"
 }
 
+# Bu bölümdeki (GZ_PARTITION) gz sim süreçleri. Eski kalıp öldürmesi komut satırında "gz sim" geçen her süreci
+# (çağıran kabuk, başka bölümdeki ayrı bir gz, ör. kalibrasyon) öldürüyordu (2026-11-20). Yalnız yürütülebilir
+# dosyası ruby/gz olan ve GZ_PARTITION'ı bizimkiyle aynı süreçler seçilir.
+gz_pids() {
+    local p exe part
+    for p in $(pgrep -f "gz sim"); do
+        exe=$(readlink "/proc/$p/exe" 2>/dev/null) || continue
+        [[ $exe == *ruby* || $exe == */gz || $exe == *gz-sim* ]] || continue
+        part=$(tr '\0' '\n' < "/proc/$p/environ" 2>/dev/null | sed -n 's/^GZ_PARTITION=//p')
+        [[ $part == "${GZ_PARTITION:-}" ]] && echo "$p"
+    done
+}
+
 stop_all() {
     if [[ -f $PGID_FILE ]]; then
         while read -r pgid; do kill -- "-$pgid" 2>/dev/null; done < "$PGID_FILE"
@@ -93,24 +130,24 @@ stop_all() {
     # Bu script dışında başlatılmış kalıntılar
     pkill -x px4 2>/dev/null
     pkill -x MicroXRCEAgent 2>/dev/null
-    pkill -f "gz sim" 2>/dev/null
+    kill $(gz_pids) 2>/dev/null
     # Elle başlatılan yardımcı düğümler: qr_recorder.py / qr_online.py (ve qr_pass/qr_watch,
     # mavlink_takeoff, kamera köprüsü) PGID_FILE'a yazılmıyor ve px4/Agent/gz desenlerine
     # uymuyor → eski stop bunları yetim bırakıyordu (2026-10-31). Script adıyla hedefli öldür
     # (ERE; "launch_all.sh stop" komut satırına uymaz). Önce SIGTERM: kaydedici kuyruğunu
     # boşaltıp özetini, online özetini yazsın; 5 sn sonra kalanı zorla.
-    local helper_pat='alan_tarama\.py|qr_recorder\.py|qr_online\.py|qr_pass\.py|qr_watch\.py|mavlink_takeoff\.py|camera_bridge\.yaml|lora_relay\.py|lora_yaklasma\.py|yer_gorevi\.py'
+    local helper_pat='alan_tarama\.py|qr_recorder\.py|qr_online\.py|qr_pass\.py|qr_watch\.py|mavlink_takeoff\.py|camera_bridge\.yaml|kamikaze_bridge\.yaml|lora_relay\.py|lora_yaklasma\.py|yer_gorevi\.py|gs_kamera\.py|aruco_geolocator_node\.py|canli_kamera\.py|gz_gercek_poz\.py'
     pkill -f "$helper_pat" 2>/dev/null
     for _ in {1..5}; do pgrep -f "$helper_pat" > /dev/null || break; sleep 1; done
     pkill -9 -f "$helper_pat" 2>/dev/null
     # Bellek baskısı altındaki gz sunucusu SIGTERM'e geç yanıt verebilir; 15 sn bekle, sonra zorla.
     for _ in {1..15}; do
-        pgrep -x px4 > /dev/null || pgrep -f "gz sim" > /dev/null || pgrep -x MicroXRCEAgent > /dev/null || return 0
+        pgrep -x px4 > /dev/null || [[ -n $(gz_pids) ]] || pgrep -x MicroXRCEAgent > /dev/null || return 0
         sleep 1
     done
     pkill -9 -x px4 2>/dev/null
     pkill -9 -x MicroXRCEAgent 2>/dev/null
-    pkill -9 -f "gz sim" 2>/dev/null
+    kill -9 $(gz_pids) 2>/dev/null
     sleep 1
 }
 
@@ -128,11 +165,22 @@ if [[ $1 == stop ]]; then
     echo "Tüm süreçler durduruldu."
     exit 0
 fi
-rm -f /tmp/{dds,gz,gz_gui,viz_trails,px4_0,px4_1}.log{,.1}
+rm -f /tmp/{dds,gz,gz_gui,viz_trails,px4_0,px4_1,gs_kamera,aruco_geolocator,gs_kamera_uav1,aruco_geolocator_uav1,kopru_uav1,lora_yaklasma}.log{,.1} /tmp/lora_yaklasma_sonuc.jsonl
 
 # PX4'ün px4-rc.gzsim'deki ortamı: gz_env.sh model/world/plugin yollarını ayarlar.
 source "$PX4_BUILD/rootfs/gz_env.sh"
-if [[ $CAM == 1 || $CAM == T || $CAM == T15 || $CAM == T10 ]]; then
+if [[ $CAM == W10 ]]; then
+    models=$CAM_W10_MODELS
+    if [[ ! -f $models/advanced_plane/model.sdf ]]; then
+        echo "HATA: model yok: $models/advanced_plane/model.sdf"
+        exit 1
+    fi
+    export PX4_GZ_MODELS=$models
+    WORLD=${WORLD:-iha_arena_aruco}
+    echo "Model: 6 mm, aşağı bakan kamera (W_nadir_10) — $PX4_GZ_MODELS"
+    export GZ_SIM_SERVER_CONFIG_PATH=$CAM_SERVER_CONFIG
+    echo "Sunucu yapılandırması: $GZ_SIM_SERVER_CONFIG_PATH (GstCameraSystem yok)"
+elif [[ $CAM == 1 || $CAM == T || $CAM == T15 || $CAM == T10 ]]; then
     if [[ $CAM == T || $CAM == T15 || $CAM == T10 ]]; then
         models=$CAM_T_MODELS
         [[ $CAM == T15 ]] && models=$CAM_T15_MODELS
@@ -204,9 +252,22 @@ if [[ $VIZ == 1 ]]; then
 fi
 
 # Kabuk açmadan (-d) çalışır; stdin gerekmez, pxh> istemi dönmez.
+# ARUCO=1: DDS damgaları PX4 saatinde (= gz sim saati) kalsın; SYNCT=1'de ajan duvar saatine kaydırılır ve
+# RTF < 1'de kare damgasıyla (sim saati) arasındaki fark büyür (CLAUDE.md "timestamp_sample 1–2 s geride").
+PX4_EXTRA_ENV=""
+[[ $ARUCO == 1 ]] && PX4_EXTRA_ENV="PX4_PARAM_UXRCE_DDS_SYNCT=0"
+# Simülatör kaynaklı EKF hataları (2026-11-20 ölçümü, docs/aruco_sim.md; SIM_EKF_DUZELT=0 ile kapatılır):
+#  - gz NavSat gecikmesiz, PX4 EKF2_GPS_DELAY 110 ms varsayıyor → konum gerçeğin ~100 ms önünde (15 m/s'de 1,3–1,5 m).
+#  - Magnetometre: PX4 gz_bridge'in eksen eşlemesi gz-sim 8.15 çıktısıyla tutarsız (yöne bağlı ±10° yaw, ±4° tilt);
+#    düzeltme PX4 kaynağında: px4_yamalar/gz_bridge_magnetometre.patch (uygulanmadan bu ortam eksik). Sapma
+#    PX4'ün WMM tablosundan (EKF2_DECL_TYPE 3, varsayılan); gz alanı +2,68°, WMM +3,41° → ~0,7° gerçekçi kalıntı.
+#    DECL_TYPE açıkça verilir: önceki bir koşunun parametre dosyasında (rootfs/<i>/parameters.bson) kalmasın.
+if [[ ${SIM_EKF_DUZELT:-1} == 1 ]]; then
+    PX4_EXTRA_ENV="$PX4_EXTRA_ENV PX4_PARAM_EKF2_GPS_DELAY=0 PX4_PARAM_EKF2_DECL_TYPE=3"
+fi
 for i in 0 1; do
     echo "[$((i + 3))/4] PX4 instance $i başlatılıyor (konum ${UAV_POSES[$i]})..."
-    start_bg "cd $PX4_DIR && env PX4_SIM_MODEL=gz_advanced_plane PX4_SYS_AUTOSTART=4008 PX4_GZ_WORLD=$GZ_WORLD_NAME PX4_GZ_MODEL_POSE='${UAV_POSES[$i]}' $PX4_BUILD/bin/px4 -d -i $i 2>&1 | limit_log /tmp/px4_$i.log"
+    start_bg "cd $PX4_DIR && env $PX4_EXTRA_ENV PX4_SIM_MODEL=gz_advanced_plane PX4_SYS_AUTOSTART=4008 PX4_GZ_WORLD=$GZ_WORLD_NAME PX4_GZ_MODEL_POSE='${UAV_POSES[$i]}' $PX4_BUILD/bin/px4 -d -i $i 2>&1 | limit_log /tmp/px4_$i.log"
     wait_for /tmp/px4_$i.log "Startup script returned successfully" 60 \
         || echo "  UYARI: PX4-$i 60 sn içinde başlangıç betiğini bitirmedi"
 done
@@ -224,8 +285,8 @@ for i in 0 1; do
     fi
 done
 
-source /opt/ros/humble/setup.bash
-source ~/ros2_ws/install/setup.bash
+source "$ROS_SETUP_FILE"
+source "$ROS_WS/install/setup.bash"
 # Başlangıç betiği DDS istemcisi topic'leri açmadan biter; 60 sn'ye kadar tekrar dene.
 for ns in /fmu/out/ /px4_1/fmu/out/; do
     count=0
@@ -251,26 +312,73 @@ if [[ $LORA == 1 ]]; then
         echo "  UYARI: LORA=1 için CAM=T/T10/T15 gerekir (aşağı bakan kamera); röle başlatılmadı"
     else
         echo "[LoRa] kamera köprüsü + qr_online + lora_relay başlatılıyor..."
-        ROS_SETUP="source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash"
+        ROS_SETUP="source $ROS_SETUP_FILE && source $ROS_WS/install/setup.bash"
         mkdir -p /tmp/qr_online_log
         start_bg "$ROS_SETUP && ros2 run ros_gz_bridge parameter_bridge --ros-args \
-            -p config_file:=$HOME/iha_sim_v2/camera_bridge.yaml \
+            -p config_file:=$SIM_DIR/camera_bridge.yaml \
             -p qos_overrides./uav0/camera/image.publisher.reliability:=best_effort \
             -p qos_overrides./uav0/camera/image.publisher.depth:=5 \
             -p qos_overrides./uav0/camera/camera_info.publisher.reliability:=best_effort \
             -p qos_overrides./uav0/camera/camera_info.publisher.depth:=5 2>&1 | limit_log /tmp/kopru.log"
-        start_bg "$ROS_SETUP && cd $HOME/iha_sim_v2 && python3 -u qr_online.py --log /tmp/qr_online_log 2>&1 | limit_log /tmp/qr_online.log"
-        start_bg "$ROS_SETUP && cd $HOME/iha_sim_v2 && python3 -u lora_relay.py ${LORA_ARGS:-} 2>&1 | limit_log /tmp/lora_relay.log"
+        start_bg "$ROS_SETUP && cd $SIM_DIR && python3 -u qr_online.py --log /tmp/qr_online_log 2>&1 | limit_log /tmp/qr_online.log"
+        start_bg "$ROS_SETUP && cd $SIM_DIR && python3 -u lora_relay.py ${LORA_ARGS:-} 2>&1 | limit_log /tmp/lora_relay.log"
         echo "      /hedef_konum → /hedef_konum_role (varsayılan gecikme ~50 ms, kayıp %3); loglar /tmp/{kopru,qr_online,lora_relay}.log"
         # YAKLASMA=1 (LORA=1 gerektirir): uav1 yaklaşma düğümü. uav1 120 m Hold'da olunca /hedef_konum_role'ye
         # göre yönelir; düğüm uav1 hazır olana kadar bekler. Parametreler YAKLASMA_ARGS ile.
         if [[ $YAKLASMA == 1 ]]; then
-            start_bg "$ROS_SETUP && cd $HOME/iha_sim_v2 && python3 -u lora_yaklasma.py --uav 1 --sonuc /tmp/lora_yaklasma_sonuc.jsonl ${YAKLASMA_ARGS:-} 2>&1 | limit_log /tmp/lora_yaklasma.log"
+            start_bg "$ROS_SETUP && cd $SIM_DIR && python3 -u lora_yaklasma.py --uav 1 --sonuc /tmp/lora_yaklasma_sonuc.jsonl ${YAKLASMA_ARGS:-} 2>&1 | limit_log /tmp/lora_yaklasma.log"
             echo "      + uav1 yaklaşma düğümü (lora_yaklasma.py); log /tmp/lora_yaklasma.log, sonuç /tmp/lora_yaklasma_sonuc.jsonl"
         fi
     fi
 fi
-if [[ $YAKLASMA == 1 && $LORA != 1 ]]; then
+# ArUco zinciri (ARUCO=1, CAM=W10): kamera köprüsü → gs_kamera (Bayer) → bapp aruco_geolocator → lora_relay (paket)
+# [→ lora_yaklasma --girdi paket, YAKLASMA=1]. LORA=1 (QR zinciri) ile birlikte kullanılmaz.
+if [[ $ARUCO == 1 ]]; then
+    if [[ $CAM != W10 ]]; then
+        echo "  UYARI: ARUCO=1 için CAM=W10 gerekir; ArUco zinciri başlatılmadı"
+    elif [[ ! -f $BAPP/bap_ros/aruco_geolocator_node.py || ! -x $PY_BAPP ]]; then
+        echo "  HATA: bapp bulunamadı ($BAPP/bap_ros/aruco_geolocator_node.py, $PY_BAPP)"; status=1
+    else
+        echo "[ArUco] kamera köprüsü + gs_kamera + aruco_geolocator + lora_relay (paket) başlatılıyor..."
+        ROS_SETUP="source $ROS_SETUP_FILE && source $ROS_WS/install/setup.bash"
+        rm -rf /tmp/aruco_log && mkdir -p /tmp/aruco_log
+        start_bg "$ROS_SETUP && ros2 run ros_gz_bridge parameter_bridge --ros-args \
+            -p config_file:=$SIM_DIR/camera_bridge.yaml \
+            -p qos_overrides./uav0/camera/image.publisher.reliability:=best_effort \
+            -p qos_overrides./uav0/camera/image.publisher.depth:=5 \
+            -p qos_overrides./uav0/camera/camera_info.publisher.reliability:=best_effort \
+            -p qos_overrides./uav0/camera/camera_info.publisher.depth:=5 2>&1 | limit_log /tmp/kopru.log"
+        start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u gs_kamera.py ${GS_ARGS:-} 2>&1 | limit_log /tmp/gs_kamera.log"
+        start_bg "$ROS_SETUP && $PY_BAPP -u $BAPP/bap_ros/aruco_geolocator_node.py --log /tmp/aruco_log \
+            --t-body-cam 0.07 0 0.1 ${ARUCO_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json} 2>&1 | limit_log /tmp/aruco_geolocator.log"
+        start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u lora_relay.py --mod paket ${LORA_ARGS:-} 2>&1 | limit_log /tmp/lora_relay.log"
+        echo "      loglar /tmp/{kopru,gs_kamera,aruco_geolocator,lora_relay}.log, kare günlüğü /tmp/aruco_log/"
+        if [[ $YAKLASMA == 1 ]]; then
+            # Kamikaze kamerası (uav1, ileri 15° aşağı) → gs_kamera → aruco_geolocator (2. örnek): dalışta marker okuma.
+            # Okuma dalış hedefini DEĞİŞTİRMEZ (hedef = LoRa raporu); /bap/uav1/okuma'yı lora_yaklasma kaydeder.
+            rm -rf /tmp/aruco_log_uav1 && mkdir -p /tmp/aruco_log_uav1
+            start_bg "$ROS_SETUP && ros2 run ros_gz_bridge parameter_bridge --ros-args -r __node:=kamikaze_bridge \
+                -p config_file:=$SIM_DIR/kamikaze_bridge.yaml \
+                -p qos_overrides./uav1/camera/image.publisher.reliability:=best_effort \
+                -p qos_overrides./uav1/camera/image.publisher.depth:=5 \
+                -p qos_overrides./uav1/camera/camera_info.publisher.reliability:=best_effort \
+                -p qos_overrides./uav1/camera/camera_info.publisher.depth:=5 2>&1 | limit_log /tmp/kopru_uav1.log"
+            start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u gs_kamera.py --giris /uav1/camera/image \
+                --info /uav1/camera/camera_info --cikis /uav1/camera/image_gs --info-cikis /uav1/camera/camera_info_gs \
+                --ad gs_kamera_uav1 2>&1 | limit_log /tmp/gs_kamera_uav1.log"
+            start_bg "$ROS_SETUP && $PY_BAPP -u $BAPP/bap_ros/aruco_geolocator_node.py --log /tmp/aruco_log_uav1 \
+                --image /uav1/camera/image_gs --camera-info /uav1/camera/camera_info_gs --fmu /px4_1/fmu \
+                --mount-deg 75 0 0 --t-body-cam 0.5 0 0 --report-topic /bap/uav1/hedef_rapor --json-topic /bap/uav1/okuma \
+                ${ARUCO_UAV1_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json} \
+                --node-name aruco_geolocator_uav1 2>&1 | limit_log /tmp/aruco_geolocator_uav1.log"
+            echo "      + uav1 kamera (ileri 15° aşağı) → gs_kamera → aruco_geolocator (uav1); log /tmp/aruco_geolocator_uav1.log"
+            start_bg "$ROS_SETUP && cd $SIM_DIR && BAPP=$BAPP $PY_BAPP -u lora_yaklasma.py --uav 1 --girdi paket \
+                --sonuc /tmp/lora_yaklasma_sonuc.jsonl ${YAKLASMA_ARGS:-} 2>&1 | limit_log /tmp/lora_yaklasma.log"
+            echo "      + uav1 yaklaşma düğümü (lora_yaklasma.py --girdi paket); log /tmp/lora_yaklasma.log"
+        fi
+    fi
+fi
+if [[ $YAKLASMA == 1 && $LORA != 1 && $ARUCO != 1 ]]; then
     echo "  UYARI: YAKLASMA=1 için LORA=1 gerekir; yaklaşma düğümü başlatılmadı"
 fi
 

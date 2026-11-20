@@ -1,0 +1,20 @@
+15:18:26  lora_relay (paket) hazır: /bap/hedef_rapor → /bap/hedef_rapor_role | SF7 BW125 kHz CR4/5 → 24+4 B için ToA 66.8 ms | duty %10 | kayıp %3
+15:22:16  istatistik: {"alinan": 6, "gonderilen": 6, "kayip": 0, "ezilen_mesgul": 0, "gecikme_ort_ms": 76.44, "gecikme_min_ms": 73.6, "gecikme_maks_ms": 79.77}
+15:22:26  istatistik: {"alinan": 16, "gonderilen": 16, "kayip": 0, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.68, "gecikme_min_ms": 69.78, "gecikme_maks_ms": 79.87}
+15:22:36  istatistik: {"alinan": 26, "gonderilen": 26, "kayip": 0, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.43, "gecikme_min_ms": 69.78, "gecikme_maks_ms": 80.94}
+15:22:46  istatistik: {"alinan": 36, "gonderilen": 35, "kayip": 1, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.22, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:22:56  istatistik: {"alinan": 45, "gonderilen": 44, "kayip": 1, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.99, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:23:06  istatistik: {"alinan": 55, "gonderilen": 54, "kayip": 1, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.06, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:23:16  istatistik: {"alinan": 65, "gonderilen": 64, "kayip": 1, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.25, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:23:26  istatistik: {"alinan": 74, "gonderilen": 73, "kayip": 1, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.04, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:23:36  istatistik: {"alinan": 84, "gonderilen": 83, "kayip": 1, "ezilen_mesgul": 0, "gecikme_ort_ms": 75.01, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:23:46  istatistik: {"alinan": 94, "gonderilen": 92, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.96, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:23:58  istatistik: {"alinan": 104, "gonderilen": 102, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.88, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:24:06  istatistik: {"alinan": 113, "gonderilen": 111, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.81, "gecikme_min_ms": 68.88, "gecikme_maks_ms": 80.94}
+15:24:16  istatistik: {"alinan": 123, "gonderilen": 121, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.78, "gecikme_min_ms": 68.13, "gecikme_maks_ms": 80.94}
+15:24:26  istatistik: {"alinan": 133, "gonderilen": 131, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.82, "gecikme_min_ms": 68.13, "gecikme_maks_ms": 80.94}
+15:24:36  istatistik: {"alinan": 142, "gonderilen": 140, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.84, "gecikme_min_ms": 67.19, "gecikme_maks_ms": 80.94}
+15:24:46  istatistik: {"alinan": 152, "gonderilen": 150, "kayip": 2, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.78, "gecikme_min_ms": 67.19, "gecikme_maks_ms": 80.94}
+15:24:56  istatistik: {"alinan": 162, "gonderilen": 158, "kayip": 4, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.71, "gecikme_min_ms": 66.82, "gecikme_maks_ms": 80.94}
+15:25:08  istatistik: {"alinan": 171, "gonderilen": 166, "kayip": 5, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.74, "gecikme_min_ms": 66.82, "gecikme_maks_ms": 80.94}
+15:25:16  istatistik: {"alinan": 180, "gonderilen": 174, "kayip": 6, "ezilen_mesgul": 0, "gecikme_ort_ms": 74.77, "gecikme_min_ms": 66.82, "gecikme_maks_ms": 80.94}

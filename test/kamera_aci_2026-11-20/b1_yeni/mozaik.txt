@@ -1,0 +1,2 @@
+mozaik: 107 kare (pencere 87–248 s)
+{"kare": 107, "gecis": 3, "yan_ozet": {"cift": 12, "ic_medyan": 16.0, "ic_min": 3, "basarili_cift(ic≥30)": 1, "kayma_medyan_m": 0.457, "kayma_maks_m": 3.632}, "on_ozet": {"cift": 18, "ic_medyan": 82.5, "ic_min": 51, "basarili_cift(ic≥30)": 18, "kayma_medyan_m": 0.01, "kayma_maks_m": 0.065}}

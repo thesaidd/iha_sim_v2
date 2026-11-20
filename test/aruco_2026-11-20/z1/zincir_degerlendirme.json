@@ -1,0 +1,30 @@
+{
+ "en_yakin_3b_m": 14.35,
+ "o_anda_yatay_m": 0.45,
+ "o_anda_irtifa_m": 14.34,
+ "t_sim": 942.5,
+ "en_yakin_yatay_m": 0.29,
+ "yatay_en_yakinda_irtifa_m": 14.35,
+ "sonuc": "indi",
+ "durma_nedeni": "durma-mesafesi (3b)",
+ "durma": {
+  "3b_m": 19.96,
+  "yatay_m": 12.87,
+  "irtifa_m": 15.25,
+  "s_m": -12.9,
+  "x_m": -0.04
+ },
+ "kullanilan_rapor": {
+  "marker_id": 0,
+  "n_obs": 66,
+  "sigma_n": 0.19,
+  "sigma_e": 0.18,
+  "sayac": 49
+ },
+ "rapor_hedef_hatasi_m": {
+  "kuzey": 0.2,
+  "dogu": 0.76,
+  "yatay": 0.79
+ },
+ "plan_hedefi_hatasi_m": 0.76
+}

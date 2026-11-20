@@ -43,7 +43,7 @@ class Takeoff(Node):
                                  lambda m: setattr(self, "pos", m), SENSOR_QOS)
         self.create_subscription(VehicleControlMode, f"{ns}/out/vehicle_control_mode",
                                  lambda m: setattr(self, "mode", m), SENSOR_QOS)
-        self.create_subscription(VehicleCommandAck, f"{ns}/out/vehicle_command_ack_v1",
+        self.create_subscription(VehicleCommandAck, f"{ns}/out/vehicle_command_ack",
                                  lambda m: self.acks.__setitem__(m.command, m.result), SENSOR_QOS)
 
     def command(self, command: int, *params: float, tries: int = 5) -> bool:

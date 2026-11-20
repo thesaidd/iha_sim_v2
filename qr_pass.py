@@ -299,7 +299,7 @@ class Pass(Node):
                                  lambda m: setattr(self, "landed", m.landed), SENSOR_QOS)
         self.create_subscription(AirspeedValidated, "/fmu/out/airspeed_validated_v1",
                                  lambda m: setattr(self, "airspeed", m.calibrated_airspeed_m_s), SENSOR_QOS)
-        self.create_subscription(VehicleCommandAck, "/fmu/out/vehicle_command_ack_v1",
+        self.create_subscription(VehicleCommandAck, "/fmu/out/vehicle_command_ack",
                                  lambda m: self.ack.__setitem__(m.command, m.result), SENSOR_QOS)
 
     def ts(self):

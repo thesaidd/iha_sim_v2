@@ -1,0 +1,80 @@
+diff --git a/src/modules/simulation/gz_bridge/GZBridge.cpp b/src/modules/simulation/gz_bridge/GZBridge.cpp
+index 3ef65e1..2837ec0 100644
+--- a/src/modules/simulation/gz_bridge/GZBridge.cpp
++++ b/src/modules/simulation/gz_bridge/GZBridge.cpp
+@@ -399,9 +399,34 @@ void GZBridge::magnetometerCallback(const gz::msgs::Magnetometer &msg)
+ 	// FIMEX: once we're on jetty or later
+ 	// The magnetometer plugin publishes in units of gauss and in a weird left handed coordinate system
+ 	// https://github.com/gazebosim/gz-sim/pull/2460
+-	report.x = -msg.field_tesla().y();
+-	report.y = -msg.field_tesla().x();
+-	report.z = msg.field_tesla().z();
++	//
++	// BAP (2026-11-20, gz-sim 8.15): ölçüm gerçekte TUTARLI döndürülmüş bir vektör: m_gz = R_enu_flu^T · b, ama b'nin
++	// bileşenleri NED sırasında (N, E, D) — uçuşta 258° yön boyunca R_enu_flu · m_gz sabit (std 1e-4 G), b ≈ (0,216,
++	// 0,010, 0,429) G @ Zürih. Aşağıdaki sabit yansıtma (x=-y, y=-x) bunu yalnız bazı yönlerde doğru çeviriyordu →
++	// yöne bağlı ±10° yaw ve ±4° tilt hatası. Gerçek poz varsa b dünyaya döndürülüp FRD'ye doğru indirilir.
++	bool q_valid;
++	gz::math::Quaterniond q_gr;
++	{
++		std::lock_guard<std::mutex> lock(_q_gr_mag_mutex);
++		q_valid = _q_gr_mag_valid;
++		q_gr = _q_gr_mag;
++	}
++
++	if (q_valid) {
++		const gz::math::Vector3d m_gz(msg.field_tesla().x(), msg.field_tesla().y(), msg.field_tesla().z());
++		const gz::math::Vector3d b_ned = q_gr.RotateVector(m_gz);       // (N, E, D)
++		gz::math::Quaterniond q_nb;                                     // FRD → NED
++		GZBridge::rotateQuaternion(q_nb, q_gr);
++		const gz::math::Vector3d m_frd = q_nb.Inverse().RotateVector(b_ned);
++		report.x = m_frd.X();
++		report.y = m_frd.Y();
++		report.z = m_frd.Z();
++
++	} else {
++		report.x = -msg.field_tesla().y();
++		report.y = -msg.field_tesla().x();
++		report.z = msg.field_tesla().z();
++	}
+ 
+ 	_sensor_mag_pub.publish(report);
+ }
+@@ -519,6 +544,12 @@ void GZBridge::poseInfoCallback(const gz::msgs::Pose_V &msg)
+ 			gz::math::Quaterniond q_nb;
+ 			GZBridge::rotateQuaternion(q_nb, q_gr);
+ 
++			{
++				std::lock_guard<std::mutex> lock(_q_gr_mag_mutex);   // BAP: magnetometerCallback düzeltmesi
++				_q_gr_mag = q_gr;
++				_q_gr_mag_valid = true;
++			}
++
+ 			// publish attitude groundtruth
+ 			vehicle_attitude_s vehicle_attitude_groundtruth{};
+ 			vehicle_attitude_groundtruth.timestamp_sample = timestamp;
+diff --git a/src/modules/simulation/gz_bridge/GZBridge.hpp b/src/modules/simulation/gz_bridge/GZBridge.hpp
+index 9f90f4d..98891f9 100644
+--- a/src/modules/simulation/gz_bridge/GZBridge.hpp
++++ b/src/modules/simulation/gz_bridge/GZBridge.hpp
+@@ -33,6 +33,8 @@
+ 
+ #pragma once
+ 
++#include <mutex>
++
+ #include "GZMixingInterfaceESC.hpp"
+ #include "GZMixingInterfaceServo.hpp"
+ #include "GZMixingInterfaceWheel.hpp"
+@@ -164,6 +166,11 @@ private:
+ 	GZGimbal _gimbal{_node};
+ 
+ 	MapProjection _pos_ref{};
++
++	// BAP (2026-11-20): magnetometre düzeltmesi için son gerçek poz (FLU gövde → ENU dünya)
++	gz::math::Quaterniond _q_gr_mag{};
++	bool _q_gr_mag_valid{false};
++	std::mutex _q_gr_mag_mutex;   // gz-transport geri çağrıları ayrı iş parçacıklarında
+ 	double _alt_ref{};
+ 
+ 	matrix::Vector3d _position_prev{};

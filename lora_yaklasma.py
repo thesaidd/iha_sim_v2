@@ -40,6 +40,7 @@ import argparse
 import json
 import math
 import os
+import sys
 import time
 
 import ayrim as ayrim_mod          # saf yardımcı (ROS'suz): öteki aracın Hold çemberi kestirimi
@@ -447,8 +448,11 @@ class Uav0Izleyici:
         self.ilk = None            # (t, merkez)
         self.son = None
 
+    ORNEK_ARALIGI = 0.05   # [s] en sık örnek: 400 örnek ≥ 20 sn (2026-11-20: bekleme döngüsü spin_once ile ~100+ Hz
+                           # dönünce 400 örnek < 4 sn kalıyor, hold_tahmini "geçmiş kısa" → uav1 240 sn sonra NO-GO)
+
     def ekle(self, t, n, e, irtifa, vn, ve):
-        if self.gecmis and t <= self.gecmis[-1][0]:
+        if self.gecmis and t - self.gecmis[-1][0] < self.ORNEK_ARALIGI:
             return
         self.gecmis.append((t, n, e, irtifa, vn, ve))
         del self.gecmis[:-400]
@@ -587,6 +591,7 @@ def _dalis_akisi(args, c):
         plan = dalis_plani((p.x, p.y, -p.z), T, geo, engeller, args.yaklasma_yonu, merkez=(-dN, -dE), **yol_kw)
     res["profil"] = "dalis"
     res["plan"] = plan
+    res["rapor"] = getattr(node, "son_rapor", None)     # --girdi paket: planda kullanılan son TargetReport + uav1 ref
     _log(f"hedef (uav1 NED) ({T[0]:.1f}, {T[1]:.1f}); dalış planı {json.dumps(plan, ensure_ascii=False)}")
     if geo["aci_kirpildi"]:
         _log(f"UYARI: istenen dalış açısı {geo['aci_istenen_deg']}° → {geo['aci_etkin_deg']}° (alçalma sınırı "
@@ -831,13 +836,28 @@ def _run_flight(args):
                                      lambda m: setattr(self, "pos", m), SENSOR_QOS)
             self.create_subscription(VehicleLandDetected, f"{pre}/out/vehicle_land_detected",
                                      lambda m: setattr(self, "landed", m.landed), SENSOR_QOS)
-            self.create_subscription(VehicleCommandAck, f"{pre}/out/vehicle_command_ack_v1",
+            self.create_subscription(VehicleCommandAck, f"{pre}/out/vehicle_command_ack",
                                      lambda m: self.ack.__setitem__(m.command, m.result), SENSOR_QOS)
             # Hedef uav0 NED'de; kendi ad alanından dinle (/hedef_konum_role küresel)
             self.hedef = None            # (tN_uav1, tE_uav1)
             self.hedef_sayac = 0
             self.son_mesaj_t = None
-            self.create_subscription(String, "/hedef_konum_role", self.on_role, 50)
+            # Kamikaze kamerası okuması (bapp aruco_geolocator uav1 örneği, /bap/uav1/okuma JSON): dalış hedefini
+            # DEĞİŞTİRMEZ; kare başına kayıt + özet (res["okuma"]): ilk/son okuma anında 3B mesafe, kenar px, kendi
+            # kestirimi (uav1 NED'ine çevrilmiş) ile dalış hedefi farkı.
+            self.okuma = {"n": 0, "ilk": None, "son": None, "kenar_max_px": 0.0}
+            self.create_subscription(String, args.okuma_konu, self.on_okuma, 20)
+            if args.girdi == "paket":
+                # bapp TargetReport (24 bayt, LoRa yükü): enlem/boylam → uav1'in KENDİ EKF origin'i (ref_lat/lon,
+                # vehicle_local_position) ile yerel NED. --kaynak-fark-n/-e hedef zincirinde kullanılmaz.
+                from std_msgs.msg import UInt8MultiArray
+                sys.path.insert(0, os.path.expanduser(os.environ.get("BAPP", "~/bapp")))
+                from bap_geo.pipeline import TargetReport
+                self._TargetReport = TargetReport
+                self.son_rapor = None
+                self.create_subscription(UInt8MultiArray, args.paket_konu, self.on_paket, 50)
+            else:
+                self.create_subscription(String, "/hedef_konum_role", self.on_role, 50)
             # dalis profili: uav0 konumu (canlı ayrım denetimi); uav0 yerel NED'inde gelir
             self.pos0 = None
             if args.profil == "dalis" and args.uav0_yaricap > 0:
@@ -856,6 +876,56 @@ def _run_flight(args):
             self.hedef = uav1_hedef(float(xk), float(yd), args.kaynak_fark_n, args.kaynak_fark_e)
             self.hedef_sayac += 1
             self.son_mesaj_t = time.monotonic()
+
+        def on_paket(self, msg):
+            data = bytes(msg.data)
+            if len(data) != self._TargetReport.SIZE:
+                return
+            rep = self._TargetReport.unpack(data)
+            if args.hedef_id >= 0 and rep.marker_id != args.hedef_id:
+                return
+            p = self.pos
+            if p is None or not p.xy_global or not math.isfinite(p.ref_lat):
+                return                                  # kendi global referansı yoksa çeviremez
+            ned, cov = rep.to_local_ned(p.ref_lat, p.ref_lon, p.ref_alt)
+            self.hedef = (float(ned[0]), float(ned[1]))
+            self.son_rapor = {"marker_id": rep.marker_id, "lat": rep.lat_deg, "lon": rep.lon_deg,
+                              "sigma_n": rep.sigma_n_m, "sigma_e": rep.sigma_e_m, "n_obs": rep.n_obs,
+                              "t_px4_ms": rep.t_px4_ms, "uav1_n": self.hedef[0], "uav1_e": self.hedef[1],
+                              "uav1_ref": [p.ref_lat, p.ref_lon, p.ref_alt], "sayac": self.hedef_sayac + 1}
+            self.hedef_sayac += 1
+            self.son_mesaj_t = time.monotonic()
+            if self.hedef_sayac == 1 or self.hedef_sayac % 10 == 0:
+                _log(f"rapor #{self.hedef_sayac}: id {rep.marker_id} ({rep.lat_deg:.7f}, {rep.lon_deg:.7f}) "
+                     f"σ {rep.sigma_n_m:.2f}/{rep.sigma_e_m:.2f} m n={rep.n_obs} → uav1 NED "
+                     f"({self.hedef[0]:.1f}, {self.hedef[1]:.1f})")
+
+        def on_okuma(self, msg):
+            try:
+                d = json.loads(msg.data)
+            except ValueError:
+                return
+            p = self.pos
+            if p is None or self.hedef is None:
+                return
+            tN, tE = self.hedef
+            r3 = math.sqrt((p.x - tN) ** 2 + (p.y - tE) ** 2 + p.z ** 2)
+            ok = self.okuma
+            ok["n"] += 1
+            ok["kenar_max_px"] = max(ok["kenar_max_px"], float(d.get("kenar_px", 0.0)))
+            # okumanın kendi kestirimi uav1 EKF NED'inde (geolocator geo_ref = uav1 EKF origin'i)
+            kay = {"t_sim": d.get("damga_sim"), "mesafe_3b_m": round(r3, 1), "irtifa_m": round(-p.z, 1),
+                   "kenar_px": d.get("kenar_px"), "id": d.get("icerik"),
+                   "kestirim_hedef_farki_m": round(math.hypot(d["x_kuzey"] - tN, d["y_dogu"] - tE), 2),
+                   "n_obs": d.get("n_obs")}
+            if ok["ilk"] is None:
+                ok["ilk"] = kay
+                _log(f"KAMİKAZE OKUDU: {d.get('icerik')} — hedefe 3B {r3:.0f} m, irtifa {-p.z:.0f} m, "
+                     f"kenar {d.get('kenar_px')} px; kendi kestirimi dalış hedefinden {kay['kestirim_hedef_farki_m']} m")
+            ok["son"] = kay
+
+        def okuma_ozet(self):
+            return dict(self.okuma)
 
         def ts(self):
             return int(self.get_clock().now().nanoseconds / 1000)
@@ -1160,6 +1230,10 @@ def _run_flight(args):
         return sonuc_kod
     finally:
         res["bitis"] = time.strftime("%H:%M:%S")
+        try:
+            res["okuma"] = node.okuma_ozet()
+        except (NameError, AttributeError):
+            pass
         if args.sonuc:
             os.makedirs(os.path.dirname(args.sonuc) or ".", exist_ok=True)
             with open(args.sonuc, "a") as f:
@@ -1177,6 +1251,12 @@ def build_parser():
     ap.add_argument("--kaynak-fark-n", type=float, default=15.0, help="uav1 kaynağı − uav0 kaynağı, Kuzey [m]")
     ap.add_argument("--kaynak-fark-e", type=float, default=-15.0, help="uav1 kaynağı − uav0 kaynağı, Doğu [m]")
     ap.add_argument("--esik-mesaj", type=int, default=1, help="yaklaşmaya başlamadan önce ardışık geçerli mesaj")
+    ap.add_argument("--girdi", choices=("json", "paket"), default="json",
+                    help="json: /hedef_konum_role (uav0 NED + kaynak farkı, eski); paket: bapp TargetReport "
+                         "(enlem/boylam → uav1 kendi EKF origin'i; kaynak farkı hedefte kullanılmaz)")
+    ap.add_argument("--paket-konu", default="/bap/hedef_rapor_role")
+    ap.add_argument("--hedef-id", type=int, default=0, help="paket modu: beklenen ArUco id (-1 = hepsi)")
+    ap.add_argument("--okuma-konu", default="/bap/uav1/okuma", help="kamikaze kamerası okuma JSON'u (aruco_geolocator uav1)")
     ap.add_argument("--durma-mesafesi", type=float, default=20.0, help="durma mesafesi [m] (--mesafe-turu'na göre)")
     ap.add_argument("--mesafe-turu", choices=("3b", "yatay"), default="3b",
                     help="durma ölçütü: 3b (yerdeki hedefe 3B; düşük irtifa/dik iniş gerektirir) ya da yatay "

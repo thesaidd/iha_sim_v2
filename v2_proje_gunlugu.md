@@ -8,6 +8,22 @@
 
 ## Kayıtlar
 
+### [2026-11-20 19:30] - Kamera geometrisi + daire taramasının gerçek kapsaması; şerit kameradan, uzatma 60, en kısa sıra
+**Teori + Gazebo doğrulaması.** Yeni `kamera_geometri.py` (ayak izi, GSD, tespit şeridi, örtüşme, montaj eğimi; bağımsız
+alt ajan hesabıyla uyumlu: roll ±2°'de W 72,2 m). Statik 6 mm test kamerası (`gz_models_cam_hw/aruco_aci_tarama.py`,
+199 poz): nadir bant 79,2 m (teori 79,8), yan 10° 82,8, 20° 56, 30° 44 m (uzak tarafta tespit kesik) → **nadir montaj en
+uygun**, değiştirilmedi. Köşe kenara 13–18 px'ten yakınken tespit kararsız → planlama kenar payı 15 px; nadirde alt sınır
+~20 px (160 m ✔, 180 m ✘).
+**Uçuşlar (3, hepsi abortsuz; gerçek pozla ölçüldü — `kapsama_analiz.py`).** B0 (z3 ayarı) 185 sn sim, tespit
+kapsaması %100, alan üstü süre %33; **B1** (`--serit-kamera … --kenar-px 15 --uzatma 60`, sıra en kısa) 161 sn
+(−%13), %99,92 (daire kenarında 24 m², direk payı geometrisinin sınırı), alan üstü %39; B2 (%60 yan örtüşme) 5 hat,
+290 sn. Ampul dönüş sonrası yanal hata 60 m'de ≤ 1 m (z1/z3 izleri) → 100 m uzatmanın 40 m'si gereksizdi.
+**Birleştirme** (`mozaik.py`): gerçek pozla mozaik dikişsiz; ORB komşu geçiş eşleşmesi %30 yan örtüşmede 0/12–1/12,
+%65'te 13/24 → mozaik gerekiyorsa `--yan-ortusme 0.6`.
+**Kod:** `alan_tarama.py` (`serit_kameradan`, `--tam-tarama`, varsayılan sıra en kısa, daire girişi ölçümü, iz `t_duvar`),
+yeni `kapsama_analiz.py`, `mozaik.py`, `kare_kaydedici.py`, `tarama_video.py`. Kuru test: alan_tarama 47 ✔,
+kamera_geometri 20 ✔. Ayrıntı: `test/kamera_aci_2026-11-20/sonuc.md`.
+
 ### [2026-11-16 13:15] - Yerden kalkış senaryosu: kalkış arızasının kök nedeni, 3 düzeltme ve Aşama 1–3'ün uçuşla doğrulanması
 **Teşhis (uçuşsuz + 1 ayırıcı deneme).** a1'de uav1 kalkamamıştı. ULG karşılaştırması (log-okuyucu): başarısız ve
 başarılı koşuda **1105 parametrenin tamamı aynı**, gaz iki koşuda da 0,85; farklı olan tek şey davranış — a1'de

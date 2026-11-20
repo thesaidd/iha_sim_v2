@@ -56,7 +56,7 @@ class OrbitAbort(Node):
                 VehicleControlMode, f"{ns}/out/vehicle_control_mode",
                 lambda msg, u=uav_id: self.mode.__setitem__(u, msg), SENSOR_QOS)
             self.create_subscription(
-                VehicleCommandAck, f"{ns}/out/vehicle_command_ack_v1",
+                VehicleCommandAck, f"{ns}/out/vehicle_command_ack",
                 lambda msg, u=uav_id: self._on_ack(u, msg), SENSOR_QOS)
 
     def _on_ack(self, uav_id: int, msg: VehicleCommandAck):

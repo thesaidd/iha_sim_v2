@@ -1,0 +1,2 @@
+16:30:56  zincir: qr_online yayıncı 0, kamera köprüsü 1, lora_relay dinleyici 0, /hedef_konum_role dinleyici (uav1) 0
+16:30:56  HATA: tarama boyunca tespit çalışmalı — qr_online / kamera köprüsü yok (LORA=1 ile başlat, --qr-baslat ya da yalnız yol doğrulaması için --tespitsiz)

@@ -1,0 +1,103 @@
+{
+ "etiket": "b2_harita60",
+ "log": "/home/bap/sim/iha_sim_v2/test/kamera_aci_2026-11-20/b2_harita60/aruco_log",
+ "pencere_sim_s": [
+  87.9,
+  377.8
+ ],
+ "alan": "daire R 100 m",
+ "alan_m2": 31419,
+ "kare_sayisi": 2744,
+ "alan_karesi": 894,
+ "gecis_sayisi": 5,
+ "goruntu_kapsamasi": 1.0,
+ "tespit_kapsamasi": 0.9994,
+ "atlanan_m2": 19.2,
+ "bosluklar": [
+  {
+   "alan_m2": 13.8,
+   "merkez_ne": [
+    -70.2,
+    -70.2
+   ]
+  },
+  {
+   "alan_m2": 5.5,
+   "merkez_ne": [
+    70.2,
+    70.2
+   ]
+  }
+ ],
+ "tekrar_2+_gecis_payi": 0.8317,
+ "tekrar_3+_gecis_payi": 0.4491,
+ "hucre_basina_tespit_kare_medyan": 81.0,
+ "gecisler": [
+  {
+   "no": 0,
+   "sure_s": 18.1,
+   "kare": 173,
+   "yon_deg": -45.1,
+   "yanal_m": -0.0
+  },
+  {
+   "no": 1,
+   "sure_s": 19.1,
+   "kare": 184,
+   "yon_deg": 132.5,
+   "yanal_m": 29.5
+  },
+  {
+   "no": 2,
+   "sure_s": 19.1,
+   "kare": 181,
+   "yon_deg": -47.5,
+   "yanal_m": -58.8
+  },
+  {
+   "no": 3,
+   "sure_s": 19.0,
+   "kare": 171,
+   "yon_deg": 132.9,
+   "yanal_m": 59.1
+  },
+  {
+   "no": 4,
+   "sure_s": 19.0,
+   "kare": 185,
+   "yon_deg": -47.4,
+   "yanal_m": -29.4
+  }
+ ],
+ "komsu_gecisler": [
+  {
+   "aralik_m": 29.4,
+   "goruntu_yan_ortusme": 0.648,
+   "tespit_serit_ortusmesi_m": 50.7
+  },
+  {
+   "aralik_m": 29.4,
+   "goruntu_yan_ortusme": 0.648,
+   "tespit_serit_ortusmesi_m": 50.7
+  },
+  {
+   "aralik_m": 29.5,
+   "goruntu_yan_ortusme": 0.646,
+   "tespit_serit_ortusmesi_m": 50.6
+  },
+  {
+   "aralik_m": 29.6,
+   "goruntu_yan_ortusme": 0.646,
+   "tespit_serit_ortusmesi_m": 50.5
+  }
+ ],
+ "alan_suresi_s": 272.8,
+ "alan_ustu_sure_s": 94.3,
+ "alan_ustu_sure_payi": 0.346,
+ "hedef_ne": [
+  -59.98,
+  -59.97
+ ],
+ "hedef_tespit_edilebilir_kare": 41,
+ "hedef_tespit_edilen_kare": 41
+}

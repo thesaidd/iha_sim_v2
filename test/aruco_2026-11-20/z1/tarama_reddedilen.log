@@ -1,0 +1,9 @@
+15:28:49  zincir: qr_online yayıncı 1, kamera köprüsü 1, lora_relay dinleyici 0, /hedef_konum_role dinleyici (uav1) 0
+15:28:49  UYARI: röle / uav1 yaklaşma düğümü dinlemiyor — tespit olsa da zincir devam ETMEYECEK
+15:28:56  ayrım denetimi: uav1 duruyor, irtifa -0 m; eşik 3B 40 m
+15:28:56  PLAN: 4 hat (aralık ≤ 70.0 m, W 70.0 m), yön 0°, toplam 3141 m ≈ 209 sn; geometrik kapsama %80.4, C 0.93; dönüşler: 1 stadyum + 2 ampul, R 85 m; direk: hat ≥ 40.0 m, dönüş ≥ 117.0 m
+15:28:56    sıra (yanal c, m): +40↑ → -100↓ → +81↑ → -40↓
+15:28:56    giriş: hizalama Hold merkezi (-400, 120), hat başı (-250, 40)
+15:28:56    doğrulama: uygun
+15:28:56  ROTA REDDEDİLDİ: ilk hat kalkış koridorunu kesiyor ve öteki araç havada değil — komut gönderilmedi
+15:28:56  AYRIM ÖZETİ: uav1 ile gerçekleşen en küçük 3B ayrım {'3b_m': 1211.1, 'yatay_m': 1206.9, 'dikey_m': 100.0, 'saat': '15:28:56'}

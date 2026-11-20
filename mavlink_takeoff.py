@@ -238,6 +238,9 @@ def take_off(v: Vehicle, alt: float, circle_alt: float) -> bool:
 
     if not v.ensure_param("MIS_TAKEOFF_ALT", alt):
         return False
+    # PX4 v1.17: navigator parametre güncellemesini bir sonraki döngüde alıyor; hemen gelen NAV_TAKEOFF eski
+    # değerle (25 m) kalkıyordu ("Using default takeoff altitude: 25.0 m", 2026-11-20). Kısa bekleme.
+    time.sleep(2.0)
 
     # PX4 GCS sağlık kontrolü kalp atışımızı görmek için birkaç sn ister; arm reddedilirse yeniden dene.
     takeoff = arm = None
