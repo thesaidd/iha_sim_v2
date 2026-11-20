@@ -2,4 +2,4 @@ __pycache__/
 *.pyc
 *.pid
 kalibrasyon/kareler/
-test/kamera_aci_2026-11-20/*/kareler/
+test/*/*/kareler/

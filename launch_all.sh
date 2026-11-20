@@ -78,6 +78,10 @@ CAM_T15_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir_15   # T_nadir ile aynı, updat
 CAM_T10_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir_10   # T_nadir ile aynı, update_rate 10
 CAM_W10_MODELS=$SIM_DIR/gz_models_cam_hw/W_nadir_10   # BAP: 6 mm, dik aşağı, 10 Hz, gürültü + distorsiyon
 PY_BAPP=${PY_BAPP:-$BAPP/.venv-ros/bin/python}         # OpenCV 5 + bap_geo (ARUCO=1 düğümleri)
+# Raporlanan σ95'in ortak bias tabanı (bapp GeolocatorConfig.sigma_*_bias): bapp varsayılanı GERÇEK uçak (GNSS 1,5 m,
+# yaw 2° …) → simde ~5 m σ95. Sim değerleri 6 sim koşusunun PX4 − gerçek poz biasından (bapp scripts/sim_replay.py, 2026-11-20);
+# --heading-beta0-deg: advanced_plane düz uçuş yan kayması (bapp scripts/heading_check.py), yaw izleyicisi yalnız tanı.
+SIM_BIAS_ARGS=${SIM_BIAS_ARGS:---sigma-gnss-bias-m 0.3 --sigma-att-bias-deg 0.3 --sigma-yaw-bias-deg 0.5 --sigma-hag-bias-m 0.1 --heading-beta0-deg 2.7}
 ARENA_WORLDS=$SIM_DIR/gz_worlds
 VIZ_SCRIPT=$SIM_DIR/viz_trails.py
 PGID_FILE=/tmp/iha_sim.pgids
@@ -350,7 +354,7 @@ if [[ $ARUCO == 1 ]]; then
             -p qos_overrides./uav0/camera/camera_info.publisher.depth:=5 2>&1 | limit_log /tmp/kopru.log"
         start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u gs_kamera.py ${GS_ARGS:-} 2>&1 | limit_log /tmp/gs_kamera.log"
         start_bg "$ROS_SETUP && $PY_BAPP -u $BAPP/bap_ros/aruco_geolocator_node.py --log /tmp/aruco_log \
-            --t-body-cam 0.07 0 0.1 ${ARUCO_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json} 2>&1 | limit_log /tmp/aruco_geolocator.log"
+            --t-body-cam 0.07 0 0.1 ${ARUCO_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json $SIM_BIAS_ARGS} 2>&1 | limit_log /tmp/aruco_geolocator.log"
         start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u lora_relay.py --mod paket ${LORA_ARGS:-} 2>&1 | limit_log /tmp/lora_relay.log"
         echo "      loglar /tmp/{kopru,gs_kamera,aruco_geolocator,lora_relay}.log, kare günlüğü /tmp/aruco_log/"
         if [[ $YAKLASMA == 1 ]]; then
@@ -369,7 +373,7 @@ if [[ $ARUCO == 1 ]]; then
             start_bg "$ROS_SETUP && $PY_BAPP -u $BAPP/bap_ros/aruco_geolocator_node.py --log /tmp/aruco_log_uav1 \
                 --image /uav1/camera/image_gs --camera-info /uav1/camera/camera_info_gs --fmu /px4_1/fmu \
                 --mount-deg 75 0 0 --t-body-cam 0.5 0 0 --report-topic /bap/uav1/hedef_rapor --json-topic /bap/uav1/okuma \
-                ${ARUCO_UAV1_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json} \
+                ${ARUCO_UAV1_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json $SIM_BIAS_ARGS} \
                 --node-name aruco_geolocator_uav1 2>&1 | limit_log /tmp/aruco_geolocator_uav1.log"
             echo "      + uav1 kamera (ileri 15° aşağı) → gs_kamera → aruco_geolocator (uav1); log /tmp/aruco_geolocator_uav1.log"
             start_bg "$ROS_SETUP && cd $SIM_DIR && BAPP=$BAPP $PY_BAPP -u lora_yaklasma.py --uav 1 --girdi paket \

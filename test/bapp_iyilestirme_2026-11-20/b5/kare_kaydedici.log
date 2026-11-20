@@ -1,0 +1,22 @@
+[INFO] [1795200900.725306479] [kare_kaydedici]: 1 kare (k_000037300.jpg)
+[INFO] [1795200983.896591196] [kare_kaydedici]: 61 kare (k_000098000.jpg)
+[INFO] [1795201071.748297308] [kare_kaydedici]: 121 kare (k_000158500.jpg)
+[INFO] [1795201159.195073110] [kare_kaydedici]: 181 kare (k_000219000.jpg)
+Traceback (most recent call last):
+  File "/home/bap/sim/iha_sim_v2/kare_kaydedici.py", line 66, in <module>
+    main()
+  File "/home/bap/sim/iha_sim_v2/kare_kaydedici.py", line 58, in main
+    rclpy.spin(n)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 934, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 915, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 885, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 793, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

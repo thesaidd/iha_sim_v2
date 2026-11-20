@@ -1,0 +1,46 @@
+{
+ "etiket": "b4",
+ "log": "/home/bap/sim/iha_sim_v2/test/bapp_iyilestirme_2026-11-20/b4/aruco_log",
+ "pencere_sim_s": [
+  92.0,
+  253.5
+ ],
+ "alan": "daire R 100 m",
+ "alan_m2": 31419,
+ "kare_sayisi": 155,
+ "alan_karesi": 32,
+ "gecis_sayisi": 1,
+ "goruntu_kapsamasi": 0.1365,
+ "tespit_kapsamasi": 0.1264,
+ "atlanan_m2": 27448.8,
+ "bosluklar": [
+  {
+   "alan_m2": 27448.8,
+   "merkez_ne": [
+    7.8,
+    -7.2
+   ]
+  }
+ ],
+ "tekrar_2+_gecis_payi": 0.0,
+ "tekrar_3+_gecis_payi": 0.0,
+ "hucre_basina_tespit_kare_medyan": 14.0,
+ "gecisler": [
+  {
+   "no": 0,
+   "sure_s": 3.6,
+   "kare": 32,
+   "yon_deg": -45.0
+  }
+ ],
+ "komsu_gecisler": [],
+ "alan_suresi_s": 3.6,
+ "alan_ustu_sure_s": 3.6,
+ "alan_ustu_sure_payi": 1.0,
+ "hedef_ne": [
+  -60.01,
+  -60.01
+ ],
+ "hedef_tespit_edilebilir_kare": 0,
+ "hedef_tespit_edilen_kare": 0
+}

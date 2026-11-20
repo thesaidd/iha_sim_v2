@@ -1,0 +1,64 @@
+{
+ "etiket": "b5",
+ "log": "/home/bap/sim/iha_sim_v2/test/bapp_iyilestirme_2026-11-20/b5/aruco_log",
+ "pencere_sim_s": [
+  90.4,
+  251.3
+ ],
+ "alan": "daire R 100 m",
+ "alan_m2": 31419,
+ "kare_sayisi": 1306,
+ "alan_karesi": 443,
+ "gecis_sayisi": 3,
+ "goruntu_kapsamasi": 1.0,
+ "tespit_kapsamasi": 1.0,
+ "atlanan_m2": 0.0,
+ "bosluklar": [],
+ "tekrar_2+_gecis_payi": 0.3259,
+ "tekrar_3+_gecis_payi": 0.0073,
+ "hucre_basina_tespit_kare_medyan": 34.0,
+ "gecisler": [
+  {
+   "no": 0,
+   "sure_s": 18.3,
+   "kare": 145,
+   "yon_deg": -45.1,
+   "yanal_m": -0.1
+  },
+  {
+   "no": 1,
+   "sure_s": 19.3,
+   "kare": 151,
+   "yon_deg": 132.5,
+   "yanal_m": 59.2
+  },
+  {
+   "no": 2,
+   "sure_s": 19.0,
+   "kare": 147,
+   "yon_deg": -47.1,
+   "yanal_m": -59.1
+  }
+ ],
+ "komsu_gecisler": [
+  {
+   "aralik_m": 59.0,
+   "goruntu_yan_ortusme": 0.297,
+   "tespit_serit_ortusmesi_m": 21.5
+  },
+  {
+   "aralik_m": 59.3,
+   "goruntu_yan_ortusme": 0.293,
+   "tespit_serit_ortusmesi_m": 21.2
+  }
+ ],
+ "alan_suresi_s": 143.5,
+ "alan_ustu_sure_s": 56.6,
+ "alan_ustu_sure_payi": 0.394,
+ "hedef_ne": [
+  -60.01,
+  -59.99
+ ],
+ "hedef_tespit_edilebilir_kare": 34,
+ "hedef_tespit_edilen_kare": 34
+}

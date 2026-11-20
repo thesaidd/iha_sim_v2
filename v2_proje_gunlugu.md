@@ -8,6 +8,13 @@
 
 ## Kayıtlar
 
+### [2026-11-20 22:05] - bapp gerçek-uçuş iyileştirmeleri simde doğrulandı (σ95 dürüst, PnP tanı, saat kipleri, yaw izleme)
+bapp'te: PnP füzyon dışı, raporlanan σ'ya ortak bias tabanı, `--clock yerel|alis|timesync` + `saat_dogrula.py`,
+`--border-margin-px`, yaw izleyicisi (yalnız tanı), `bap_geo.coverage`. Bu depoda `launch_all.sh` → `SIM_BIAS_ARGS`
+(sim bias σ'ları 0,3 m / 0,3° / 0,5° / 0,1 m, β₀ 2,7°). Uçuşlar: B3 hata 1,28 m ⊂ σ95 1,70 m; B4 düğüm çöktü (rclpy günlük
+önem düzeyi) → düzeltildi; B5 34/34 tespit, 0,60 m ⊂ σ95 1,72 m, raporların %100'ü σ95 içinde (önce %1–12). Ayrıntı:
+`test/bapp_iyilestirme_2026-11-20/sonuc.md`.
+
 ### [2026-11-20 19:30] - Kamera geometrisi + daire taramasının gerçek kapsaması; şerit kameradan, uzatma 60, en kısa sıra
 **Teori + Gazebo doğrulaması.** Yeni `kamera_geometri.py` (ayak izi, GSD, tespit şeridi, örtüşme, montaj eğimi; bağımsız
 alt ajan hesabıyla uyumlu: roll ±2°'de W 72,2 m). Statik 6 mm test kamerası (`gz_models_cam_hw/aruco_aci_tarama.py`,

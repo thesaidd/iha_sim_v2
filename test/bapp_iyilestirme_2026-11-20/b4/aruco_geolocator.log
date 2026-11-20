@@ -1,0 +1,55 @@
+[INFO] [1795200394.800572610] [aruco_geolocator]: kare 39 (düşen 0) tespitli 0 kabul 0 | att 430 pos 215 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 39} | red {} | kenar elenen 0
+[INFO] [1795200394.801294885] [aruco_geolocator]: yaw izleme: unobservable: δ_hava = +nan° ± nan°, δ_yaw = +nan° ± nan°, w = (+nan, +nan) m/s, k = 1.000, RMS nan m/s, n = 0 (0 iç, n_eff nan), R = nan, R2 = nan, yay nan° [few_samples]
+[INFO] [1795200399.757519469] [aruco_geolocator]: kare 73 (düşen 0) tespitli 0 kabul 0 | att 810 pos 405 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 73} | red {} | kenar elenen 0
+[INFO] [1795200404.757033487] [aruco_geolocator]: kare 107 (düşen 0) tespitli 0 kabul 0 | att 1189 pos 594 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 107} | red {} | kenar elenen 0
+[INFO] [1795200409.757177826] [aruco_geolocator]: kare 142 (düşen 0) tespitli 0 kabul 0 | att 1561 pos 780 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 142} | red {} | kenar elenen 0
+[INFO] [1795200414.757147679] [aruco_geolocator]: kare 176 (düşen 0) tespitli 0 kabul 0 | att 1980 pos 990 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 176} | red {} | kenar elenen 0
+[INFO] [1795200419.757149456] [aruco_geolocator]: kare 210 (düşen 0) tespitli 0 kabul 0 | att 2360 pos 1180 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 210} | red {} | kenar elenen 0
+[INFO] [1795200424.757230808] [aruco_geolocator]: kare 227 (düşen 0) tespitli 0 kabul 0 | att 2559 pos 1279 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 227} | red {} | kenar elenen 0
+[INFO] [1795200429.756921622] [aruco_geolocator]: kare 261 (düşen 0) tespitli 0 kabul 0 | att 2923 pos 1461 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 260} | red {} | kenar elenen 0
+[INFO] [1795200434.757312371] [aruco_geolocator]: kare 290 (düşen 0) tespitli 0 kabul 0 | att 3290 pos 1645 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 290} | red {} | kenar elenen 0
+[INFO] [1795200439.756933565] [aruco_geolocator]: kare 326 (düşen 0) tespitli 0 kabul 0 | att 3675 pos 1837 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 326} | red {} | kenar elenen 0
+[INFO] [1795200444.757885067] [aruco_geolocator]: kare 362 (düşen 0) tespitli 0 kabul 0 | att 4062 pos 2031 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 361} | red {} | kenar elenen 0
+[INFO] [1795200449.756913892] [aruco_geolocator]: kare 402 (düşen 0) tespitli 0 kabul 0 | att 4492 pos 2246 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 402} | red {} | kenar elenen 0
+[INFO] [1795200456.938965831] [aruco_geolocator]: kare 439 (düşen 0) tespitli 0 kabul 0 | att 4890 pos 2445 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 439} | red {} | kenar elenen 0
+[INFO] [1795200459.756889799] [aruco_geolocator]: kare 459 (düşen 0) tespitli 0 kabul 0 | att 5112 pos 2556 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 459} | red {} | kenar elenen 0
+[INFO] [1795200464.758022911] [aruco_geolocator]: kare 498 (düşen 0) tespitli 0 kabul 0 | att 5492 pos 2746 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 497} | red {} | kenar elenen 0
+[INFO] [1795200469.757368159] [aruco_geolocator]: kare 530 (düşen 0) tespitli 0 kabul 0 | att 5872 pos 2936 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 529} | red {} | kenar elenen 0
+[INFO] [1795200474.760778822] [aruco_geolocator]: kare 567 (düşen 0) tespitli 0 kabul 0 | att 6259 pos 3129 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 567} | red {} | kenar elenen 0
+[INFO] [1795200479.757248745] [aruco_geolocator]: kare 596 (düşen 0) tespitli 0 kabul 0 | att 6624 pos 3312 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 596} | red {} | kenar elenen 0
+[INFO] [1795200484.756993298] [aruco_geolocator]: kare 626 (düşen 0) tespitli 0 kabul 0 | att 7007 pos 3503 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 626} | red {} | kenar elenen 0
+[INFO] [1795200491.596471694] [aruco_geolocator]: kare 655 (düşen 0) tespitli 0 kabul 0 | att 7337 pos 3668 | ref (47.39797111540532, 8.546163852310725, 0.08625750243663788) | {'no_det': 655} | red {} | kenar elenen 0
+Traceback (most recent call last):
+  File "/home/bap/bapp/bap_ros/aruco_geolocator_node.py", line 584, in <module>
+    main()
+  File "/home/bap/bapp/bap_ros/aruco_geolocator_node.py", line 573, in main
+    rclpy.spin(node)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 934, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in _spin_once_impl
+    raise handler.exception()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 600, in handler
+    await call_coroutine()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 462, in _execute
+    await await_or_execute(tmr.callback)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 116, in await_or_execute
+    return callback(*args)
+           ^^^^^^^^^^^^^^^
+  File "/home/bap/bapp/bap_ros/aruco_geolocator_node.py", line 495, in _status
+    self._heading_status()
+  File "/home/bap/bapp/bap_ros/aruco_geolocator_node.py", line 347, in _heading_status
+    log(f"yaw izleme: {est.summary()}")
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/impl/rcutils_logger.py", line 355, in warn
+    return self.warning(message, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/impl/rcutils_logger.py", line 347, in warning
+    return self.log(message, LoggingSeverity.WARN, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/impl/rcutils_logger.py", line 313, in log
+    raise ValueError('Logger severity cannot be changed between calls.')
+ValueError: Logger severity cannot be changed between calls.
