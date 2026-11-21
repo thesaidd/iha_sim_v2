@@ -34,7 +34,11 @@ PX4'e `px4_yamalar/gz_bridge_magnetometre.patch` uygulanmış olmalı.
 
 ## Yığın
 
-Ubuntu 22.04 (WSL2) · ROS 2 Humble · Gazebo Sim 8 (Harmonic) · PX4 SITL (v1.17.0-alpha1) ·
+> **Tek sürüm kararı (2026-11-21):** proje Ubuntu 24.04 + ROS 2 Jazzy üzerinde birleşir (Harmonic'in resmî eşi, destek 2029;
+> Humble 2027'de biter). Geçiş bitene kadar `launch_all.sh` kurulu dağıtımı otomatik seçer (jazzy varsa jazzy, yoksa humble);
+> eski Humble ortamı yalnız geçiş süresince desteklenir ve doğrulama Jazzy'de yeniden yapılmalıdır.
+
+**Hedef yığın: Ubuntu 24.04 (WSL2) · ROS 2 Jazzy · Gazebo Sim 8 (Harmonic) · PX4 SITL (v1.17.0)** ·
 MicroXRCE-DDS Agent · `px4_msgs` · Python (OpenCV 4.9 + contrib, numpy, pymavlink; V1'de ultralytics/YOLO11).
 Model: PX4 `advanced_plane` (sabit kanat). MAVROS / ArduPilot kullanılmıyor.
 

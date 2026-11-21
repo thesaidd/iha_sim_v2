@@ -2,8 +2,9 @@
 
 TÜBİTAK kapsamında İHA tespit/takip sistemi. Hedef: simülasyonda iki sabit kanatlı İHA'yı birlikte uçurmak ve aralarında tespit/takip sistemini test etmek.
 
-## Yığın (Ubuntu 22.04, WSL2)
-- ROS 2 Humble, Gazebo Sim 8 (Harmonic), PX4 SITL (`~/PX4-Autopilot`, v1.17.0-alpha1), MicroXRCE-DDS Agent
+## Yığın (hedef: Ubuntu 24.04, WSL2; geçiş süresince 22.04 de çalışır)
+- **Tek sürüm kararı (2026-11-21): ROS 2 Jazzy.** `launch_all.sh` kurulu dağıtımı otomatik seçer; mevcut doğrulamalar Humble'da yapıldı, Jazzy'de tekrarlanmalı.
+- ROS 2 Humble (eski) / Jazzy (hedef), Gazebo Sim 8 (Harmonic), PX4 SITL (`~/PX4-Autopilot`, v1.17.0-alpha1), MicroXRCE-DDS Agent
 - `px4_msgs` çalışma alanı: `~/ros2_ws` (`source ~/ros2_ws/install/setup.bash`)
 - Model: `advanced_plane` (sabit kanat, 640x480 30 Hz kamera). MAVROS/ArduPilot kullanılmıyor.
 - Python: ultralytics (YOLO11), opencv + contrib, torch

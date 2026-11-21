@@ -59,7 +59,11 @@
 
 SIM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # depo kökü (eski: ~/iha_sim_v2 sabit)
 PX4_DIR=${PX4_DIR:-~/PX4-Autopilot}
-ROS_SETUP_FILE=/opt/ros/${ROS_DISTRO:-jazzy}/setup.bash   # 24.04: jazzy (eski: humble sabit)
+# ROS_DISTRO verilmemişse kurulu olanı seç: jazzy (24.04) varsa o, yoksa humble (22.04).
+if [[ -z ${ROS_DISTRO:-} ]]; then
+    [[ -d /opt/ros/jazzy ]] && ROS_DISTRO=jazzy || ROS_DISTRO=humble
+fi
+ROS_SETUP_FILE=/opt/ros/$ROS_DISTRO/setup.bash
 ROS_WS=${ROS_WS:-~/ros2_ws}
 # Jazzy: /opt/ros/jazzy/setup.bash gz_tools_vendor'ın `gz`'sini ve GZ_CONFIG_PATH'i öne koyar; orada sim8.yaml
 # yok → `gz sim` "komut yok" der (2026-11-20). Sistem Harmonic yapılandırmasını öne al (ROS kaynaklansa da çalışsın).
