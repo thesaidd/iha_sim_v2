@@ -47,6 +47,9 @@ class Param:
     ek_listesi: tuple = (0.0, 20.0, 40.0, 60.0, 80.0, 120.0)     # dönüşü dışarı öteleme adayları [m]
     cikis_listesi: tuple = (60.0, 100.0, 150.0, 200.0, 250.0)    # hat sonu → Hold'a geçiş mesafesi adayları [m]
     isin_genisligi: int = 4000   # sıra aramasında katman başına tutulan durum sayısı
+    daire: float = 0.0           # > 0: arama alanı merkez çevresinde bu yarıçaplı DAİRE (yari = daire olur; hatlar
+                                 # yanal [−R, R]'yi kaplar, her hat çapı boydan boya geçer, dönüşler daire dışında).
+                                 # Kapsama / alan içi uzunluk daireye göre hesaplanır. 2026-11-20 (R = 100 m halka).
 
     @property
     def T(self):
@@ -189,6 +192,22 @@ def kapsama(p, hatlar):
     """Geometrik kapsama: şeritlerin (c ± W/2) kutu yanal ekseninde birleşim oranı; ve Koopman kapsama faktörü
     C = W · (kutu içi hat uzunluğu) / alan."""
     ar = sorted((max(-p.yari, c - p.W / 2), min(p.yari, c + p.W / 2)) for c in hatlar)
+    if p.daire > 0:
+        # daire: kaplanan yanal aralıklardaki kiriş alanı / daire alanı (her hat çapı boydan boya geçiyor)
+        R = p.daire
+
+        def F(x):                                    # ∫ 2·√(R² − c²) dc, −R..x
+            x = max(-R, min(R, x))
+            return x * math.sqrt(R * R - x * x) + R * R * math.asin(x / R) + R * R * math.pi / 2
+        top, son = 0.0, -R
+        for a, b in ar:
+            a = max(a, son)
+            if b > a:
+                top += F(b) - F(a)
+                son = b
+        alan = math.pi * R * R
+        ic = sum(daire_kiris(p, c) for c in hatlar)
+        return top / alan, p.W * ic / alan
     top, son = 0.0, -p.yari
     for a, b in ar:
         a = max(a, son)
@@ -197,6 +216,19 @@ def kapsama(p, hatlar):
             son = b
     C = p.W * len(hatlar) * 2 * p.yari / (2 * p.yari) ** 2
     return top / (2 * p.yari), C
+
+
+def daire_kiris(p, c):
+    """Daire modunda yanal c'deki hattın daire içindeki uzunluğu (kiriş) [m]."""
+    return 2.0 * math.sqrt(max(0.0, p.daire * p.daire - c * c))
+
+
+def alan_icinde(p, n, e, pay=0.0):
+    """(n, e) arama alanında mı (kutu ya da daire), ± pay m."""
+    if p.daire > 0:
+        return math.hypot(n - p.merkez[0], e - p.merkez[1]) <= p.daire + pay
+    t, c = p.tc(n, e)
+    return abs(t) <= p.yari + pay and abs(c) <= p.yari + pay
 
 
 # ── Dönüş bağlantıları ──────────────────────────────────────────────────────────────────────────
@@ -446,7 +478,9 @@ class Plan:
         D = [b["D"] for b in self.baglar]
         return {"ad": self.ad, "hat_sayisi": n, "hat_uzunlugu_m": round(hat_uz), "donus_uzunlugu_m": round(don_uz),
                 "toplam_m": round(hat_uz + don_uz), "sure_sn": round((hat_uz + don_uz) / p.hiz),
-                "kutu_ici_m": n * 2 * p.yari, "geometrik_kapsama": round(oran, 3), "C": round(C, 3),
+                "kutu_ici_m": round(sum(daire_kiris(p, c) for c in self.hatlar)) if p.daire > 0 else n * 2 * p.yari,
+                "alan": f"daire R {p.daire:g} m" if p.daire > 0 else f"kutu {2 * p.yari:g} m",
+                "geometrik_kapsama": round(oran, 3), "C": round(C, 3),
                 "POD_koopman": round(1 - math.exp(-C), 3),
                 "en_kucuk_D_m": round(min(D), 1) if D else None, "en_buyuk_D_m": round(max(D), 1) if D else None,
                 "stadyum": sum(b["tur"] == "stadyum" for b in self.baglar),
@@ -500,6 +534,28 @@ def planla(p, baslangic=None, sirali=False, ad="", sec=None, ilk=None):
     if s is None:
         return None
     return Plan(p, hatlar, s[0], s[1], s[2], serbest, ad)
+
+
+def planla_yon_sec(p, yonler, baslangic=None, sirali=False, ad=""):
+    """Hat yönünü adaylar arasından seç: doğrulanmış planlar içinde geometrik kapsaması en büyük, eşitlikte (±%0,5)
+    toplam yolu en kısa olan. Daire modunda yön serbest (direkler eksenlerde, merkezden 140 m; K–G/D–B hatların
+    uzantısı direk payına giriyor ve merkez şerit boş kalıyordu). Dönüş: (Plan, [(yön, kapsama, toplam, hata)])."""
+    import dataclasses
+    aday = []
+    for y in yonler:
+        q = dataclasses.replace(p, psi0=float(y))
+        pl = planla(q, baslangic, sirali, ad)
+        if pl is None:
+            aday.append((y, None, None, "plan yok"))
+            continue
+        o, h = pl.ozet(), pl.dogrula()
+        aday.append((y, o["geometrik_kapsama"], o["toplam_m"], "; ".join(h)))
+    uygun = [a for a in aday if a[1] is not None and not a[3]]
+    if not uygun:
+        return None, aday
+    best = max(a[1] for a in uygun)
+    sec = min((a for a in uygun if a[1] >= best - 0.005), key=lambda a: a[2])
+    return planla(dataclasses.replace(p, psi0=float(sec[0])), baslangic, sirali, ad), aday
 
 
 def planla_seyrek(p, baslangic=None, ad=""):

@@ -1,0 +1,90 @@
+15:09:32  [geçiş 1] hedef (-60, -60), ψ=210°, irtifa 100 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (73, 47, 98 m)
+15:09:38  ayrım denetimi: uav1 duruyor, irtifa 0 m; eşik 3B 40 m
+15:09:38  bekleme: (50, 119)'den düz yol kapalı (direk 1 m < 65 m); direklerden uzak ara nokta bulunamadı — Hold çemberinde uygun an bekleniyor (en fazla 60 sn)
+15:09:59  DO_REPOSITION → ara nokta (268, -225), 100 m: kabul (1. deneme); uçaktan yol–direk mesafesi 68 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı -31°; ayrım: bacak: öteki araç duruyor, en kötü durum yatay boşluk -5 m, dikey boşluk 89 m → 3B 89 m ≥ 40 m
+15:10:25  bekleme: (168, -160)'den rota kapısı tutmadı (rota farkı -96°, sınır ±45°) — Hold çemberinde uygun an bekleniyor (en fazla 60 sn)
+15:10:45  DO_REPOSITION → H (543, 196), 100 m: kabul (1. deneme); uçaktan yol–direk mesafesi 272 m (denetlendi ≥ 40 + iz payı 25), koridor serbest; rota farkı -45°; ayrım: bacak: öteki araç duruyor, en kötü durum yatay boşluk 352 m, dikey boşluk 89 m → 3B 363 m ≥ 40 m
+15:10:45  ayrım: taşıma komutlarına kadar gerçekleşen en küçük 3B {'3b_m': 102.9, 'yatay_m': 26.2, 'dikey_m': 99.5, 'saat': '15:10:07'}
+15:10:45  hizalama: H'ye   556 m  s=  -185  x=+385.7 m  rota hatası=+168.5°  irtifa= 99.1 m  yer_hızı=14.2 m/s  mod=AUTO
+15:10:50  hizalama: H'ye   496 m  s=  -243  x=+363.4 m  rota hatası=-146.5°  irtifa=100.0 m  yer_hızı=13.7 m/s  mod=AUTO
+15:10:55  hizalama: H'ye   432 m  s=  -296  x=+327.5 m  rota hatası=-145.4°  irtifa= 99.8 m  yer_hızı=13.9 m/s  mod=AUTO
+15:11:02  hizalama: H'ye   367 m  s=  -349  x=+290.4 m  rota hatası=-145.5°  irtifa= 99.7 m  yer_hızı=14.0 m/s  mod=AUTO
+15:11:07  hizalama: H'ye   300 m  s=  -405  x=+252.3 m  rota hatası=-145.4°  irtifa= 99.5 m  yer_hızı=14.0 m/s  mod=AUTO
+15:11:12  hizalama: H'ye   231 m  s=  -461  x=+213.1 m  rota hatası=-145.2°  irtifa= 99.4 m  yer_hızı=14.1 m/s  mod=AUTO
+15:11:17  hizalama: H'ye   162 m  s=  -518  x=+173.8 m  rota hatası=-145.2°  irtifa= 99.4 m  yer_hızı=14.1 m/s  mod=AUTO
+15:11:22  hizalama: H'ye    98 m  s=  -581  x=+149.8 m  rota hatası=+179.3°  irtifa= 99.9 m  yer_hızı=13.9 m/s  mod=AUTO
+15:11:27  hizalama: H'ye    79 m  s=  -649  x=+159.0 m  rota hatası=+178.8°  irtifa= 99.2 m  yer_hızı=14.5 m/s  mod=AUTO
+15:11:32  hizalama: H'ye    80 m  s=  -710  x=+133.8 m  rota hatası=-132.3°  irtifa= 98.9 m  yer_hızı=14.4 m/s  mod=AUTO
+15:11:40  hizalama: H'ye    80 m  s=  -730  x= +71.4 m  rota hatası= -83.5°  irtifa= 99.0 m  yer_hızı=14.3 m/s  mod=AUTO
+15:11:45  hizalama: H'ye    80 m  s=  -695  x= +13.4 m  rota hatası= -33.8°  irtifa= 98.9 m  yer_hızı=14.2 m/s  mod=AUTO
+15:11:46  DO_SET_MODE → OFFBOARD (deneme 1): s=-671 m, x=+2.5 m, rota hatası=-15.0°
+15:11:46  OFFBOARD ✔ (57 sn hizalama): s=-671 m, x=+2.4 m, irtifa=99.0 m, nav_state=AUTO_LOITER
+15:11:46  hat: s= -670.4 m  x= +2.31 m  irtifa= 98.96 m  yer_hızı=14.22  hava_hızı=14.15 m/s
+15:11:47  hat: s= -656.6 m  x= -0.22 m  irtifa= 99.01 m  yer_hızı=14.22  hava_hızı=14.26 m/s
+15:11:48  hat: s= -642.4 m  x= -1.24 m  irtifa= 99.15 m  yer_hızı=14.13  hava_hızı=14.18 m/s
+15:11:49  hat: s= -628.1 m  x= -1.41 m  irtifa= 99.28 m  yer_hızı=14.06  hava_hızı=13.93 m/s
+15:11:50  hat: s= -614.1 m  x= -1.15 m  irtifa= 99.35 m  yer_hızı=14.04  hava_hızı=13.94 m/s
+15:11:51  hat: s= -600.6 m  x= -0.79 m  irtifa= 99.38 m  yer_hızı=14.05  hava_hızı=13.89 m/s
+15:11:52  hat: s= -586.6 m  x= -0.43 m  irtifa= 99.39 m  yer_hızı=14.04  hava_hızı=13.74 m/s
+15:11:53  hat: s= -573.0 m  x= -0.13 m  irtifa= 99.39 m  yer_hızı=14.03  hava_hızı=13.94 m/s
+15:11:54  hat: s= -558.8 m  x= +0.06 m  irtifa= 99.40 m  yer_hızı=14.01  hava_hızı=13.86 m/s
+15:11:55  hat: s= -544.8 m  x= +0.13 m  irtifa= 99.41 m  yer_hızı=14.00  hava_hızı=13.94 m/s
+15:11:56  hat: s= -531.1 m  x= +0.17 m  irtifa= 99.40 m  yer_hızı=14.02  hava_hızı=13.88 m/s
+15:11:57  hat: s= -516.9 m  x= +0.12 m  irtifa= 99.36 m  yer_hızı=14.04  hava_hızı=13.98 m/s
+15:11:58  hat: s= -503.4 m  x= +0.05 m  irtifa= 99.33 m  yer_hızı=14.07  hava_hızı=14.06 m/s
+15:11:59  hat: s= -490.5 m  x= -0.01 m  irtifa= 99.32 m  yer_hızı=14.06  hava_hızı=13.94 m/s
+15:12:00  hat: s= -477.4 m  x= -0.05 m  irtifa= 99.31 m  yer_hızı=14.05  hava_hızı=13.97 m/s
+15:12:01  hat: s= -464.8 m  x= -0.07 m  irtifa= 99.31 m  yer_hızı=14.03  hava_hızı=14.00 m/s
+15:12:02  hat: s= -452.1 m  x= -0.09 m  irtifa= 99.34 m  yer_hızı=14.02  hava_hızı=13.94 m/s
+15:12:03  hat: s= -439.5 m  x= -0.10 m  irtifa= 99.36 m  yer_hızı=14.04  hava_hızı=13.89 m/s
+15:12:04  hat: s= -427.4 m  x= -0.11 m  irtifa= 99.36 m  yer_hızı=14.06  hava_hızı=14.00 m/s
+15:12:05  hat: s= -415.5 m  x= -0.12 m  irtifa= 99.37 m  yer_hızı=14.07  hava_hızı=14.02 m/s
+15:12:06  hat: s= -402.8 m  x= -0.11 m  irtifa= 99.37 m  yer_hızı=14.08  hava_hızı=13.95 m/s
+15:12:07  hat: s= -391.0 m  x= -0.11 m  irtifa= 99.38 m  yer_hızı=14.10  hava_hızı=13.98 m/s
+15:12:08  hat: s= -379.0 m  x= -0.09 m  irtifa= 99.36 m  yer_hızı=14.11  hava_hızı=13.92 m/s
+15:12:12  hat: s= -367.5 m  x= -0.07 m  irtifa= 99.34 m  yer_hızı=14.11  hava_hızı=13.97 m/s
+15:12:13  hat: s= -355.0 m  x= -0.05 m  irtifa= 99.31 m  yer_hızı=14.10  hava_hızı=13.98 m/s
+15:12:14  hat: s= -342.6 m  x= -0.06 m  irtifa= 99.29 m  yer_hızı=14.12  hava_hızı=13.93 m/s
+15:12:15  hat: s= -330.3 m  x= -0.08 m  irtifa= 99.27 m  yer_hızı=14.13  hava_hızı=13.87 m/s
+15:12:16  hat: s= -318.0 m  x= -0.09 m  irtifa= 99.25 m  yer_hızı=14.15  hava_hızı=13.99 m/s
+15:12:17  hat: s= -305.9 m  x= -0.10 m  irtifa= 99.24 m  yer_hızı=14.16  hava_hızı=13.93 m/s
+15:12:18  hat: s= -293.1 m  x= -0.14 m  irtifa= 99.25 m  yer_hızı=14.17  hava_hızı=14.01 m/s
+15:12:19  hat: s= -280.7 m  x= -0.17 m  irtifa= 99.24 m  yer_hızı=14.18  hava_hızı=13.94 m/s
+15:12:20  hat: s= -267.9 m  x= -0.15 m  irtifa= 99.23 m  yer_hızı=14.18  hava_hızı=13.81 m/s
+15:12:21  hat: s= -255.3 m  x= -0.14 m  irtifa= 99.24 m  yer_hızı=14.20  hava_hızı=13.84 m/s
+15:12:22  hat: s= -242.9 m  x= -0.16 m  irtifa= 99.25 m  yer_hızı=14.19  hava_hızı=13.98 m/s
+15:12:23  hat: s= -230.0 m  x= -0.16 m  irtifa= 99.24 m  yer_hızı=14.19  hava_hızı=14.03 m/s
+15:12:24  hat: s= -217.8 m  x= -0.16 m  irtifa= 99.24 m  yer_hızı=14.21  hava_hızı=13.95 m/s
+15:12:25  hat: s= -205.0 m  x= -0.16 m  irtifa= 99.23 m  yer_hızı=14.21  hava_hızı=13.94 m/s
+15:12:26  hat: s= -192.3 m  x= -0.16 m  irtifa= 99.24 m  yer_hızı=14.22  hava_hızı=13.83 m/s
+15:12:27  hat: s= -179.8 m  x= -0.15 m  irtifa= 99.22 m  yer_hızı=14.23  hava_hızı=13.91 m/s
+15:12:28  hat: s= -167.0 m  x= -0.11 m  irtifa= 99.21 m  yer_hızı=14.24  hava_hızı=13.92 m/s
+15:12:29  hat: s= -154.7 m  x= -0.08 m  irtifa= 99.25 m  yer_hızı=14.23  hava_hızı=13.95 m/s
+15:12:30  hat: s= -142.5 m  x= -0.08 m  irtifa= 99.26 m  yer_hızı=14.23  hava_hızı=13.82 m/s
+15:12:31  hat: s= -129.9 m  x= -0.10 m  irtifa= 99.27 m  yer_hızı=14.27  hava_hızı=13.92 m/s
+15:12:32  hat: s= -117.2 m  x= -0.11 m  irtifa= 99.26 m  yer_hızı=14.26  hava_hızı=13.96 m/s
+15:12:33  hat: s= -105.5 m  x= -0.09 m  irtifa= 99.27 m  yer_hızı=14.25  hava_hızı=13.94 m/s
+15:12:34  hat: s=  -94.1 m  x= -0.07 m  irtifa= 99.28 m  yer_hızı=14.26  hava_hızı=13.94 m/s
+15:12:35  hat: s=  -83.1 m  x= -0.08 m  irtifa= 99.31 m  yer_hızı=14.26  hava_hızı=14.09 m/s
+15:12:36  hat: s=  -71.3 m  x= -0.06 m  irtifa= 99.33 m  yer_hızı=14.26  hava_hızı=13.95 m/s
+15:12:37  hat: s=  -59.7 m  x= -0.02 m  irtifa= 99.37 m  yer_hızı=14.25  hava_hızı=13.89 m/s
+15:12:38  hat: s=  -47.7 m  x= -0.03 m  irtifa= 99.39 m  yer_hızı=14.26  hava_hızı=13.83 m/s
+15:12:39  hat: s=  -35.9 m  x= -0.05 m  irtifa= 99.40 m  yer_hızı=14.27  hava_hızı=13.92 m/s
+15:12:40  hat: s=  -23.6 m  x= -0.08 m  irtifa= 99.40 m  yer_hızı=14.29  hava_hızı=13.88 m/s
+15:12:41  hat: s=  -11.8 m  x= -0.09 m  irtifa= 99.43 m  yer_hızı=14.32  hava_hızı=13.89 m/s
+15:12:42  hat: s=   -0.4 m  x= -0.12 m  irtifa= 99.45 m  yer_hızı=14.33  hava_hızı=13.94 m/s
+15:12:42  HEDEF ÜSTÜ: yanal -0.12 m, dikey -0.55 m, yer hızı 14.3 m/s, hava hızı 13.9 m/s
+15:12:43  hat: s=  +11.3 m  x= -0.16 m  irtifa= 99.47 m  yer_hızı=14.32  hava_hızı=13.85 m/s
+15:12:46  hat: s=  +23.1 m  x= -0.19 m  irtifa= 99.49 m  yer_hızı=14.33  hava_hızı=13.78 m/s
+15:12:47  hat: s=  +35.0 m  x= -0.21 m  irtifa= 99.51 m  yer_hızı=14.34  hava_hızı=13.87 m/s
+15:12:48  hat: s=  +47.4 m  x= -0.23 m  irtifa= 99.53 m  yer_hızı=14.34  hava_hızı=13.90 m/s
+15:12:49  hat: s=  +60.5 m  x= -0.24 m  irtifa= 99.56 m  yer_hızı=14.35  hava_hızı=13.89 m/s
+15:12:50  hat: s=  +73.3 m  x= -0.26 m  irtifa= 99.58 m  yer_hızı=14.33  hava_hızı=13.82 m/s
+15:12:51  hat: s=  +86.0 m  x= -0.26 m  irtifa= 99.60 m  yer_hızı=14.32  hava_hızı=13.89 m/s
+15:12:52  hat: s=  +98.8 m  x= -0.25 m  irtifa= 99.65 m  yer_hızı=14.32  hava_hızı=13.82 m/s
+15:12:53  hat: s= +111.7 m  x= -0.24 m  irtifa= 99.68 m  yer_hızı=14.34  hava_hızı=13.88 m/s
+15:12:54  hat: s= +124.7 m  x= -0.23 m  irtifa= 99.68 m  yer_hızı=14.35  hava_hızı=13.85 m/s
+15:12:55  hat: s= +137.6 m  x= -0.23 m  irtifa= 99.75 m  yer_hızı=14.33  hava_hızı=13.89 m/s
+15:12:56  Hold: ✔ (DO_SET_MODE kabul, nav_state=AUTO_LOITER; akış mod değişene kadar sürdü) — nav_state değişimleri: OFFBOARD → AUTO_LOITER
+15:12:56  ÖZET geçiş 1: hedef üstü {'x_m': -0.12, 'dikey_m': -0.55, 'yer_hizi': 14.33, 'hava_hizi': 13.94}; s∈[−400, +150] {'ornek': 4375, 'x_ort': -0.13, 'x_std': 0.07, 'x_maks_abs': 0.26, 'x_min_abs': 0.02, 'dikey_ort': -0.63, 'dikey_maks_abs': 0.8, 'yer_hizi_ort': 14.24, 'hava_hizi_ort': 13.92}; kayıt penceresi {'ornek': 2779, 'x_ort': -0.13, 'x_std': 0.07, 'x_maks_abs': 0.26, 'x_min_abs': 0.02, 'dikey_ort': -0.64, 'dikey_maks_abs': 0.8, 'yer_hizi_ort': 14.27, 'hava_hizi_ort': 13.91}
+15:12:56  AYRIM ÖZETİ: bu koşuda uav1 ile gerçekleşen en küçük 3B ayrım {'3b_m': 99.3, 'yatay_m': 1.4, 'dikey_m': 99.3, 'saat': '15:12:34'} (eşik 40 m)

@@ -1,0 +1,24 @@
+# ros_gz_bridge: uav1 (Kamikaze) ileri-aşağı kamerası Gazebo → ROS 2 (2026-11-20)
+#
+# Sensör: gz_models_cam_hw/W_nadir_10 'kamera_ileri' (RPi GS + 6 mm, burunda, 15° aşağı).
+# lazy: true → köprü gz'ye ancak ROS tarafında abone varken abone olur; Gazebo kamerayı da yalnız o zaman işler
+# (ARUCO=1 YAKLASMA=1'de gs_kamera.py abone olur).
+# QoS: launch_all.sh qos_overrides (best_effort, depth 5), camera_bridge.yaml ile aynı.
+
+- ros_topic_name: "/uav1/camera/image"
+  gz_topic_name: "/world/default/model/advanced_plane_1/link/base_link/sensor/kamera_ileri/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+  lazy: true
+  subscriber_queue: 5
+  publisher_queue: 5
+
+- ros_topic_name: "/uav1/camera/camera_info"
+  gz_topic_name: "/world/default/model/advanced_plane_1/link/base_link/sensor/kamera_ileri/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: true
+  subscriber_queue: 5
+  publisher_queue: 5

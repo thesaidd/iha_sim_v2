@@ -25,8 +25,12 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-os.environ["FASTRTPS_DEFAULT_PROFILES_FILE"] = os.path.join(HERE, "fastdds_dinamik.xml")
-os.environ["RMW_FASTRTPS_USE_QOS_FROM_XML"] = "1"
+# PX4 v1.17.0 + eşleşen px4_msgs (msg/ ve msg/versioned/ birebir kopyalandı, 2026-11-20): VehicleStatus v1 olağan
+# abonelikle okunur; ham CDR + dinamik bellek (eski çözüm) yalnız PX4_DURUM_HAM=1 ile.
+HAM = os.environ.get("PX4_DURUM_HAM") == "1"
+if HAM:
+    os.environ["FASTRTPS_DEFAULT_PROFILES_FILE"] = os.path.join(HERE, "fastdds_dinamik.xml")
+    os.environ["RMW_FASTRTPS_USE_QOS_FROM_XML"] = "1"
 
 import rclpy                                    # noqa: E402  (ortam değişkenlerinden sonra)
 from px4_msgs.msg import VehicleStatus          # noqa: E402
@@ -54,13 +58,14 @@ def main() -> int:
     mode.add_argument("--izle", action="store_true")
     ap.add_argument("--timeout", type=float, default=4.0, help="--tek: ilk örneği bekleme süresi [sn]")
     args = ap.parse_args()
-    topic = ("/fmu" if args.uav == 0 else f"/px4_{args.uav}/fmu") + "/out/vehicle_status_v2"
+    topic = ("/fmu" if args.uav == 0 else f"/px4_{args.uav}/fmu") + "/out/" + os.environ.get(
+        "PX4_STATUS_TOPIC", "vehicle_status_v2" if HAM else "vehicle_status_v1")
     rclpy.init()
     node = rclpy.create_node(f"px4_durum_uav{args.uav}")
     latest = {}
 
     def on_raw(raw):
-        p = parse(raw)
+        p = parse(raw) if HAM else (raw.nav_state, raw.nav_state_user_intention, raw.arming_state)
         if p is None:
             return
         latest["v"], latest["t"] = p, time.time()
@@ -68,7 +73,7 @@ def main() -> int:
             print(line(*p), flush=True)
 
     from rclpy.qos import qos_profile_sensor_data
-    node.create_subscription(VehicleStatus, topic, on_raw, qos_profile_sensor_data, raw=True)
+    node.create_subscription(VehicleStatus, topic, on_raw, qos_profile_sensor_data, raw=HAM)
     try:
         if args.izle:
             rclpy.spin(node)

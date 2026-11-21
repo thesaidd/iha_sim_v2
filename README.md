@@ -19,6 +19,19 @@ konumu LoRa benzeri bir röleyle ikinci İHA'ya iletir, ikinci İHA hedefe kontr
 Doğrulanan sonuçlar: 6/6 abortsuz zincir, QR tespiti kadrajdayken 53/54, dalış 3B 19,8–19,9 m'de duruş,
 yerden kalkış zinciri 2/2. Tablolar `test/*/sonuc.md` dosyalarında.
 
+## ArUco / bapp zinciri (2026-11-20, Ubuntu 24.04 + Jazzy + PX4 v1.17.0)
+
+bapp geo-lokalizasyonu (2×2 m ArUco, RPi GS + 6 mm) bu simülasyonda uçtan uca denendi: tespit → 24 bayt LoRa raporu →
+uav1 yerden kalkış → dalış; uav1 gerçek hedefin 0,29 m yanından geçti. Kurulum, simülatör hataları (magnetometre
+eşlemesi, GPS gecikmesi, gz distorsiyonu), sonuçlar ve sınırlar: [`test/aruco_2026-11-20/sonuc.md`](test/aruco_2026-11-20/sonuc.md).
+
+```bash
+CAM=W10 ARUCO=1 ./launch_all.sh                     # 6 mm kamera + ArUco dünyası + bapp düğümü + LoRa (paket)
+bash test/aruco_2026-11-20/zincir.sh <çıktı>        # uçtan uca: R=100 m halkada çim biçme taraması + kamikaze okuması (~20 dk)
+GOR=1 bash test/aruco_2026-11-20/zincir.sh <çıktı>  # aynısı görsel: Gazebo penceresi + iki kamera penceresi (GPU)
+```
+PX4'e `px4_yamalar/gz_bridge_magnetometre.patch` uygulanmış olmalı.
+
 ## Yığın
 
 Ubuntu 22.04 (WSL2) · ROS 2 Humble · Gazebo Sim 8 (Harmonic) · PX4 SITL (v1.17.0-alpha1) ·
@@ -80,7 +93,7 @@ Kuru testler (ROS ortamı kaynaklanmış olmalı): `python3 alan_tarama_test.py`
 1. **uav1 yakın çekim videosu** (kalkış + dalış): `test/yerden_kalkis_2026-11-15/ucus/s2/calistir.sh` yeniden koşturulabilir
    (~9 dk); mevcut `uav1_yakin.mp4` bozuk, `kayit.py` düzeltildi.
 2. **İniş boyuna taşması** +52…+78 m (flare): `FW_LND_FL_TIME` / `FW_LND_FLALT` / süzülme açısı ile daraltılabilir.
-3. **Konum kestirimi anomalisi:** bir geçişte 9–9,9 m hata (PX4 pitch −7,4° iken); diğerleri 2–3,3 m. Neden bulunmadı.
+3. **Konum kestirimi anomalisi:** bir geçişte 9–9,9 m hata (PX4 pitch −7,4° iken); diğerleri 2–3,3 m. Neden bulunmadı. **(2026-11-20: büyük olasılıkla PX4 gz_bridge magnetometre eşlemesi — yöne bağlı ±10° yaw; yama ve ölçüm `test/aruco_2026-11-20/sonuc.md`.)**
 4. **uav1 geçiş bacağında engel payı:** Hold geçişinde direğe ~10 m yaklaşma görüldü.
 5. Hava hızı sıcaklık hatası (gz `AirSpeed` eklentisi 0 K gönderiyor) — geçici önlemler yalnız simülasyonda; gerçek düzeltme PX4 eklentisinde.
 6. `px4_msgs` sürüm uyumsuzluğu (nav_state ham okumayla aşıldı); uav1 kamerası ve YOLO/tracker entegrasyonu yapılmadı.

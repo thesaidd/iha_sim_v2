@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!-- Sabit montaj açısı testi kamerası (2026-11-20). Kamera bloğu gz_models_cam_hw/W_nadir_10 ile aynı (RPi GS IMX296
+     + 6 mm: 1456×1088, horizontal_fov 0.79287, Gauss σ 0,012, 10 Hz, clip 0,1–1000, pitch +π/2 = model −z'ye bakar);
+     fark: sensör link merkezinde, model statik, yerçekimi / çarpışma / görsel yok. Model yönelimi kamerayı döndürür:
+     model kimlikte görüntü üstü = dünya +x (doğu), görüntü solu = +y (kuzey). aruco_aci_tarama.py pozu kendisi kurar.
+     Dünyaya çalışma anında /world/default/create ile eklenir, set_pose ile taşınır, remove ile silinir. -->
+<sdf version="1.9">
+  <model name="kamera_test_w">
+    <static>true</static>
+    <link name="link">
+      <gravity>false</gravity>
+      <sensor name="camera" type="camera">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <camera>
+          <horizontal_fov>0.79287</horizontal_fov>
+          <image>
+            <width>1456</width>
+            <height>1088</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>1000</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.012</stddev>
+          </noise>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>10</update_rate>
+        <visualize>false</visualize>
+      </sensor>
+    </link>
+  </model>
+</sdf>

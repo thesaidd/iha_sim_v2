@@ -48,7 +48,7 @@ class Approach(Node):
         for u in {uav_id, *other_ids}:
             self.create_subscription(VehicleLocalPosition, f"{get_fmu_prefix(u)}/out/vehicle_local_position_v1",
                                      lambda m, u=u: self.pos.__setitem__(u, m), SENSOR_QOS)
-        self.create_subscription(VehicleCommandAck, f"{get_fmu_prefix(uav_id)}/out/vehicle_command_ack_v1",
+        self.create_subscription(VehicleCommandAck, f"{get_fmu_prefix(uav_id)}/out/vehicle_command_ack",
                                  self._on_ack, SENSOR_QOS)
 
     def _on_ack(self, msg: VehicleCommandAck):

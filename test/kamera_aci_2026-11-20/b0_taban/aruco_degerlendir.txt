@@ -1,0 +1,41 @@
+# ArUco simülasyon değerlendirmesi — /home/bap/sim/iha_sim_v2/test/kamera_aci_2026-11-20/b0_taban/aruco_log
+
+- Gerçek hedef: ENU (-60.0, -60.0) → (47.3974315, 8.5453666); geolocator NED (-60.03, -59.97, 0.06); EKF origin 47.3979714, 8.5461634, 0.08 m
+- Kare: 2616 işlenen, 40 beklenen (marker tam görüntüde), 40 tespitli; sahte tespit (beklenmezken): 0
+- Zaman hizası: PX4–gerçek yatay konum farkını en küçükleyen gecikme -10 ms (medyan fark 0.05 m); 0 ms civarı → kare/PX4 saatleri aynı
+
+## Tespit oranı (beklenen karelerde)
+
+| kenar px | irtifa m | beklenen | tespit | oran |
+|---|---|---|---|---|
+| 30–35 | 101 | 40 | 40 | 100.0 % |
+
+## Kare başına hata (yatay, m)
+
+- ray-cast: medyan 0.29, %95 0.52, en çok 0.54 (n=40)
+- PnP: medyan 0.19, %95 0.47, en çok 0.53 (n=40)
+- ray-cast GERÇEK pozla (tespit+kamera modeli): medyan 0.05, %95 0.06, en çok 0.06 (n=40)
+- PnP GERÇEK pozla: medyan 0.65, %95 0.90, en çok 0.94 (n=40)
+- köşe hatası (gerçek izdüşüme göre, RMS px): medyan 1.00, %95 1.07, en çok 1.09 (n=40)
+
+## PX4 poz hatası (tespitli karelerde)
+
+- yatay konum: medyan 0.19, %95 0.22, en çok 0.25 (n=40) m
+- düşey (D): medyan 0.03, %95 0.05, en çok 0.05 (n=40) m
+- |roll|: medyan 0.13, %95 0.16, en çok 0.16 (n=40)°
+- |pitch|: medyan 0.07, %95 0.09, en çok 0.09 (n=40)°
+- |yaw|: medyan 0.51, %95 0.54, en çok 0.54 (n=40)°
+
+## LoRa raporları (füzyon tahmini, gönderilen)
+
+| # | n_obs | hata m | σ95 m | hata/σ95 |
+|---|---|---|---|---|
+| 1 | 4 | 0.47 | 1.80 | 0.26 |
+| 51 | 80 | 0.19 | 0.39 | 0.50 |
+| 102 | 80 | 0.19 | 0.39 | 0.50 |
+| 152 | 80 | 0.19 | 0.39 | 0.50 |
+| 202 | 80 | 0.19 | 0.39 | 0.50 |
+
+- Son rapor hatası: **0.19 m** (σ95 0.39 m, 80 gözlem); raporların %100'inde hata ≤ σ95
+
+kare CSV: /home/bap/sim/iha_sim_v2/test/kamera_aci_2026-11-20/b0_taban/aruco_log/degerlendirme.csv

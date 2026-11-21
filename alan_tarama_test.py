@@ -320,4 +320,38 @@ dogrula(kod == 0 and len(res["ucuslar"]) == len(planlar[20.0].sira)
         f"[pay 20] {len(res['ucuslar'])} hat uçuldu, iz direklerden ≥ 17 m ({min(q.pylon_dist((r[1], r[2])) for r in u.iz):.1f}), "
         f"{res['tarama_sn']:.0f} sn")
 
+# ══ 8. Kameradan şerit, en kısa sıra, tam tarama, daire girişi (2026-11-20) ══════════════════════
+KJ = "kalibrasyon/w_nadir_10_sim.json"
+W5, d5 = at.serit_kameradan(arg(serit_kamera=KJ, alt=100.0, kenar_px=5.0), kayit=lambda m: None)
+W15, _ = at.serit_kameradan(arg(serit_kamera=KJ, alt=100.0, kenar_px=15.0), kayit=lambda m: None)
+_, d60 = at.serit_kameradan(arg(serit_kamera=KJ, alt=100.0, kenar_px=15.0, yan_ortusme=0.6), kayit=lambda m: None)
+dogrula(abs(W5 - 72.0) < 0.5 and d5 == W5 and W15 < W5 and abs(d60 - 30.3) < 0.5,
+        f"--serit-kamera: W {W5:.1f} m (kenar 5 px), {W15:.1f} m (15 px); %60 yan örtüşme → aralık {d60:.1f} m")
+a_d = dict(serit_kamera=KJ, alt=100.0, kenar_px=15.0, daire=100.0, koridor_yok=True)
+p_d = at.param_olustur(arg(uzatma=60.0, **a_d), kayit=lambda m: None)
+pl_kisa = at.plan_kur(p_d, arg(uzatma=60.0, **a_d), None, kayit=lambda m: None)
+pl_cim = at.plan_kur(p_d, arg(uzatma=60.0, sira="cim", **a_d), None, kayit=lambda m: None)
+p_eski = at.param_olustur(arg(serit=70.0, hat_araligi=70.0, alt=100.0, daire=100.0, uzatma=100.0), kayit=lambda m: None)
+pl_eski = at.plan_kur(p_eski, arg(serit=70.0, hat_araligi=70.0, alt=100.0, daire=100.0, sira="cim"), None, kayit=lambda m: None)
+o_k, o_c, o_e = pl_kisa.ozet(), pl_cim.ozet(), pl_eski.ozet()
+dogrula(not pl_kisa.dogrula() and o_k["toplam_m"] <= o_c["toplam_m"] < o_e["toplam_m"]
+        and o_k["geometrik_kapsama"] >= o_e["geometrik_kapsama"],
+        f"daire R 100: en kısa sıra {o_k['toplam_m']} m ≤ çim {o_c['toplam_m']} m < eski (W 70, uzatma 100) {o_e['toplam_m']} m; "
+        f"kapsama %{100 * o_k['geometrik_kapsama']:.1f} ≥ %{100 * o_e['geometrik_kapsama']:.1f}")
+yur = at.Yurutucu(pl_kisa, kayit=lambda m: None)
+yur.baslat()
+c0, g0 = pl_kisa.hatlar[pl_kisa.sira[0]], pl_kisa.g0
+dis = p_d.nokta(-g0 * (tp.daire_kiris(p_d, c0) / 2 + 5.0), c0)
+ic = p_d.nokta(-g0 * (tp.daire_kiris(p_d, c0) / 2 - 5.0), c0)
+yur.adim(*dis)
+once = yur.ucuslar[-1]["x_giris_m"]
+yur.adim(*ic)
+dogrula(once is None and yur.ucuslar[-1]["x_giris_m"] is not None,
+        "daire modu: hat girişi (x_giris) daireye girişte ölçülür, kiriş dışında değil")
+u = SahteUcak(-30.0, 210.0, hedef_qr=(-60.0, -68.0))          # bölüm 4: bu hedef taramayı son hattan önce keser
+kod, res, kayit = kos(plan, u, tam_tarama=True)
+dogrula(kod == 0 and res["tespit"] is not None and res["tespit"]["ucus_sirasi"] < len(plan.sira)
+        and res["ucular_hat"] == len(plan.sira) and res["dur_nedeni"] == "tüm hatlar uçuldu",
+        f"--tam-tarama: tespit {res['tespit']['ucus_sirasi']}. hatta kaydedildi, tarama {res['ucular_hat']}/{len(plan.sira)} hat sürdü")
+
 print(f"\n{n_assert} doğrulama geçti")
