@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 5.2] - Tulpar 60 m QR geçişi: 2 geçiş, %100 tespit, kadraj kayması = 60·tan(pitch)
+Arena, `UAV0=tulpar CAM=T10 LORA=1`, uav1 yerde; el fırlatma → 100 m Hold → `qr_pass` ×2 (60 m, ψ 210°, 15 m/s). Tespit: kadrajdaki karelerde bulma/çözme 8/8 ve 6/6 (%100), modül 3,64–3,73 px (statik 3,69). Konum hatası: gerçek-poz yöntemi 5,7 / 6,4 cm, PX4-tam 0,55 / 0,44 m. Yanal hat sapması ort −0,08 / −0,14 m (std 0,03–0,04, maks 0,17/0,24). **Kadraj kayması**: pitch +2,7° / +4,0° iken ölçülen 2,77 / 4,24 m = 60·tan(pitch) (2,80 / 4,22), yön ileri (QR merkezi, uçak hedefin h·tanθ gerisindeyken ortadan geçer) — advanced_plane 1,6° ≈ 1,7 m. RTF 0,98–1,00 (geçişte), failsafe yok, servo doygunluğu %0. Sınırlar: n=2, tek uçuş, köprü kare kaybı %6,9 (geçiş 2'de ~2–3 kare), ayrı kabuktaki uav0 araçlarına UAV0_MODEL=tulpar verilmeli. Yeni `gz_models_tulpar/test/qr_gecis_analiz.py`. Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 5.3 (tam kutu tarama, onay bekler).
+
 ### [2026-11-22 Tulpar - Adım 5.1] - Tulpar el fırlatma → 100 m Hold, 218 s (1 uçuş)
 Arenada (`UAV0=tulpar CAM=T10`, uav1 yerde): motor açılışından 100 m'ye 15,6 s (Adım 4 ile aynı); Hold 218 s: yarıçap 80,2 m (std 0,2), yer hızı ort 15,2 (14,3–16,4) m/s, irtifa 100,0 ± 0,4 m, RTF ort 0,965 (min 0,77), failsafe yok, servo doygunluğu %0, roll ort 16,3°. **Bulgu:** yavaş trim sürüklenmesi — pitch dakikalık ort. +2,9° → −0,2°, gaz 0,353 → 0,362, hız 14,9 → 15,6 m/s (3 dk'lık Adım 4 uçuşunda pitch ort 3,75° idi) → 5.2'de kadraj kayması sabit 4° değil ölçülen pitch'le değerlendirilecek. Nedeni incelenmedi. Sınırlar: tek uçuş, hava hızı sensörü gürültülü (sim), 15–25 dk ivmeölçer sapması denenmedi. Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 5.2 (60 m QR geçişi, onay bekler).
 

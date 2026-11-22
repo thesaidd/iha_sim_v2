@@ -1,0 +1,22 @@
+model tulpar_0; kamera kolu FLU (0.3, 0.0, 0.0); geçiş sayısı 2
+
+=== Geçiş 1: sim 257.2–258.0 s, kadrajda 8 kare (0.9 s)
+  bulma 8/8 (%100), çözme 8/8 (%100), yayın 8
+  konum hatası PX4-tam: ort 0.55 m (min 0.45, maks 0.61); medyan 0.55 m
+  konum hatası gerçek-poz yöntemi: ort 5.7 cm (maks 6.6 cm)
+  PX4 − gerçek: yatay ort 0.38 m, dikey ort 0.03 m; kamera–QR 3B 59.8–60.4 m
+  QR merkezi görüntü ortasından (v=544) geçtiği an: s_c = -3.07 m (t_sim 257.54); irtifa 59.8 m; u = 699 px (ortadan -29)
+  pitch (burun yukarı +): gerçek +2.68°, PX4 +2.50° → beklenen kayma +2.80 m (60·tan(pitch)); ölçülen kayma s_c − (−0.30) = -2.77 m
+  QR merkezi kadrajda: s ∈ [-10.4, +4.6] m (15.1 m, 0.98 s)
+
+=== Geçiş 2: sim 436.3–437.0 s, kadrajda 6 kare (0.8 s)
+  bulma 6/6 (%100), çözme 6/6 (%100), yayın 6
+  konum hatası PX4-tam: ort 0.44 m (min 0.41, maks 0.48); medyan 0.42 m
+  konum hatası gerçek-poz yöntemi: ort 6.4 cm (maks 7.7 cm)
+  PX4 − gerçek: yatay ort 0.39 m, dikey ort 0.04 m; kamera–QR 3B 60.1–60.6 m
+  QR merkezi görüntü ortasından (v=544) geçtiği an: s_c = -4.54 m (t_sim 436.59); irtifa 60.0 m; u = 769 px (ortadan +41)
+  pitch (burun yukarı +): gerçek +4.02°, PX4 +3.95° → beklenen kayma +4.22 m (60·tan(pitch)); ölçülen kayma s_c − (−0.30) = -4.24 m
+  QR merkezi kadrajda: s ∈ [-10.5, +2.7] m (13.2 m, 0.86 s)
+
+(Not: kenar/modül px, qr_online.log YAYIN satırlarında; kenar/21 = modül.)
+tüm yayınlar: 14 adet, kenar 76.4–78.3 px → modül 3.64–3.73 px (statik 60 m: 3,69 px)

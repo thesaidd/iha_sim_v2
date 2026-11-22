@@ -1,0 +1,16 @@
+16:19:01  izleme: hedef irtifa 60 ± 15 m, RTF ≥ 0.7, gz RSS ≤ 4096 MB, STATUSTEXT /tmp/qr_mavlink.log; abort → orbit_abort 0
+16:20:41  OFFBOARD — kurallar devrede
+16:20:41  t=    0 sn mod=OFFBOARD irtifa=  60.1 m yer_hızı= 15.3 m/s RTF=1.000 gz=661 MB
+16:20:46  t=    5 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 14.8 m/s RTF=1.000 gz=661 MB
+16:20:51  t=   10 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 15.0 m/s RTF=1.000 gz=661 MB
+16:20:58  t=   15 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 14.8 m/s RTF=1.000 gz=661 MB
+16:21:03  t=   20 sn mod=OFFBOARD irtifa=  60.4 m yer_hızı= 15.0 m/s RTF=1.000 gz=661 MB
+16:21:08  t=   25 sn mod=OFFBOARD irtifa=  60.0 m yer_hızı= 15.3 m/s RTF=1.000 gz=661 MB
+16:21:13  t=   30 sn mod=OFFBOARD irtifa=  60.0 m yer_hızı= 15.3 m/s RTF=1.000 gz=661 MB
+16:21:18  t=   35 sn mod=OFFBOARD irtifa=  59.9 m yer_hızı= 15.3 m/s RTF=1.000 gz=661 MB
+16:21:23  t=   40 sn mod=OFFBOARD irtifa=  59.8 m yer_hızı= 15.5 m/s RTF=1.000 gz=661 MB
+16:21:29  t=   45 sn mod=OFFBOARD irtifa=  60.2 m yer_hızı= 15.3 m/s RTF=1.000 gz=661 MB
+16:21:34  t=   50 sn mod=OFFBOARD irtifa=  60.0 m yer_hızı= 15.4 m/s RTF=1.000 gz=661 MB
+16:21:38  Geçiş bitti (done-file var), mod=AUTO — 10 sn nav_state + STATUSTEXT izleniyor
+16:21:48  Geçiş normal bitti — Hold nav_state ile doğrulandı (0.0 sn); nav_state değişimleri: 16:19:02 AUTO_LOITER → 16:20:41 OFFBOARD → 16:21:38 AUTO_LOITER
+16:21:48  ÖZET: OFFBOARD süresi 64 sn, en düşük RTF(5 sn) 1.000, en yüksek gz RSS 661 MB, çıkış kodu 0

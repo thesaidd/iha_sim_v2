@@ -1,0 +1,57 @@
+16:14:42  [uav0] Bağlanılıyor: udpin:0.0.0.0:14540 (sysid 1), GCS kalp atışı 1 Hz gönderiliyor
+16:14:44  [uav0] PX4 kalp atışı alındı — irtifa=    0.0 m  mod=LOITER       disarmed hava_hızı=  0.4 m/s  gz_RSS=638 MB
+16:14:44  [uav0] FD_ESCS_EN = 0 (zaten ayarlı)
+16:14:45  [uav0] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+16:14:45  [uav0] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+16:14:45  [uav0] NAV_DLL_ACT = 0 (zaten ayarlı)
+16:14:45  [uav0] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+16:14:45  [uav0] COM_DISARM_LAND = 10.0 (zaten ayarlı)
+16:14:45  [uav0] FW_LAUN_DETCN_ON = 1 (zaten ayarlı)
+16:14:45  [uav0] FW_LAUN_AC_THLD = 20.0 (zaten ayarlı)
+16:14:45  [uav0] FW_LAUN_AC_T: 0.05000000074505806 → 0.05000000074505806
+16:14:45  [uav0] FW_LAUN_MOT_DEL: 0.30000001192092896 → 0.30000001192092896
+16:14:45  [uav0] RWTO_TKOFF = 0 (zaten ayarlı)
+16:14:45  [uav0] FW_AIRSPD_TRIM = 15.0 (zaten ayarlı)
+16:14:45  [uav0] FW_AIRSPD_MIN = 11.0 (zaten ayarlı)
+16:14:45  [uav0] FW_AIRSPD_MAX = 24.0 (zaten ayarlı)
+16:14:45  [uav0] FW_THR_TRIM: 0.36000001430511475 → 0.36000001430511475
+16:14:45  [uav0] FW_THR_MAX: 0.8999999761581421 → 0.8999999761581421
+16:14:46  [uav0] FW_THR_MIN: 0.05000000074505806 → 0.05000000074505806
+16:14:46  [uav0] FW_PSP_OFF = -2.0 (zaten ayarlı)
+16:14:46  [uav0] FW_TKO_PITCH_MIN = 10.0 (zaten ayarlı)
+16:14:46  [uav0] FW_P_LIM_MAX = 22.0 (zaten ayarlı)
+16:14:46  [uav0] FW_PR_I: 0.10000000149011612 → 0.10000000149011612
+16:14:46  [uav0] FW_RR_I: 0.05000000074505806 → 0.05000000074505806
+16:14:46  [uav0] FW_RR_P: 0.07999999821186066 → 0.07999999821186066
+16:14:46  [uav0] FW_RR_FF: 0.11999999731779099 → 0.11999999731779099
+16:14:46  [uav0] FW_R_LIM = 35.0 (zaten ayarlı)
+16:14:49  [uav0] MIS_TAKEOFF_ALT = 100.0 (zaten ayarlı)
+16:14:51  [uav0] PX4 [sev 6]: Armed by external command	
+16:14:51  [uav0] Deneme 1: NAV_TAKEOFF → MAV_RESULT_ACCEPTED, ARM → MAV_RESULT_ACCEPTED
+16:14:51  [uav0] PX4 [sev 6]: Using default takeoff altitude: 100.0 m	
+16:14:52  [uav0] PX4 [sev 6]: Takeoff detected	
+16:14:53  [uav0] el fırlatma: ışınlama tamam, darbe a=40.0 m/s² (hedef v=12.0 m/s), sim süresi 0.300 s (duvar 0.499 s)
+16:14:53  [uav0] irtifa=    0.0 m  mod=TAKEOFF      ARMED    hava_hızı=  6.9 m/s  gz_RSS=656 MB
+16:14:58  [uav0] irtifa=   30.8 m  mod=TAKEOFF      ARMED    hava_hızı= 15.3 m/s  gz_RSS=656 MB
+16:15:03  [uav0] irtifa=   64.0 m  mod=TAKEOFF      ARMED    hava_hızı= 15.2 m/s  gz_RSS=656 MB
+16:15:08  [uav0] irtifa=   95.3 m  mod=TAKEOFF      ARMED    hava_hızı= 16.7 m/s  gz_RSS=656 MB
+16:15:13  [uav0] irtifa=   98.0 m  mod=LOITER       ARMED    hava_hızı= 14.7 m/s  gz_RSS=656 MB
+16:15:13  Turlama başladı (20 sn sonra) — 20 sn izleniyor
+16:15:19  [uav0] irtifa=   97.1 m  mod=LOITER       ARMED    hava_hızı= 18.6 m/s  gz_RSS=656 MB
+16:15:24  [uav0] irtifa=   97.2 m  mod=LOITER       ARMED    hava_hızı= 15.2 m/s  gz_RSS=656 MB
+16:15:29  [uav0] irtifa=   98.0 m  mod=LOITER       ARMED    hava_hızı= 18.2 m/s  gz_RSS=656 MB
+16:15:34  [uav0] irtifa=   98.3 m  mod=LOITER       ARMED    hava_hızı= 15.0 m/s  gz_RSS=656 MB
+16:15:34  İzleme tamamlandı. Kalp atışı sürüyor (durdurmak için SIGTERM / Ctrl+C); 30 sn'de bir durum.
+16:16:06  [uav0] irtifa=   99.4 m  mod=LOITER       ARMED    hava_hızı= 13.1 m/s  gz_RSS=656 MB
+16:16:37  [uav0] irtifa=   86.9 m  mod=LOITER       ARMED    hava_hızı= 15.4 m/s  gz_RSS=656 MB
+16:17:09  [uav0] irtifa=   60.1 m  mod=LOITER       ARMED    hava_hızı= 14.5 m/s  gz_RSS=656 MB
+16:17:40  [uav0] irtifa=   59.7 m  mod=OFFBOARD     ARMED    hava_hızı= 19.5 m/s  gz_RSS=656 MB
+16:18:12  [uav0] irtifa=   60.1 m  mod=OFFBOARD     ARMED    hava_hızı= 15.3 m/s  gz_RSS=657 MB
+16:18:43  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 15.8 m/s  gz_RSS=664 MB
+16:19:15  [uav0] irtifa=   60.4 m  mod=LOITER       ARMED    hava_hızı= 10.2 m/s  gz_RSS=660 MB
+16:19:45  [uav0] irtifa=   59.8 m  mod=LOITER       ARMED    hava_hızı= 15.7 m/s  gz_RSS=660 MB
+16:20:16  [uav0] irtifa=   59.9 m  mod=LOITER       ARMED    hava_hızı= 10.4 m/s  gz_RSS=661 MB
+16:20:48  [uav0] irtifa=   60.0 m  mod=OFFBOARD     ARMED    hava_hızı= 15.2 m/s  gz_RSS=661 MB
+16:21:19  [uav0] irtifa=   60.0 m  mod=OFFBOARD     ARMED    hava_hızı= 12.5 m/s  gz_RSS=661 MB
+16:21:51  [uav0] irtifa=   60.2 m  mod=LOITER       ARMED    hava_hızı= 15.7 m/s  gz_RSS=661 MB
+16:22:07  Durduruldu — kalp atışı kesildi
