@@ -23,6 +23,8 @@
 #                              2026-10-29 ölçümü: RTF 0,999, sunucu belleği sabit. CAM=1 ile birleştirilebilir.
 #   WORLD=iha_arena_v2 ./launch_all.sh → aynı arena, çim/toprak dokulu zemin (gz_worlds/iha_arena_v2.sdf);
 #                              CAM=T* ile de seçilebilir: CAM=T10 WORLD=iha_arena_v2 (WORLD verilmezse iha_arena).
+#   WORLD=iha_arena_gercek ./launch_all.sh → ortofoto benzeri zemin, halka/ızgara yok, gök mavisi (make_iha_arena.py --gercekci; 2026-11-21);
+#                              CAM=T* ile de seçilebilir.
 #   WORLD=iha_arena ./launch_all.sh → $SIM_DIR/gz_worlds/iha_arena.sdf (halka, direkler, ızgara);
 #                              varsayılan PX4 default.sdf. Dünya adı SDF'ten okunur ("default" kalır),
 #                              iki PX4 örneği ve ros_gz aynı adı kullanır. Bu dünyada PX4'ün kamera
@@ -199,8 +201,8 @@ elif [[ $CAM == 1 || $CAM == T || $CAM == T15 || $CAM == T10 ]]; then
         fi
         export PX4_GZ_MODELS=$models
         # iha_arena = özgün gri zemin (varsayılan); iha_arena_v2 = dokulu zemin (make_iha_arena.py --zemin dokulu).
-        if [[ -n $WORLD && $WORLD != iha_arena && $WORLD != iha_arena_v2 ]]; then
-            echo "  UYARI: CAM=$CAM yalnızca iha_arena / iha_arena_v2 ile çalışır (QR hedefi); WORLD=$WORLD yok sayıldı"
+        if [[ -n $WORLD && $WORLD != iha_arena && $WORLD != iha_arena_v2 && $WORLD != iha_arena_gercek ]]; then
+            echo "  UYARI: CAM=$CAM yalnızca iha_arena / iha_arena_v2 / iha_arena_gercek ile çalışır (QR hedefi); WORLD=$WORLD yok sayıldı"
             WORLD=iha_arena
         fi
         WORLD=${WORLD:-iha_arena}

@@ -3,3 +3,6 @@ __pycache__/
 *.pid
 kalibrasyon/kareler/
 test/*/*/kareler/
+*.ulg
+*:Zone.Identifier
+İşbirlikçi Sabit Kanat İHA.html

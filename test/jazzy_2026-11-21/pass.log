@@ -1,0 +1,6 @@
+17:22:43  [geçiş 1] hedef (-60, -60), ψ=210°, irtifa 60 m, V 15 m/s, bias +0.0 m; hizalama Hold merkezi H=(543, 196); uçak (-79, 241, 100 m)
+17:22:49  ayrım denetimi: uav1 hold, Hold merkezi (20, 226), irtifa 120 m; eşik 3B 40 m
+17:22:49  bekleme: (-53, 139)'den AYRIM — bacak: öteki araç hold, en kötü durum yatay boşluk -49 m, dikey boşluk 9 m → 3B 9 m < 40 m — Hold çemberinde uygun an bekleniyor (en fazla 60 sn)
+17:23:54  ROTA REDDEDİLDİ: AYRIM — bacak: öteki araç hold, en kötü durum yatay boşluk -41 m, dikey boşluk 10 m → 3B 10 m < 40 m. Komut gönderilmedi — uçak mevcut Hold'da kalıyor (-50, 273)
+17:23:54  ayrım: taşıma komutlarına kadar gerçekleşen en küçük 3B {'3b_m': 20.7, 'yatay_m': 6.6, 'dikey_m': 19.7, 'saat': '17:22:58'}
+17:23:54  AYRIM ÖZETİ: bu koşuda uav1 ile gerçekleşen en küçük 3B ayrım {'3b_m': 20.7, 'yatay_m': 6.6, 'dikey_m': 19.7, 'saat': '17:22:58'} (eşik 40 m)

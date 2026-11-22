@@ -69,11 +69,20 @@ GROUND_SIZE = 700.0
 GROUND_TILES = 2                         # 2×2 → 350 m karo; 2048 px doku ile 17 cm/texel
 GROUND_TEXTURE = os.path.join(HERE, "zemin_doku.png")
 TEXTURE_ABS = False                      # main(): --mutlak-yol
+# --gercekci (iha_arena_gercek.sdf, 2026-11-21): ortofoto benzeri 2×2 benzersiz karo (make_zemin_gercek.py),
+# halka/ızgara/merkez diski yok, gerçek uçuş-engeli direkleri (beyaz gövde + kırmızı bant), sönük bina renkleri,
+# 8 km'lik çevre zemini (ufuk), gök mavisi arka plan. Engel konumları/boyutları DEĞİŞMEZ (planlayıcı aynı).
+GERCEKCI = False
+EMISSIVE = 0.35                          # --gercekci: 0,06 (kendinden ışıklı görünüm azalır)
+GERCEK_DIREK_BANT = (0.85, 0.08, 0.05)
+GERCEK_ARKA = (0.53, 0.70, 0.90)         # gök mavisi
+GERCEK_CEVRE = (0.26, 0.34, 0.17)        # 700 m zemin görselinin ötesi
 CAMERA_POSE = (-300.0, -300.0, 300.0)   # güneybatı, 300 m
 CAMERA_TARGET = (0.0, 0.0, 60.0)
 
 
-def material(rgb, emissive=0.35):
+def material(rgb, emissive=None):
+    emissive = EMISSIVE if emissive is None else emissive
     r, g, b = rgb
     return (f"<material><ambient>{r} {g} {b} 1</ambient><diffuse>{r} {g} {b} 1</diffuse>"
             f"<specular>0 0 0 1</specular><emissive>{r*emissive:.3f} {g*emissive:.3f} {b*emissive:.3f} 1</emissive></material>")
@@ -106,6 +115,15 @@ def textured_plane_visual(name, x, y, z, size, texture):
             "</metal></pbr></material></visual>")
 
 
+def color_plane_visual(name, x, y, z, size, rgb):
+    r, g, b = rgb
+    return (f"<visual name='{name}'><pose>{x:.3f} {y:.3f} {z:.3f} 0 0 0</pose>"
+            f"<cast_shadows>false</cast_shadows><geometry><plane><normal>0 0 1</normal>"
+            f"<size>{size:.1f} {size:.1f}</size></plane></geometry>"
+            f"<material><ambient>{r} {g} {b} 1</ambient><diffuse>{r} {g} {b} 1</diffuse><specular>0 0 0 1</specular>"
+            "</material></visual>")
+
+
 def static_model(name, visuals):
     return (f"<model name='{name}'><static>true</static><link name='link'>"
             + "".join(visuals) + "</link></model>")
@@ -113,14 +131,17 @@ def static_model(name, visuals):
 
 def build(hedef="qr"):
     models = {}
+    if GERCEKCI:
+        models["arena_cevre"] = [color_plane_visual("cevre", 0.0, 0.0, -0.06, 8000.0, GERCEK_CEVRE)]
 
     seg = 2.0 * RING_RADIUS * math.sin(math.pi / RING_SEGMENTS) + 0.2
-    models["arena_halka"] = [
-        box_visual(f"s{i}", RING_RADIUS * math.cos(a), RING_RADIUS * math.sin(a), 0.03, a + math.pi / 2,
-                   seg, 1.2, 0.03, (1.0, 0.45, 0.0))
-        for i, a in ((i, 2.0 * math.pi * i / RING_SEGMENTS) for i in range(RING_SEGMENTS))]
+    if not GERCEKCI:
+        models["arena_halka"] = [
+            box_visual(f"s{i}", RING_RADIUS * math.cos(a), RING_RADIUS * math.sin(a), 0.03, a + math.pi / 2,
+                       seg, 1.2, 0.03, (1.0, 0.45, 0.0))
+            for i, a in ((i, 2.0 * math.pi * i / RING_SEGMENTS) for i in range(RING_SEGMENTS))]
 
-    models["arena_merkez"] = [cylinder_visual("disk", 0.0, 0.0, 0.04, 3.0, 0.03, (0.9, 0.1, 0.1))]
+        models["arena_merkez"] = [cylinder_visual("disk", 0.0, 0.0, 0.04, 3.0, 0.03, (0.9, 0.1, 0.1))]
 
     pylon_visuals = []
     for label, ang in PYLONS.items():
@@ -128,14 +149,15 @@ def build(hedef="qr"):
         pylon_visuals.append(cylinder_visual(f"{label}_govde", x, y, PYLON_HEIGHT / 2, 1.5, PYLON_HEIGHT, (0.92, 0.92, 0.92)))
         for h in range(20, int(PYLON_HEIGHT) + 1, 20):
             pylon_visuals.append(cylinder_visual(f"{label}_bant{h}", x, y, h, 2.2, 3.0,
-                                                 BAND_COLORS.get(h, (1.0, 0.85, 0.0))))
+                                                 GERCEK_DIREK_BANT if GERCEKCI else BAND_COLORS.get(h, (1.0, 0.85, 0.0))))
     models["arena_direkler"] = pylon_visuals
 
     grid = []
-    for v in range(-GRID_HALF, GRID_HALF + 1, GRID_STEP):
+    for v in ([] if GERCEKCI else range(-GRID_HALF, GRID_HALF + 1, GRID_STEP)):
         grid.append(box_visual(f"x{v}", v, 0.0, 0.01, 0.0, 0.6, 2.0 * GRID_HALF, 0.02, (0.35, 0.35, 0.38)))
         grid.append(box_visual(f"y{v}", 0.0, v, 0.012, 0.0, 2.0 * GRID_HALF, 0.6, 0.02, (0.35, 0.35, 0.38)))
-    models["arena_izgara"] = grid
+    if grid:
+        models["arena_izgara"] = grid
 
     models["arena_binalar"] = [box_visual(n, x, y, h / 2, 0.0, sx, sy, h, rgb) for n, x, y, sx, sy, h, rgb in BUILDINGS]
 
@@ -168,8 +190,8 @@ def gui_block():
         "<gui fullscreen='0'>"
         "<plugin filename='MinimalScene' name='3D View'><gz-gui><title>3D View</title>"
         "<property type='bool' key='showTitleBar'>false</property><property type='string' key='state'>docked</property>"
-        "</gz-gui><engine>ogre2</engine><scene>scene</scene><ambient_light>0.4 0.4 0.4</ambient_light>"
-        "<background_color>0.8 0.8 0.8</background_color>"
+        f"</gz-gui><engine>ogre2</engine><scene>scene</scene><ambient_light>{'0.5 0.5 0.5' if GERCEKCI else '0.4 0.4 0.4'}</ambient_light>"
+        f"<background_color>{' '.join(map(str, GERCEK_ARKA)) if GERCEKCI else '0.8 0.8 0.8'}</background_color>"
         f"<camera_pose>{cx} {cy} {cz} 0 {pitch:.4f} {yaw:.4f}</camera_pose></plugin>"
         + helpers +
         "<plugin filename='WorldControl' name='World control'><gz-gui><title>World control</title>"
@@ -202,7 +224,8 @@ def ground_tiles():
     for i in range(GROUND_TILES):
         for j in range(GROUND_TILES):
             x, y = -GROUND_SIZE / 2 + (i + 0.5) * t, -GROUND_SIZE / 2 + (j + 0.5) * t
-            out.append(textured_plane_visual(f"zemin_{i}{j}", x, y, 0.0, t, GROUND_TEXTURE))
+            tex = os.path.join(HERE, f"zemin_gercek_{i}{j}.jpg") if GERCEKCI else GROUND_TEXTURE
+            out.append(textured_plane_visual(f"zemin_{i}{j}", x, y, 0.0, t, tex))
     return out
 
 
@@ -212,13 +235,20 @@ def main():
                     help="duz = özgün gri zemin (iha_arena.sdf); dokulu = çim/toprak dokulu karolar (iha_arena_v2.sdf)")
     ap.add_argument("--hedef", choices=["qr", "aruco"], default="qr",
                     help="qr = 1 m QR (HEDEF-01); aruco = 2 m DICT_4X4_50 marker (aruco_hedef.png)")
+    ap.add_argument("--gercekci", action="store_true",
+                    help="ortofoto benzeri zemin + halka/ızgara yok + gök mavisi (iha_arena_gercek.sdf); --zemin dokulu sayılır")
     ap.add_argument("--mutlak-yol", action="store_true", help="doku yollarını mutlak yaz (eski davranış)")
     ap.add_argument("--out", default=None,
                     help="çıktı dosyası (varsayılan: iha_arena.sdf / iha_arena_v2.sdf; --hedef aruco → iha_arena_aruco.sdf)")
     args = ap.parse_args()
-    global TEXTURE_ABS
+    global TEXTURE_ABS, GERCEKCI, EMISSIVE
     TEXTURE_ABS = args.mutlak_yol
-    if args.hedef == "aruco":
+    if args.gercekci:
+        GERCEKCI, EMISSIVE = True, 0.06
+        args.zemin = "dokulu"
+    if args.gercekci:
+        out = args.out or OUT.replace("iha_arena.sdf", "iha_arena_gercek.sdf")
+    elif args.hedef == "aruco":
         out = args.out or OUT.replace("iha_arena.sdf", "iha_arena_aruco.sdf")
     else:
         out = args.out or (OUT if args.zemin == "duz" else OUT.replace("iha_arena.sdf", "iha_arena_v2.sdf"))
@@ -233,8 +263,10 @@ def main():
 
     extra_visuals = 0
     if args.zemin == "dokulu":
-        if not os.path.isfile(GROUND_TEXTURE):
-            raise SystemExit(f"zemin dokusu yok: {GROUND_TEXTURE} (önce make_zemin_doku.py)")
+        for dosya in ([os.path.join(HERE, f"zemin_gercek_{i}{j}.jpg") for i in range(2) for j in range(2)]
+                      if GERCEKCI else [GROUND_TEXTURE]):
+            if not os.path.isfile(dosya):
+                raise SystemExit(f"zemin dokusu yok: {dosya} (önce make_zemin_{'gercek' if GERCEKCI else 'doku'}.py)")
         tiles = ground_tiles()
         # ground_plane'in tek görseli (çarpışmadan sonraki <visual name="visual"> … </visual>) karolarla değişir
         text, n = re.subn(r"<visual name=\"visual\">.*?</visual>", lambda m: "\n        ".join(tiles), text, count=1, flags=re.S)
@@ -242,6 +274,13 @@ def main():
             raise SystemExit("zemin görseli bloğu bulunamadı")
         extra_visuals = len(tiles) - 1
 
+    if GERCEKCI:   # sahne: gök mavisi arka plan, daha parlak ortam, hafif sıcak güneş (yalnız atmosfer; geometri aynı)
+        r, g, b = GERCEK_ARKA
+        text, n1 = re.subn(r"<background>[^<]*</background>", f"<background>{r} {g} {b} 1</background>", text, count=1)
+        text, n2 = re.subn(r"<ambient>0\.4 0\.4 0\.4 1</ambient>", "<ambient>0.5 0.5 0.5 1</ambient>", text, count=1)
+        text, n3 = re.subn(r"(<light name=\"sunUTC\".*?<diffuse>)[^<]*(</diffuse>)", r"\g<1>1.0 0.96 0.88 1\g<2>", text, count=1, flags=re.S)
+        if (n1, n2, n3) != (1, 1, 1):
+            raise SystemExit(f"sahne/güneş ayarı bulunamadı ({n1},{n2},{n3})")
     models = build(args.hedef)
     gui, pitch, yaw = gui_block()
     extra = "\n    ".join(static_model(name, vis) for name, vis in models.items())

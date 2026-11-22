@@ -1,0 +1,17 @@
+17:52:10  izleme: hedef irtifa 60 ± 15 m, RTF ≥ 0.7, gz RSS ≤ 4096 MB, STATUSTEXT /home/yusuf24/kurulum/takeoff2.log; abort → orbit_abort 0
+17:53:43  OFFBOARD — kurallar devrede
+17:53:44  t=    0 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.2 m/s RTF=0.996 gz=1282 MB
+17:53:49  t=    5 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 14.0 m/s RTF=1.000 gz=1286 MB
+17:53:54  t=   10 sn mod=OFFBOARD irtifa=  60.5 m yer_hızı= 14.0 m/s RTF=0.996 gz=1296 MB
+17:53:59  t=   15 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.0 m/s RTF=0.996 gz=1301 MB
+17:54:04  t=   20 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.1 m/s RTF=0.997 gz=1310 MB
+17:54:09  t=   25 sn mod=OFFBOARD irtifa=  60.2 m yer_hızı= 14.1 m/s RTF=1.000 gz=1320 MB
+17:54:15  t=   30 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.1 m/s RTF=0.999 gz=1329 MB
+17:54:20  t=   35 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.1 m/s RTF=0.999 gz=1339 MB
+17:54:25  t=   40 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.0 m/s RTF=1.000 gz=1348 MB
+17:54:31  t=   45 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.1 m/s RTF=0.992 gz=1357 MB
+17:54:35  t=   50 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.0 m/s RTF=1.000 gz=1367 MB
+17:54:40  t=   55 sn mod=OFFBOARD irtifa=  60.3 m yer_hızı= 14.0 m/s RTF=1.000 gz=1377 MB
+17:54:45  Geçiş bitti (done-file var), mod=AUTO — 10 sn nav_state + STATUSTEXT izleniyor
+17:54:55  Geçiş normal bitti — Hold nav_state ile doğrulandı (0.0 sn); nav_state değişimleri: 17:52:10 AUTO_LOITER → 17:53:44 OFFBOARD → 17:54:45 AUTO_LOITER
+17:54:55  ÖZET: OFFBOARD süresi 69 sn, en düşük RTF(5 sn) 0.992, en yüksek gz RSS 1382 MB, çıkış kodu 0
