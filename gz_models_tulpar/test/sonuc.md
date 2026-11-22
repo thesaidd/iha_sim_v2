@@ -193,3 +193,22 @@ Yöntem: `UAV0=tulpar CAM=T10 LORA=1 ./launch_all.sh` → el fırlatma → 100 m
 - **Roll/pitch (tarama):** roll −38,9…+38,5° (|roll| ort 8,4°; `FW_R_LIM` 35'i yay girişlerinde kısa süre aşıyor), pitch ort 2,88° (std 1,28; −1,9…8,8°).
 - Karşılaştırma (advanced_plane, günlük 2026-11-12; bu adımda advanced_plane uçulmadı): 9/9 hat 646/649 s (Tulpar 551 s; hız ~15 m/s aynı, süre farkı hat/yay sırası ve uçuş koşulu farkı olabilir, incelenmedi), giriş yanal hata medyanı 1,0 m (Tulpar 0,95), hat–direk gerçek 37,5 m (Tulpar 38,6), kapsama plan %44.
 - **Sınırlar (dürüst):** 9/9 yalnız `--koridor-yok` ile (koridor denetimi bilinçli kapatıldı; gerçek zincirde uav1 uzak üste (IHA_UAV1_SPAWN_NE 200,−950) olduğundan zaten bu bayrak gerekir); tek uçuş, tek tam koşu (koşu 1 kısmi); QR yalnız c=−55 hattında görüldü (diğer hatlar şerit dışı); kapsama kendi hesabımız (kamera ayak izi, yer z=0, 1 m ızgara) — `kapsama_analiz.py` `bap_geo` yok → çalıştırılamadı; yay sapması advanced_plane'den büyük, nedeni incelenmedi; `servo3` tek kısa doygunluk (ulg örneği).
+
+## Adım 5.4 — Tulpar zinciri: tarama → tespit → LoRa → uav1 yerden kalkış → dalış → iniş (2026-11-22) ZİNCİR TAMAMLANDI (dalış gerçek 3B 20,21 m: hedef bandının 0,21 m üstünde)
+Yöntem: `UAV0=tulpar CAM=T10 LORA=1 UAV1_POSE=-950,200,0.5,0,0,0 IHA_UAV1_SPAWN_NE=200,-950 ./launch_all.sh` (dünya iha_arena; **ROS ortamı launch_all'dan ÖNCE kaynaklanmamalı** — kaynaklanınca gz sunucusu başlamıyor, PX4 "Waiting for Gazebo world" ile zaman aşımına uğruyor, 2 denemede yaşandı) → uav0 `mavlink_takeoff.py --el-firlatma --alt 100` → `lora_yaklasma.py --uav 1 --profil dalis --alcalma-siniri 4.0 --baslangic yer --kaynak-fark-n 200 --kaynak-fark-e -950 --pist-yonu 90 --guvenli-irtifa 120` → `alan_tarama.py --ilk-hat -40 --koridor-yok`. Betikler ve kayıtlar `test/adim5_4_2026-11-22/` (ulg yok; gerçek poz 2 Hz'e seyreltilmiş). Analiz `test/zincir_analiz.py` (yeni). **Tek uçuş, tek zincir.**
+| ölçüt | hedef / referans | ölçülen |
+|---|---|---|
+| zincir tamam (abortsuz) | evet | **evet** — tespit → röle → kalkış → dalış → tırmanış → Hold → dönüş → iniş → disarm, abort yok |
+| dalış durması, gerçek 3B (gz) | 19,8–20,0 m (ref. 19,74–19,98) | **20,21 m** (yatay 12,49, irtifa 15,91) — bandın 0,21 m ÜSTÜNDE; node'un PX4 tahminiyle 19,87 m (yatay 12,62, irtifa 15,35), durma nedeni 3B mesafe |
+| uçuş yolunun hedefe en yakın 3B'si | — | 14,52 m (yatay 0,78 m): durmadan sonra tırmanış hedefin tam üstünden 14,5 m'de geçiyor; dip irtifa 14,2 m (node) / 14,4 m (gz) |
+| dalış açısı / profil izleme | plan 8,19° | ölçülen 6,8°; hat girişi yanal −0,06 m, irtifa 38,3 m (hedef 38,3); dalışta yanal ≤ 0,1 m |
+| konum kestirimi (zincirin kullandığı ilk yayın) | PX4 yöntemiyle ≤ 3 m | (−60,40; −59,70) → **0,50 m** (gerçek (−60,−60)); yalnız ilk yayın hesaplandı, tüm yayınların medyanı çıkarılmadı |
+| tespit | — | hat 3/9 (c=−70↑), tarama 189 s, tespit 163,9. sn; uav0 Hold'u tespitten 37 sn sonra oturdu |
+| tespit → uav1 kalkış komutu / harekete geçiş / tırmanış sonu (Hold) | ref. 42,5–45,0 / — / — | 37,6 s / 49,1 s / 141,1 s; tespit → iniş algılama 330 s (node toplam 330,2 s) |
+| uav1 kalkış | ref. teker kesme 6,4–7,1 s | arm 3,8 s, teker kesme 8,42 s (komuttan), yer koşusu 26,0 m, 25,2 m/s |
+| iki araç 3B ayrım (ikisi havada) | ≥ 40 m | en küçük 300 m (dalış anında 319 m) |
+| uav1 / uav0 en yakın direk (yatay) | ≥ 37 m | uav1 47,2 m; uav0 38,6 m |
+| iniş | ref. yanal ≤ 0,5 m, boyuna +52…+78 m | yanal −0,2 m, boyuna **+67,2 m**, disarm 2,1 s; son konum üsse 17 m |
+| ulg failsafe | 0 | uav0 0/1476, uav1 0/1402 örnek; nav_state uav0 {4,14,17}, uav1 {3,4,14,17}; accel_bias 0 (EKF2_IMU_CTRL=5) |
+- **Karşılaştırma (advanced_plane, 2026-11-16 yerden kalkış):** dalış durması 3B 19,74–19,98 m, dip 13,4–13,8 m, açı 6,8°; burada 3B bandın hemen üstünde (gz 20,21 m), dip 14,2 m, açı 6,8°. Fark Tulpar'dan değil uav1 tarafının tek örneğinden de gelebilir; n=1.
+- **Sınırlar (dürüst):** tek uçuş/zincir, istatistik yok. RTF uçuş boyunca sürekli kaydedilmedi (`qr_watch` çalıştırılmadı): yalnız kalkıştan sonra 0,999 ve iniş sonrası 1,000 ölçüldü. `--koridor-yok` kullanıldı (uav1 uzak üste olduğu halde planlayıcı koridoru orijin pistine göre koruyor). PX4 EKF xy reset sayacı uav0'da 4, uav1'de 5 (başlangıçtaki değeri ayrıca doğrulanmadı). uav1'in dalıştan sonraki yolu hedefin hemen üstünden 14,5 m'de geçiyor (önceki uçuşlarda aynı ölçü çıkarılmadı). iz2.log boş: iz.csv yine yazıldı (PYTHONPATH gerekir).

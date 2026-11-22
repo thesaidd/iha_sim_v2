@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 5.4] - Tulpar zinciri: tarama → LoRa → uav1 yerden kalkış → dalış → iniş, abortsuz (1 uçuş); dalış gerçek 3B 20,21 m
+Tulpar (uav0) el fırlatma → 100 m → `alan_tarama.py --ilk-hat -40 --koridor-yok`; uav1 (advanced_plane) uzak üste yerde. QR 3. hatta bulundu (ilk yayın hatası 0,50 m) → röle → uav1 kalkış (tespitten 37,6 s) → dalış → tırmanış → üsse dönüş → iniş. **Zincir abortsuz tamamlandı (1/1).** Dalış durması gerçek 3B **20,21 m** (node tahmini 19,87; hedef 19,8–20,0 → 0,21 m üstünde), durmadan sonra hedefin üstünden 14,5 m'de geçti; ayrım ≥ 300 m; uav1 direk ≥ 47,2 m; failsafe 0; iniş yanal −0,2 m, boyuna +67,2 m. **Tuzak:** `launch_all.sh`'ten önce ROS Jazzy kaynaklanırsa gz sunucusu çalışmıyor (PX4 "Waiting for Gazebo world"). Açık: tek uçuş, RTF sürekli ölçülmedi, `--koridor-yok` gerekli. Ayrıntı: `gz_models_tulpar/test/sonuc.md` Adım 5.4.
+
 ### [2026-11-22 Tulpar - Adım 5.3] - Tulpar tam kutu taraması: 9/9 hat (--koridor-yok), 551 s, giriş yanal medyan 0,95 m
 Aynı uçuşta iki koşu (`alan_tarama.py --tam-tarama`, arena, uav1 yerde): **koşu 1** koridor denetimiyle 5/9 hatta durdu (kalan 4 hat doğu kalkış koridorunu kesiyor, uav1 orijin pistinde olduğu için "koridor serbest değil"); **koşu 2** `--koridor-yok` ile **9/9 hat, abort yok, 551 s**. Kutu girişi yanal hata medyanı 0,95 m (maks 1,54), gerçek hat–direk en yakın 38,6 m (advanced_plane 37,5), irtifa 60,01 ± 0,33 m, gerçek-ayak-izi kapsaması %46,9 (plan %44,4), QR iki koşuda da c=−55 hattında bulundu (hata 0,47 / 0,37 m; kadrajda 6/6, 8/8), RTF ≥ 0,994, failsafe yok. Bulgular: dönüş yayı sapması ort 16 m (advanced_plane 11 m), yay girişlerinde roll ±38,9° (FW_R_LIM 35'i kısa süre aşıyor). Sınırlar: 9/9 yalnız koridor bayrağıyla, tek tam koşu, kapsama kendi hesabımız. Yeni `gz_models_tulpar/test/tarama_analiz.py`. Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 5.4 (zincir: tarama → LoRa röle → uav1 dalış; onay bekler).
 
