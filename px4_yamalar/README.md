@@ -9,3 +9,11 @@ PX4 `v1.17.0-alpha1-959-g2ca42e5252`, `Tools/simulation/gz` alt modülü `3eb05f
 - `gz_bridge_magnetometre.patch` — Muhammet'in gz_bridge eksen eşleme yaması (PX4 kaynağına uygulanır).
 
 Yeni PX4'e: `cd Tools/simulation/gz && git apply <depo>/px4_yamalar/gz_advanced_plane_el_degisiklik.patch` (isteğe bağlı).
+
+## Tulpar airframe'i (2026-11-22)
+- `4030_gz_tulpar` — pusher twin-boom ters-V uçak (Tulpar) için SITL airframe'i. PX4'e kopyalanır:
+  `cp px4_yamalar/4030_gz_tulpar ~/PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes/`
+- `4030_airframes_CMakeLists.patch` — aynı dizindeki `CMakeLists.txt`'ye `4030_gz_tulpar` satırı:
+  `cd ~/PX4-Autopilot && git apply ~/iha_sim_v2/px4_yamalar/4030_airframes_CMakeLists.patch`
+- Sonra `make px4_sitl_default`. Model dosyaları `gz_models_tulpar/` altında (`PX4_GZ_MODELS=<…>/<varyant>`).
+- Airframe içindeki `FD_ESCS_EN 0` yalnız simülasyon önlemidir (gz_bridge ESC bayrağı), gerçek uçağa taşınmaz.

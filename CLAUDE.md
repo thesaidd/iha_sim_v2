@@ -185,6 +185,9 @@ Kullanıcı kararıyla simülasyon aşaması kapatıldı. Kanıt: 4 uçuş, 6 zi
 - Başlatma tuzağı: `launch_all.sh` çağıran komut metninde düğüm betik adları geçerse `pkill` kabuğu öldürür ve yardımcı düğümler çift kalabilir (2026-11-13 tur 1'de yaşandı).
 **(c) Sıradaki aşama: gerçek donanım.** Simülasyona özgü önlemler (`SIM_ONLY_PARAMS`: `ASPD_DO_CHECKS`, `NAV_DLL_ACT`, `ASPD_SCALE_APPLY`, `FW_AIRSPD_TRIM`, `RWTO_MAX_THR`, `FW_TKO_PITCH_MIN`, `EKF2_IMU_CTRL`; `UCUS_DINAMIGI_PARAMS`) gerçek uçağa TAŞINMAYACAK. Donanıma geçmeden önce yukarıdaki konum kestirimi anomalisi ve direk yakın geçişi (engel payı) ele alınmalı.
 
+## Tulpar geçişi (2026-11-22) — güncel durum
+Uçak adı **Tulpar** (pusher twin-boom ters-V, yalnız uav0 tarama+tespit; uav1 advanced_plane). Model/PX4: `gz_models_tulpar/` (`nocam|kam/tulpar/model.sdf`, `tulpar_ortam.sh`, `test/sonuc.md`), PX4 airframe `4030_gz_tulpar` (kopya+yama `px4_yamalar/`). Adım 0 (push) ve 1 (yeniden adlandırma, A5 tekrarı) **tamam**; sırada: **2** T10 kamera (`T10/tulpar`), **3** `arac_modelleri.py` + `launch_all.sh UAV0=tulpar` (UAV0 verilmezse davranış birebir aynı), **4** `el_firlatma.py`, **5** kademeli uçuşlar (Hold → 60 m QR → tam kutu → zincir; her uçuş ayrı onay + ulg analizi). Plan: `~/.claude/plans/her-eyi-test-edelim-*.md`. Kuru test baz çizgisi: alan_tarama 47, qr_pass 23, ayrim 18, yer_gorevi 83, lora_tarama_zincir 26. Commit kimliği yalnız `git -c user.name=thesaidd -c user.email=thesaidd@users.noreply.github.com`; `*.ulg` commit'lenmez; push'u kullanıcı yapar.
+
 ## Nereden devam edilecek (2026-11-16 13:15)
 **Yerden kalkış senaryosu Aşama 0–3 TAMAMLANDI** (bkz. yukarıdaki bölüm): a1 kalkış arızasının kök nedeni bulundu
 (spawn yaw ≠ 0 → model aerodinamiği), üs (200, −950) / pist 90°'ye taşındı, güvenli durdurma + MIS_TAKEOFF_ALT

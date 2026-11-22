@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 0/1] - Push (kullanıcı), uçağın adı Tulpar, yeniden adlandırma + A5 tekrarı
+Kararlar: uçak adı **Tulpar**; yalnız uav0 (tarama+tespit); uav1 advanced_plane kalır; Tulpar inişi ileride. Adım 0: `.gitignore` (+`*.ulg`, Zone.Identifier, yerel html), iki commit (97cab68, c253e0b), baz çizgisi 47/23/18/83/26 ✔; push kullanıcı tarafından yapıldı (origin/main = c253e0b). Adım 1: `gz_models_gercek_ucak` → `gz_models_tulpar` (`nocam|kam/tulpar/`, örnek `tulpar_0`), PX4 `4030_gz_tulpar` (+yamalar `px4_yamalar/`), `tulpar_ortam.sh`, `tulpar_firlat.py`; eski ad grep'i 0; `gz sdf -k` Valid; A5 tekrarı: 39,5 m'ye 6,5 s, Hold 40,0 ± 0,4 m 75 s, failsafe 0 (ayrıntı `gz_models_tulpar/test/sonuc.md`). Sırada: Adım 2 (T10 kamera), 3 (arac_modelleri.py + launch_all UAV0=tulpar), 4 (el_firlatma.py), 5 (kademeli uçuşlar, her biri onaylı).
+
 ### [2026-11-21 Gerçek uçak] - gercek_ucak (pusher, twin-boom, ters-V) Gazebo modeli + PX4 4030 + el fırlatma uçuşu
 Yeni model `gz_models_gercek_ucak/gercek_ucak` (üretici `uret_model.py`, önizleme `render_onizleme.py`), PX4 airframe `4030_gz_gercek_ucak` (PX4'e kopyalandı: `ROMFS/.../airframes/4030_gz_gercek_ucak` + `CMakeLists.txt` +1 satır, yedek `yedek/airframes_CMakeLists.txt.bak-2026-11-21`; `make px4_sitl_default` yeniden derlendi). Kademeli test A0–A5 geçti (`gz_models_gercek_ucak/test/sonuc.md`): servo yönü, motor itkisi (≈20 N tam gaz), serbest uçuş trim (16–17 m/s), PX4 eşlemesi, el fırlatma → 40 m → Hold 2,5+ dk kararlı. Ana bulgular: ters-V yaw işareti, şablon kontrol katsayıları 2,5–4× fazla, gz ESC "armed" bayrağı yüzünden FD_ESCS_EN=0 (sim-only), float param tipi. Ortam: `gz_models_gercek_ucak/gercek_ortam.sh start|stop` + `test/gercek_firlat.py` (launch_all.sh'a dokunulmadı). Eski modeller/zincir değişmedi.
 
