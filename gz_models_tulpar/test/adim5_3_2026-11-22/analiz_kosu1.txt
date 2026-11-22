@@ -1,0 +1,12 @@
+sonuç: tespit, uçulan hat 5/9, tarama 359 s, neden: kalan hatlar uçulamıyor: c=+40.0: hat kalkış koridorunu kesiyor ve koridor serbest değil; c=+67.5: hat kalkış koridorunu kesiyor ve koridor serbest değil; c=+81.2: hat kalkış koridorunu kesiyor ve koridor serbest değil; c=+53.7: hat kalkış koridorunu kesiyor ve koridor serbest değil
+  uçulmayan: [40.0, 67.5, 81.2, 53.7]; devralma s=-170.8, x=2.8; uav1'e en küçük 3B ayrım 64.7 m
+
+KUTU GİRİŞİ yanal hata (hat başına, 5 hat): -0.16, -1.13, +1.43, +1.19, -1.18
+  |x_giris| medyan 1.18 m, ort 1.02, maks 1.43; kutu içi |x|maks hat başına maks 1.46 m (medyan 1.20)
+DÖNÜŞ yayları (4): |x|maks ort 15.1 m (maks 15.6); çıkışta |x_son| ort 14.0 m (maks 14.4); planlanan dönüş–direk en küçük 117 m
+PLAN hat–direk en küçük (planlanan): 39.9 m
+
+TARAMA penceresi (sim): 156–515 s (359 s), gerçek poz örneği 5997
+GERÇEK en yakın direk mesafesi (yatay, tüm tarama): 39.7 m; hat fazında 39.7 m; dönüş fazında 116.0 m
+hat fazında irtifa 60.07 ± 0.37 m (min 59.1, maks 61.4)
+KAPSAMA (gerçek kamera ayak izi birleşimi, 1 m ızgara, 300×300 m kutu): %26.2 (218 ayak izi); plan geometrik kapsama %44,4

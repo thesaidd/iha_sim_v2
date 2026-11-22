@@ -1,0 +1,31 @@
+sonuç: tespit, uçulan hat 9/9, tarama 551 s, neden: tüm hatlar uçuldu
+  uçulmayan: []; devralma s=-169.6, x=2.7; uav1'e en küçük 3B ayrım 65.0 m
+
+KUTU GİRİŞİ yanal hata (hat başına, 9 hat): +0.01, -1.54, -1.18, -0.66, +1.18, +0.95, +0.93, -0.68, -1.49
+  |x_giris| medyan 0.95 m, ort 0.96, maks 1.54; kutu içi |x|maks hat başına maks 1.76 m (medyan 1.25)
+DÖNÜŞ yayları (8): |x|maks ort 16.0 m (maks 16.5); çıkışta |x_son| ort 9.4 m (maks 15.5); planlanan dönüş–direk en küçük 114 m
+PLAN hat–direk en küçük (planlanan): 38.6 m
+
+TARAMA penceresi (sim): 608–1159 s (551 s), gerçek poz örneği 9195
+GERÇEK en yakın direk mesafesi (yatay, tüm tarama): 38.6 m; hat fazında 38.6 m; dönüş fazında 115.2 m
+    hat sırası 1: gerçek en yakın direk 40.1 m, irtifa 59.6 ± 0.24 m
+    hat sırası 2: gerçek en yakın direk 38.6 m, irtifa 60.0 ± 0.29 m
+    hat sırası 3: gerçek en yakın direk 68.8 m, irtifa 60.0 ± 0.27 m
+    hat sırası 4: gerçek en yakın direk 53.7 m, irtifa 59.9 ± 0.15 m
+    hat sırası 5: gerçek en yakın direk 39.6 m, irtifa 60.1 ± 0.25 m
+    hat sırası 6: gerçek en yakın direk 39.7 m, irtifa 60.2 ± 0.35 m
+    hat sırası 7: gerçek en yakın direk 54.7 m, irtifa 60.2 ± 0.31 m
+    hat sırası 8: gerçek en yakın direk 52.6 m, irtifa 60.2 ± 0.30 m
+    hat sırası 9: gerçek en yakın direk 53.4 m, irtifa 60.0 ± 0.28 m
+hat fazında irtifa 60.01 ± 0.33 m (min 59.1, maks 61.1)
+KAPSAMA (gerçek kamera ayak izi birleşimi, 1 m ızgara, 300×300 m kutu): %46.9 (390 ayak izi); plan geometrik kapsama %44,4
+
+QR: kadrajdaki küme sayısı 2
+  küme 1: sim 490–491 s, 6 kare, bulundu 6, çözüldü 6; PX4-tam hata ort 0.46 m, gerçek-poz 11.9 cm
+  küme 2: sim 1142–1143 s, 8 kare, bulundu 8, çözüldü 8; PX4-tam hata ort 0.31 m, gerçek-poz 5.6 cm
+  kadrajda_gercek=False iken bulunan kare: 1 (yanlış tespit/geometri payı)
+
+ULG failsafe bayrakları (ihmal edilenler hariç): yok
+  nav_state değerleri: [4, 14, 17] (4=AUTO_LOITER, 14=OFFBOARD, 17=TAKEOFF; 5=RTL/18=LAND olmamalı)
+  servo |cmd| maks / >0,95 payı: servo0 0.57 / %0.00, servo1 0.57 / %0.00, servo2 0.87 / %0.00, servo3 1.00 / %0.03
+  tarama süresince roll min -38.9 maks 38.5°, |roll| ort 8.4°; pitch ort 2.88° (std 1.28, min -1.9, maks 8.8)
