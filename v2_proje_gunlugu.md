@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 2] - Tulpar T10 (aşağı bakan RPi GS kamera): modül boyutu referansla aynı
+`uret_model.py` `TULPAR_VARYANT=T10` → `gz_models_tulpar/T10/tulpar/model.sdf` (kamera bloğu T_nadir_10 ile aynı; x=0,30 m, dik aşağı; +0,12 kg, CG çeyrek kordda). Ölçümler: camera_info fx 4637,814 (ref 4637,81); 60 m / 0° QR modül 3,690 px, 45° 3,662 px — referans `kamera_test` ile fark 0,000 (ölçüt ≤ %1 ✔); 40 ve 80 m de aynı; QR engelsiz görünür. Kuru testler baz çizgisiyle aynı (47/23/18/83/26). Doğrulanmayan: uçuşta pitch ~4° ve model içi 0,30 m ofset, yerde yakın kırpma (Adım 5). Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 3 (arac_modelleri.py + launch_all UAV0=tulpar).
+
 ### [2026-11-22 Tulpar - Adım 0/1] - Push (kullanıcı), uçağın adı Tulpar, yeniden adlandırma + A5 tekrarı
 Kararlar: uçak adı **Tulpar**; yalnız uav0 (tarama+tespit); uav1 advanced_plane kalır; Tulpar inişi ileride. Adım 0: `.gitignore` (+`*.ulg`, Zone.Identifier, yerel html), iki commit (97cab68, c253e0b), baz çizgisi 47/23/18/83/26 ✔; push kullanıcı tarafından yapıldı (origin/main = c253e0b). Adım 1: `gz_models_gercek_ucak` → `gz_models_tulpar` (`nocam|kam/tulpar/`, örnek `tulpar_0`), PX4 `4030_gz_tulpar` (+yamalar `px4_yamalar/`), `tulpar_ortam.sh`, `tulpar_firlat.py`; eski ad grep'i 0; `gz sdf -k` Valid; A5 tekrarı: 39,5 m'ye 6,5 s, Hold 40,0 ± 0,4 m 75 s, failsafe 0 (ayrıntı `gz_models_tulpar/test/sonuc.md`). Sırada: Adım 2 (T10 kamera), 3 (arac_modelleri.py + launch_all UAV0=tulpar), 4 (el_firlatma.py), 5 (kademeli uçuşlar, her biri onaylı).
 

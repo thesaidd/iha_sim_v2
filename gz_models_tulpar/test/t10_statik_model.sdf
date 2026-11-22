@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- Adım 2 statik ölçümü: Tulpar T10 modelini sarmalayıcı statik modelle kamera_test yerine yerleştirir.
+     Tulpar kamerası model içinde x=0.30'da; include pozu -0.30 ile sensör sarmalayıcı orijinine oturur
+     (qr_irtifa_tarama.py gibi sensör = model orijini, dik aşağı, yaw 0 → görüntü üstü doğu). -->
+<sdf version="1.9">
+  <model name="kamera_test">
+    <static>true</static>
+    <include>
+      <uri>file:///home/yusuf24/iha_sim_v2/gz_models_tulpar/T10/tulpar</uri>
+      <name>tulpar</name>
+      <static>true</static>
+      <pose>-0.30 0 0 0 0 0</pose>
+    </include>
+  </model>
+</sdf>

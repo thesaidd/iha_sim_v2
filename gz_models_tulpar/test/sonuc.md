@@ -75,3 +75,20 @@ Her adımdan sonra aynı sayılar beklenir; kötüleşme = dur.
 - Ölçüt kanıtları: eski ad grep (`gercek_ucak|gercek_ortam|gercek_firlat`, `.git` hariç) = günlükteki 2 tarihsel satır dışında **0**; `gz sdf -k` nocam ve kam **Valid**; `make px4_sitl_default` hatasız (ROMFS yenilendi, `4030_gz_tulpar` build'de var); `tulpar_ortam.sh start` → `gz_bridge model: tulpar_0`, "Ready for takeoff".
 - A5 tekrarı (`tulpar_firlat.py 12 45`, arena değil boş default dünya, ulg `2026-11-22/11_54_28`): fırlatma → 39,5 m'ye **6,5 s** (hedef < 10 s ✔); tırmanış tepesi 46,5 m (8 s), Hold'a oturma sonrası irtifa **40,0 ± 0,4 m** (hedef |hata| ≤ 1 m ✔), Hold **75 s** izlendi (≥ 60 s ✔), failsafe **0** ✔, roll 16–17° sabit daire (A5: 16°), yer hızı 20–80 s: ort **15,2** (14,4–16,0) m/s (A5: 13–17), hava hızı sensörü 10–19 arası gürültülü (A5 ile aynı). Karşılaştırma A5 (eski ad): 40,0 ± 0,3 m — fark ≤ 0,1 m.
 - Not: kamerasız `nocam/tulpar` kullanıldı; `kam` varyantı yalnız `gz sdf -k` ile doğrulandı (uçuşta A5 öncesi video çekiminde kullanılmıştı).
+
+## Adım 2 — Tulpar T10 (aşağı bakan kamera) (2026-11-22) GEÇTİ (kapsamı aşağıda)
+- `uret_model.py`: `TULPAR_VARYANT=T10` → `T10/tulpar/model.sdf` (nocam üretimi sonunda otomatik). Kamera bloğu `gz_models_cam_hw/T_nadir_10/advanced_plane/model.sdf:127-139` ile aynı (hfov 0,3114, 1456×1088, clip 0,1–1000, 10 Hz, dik aşağı `0 1.5708 0`, sensör adı `camera`); poz base_link'te x = 0,30 m, z = 0 (gövde altı 1 cm aşağıda), görüntü üstü = burun. Kamera + lens kütlesi 0,12 kg (CG batarya konumuyla yeniden çözüldü: batarya 0,62 → 0,50 kg, x 0,280 → 0,276 m); nocam/kam dosyaları değişmedi (`git diff` boş).
+- Doğrulama: `gz sdf -k` nocam/kam/T10 Valid; CG x = 0,000 m (çeyrek kord; ölçüt ≤ 5 mm ✔); kamera parametreleri referansla birebir (parametre diff boş).
+- **camera_info fx = fy = 4637,814** (referans 4637,81; fark < %0,001 ✔; cx 728, cy 544).
+- **Statik QR ölçümü** (`test/t10_statik_qr.py` → `gz_models_cam_hw/qr_irtifa_tarama.py` yeniden kullanıldı; statik sarmalayıcı `t10_statik_model.sdf`, sensör sarmalayıcı orijininde, aynı dünya `iha_arena_gercek`, aynı anda referans `kamera_test` ile koşuldu). Modül boyutu (px), teorik / referans / Tulpar T10:
+| irtifa / yön | teorik | referans (kamera_test) | Tulpar T10 | fark |
+|---|---|---|---|---|
+| 40 m / 0° | 5,52 | 5,476 | 5,476 | 0,000 |
+| 40 m / 45° | 5,52 | 5,539 | 5,539 | 0,000 |
+| **60 m / 0°** | 3,68 | 3,690 | **3,690** | **0,000 (%0)** |
+| 60 m / 45° | 3,68 | 3,662 | 3,662 | 0,000 |
+| 80 m / 0° | 2,76 | 2,714 | 2,714 | 0,000 |
+| 80 m / 45° | 2,76 | 2,719 | 2,719 | 0,000 |
+60 m bulma/çözme: ham QRCodeDetector 100/100 (iki yönde). Ölçüt (fark ≤ %1, referans 3,67) ✔. Önceki kayıt (2026-10-30) 3,67 ile bugünkü referans 3,69 arasındaki ~%0,5 fark renderer/dünya (iha_arena_gercek) farkından, bu görevin dışı.
+- **Kapsam/sınır (dürüst):** fark 0 olması beklenen sonuç (aynı sensör bloğu, aynı poz) — test **kamera bloğunu, optik ekseni (dik aşağı) ve gövdenin görüşü kapatmadığını** doğrular (Tulpar gövde/kanat/boom görselleri sahnede, 40 m karede QR engelsiz: `t10_statik_2026-11-22/tulpar_kare_040m.png`). **Doğrulanmayan:** modelin gerçek uçuşta eğimi (pitch ~4°) ve model içindeki 0,30 m ofseti (sarmalayıcı −0,30 ile telafi etti), yerdeki yakın kırpma (near 0,1 m; yerde kamera yüksekliği ölçülmedi) — Adım 5'te ölçülür.
+- Beş kuru test (Adım 2 sonrası): alan_tarama **47**, qr_pass **23**, ayrim **18**, yer_gorevi **83**, lora_tarama_zincir **26** — baz çizgisiyle aynı ✔.

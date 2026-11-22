@@ -13,7 +13,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SABLON = os.path.join(HERE, "..", "gz_models_nocam", "advanced_plane", "model.sdf")
-CIKTI = os.path.join(HERE, "nocam", "tulpar")
+VARYANT = os.environ.get("TULPAR_VARYANT", "nocam")        # nocam (+ kam otomatik) | T10
+CIKTI = os.path.join(HERE, "T10" if VARYANT == "T10" else "nocam", "tulpar")
 
 # ---- ölçüler (kullanıcı) ----
 SPAN = 1.70            # kanat açıklığı
@@ -74,6 +75,9 @@ parcalar = [  # (kütle, x, y, z, sx, sy, sz)
     (0.05, (X_TE + X_KUYRUK_LE) / 2, -0.225, Z_BOOM, X_TE - X_KUYRUK_LE, 0.01, 0.01),  # boom R
     (0.08, X_KUYRUK_TE + KUYRUK_KORD / 2, 0, Z_APEX - PANEL_DIKEY / 2, KUYRUK_KORD, KUYRUK_YATAY_GENIS, PANEL_DIKEY),
 ]
+X_KAM = 0.30                      # T10 kamera x (burun altı); sensör poz: x=X_KAM, z=0, dik aşağı
+if VARYANT == "T10":
+    parcalar.append((0.12, X_KAM, 0, 0.0, 0.04, 0.04, 0.04))   # RPi Global Shutter Camera + 16 mm lens
 M_BAT = KUTLE - sum(p[0] for p in parcalar)
 XB = (X_QC * KUTLE - sum(p[0] * p[1] for p in parcalar)) / M_BAT   # CG = çeyrek kord olacak batarya konumu
 if not (X_GOVDE_ARKA <= XB <= X_BURUN):
@@ -164,6 +168,20 @@ collision = f"""      <collision name='govde_col'>
 with open(SABLON) as fh:
     satirlar = fh.read().splitlines()
 sensorler = "\n".join(satirlar[54:157])  # imu, baro, mag, navsat (satır 55-157)
+if VARYANT == "T10":
+    # gz_models_cam_hw/T_nadir_10/advanced_plane/model.sdf:127-139 ile aynı kamera parametreleri
+    sensorler += f"""
+      <sensor name="camera" type="camera">
+        <pose>{f(X_KAM)} 0 0 0 1.5708 0</pose>
+        <camera>
+          <horizontal_fov>0.3114</horizontal_fov>
+          <image><width>1456</width><height>1088</height></image>
+          <clip><near>0.1</near><far>1000</far></clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>10</update_rate>
+        <visualize>true</visualize>
+      </sensor>"""
 
 # ---- kontrol yüzeyleri ----
 linkler = ""
@@ -388,6 +406,10 @@ print(f"batarya x={XB:.3f} m={M_BAT:.2f} kg")
 print(f"S={S:.3f} m2 AR={AR:.2f} CG=({cgx:.3f},{cgz:.3f}) I=({Ixx:.4f},{Iyy:.4f},{Izz:.4f})")
 print(f"panel_uzun={PANEL_UZUN:.3f} dikey={PANEL_DIKEY:.3f} z_apex={Z_APEX:.3f} burun={X_BURUN:.3f} kuyruk_te={X_KUYRUK_TE:.3f}")
 
+if VARYANT == "T10":
+    print(f"T10 varyantı yazıldı: {CIKTI}")
+    sys.exit(0)
+
 # ---- isteğe bağlı: kameralı varyant (video çekimi) — kam/tulpar/model.sdf (model adı yine `tulpar`) ----
 def kamera_linki(ad, x, z, pitch, fov, w, h):
     return f"""    <link name='{ad}_link'>
@@ -416,3 +438,7 @@ with open(os.path.join(KAM, "model.config"), "w") as fh:
 <model><name>Tulpar Kamerali</name><version>1.0</version><sdf version='1.9'>model.sdf</sdf><author><name>iha_sim_v2</name></author>
 <description>tulpar + arkadan takip kamerasi + burun kamerasi (video cekimi icin).</description></model>
 """)
+
+
+import subprocess
+subprocess.run([sys.executable, "-I", os.path.abspath(__file__)], env={**os.environ, "TULPAR_VARYANT": "T10"}, check=True)
