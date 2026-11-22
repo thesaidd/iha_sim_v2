@@ -34,6 +34,23 @@ else:
     rr = np.hypot(xs - cx, ys - cy)
     print(f"Hold: giriş {t[i0] - T0:.1f} s, süre {t[i1] - t[i0]:.0f} s; merkez ({cx:.0f}, {cy:.0f}) m (NED x,y)")
     print(f"  yarıçap {r:.1f} m (std {rr.std():.1f} m); yer hızı ort {vg[hs].mean():.1f} min {vg[hs].min():.1f} max {vg[hs].max():.1f} m/s; irtifa ort {z[hs].mean():.1f} ± {z[hs].std():.1f} m")
+    # dakika dakika: yarıçap (sabit merkezle), yer hızı, irtifa — sürüklenme/bozulma var mı?
+    th = np.arctan2(ys - cy, xs - cx); ts_h = t[hs]; ang = np.unwrap(th)
+    print(f"  merkez etrafında dönüş: {np.degrees(ang[-1] - ang[0]) / 360:.2f} tur, yön {'saat yönü (NED)' if ang[-1] > ang[0] else 'saat yönü tersi (NED)'}")
+    for k in range(int((ts_h[-1] - ts_h[0]) // 60) + 1):
+        m = (ts_h >= ts_h[0] + 60 * k) & (ts_h < ts_h[0] + 60 * (k + 1))
+        if m.sum() > 30:
+            print(f"    dk {k + 1}: yarıçap {np.hypot(xs[m] - cx, ys[m] - cy).mean():.1f} m, hız {vg[hs][m].mean():.1f} m/s (min {vg[hs][m].min():.1f}), irtifa {z[hs][m].mean():.1f} m")
+    at = d["vehicle_attitude"]; ta = at.data["timestamp"] / 1e6; m = (ta > t[i0] + 20) & (ta < t[i1])
+    q = np.stack([at.data[f"q[{j}]"] for j in range(4)], 1)[m]
+    roll = np.degrees(np.arctan2(2 * (q[:, 0] * q[:, 1] + q[:, 2] * q[:, 3]), 1 - 2 * (q[:, 1] ** 2 + q[:, 2] ** 2)))
+    pitch = np.degrees(np.arcsin(np.clip(2 * (q[:, 0] * q[:, 2] - q[:, 3] * q[:, 1]), -1, 1)))
+    print(f"  roll ort {roll.mean():.1f}° (std {roll.std():.1f}, min {roll.min():.1f}, max {roll.max():.1f}); pitch ort {pitch.mean():.2f}° (std {pitch.std():.2f}, min {pitch.min():.1f}, max {pitch.max():.1f})")
+    sv = d.get("actuator_servos")
+    if sv is not None:
+        tsv = sv.data["timestamp"] / 1e6; m = (tsv > t[i0] + 20) & (tsv < t[i1])
+        doy = [float((np.abs(sv.data[f"control[{j}]"][m]) > 0.95).mean()) * 100 for j in range(4)]
+        print(f"  servo doygunluğu (|cmd|>0,95): " + ", ".join(f"servo{j} %{v:.1f}" for j, v in enumerate(doy)))
     ca = d.get("airspeed_validated")
     if ca is not None:
         tc = ca.data["timestamp"] / 1e6; m = (tc > t[i0] + 20) & (tc < t[i1]); v = ca.data["calibrated_airspeed_m_s"][m]

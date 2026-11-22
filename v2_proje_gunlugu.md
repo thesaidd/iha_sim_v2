@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 5.1] - Tulpar el fırlatma → 100 m Hold, 218 s (1 uçuş)
+Arenada (`UAV0=tulpar CAM=T10`, uav1 yerde): motor açılışından 100 m'ye 15,6 s (Adım 4 ile aynı); Hold 218 s: yarıçap 80,2 m (std 0,2), yer hızı ort 15,2 (14,3–16,4) m/s, irtifa 100,0 ± 0,4 m, RTF ort 0,965 (min 0,77), failsafe yok, servo doygunluğu %0, roll ort 16,3°. **Bulgu:** yavaş trim sürüklenmesi — pitch dakikalık ort. +2,9° → −0,2°, gaz 0,353 → 0,362, hız 14,9 → 15,6 m/s (3 dk'lık Adım 4 uçuşunda pitch ort 3,75° idi) → 5.2'de kadraj kayması sabit 4° değil ölçülen pitch'le değerlendirilecek. Nedeni incelenmedi. Sınırlar: tek uçuş, hava hızı sensörü gürültülü (sim), 15–25 dk ivmeölçer sapması denenmedi. Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 5.2 (60 m QR geçişi, onay bekler).
+
 ### [2026-11-22 Tulpar - Adım 4] - El fırlatma modülü (el_firlatma.py, mavlink_takeoff.py --el-firlatma); arena dünyasında Tulpar 100 m Hold
 `el_firlatma.py` (sim saatiyle darbe, varyanta göre CG torku, Tulpar parametre tabloları) ve `mavlink_takeoff.py --el-firlatma` (yalnız `--uav 0`, `UAV0_MODEL=tulpar`); SIM_ONLY parametreleri araç tipine göre ayrıldı (Tulpar'a pist ayarı yazılmaz, FD_ESCS_EN=0 sim-only). Yeni kuru test `el_firlatma_test.py` (28 ✔; taban `ee97a24` ile advanced_plane tabloları birebir aynı). Uçuş (1/1, arena `iha_arena`, T10 modeli, uav1 yerde): motor açılışından **100 m'ye 15,6 s**, Hold yarıçap **80,1 m** (std 0,2), yer hızı ort 15,2 m/s, irtifa 99,3 ± 0,3 m, RTF ort 0,96 (min 0,77), failsafe yok; IMU ivmesi 20 m/s² eşiğini motordan 0,436 s önce geçti (fırlatma algılaması darbeyle tetiklendi). Sınırlar: tek uçuş, `mavlink_takeoff.py --uav 0 1` canlı koşulmadı (tablo düzeyinde aynı), hava hızı sensörü gürültülü (sim). Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 5 (kademeli uçuşlar; her biri ayrı onay).
 

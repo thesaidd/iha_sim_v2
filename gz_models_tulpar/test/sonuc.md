@@ -130,3 +130,22 @@ Her adımdan sonra aynı sayılar beklenir; kötüleşme = dur.
 - Fırlatma = ışınlama + darbe; gerçek el hareketi değil. Darbe `uav0` doğu yönünde (yaw-0 kısıtı).
 - `UAV0_MODEL=tulpar` ayrı kabukta elle verilmeli (launch_all.sh yalnız kendi alt süreçlerine verir); aksi halde `--el-firlatma` reddedilir (hata mesajı güncellendi).
 - Hold merkezi spawn noktasının ~247 m doğusunda (80 m yarıçap); arena direkleri (r 140 m) ve QR hedefiyle ilişkisi Adım 5'te planlanır (uav0 Hold'u şimdilik serbest).
+
+## Adım 5.1 — Tulpar el fırlatma → 100 m Hold, 3 dk+ (2026-11-22) GEÇTİ
+Yöntem: Adım 4 ile aynı (`UAV0=tulpar CAM=T10 ./launch_all.sh`; `UAV0_MODEL=tulpar python3 mavlink_takeoff.py --uav 0 --el-firlatma --alt 100 --watch 180`; arena `iha_arena`, uav1 yerde); kayıtlar `test/adim5_1_2026-11-22/` (ulg commit'lenmez; analiz `test/ulg_hold.py`, genişletildi: dakika dakika döküm, pitch/roll, servo doygunluğu).
+| ölçüt | hedef | ölçülen (1 uçuş) |
+|---|---|---|
+| Hold süresi | ≥ 3 dk (180 s) | **218 s** (izleme 180 s + kalp atışı süren kalan süre) |
+| 100 m'ye ulaşma (motordan) | — | 15,6 s (40 m 6,2 s, 80 m 12,4 s, tepe 105,5 m @17,2 s) — Adım 4 ile aynı 15,6 s |
+| Hold yarıçapı | kaydedilir | **80,2 m** (std 0,2); dakikalık 80,3 / 80,2 / 80,1 / 79,8 m |
+| Hold yer hızı | kaydedilir | ort **15,2** (14,3–16,4) m/s; dakikalık 14,9 / 15,1 / 15,4 / 15,6 |
+| Hold irtifası | — | 100,0 ± 0,4 m (dikey hız std 0,22 m/s) |
+| RTF (240 s pencere, 1 sn'lik) | kaydedilir | ort **0,965**, min 0,770, max 1,000 (n=46) |
+| failsafe | 0 | **yok** (bayrak taraması boş, PX4 mesajı yok) |
+| servo doygunluğu (\|cmd\|>0,95) | — | 4 servo da **%0,0** |
+| roll (Hold) | — | ort 16,3° (std 0,9; 12,6…19,0) |
+| pitch (Hold) | — | ort 1,37° (std 1,53; −4,1…4,9) |
+- Darbe: sim süresi 0,304 s (duvar 0,304 s); 6 tur dönüldü (saat yönü, NED).
+- **Bulgu — yavaş trim sürüklenmesi:** Hold boyunca pitch dakikalık ortalaması +2,93° → +1,29° → +0,42° → −0,24°, gaz 0,353 → 0,362, yer hızı 14,9 → 15,6 m/s (roll ~16,0 → 16,8°). Yani seyir pitch'i Hold'a girişten sonraki ilk ~4 dakikada ~3° değişiyor; Adım 4 kaydında (3 dk) pitch ort 3,75° idi, bu uçuşta 1,37°. **Adım 5.2 için sonuç:** QR geçişinde pitch 0–4° arası ve zamana bağlı → kadraj kayması `60·tan(pitch)` 0–4,2 m; sabit "4°" varsayımı yerine ölçülen pitch kullanılmalı. Sürüklenme nedeni (TECS/pitch integratörü yakınsaması mı) incelenmedi.
+- Karşılaştırma (advanced_plane değerleri günlükten, bu adımda advanced_plane uçulmadı): Hold yarıçap 80 m (aynı), yer hızı ~14,5–15,5 m/s (Tulpar 15,2), irtifa tutma ±~0,3 m (Tulpar ±0,4), RTF 0,967–0,985 (Tulpar 0,965) → pencereli değil, penceresiz koşuldu. Tulpar A5 (boş dünya, 40 m): roll ~16°, 13–17 m/s — aynı.
+- Sınır: **1 uçuş**, tekrar yok; hava hızı sensörü (airspeed_validated) gürültülü (min −4,4, max 21,8 m/s; yer hızı güvenilir); 3 dk eşiği ölçüldü ama uzun uçuşta (15–25 dk) ivmeölçer sapması/`High Accelerometer Bias` (bilinen) denenmedi.
