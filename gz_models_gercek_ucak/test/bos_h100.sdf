@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="bos">
+    <physics name="p" type="ode"><max_step_size>0.004</max_step_size><real_time_factor>1</real_time_factor></physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors"><render_engine>ogre2</render_engine></plugin>
+    <plugin filename="gz-sim-apply-link-wrench-system" name="gz::sim::systems::ApplyLinkWrench"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-air-pressure-system" name="gz::sim::systems::AirPressure"/>
+    <plugin filename="gz-sim-magnetometer-system" name="gz::sim::systems::Magnetometer"/>
+    <plugin filename="gz-sim-air-speed-system" name="gz::sim::systems::AirSpeed"/>
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat"/>
+    <spherical_coordinates><surface_model>EARTH_WGS84</surface_model><latitude_deg>47.3977</latitude_deg><longitude_deg>8.5456</longitude_deg><elevation>0</elevation><heading_deg>0</heading_deg></spherical_coordinates>
+    <light type="directional" name="sun"><cast_shadows>true</cast_shadows><pose>0 0 10 0 0 0</pose><diffuse>1 1 1 1</diffuse><specular>0.3 0.3 0.3 1</specular><direction>-0.5 0.3 -1</direction></light>
+    <model name="zemin"><static>true</static><link name="l">
+      <collision name="c"><geometry><plane><normal>0 0 1</normal><size>50 50</size></plane></geometry></collision>
+      <visual name="v"><geometry><plane><normal>0 0 1</normal><size>50 50</size></plane></geometry><material><ambient>0.55 0.6 0.55 1</ambient><diffuse>0.55 0.6 0.55 1</diffuse></material></visual>
+    </link></model>
+    <include><uri>file:///home/yusuf24/iha_sim_v2/gz_models_gercek_ucak/gercek_ucak</uri><pose>0 0 100 0 0 0</pose></include>
+  </world>
+</sdf>

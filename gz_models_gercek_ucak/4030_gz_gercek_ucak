@@ -1,0 +1,94 @@
+#!/bin/sh
+#
+# @name Gercek Ucak (pusher twin-boom V-tail) SITL
+#
+
+. ${R}etc/init.d/rc.fw_defaults
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=default}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=gercek_ucak}
+
+param set-default SIM_GZ_EN 1
+
+param set-default SENS_EN_ARSPDSIM 1
+
+param set-default FW_LND_ANG 8
+
+param set-default FW_PR_FF 0.08
+param set-default FW_PR_I 0.1
+param set-default FW_PR_P 0.08
+
+param set-default FW_RR_FF 0.12
+param set-default FW_RR_I 0.05
+param set-default FW_RR_P 0.08
+
+param set-default FW_YR_FF 0.3
+param set-default FW_YR_I 0.4
+param set-default FW_YR_P 0.2
+
+param set-default FW_PSP_OFF -2
+param set-default FW_P_LIM_MAX 22
+param set-default FW_P_LIM_MIN -15
+
+param set-default FW_SPOILERS_LND 0.4
+
+param set-default FW_THR_MIN 0.05
+param set-default FW_THR_TRIM 0.36
+param set-default FW_THR_MAX 0.9
+
+param set-default FW_T_CLMB_R_SP 5
+param set-default FW_T_CLMB_MAX 6
+param set-default FW_T_SINK_MAX 2.7
+param set-default FW_T_SINK_MIN 2.2
+
+# YALNIZCA SİMÜLASYON: gz_bridge ESC 'armed' bayrağını motor hızı > 0 iken kurar; el fırlatmada motor kalkışa kadar
+# kapalı (NaN) olduğundan 'ESC failure' failsafe'i arm'dan hemen sonra disarm ediyor. Gerçek uçağa TAŞINMAZ.
+param set-default FD_ESCS_EN 0
+
+param set-default FW_W_EN 1
+
+param set-default NAV_DLL_ACT 2
+
+param set-default RWTO_TKOFF 0
+
+param set-default CA_AIRFRAME 1
+
+param set-default CA_ROTOR_COUNT 1
+
+param set-default CA_SV_CS_COUNT 4
+# 0/1 aileron (sol/sag), 2/3 V-kuyruk ruddervator (sol/sag). Isaretleri ilk SITL'de dogrula.
+param set-default CA_SV_CS0_TRQ_R -0.5
+param set-default CA_SV_CS0_TYPE 1
+param set-default CA_SV_CS1_TRQ_R 0.5
+param set-default CA_SV_CS1_TYPE 2
+# TERS-V (Λ) kuyrukta yaw işareti V kuyruğun tersi: sol fiziksel panel = PX4 "Right V-Tail" (P+, Y-), sağ panel = "Left V-Tail"
+param set-default CA_SV_CS2_TYPE 8
+param set-default CA_SV_CS3_TYPE 7
+# Etkinlik katsayıları AÇIKÇA verilmeli (yaml varsayılanları yalnız arayüzde geçerli).
+# servo_2 = sol panel (PX4 Right-V rolü): pitch +, yaw -;  servo_3 = sağ panel (Left-V rolü): pitch +, yaw +
+param set-default CA_SV_CS2_TRQ_P 0.5
+param set-default CA_SV_CS2_TRQ_Y -0.5
+param set-default CA_SV_CS3_TRQ_P 0.5
+param set-default CA_SV_CS3_TRQ_Y 0.5
+
+param set-default SIM_GZ_EC_FUNC1 101
+param set-default SIM_GZ_EC_MIN1 10
+param set-default SIM_GZ_EC_MAX1 1500
+
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_FUNC2 202
+param set-default SIM_GZ_SV_FUNC3 203
+param set-default SIM_GZ_SV_FUNC4 204
+
+# --- El fırlatma + gercek_ucak ayarları (2026-11-21, A5 uçuşuyla doğrulandı) ---
+param set-default FW_LAUN_DETCN_ON 1
+param set-default FW_LAUN_AC_THLD 20
+param set-default FW_LAUN_AC_T 0.05
+param set-default FW_LAUN_MOT_DEL 0.3
+param set-default MIS_TAKEOFF_ALT 40
+param set-default FW_TKO_PITCH_MIN 10
+param set-default FW_AIRSPD_TRIM 15
+param set-default FW_AIRSPD_MIN 11
+param set-default FW_AIRSPD_MAX 24
+param set-default FW_R_LIM 35

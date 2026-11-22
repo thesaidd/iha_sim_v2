@@ -8,6 +8,19 @@
 
 ## Kayıtlar
 
+### [2026-11-21 Gerçek uçak] - gercek_ucak (pusher, twin-boom, ters-V) Gazebo modeli + PX4 4030 + el fırlatma uçuşu
+Yeni model `gz_models_gercek_ucak/gercek_ucak` (üretici `uret_model.py`, önizleme `render_onizleme.py`), PX4 airframe `4030_gz_gercek_ucak` (PX4'e kopyalandı: `ROMFS/.../airframes/4030_gz_gercek_ucak` + `CMakeLists.txt` +1 satır, yedek `yedek/airframes_CMakeLists.txt.bak-2026-11-21`; `make px4_sitl_default` yeniden derlendi). Kademeli test A0–A5 geçti (`gz_models_gercek_ucak/test/sonuc.md`): servo yönü, motor itkisi (≈20 N tam gaz), serbest uçuş trim (16–17 m/s), PX4 eşlemesi, el fırlatma → 40 m → Hold 2,5+ dk kararlı. Ana bulgular: ters-V yaw işareti, şablon kontrol katsayıları 2,5–4× fazla, gz ESC "armed" bayrağı yüzünden FD_ESCS_EN=0 (sim-only), float param tipi. Ortam: `gz_models_gercek_ucak/gercek_ortam.sh start|stop` + `test/gercek_firlat.py` (launch_all.sh'a dokunulmadı). Eski modeller/zincir değişmedi.
+
+### [2026-11-21 Gerçekçi dünya] - iha_arena_gercek: doku yolu düzeltildi, ortofoto benzeri dünya, QR 9/9
+Eski mutlak doku yolları (/home/yusuf22_04/...) yüzünden QR/zemin dokusu yüklenmiyordu → generator göreli yola geçti, v1/v2 yeniden üretildi.
+Yeni `WORLD=iha_arena_gercek` (make_zemin_gercek.py + `make_iha_arena.py --gercekci`): tarla/yol/ağaç dokulu zemin, halka/ızgara yok, gök mavisi.
+Jazzy'de QR geçişi: yanal −0,13 m, 9/9 bulma+çözme+yayın, RTF 1,0. Yedekler: yedek/make_iha_arena.py.bak-2026-11-21, yedek/launch_all.sh.bak-2026-11-21.
+
+### [2026-11-21 Jazzy geçişi] - Ubuntu 24.04 + ROS 2 Jazzy + Gazebo 8.15 + PX4 v1.17.0 kuruldu; kuru testler geçti
+PX4 v1.17.0 (eski: alpha1-959) derlendi, magnetometre + el yamaları uygulandı (eski `Tools/simulation/gz` farkı depodaki yamayla birebir aynı),
+Agent v2.4.3, px4_msgs v1.17.0 (PX4 msg ile içerik olarak aynı) derlendi, venv'de OpenCV 4.10 contrib. Kuru testler hepsi geçti.
+Sim: RTF 1,0, kalkış + QR geçişi abortsuz (yanal 0,01 m); QR TESPİTİ 0/7 — dünya dosyasında eski mutlak doku yolu (/home/yusuf22_04/...). Düzeltilmedi. Humble sonuçları Jazzy'de henüz tam kanıtlanmış sayılmaz. Ayrıntı: `docs/kurulum_ubuntu2404_jazzy.md`.
+
 ### [2026-11-20 22:05] - bapp gerçek-uçuş iyileştirmeleri simde doğrulandı (σ95 dürüst, PnP tanı, saat kipleri, yaw izleme)
 bapp'te: PnP füzyon dışı, raporlanan σ'ya ortak bias tabanı, `--clock yerel|alis|timesync` + `saat_dogrula.py`,
 `--border-margin-px`, yaw izleyicisi (yalnız tanı), `bap_geo.coverage`. Bu depoda `launch_all.sh` → `SIM_BIAS_ARGS`
