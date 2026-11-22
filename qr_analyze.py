@@ -32,11 +32,12 @@ import time
 
 import cv2
 import numpy as np
+from arac_modelleri import kamera_kol_flu
 
 W, H = 1456, 1088
 FX = FY = 4637.81
 CX, CY = 727.5, 543.5
-CAM_T_FLU = np.array([0.07, 0.0, -0.1])
+CAM_T_FLU = np.array(kamera_kol_flu(0))
 R_S = np.array([[0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-1.0, 0.0, 0.0]])     # Ry(+π/2): sensör → gövde (FLU)
 QR_E, QR_N, QR_Z = -60.0, -60.0, 0.05
 CODE = 1.0

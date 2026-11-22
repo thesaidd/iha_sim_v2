@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 3] - arac_modelleri.py + launch_all.sh UAV0=tulpar; uav0 parametre sızıntısı bulundu ve düzeltildi
+`arac_modelleri.py` (UAV0_MODEL/UAV1_MODEL, varsayılan advanced_plane) ile uav0'a bağlı sabit adlar/kamera kolu merkezileşti (qr_online, qr_recorder, gz_gercek_poz, viz_trails, cam.sh, qr_analyze + 4 analiz aracı); uav1 dosyalarına dokunulmadı. `UAV0=tulpar CAM=T10 ./launch_all.sh`: uav0 `tulpar_0` (PX4 4030), uav1 `advanced_plane_1`. **Bulgu:** Tulpar testleri `rootfs/0/parameters.bson`'a `FW_LAUN_DETCN_ON=1` yazmıştı (airframe default'u kayıtlı değeri ezmez) → advanced_plane uav0 etkilenecekti; yedekli sıfırlama eklendi (model değişince otomatik, `rootfs/0/.arac_modeli`). Varsayılan yol BİREBİR aynı: gz topic 68/68, ROS topic 132/132, PX4 komut satırları aynı, camera_bridge.yaml cmp aynı; kuru testler 47/23/18/83/26. Tulpar başlatması: `/uav0/camera/image` 9,8 Hz 1456×1088, qr_online gerçek-poz alanları dolu. Uçuş yok. Ayrıntı ve sınırlar `gz_models_tulpar/test/sonuc.md`. Sırada Adım 4 (el_firlatma.py).
+
 ### [2026-11-22 Tulpar - Adım 2] - Tulpar T10 (aşağı bakan RPi GS kamera): modül boyutu referansla aynı
 `uret_model.py` `TULPAR_VARYANT=T10` → `gz_models_tulpar/T10/tulpar/model.sdf` (kamera bloğu T_nadir_10 ile aynı; x=0,30 m, dik aşağı; +0,12 kg, CG çeyrek kordda). Ölçümler: camera_info fx 4637,814 (ref 4637,81); 60 m / 0° QR modül 3,690 px, 45° 3,662 px — referans `kamera_test` ile fark 0,000 (ölçüt ≤ %1 ✔); 40 ve 80 m de aynı; QR engelsiz görünür. Kuru testler baz çizgisiyle aynı (47/23/18/83/26). Doğrulanmayan: uçuşta pitch ~4° ve model içi 0,30 m ofset, yerde yakın kırpma (Adım 5). Ayrıntı `gz_models_tulpar/test/sonuc.md`. Sırada Adım 3 (arac_modelleri.py + launch_all UAV0=tulpar).
 

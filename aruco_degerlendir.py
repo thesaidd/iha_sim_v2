@@ -35,6 +35,7 @@ from bap_geo.geodesy import MapProjection  # noqa: E402
 from bap_geo.pnp import pnp_target  # noqa: E402
 from bap_geo.pose import AircraftPose, marker_corners_ned, project_ned  # noqa: E402
 from bap_geo.raycast import raycast_target  # noqa: E402
+from arac_modelleri import gz_ad, kamera_kol_frd  # noqa: E402
 
 T_NED_ENU = np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, -1.0]])
 F_FLU_FRD = np.diag([1.0, -1.0, -1.0])
@@ -111,8 +112,8 @@ def main():
     ap.add_argument("--hedef-enu", type=float, nargs=2, default=(-60.0, -60.0), metavar=("X_E", "Y_N"))
     ap.add_argument("--hedef-z", type=float, default=0.02)
     ap.add_argument("--hedef-yaw", type=float, default=0.0, help="marker yaw (NED, derece); 0 = üst kenar kuzey")
-    ap.add_argument("--model", default="advanced_plane_0")
-    ap.add_argument("--t-body-cam", type=float, nargs=3, default=(0.07, 0.0, 0.1))
+    ap.add_argument("--model", default=gz_ad(0))
+    ap.add_argument("--t-body-cam", type=float, nargs=3, default=kamera_kol_frd(0))
     ap.add_argument("--marker-size", type=float, default=2.0)
     ap.add_argument("--md", default=None, help="özet Markdown dosyası")
     ap.add_argument("--csv", default=None, help="kare başına değerlendirme CSV (varsayılan <log>/degerlendirme.csv)")

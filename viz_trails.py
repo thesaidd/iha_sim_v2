@@ -38,6 +38,7 @@ from gz.msgs10.marker_v_pb2 import Marker_V
 from gz.msgs10.boolean_pb2 import Boolean
 from gz.msgs10.pose_v_pb2 import Pose_V
 from gz.transport13 import Node
+from arac_modelleri import gz_ad
 
 NS = "iha_viz"
 COLORS = {0: (0.95, 0.1, 0.1), 1: (0.1, 0.35, 1.0)}   # uav0 kırmızı, uav1 mavi
@@ -82,7 +83,7 @@ def main() -> int:
     signal.signal(signal.SIGINT, lambda *_: stop.set())
 
     node = Node()
-    names = {f"advanced_plane_{u}": u for u in args.uav}
+    names = {gz_ad(u): u for u in args.uav}
     latest = {}
     lock = threading.Lock()
 

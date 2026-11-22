@@ -23,7 +23,7 @@ call() {   # call <servis> <istek tipi> <istek>
 
 case "$1" in
     uav0|uav1)
-        model="advanced_plane_${1#uav}"
+        m_var="UAV${1#uav}_MODEL"; model="${!m_var:-advanced_plane}_${1#uav}"   # arac_modelleri.py ile aynı kural
         call /gui/follow/offset gz.msgs.Vector3d "x: -$BEHIND, y: 0, z: $ABOVE"
         call /gui/follow gz.msgs.StringMsg "data: \"$model\""
         echo "kamera: $model takibi (arkada $BEHIND m, yukarıda $ABOVE m)"

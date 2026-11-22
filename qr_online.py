@@ -42,6 +42,7 @@ import time
 
 import cv2
 import numpy as np
+from arac_modelleri import gz_ad, kamera_kol_flu
 
 from qr_analyze import (CX, CY, FX, H, QR_E, QR_N, QR_Z, W, ENU_NED, FLU_FRD, euler_to_R, project_enu, quat_to_R,
                         ray_ground_ned)
@@ -116,7 +117,7 @@ def truth_eval(gt, u=None, v=None):
     R_wb = quat_to_R(*gt[3:])
     in_frame = all(math.isfinite(pu) and 0 <= pu < W and 0 <= pv < H for pu, pv, _ in
                    (project_enu(R_wb, t, c) for c in QR_CORNERS))
-    dist = float(np.linalg.norm(t + R_wb @ np.array([0.07, 0.0, -0.1]) - np.array([QR_E, QR_N, QR_Z])))
+    dist = float(np.linalg.norm(t + R_wb @ np.array(kamera_kol_flu(0)) - np.array([QR_E, QR_N, QR_Z])))
     est = None
     if u is not None:
         est = ray_ground_ned(ENU_NED @ R_wb @ FLU_FRD, ENU_NED @ t, u, v, -QR_Z)
@@ -232,7 +233,7 @@ def online(args):
     def on_pose(m):
         t = m.header.stamp.sec + m.header.stamp.nsec * 1e-9
         for p in m.pose:
-            if p.name == "advanced_plane_0":
+            if p.name == gz_ad(0):
                 o = p.orientation
                 with lock:
                     truth.append((t, p.position.x, p.position.y, p.position.z, o.w, o.x, o.y, o.z))

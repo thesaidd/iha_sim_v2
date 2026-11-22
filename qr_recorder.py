@@ -45,6 +45,7 @@ from px4_msgs.msg import VehicleControlMode, VehicleOdometry
 from gz.transport13 import Node as GzNode
 from gz.msgs10.clock_pb2 import Clock
 from gz.msgs10.pose_v_pb2 import Pose_V
+from arac_modelleri import gz_ad
 
 COLUMNS = ["gecis", "kare", "png", "img_sim_s", "img_duvar_s", "varis_duvar_s",
            "odo_ts_s", "odo_varis_s", "dt_odo_ms", "n", "e", "d", "vn", "ve", "vd", "yaw_deg", "pitch_deg", "roll_deg",
@@ -96,7 +97,7 @@ class Recorder:
     def on_pose(self, m):
         t = m.header.stamp.sec + m.header.stamp.nsec * 1e-9
         for p in m.pose:
-            if p.name == "advanced_plane_0":
+            if p.name == gz_ad(0):
                 o = p.orientation
                 with self.lock:
                     self.truth.append((t, p.position.x, p.position.y, p.position.z, o.w, o.x, o.y, o.z))

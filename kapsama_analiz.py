@@ -33,6 +33,7 @@ import numpy as np
 import kamera_geometri as kg
 from aruco_degerlendir import Gercek, dunya_orijini, oku_csv
 from bap_geo.geodesy import MapProjection
+from arac_modelleri import gz_ad, kamera_kol_frd
 
 
 def zemin_d(w0, ref, z_enu=0.0):
@@ -67,9 +68,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--log", required=True)
     ap.add_argument("--dunya", default=os.path.join(here, "gz_worlds/iha_arena_aruco.sdf"))
-    ap.add_argument("--model", default="advanced_plane_0")
+    ap.add_argument("--model", default=gz_ad(0))
     ap.add_argument("--kamera-json", default=None)
-    ap.add_argument("--t-body-cam", type=float, nargs=3, default=(0.07, 0.0, 0.1))
+    ap.add_argument("--t-body-cam", type=float, nargs=3, default=kamera_kol_frd(0))
     ap.add_argument("--daire", type=float, default=100.0, help="alan: merkez çevresinde daire yarıçapı [m]; 0 → --kutu")
     ap.add_argument("--kutu", type=float, default=300.0)
     ap.add_argument("--merkez", type=float, nargs=2, default=(0.0, 0.0), metavar=("N", "E"))

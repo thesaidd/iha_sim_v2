@@ -26,6 +26,7 @@ import kamera_geometri as kg
 from aruco_degerlendir import Gercek, dunya_orijini, oku_csv
 from bap_geo.geodesy import MapProjection
 from kapsama_analiz import tarama_penceresi, zemin_d
+from arac_modelleri import gz_ad, kamera_kol_frd
 
 
 def main():
@@ -35,8 +36,8 @@ def main():
     ap.add_argument("--log", required=True)
     ap.add_argument("--tarama-log", default=None)
     ap.add_argument("--dunya", default=os.path.join(here, "gz_worlds/iha_arena_aruco.sdf"))
-    ap.add_argument("--model", default="advanced_plane_0")
-    ap.add_argument("--t-body-cam", type=float, nargs=3, default=(0.07, 0.0, 0.1))
+    ap.add_argument("--model", default=gz_ad(0))
+    ap.add_argument("--t-body-cam", type=float, nargs=3, default=kamera_kol_frd(0))
     ap.add_argument("--daire", type=float, default=100.0)
     ap.add_argument("--merkez", type=float, nargs=2, default=(0.0, 0.0))
     ap.add_argument("--hedef-enu", type=float, nargs=2, default=(-60.0, -60.0))

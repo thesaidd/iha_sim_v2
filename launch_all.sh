@@ -54,6 +54,12 @@
 #   Birleştirilebilir:  GUI=1 VIZ=1 WORLD=iha_arena ./launch_all.sh
 #   ./launch_all.sh stop     → hepsini durdur
 #
+#   UAV0=tulpar ./launch_all.sh        → uav0 (tarama+tespit) Tulpar (gz_models_tulpar, PX4 4030); uav1 advanced_plane kalır.
+#                              CAM verilmezse nocam/tulpar, CAM=T10 ile T10/tulpar (aşağı bakan 16 mm kamera); CAM=1/T/T15/W10 desteklenmez.
+#                              UAV0 verilmezse (veya advanced_plane) davranış eskisiyle BİREBİR aynıdır (Adım 3, 2026-11-22).
+#                              uav0'ın kalıcı PX4 parametreleri (rootfs/0/parameters*.bson) model değişince yedeklenip sıfırlanır
+#                              (yedek/rootfs0_params_<tarih>/); işaret dosyası rootfs/0/.arac_modeli. RESET_UAV0_PARAMS=1 zorlar.
+#
 # Not: Orijinal server.config (GstCameraSystem yüklü) ile kameralı model ~1,4 GB/dk bellek sızdırıyor
 #      (2026-10-29); CAM=1 bu yüzden kopya yapılandırmayı kullanır.
 #      Konum değişkeni PX4_GZ_MODEL_POSE'dur; PX4_GZ_POSE PX4 tarafından okunmaz.
@@ -78,6 +84,28 @@ fi
 BAPP=${BAPP:-~/bapp}                                     # bapp deposu (aruco_geolocator düğümü, ARUCO=1)
 PX4_BUILD=$PX4_DIR/build/px4_sitl_default
 NOCAM_MODELS=$SIM_DIR/gz_models_nocam
+# Araç modelleri (arac_modelleri.py ile aynı kural): UAV0=advanced_plane (varsayılan) | tulpar. uav1 her zaman advanced_plane.
+UAV0=${UAV0:-advanced_plane}
+UAV0_SIM_MODEL=gz_advanced_plane; UAV0_AUTOSTART=4008; UAV0_PX4_ENV=""
+case $UAV0 in
+    advanced_plane) ;;
+    tulpar)
+        UAV0_SIM_MODEL=gz_tulpar; UAV0_AUTOSTART=4030
+        case ${CAM:-} in
+            "") UAV0_VARYANT=nocam ;;
+            T10) UAV0_VARYANT=T10 ;;
+            *) echo "HATA: UAV0=tulpar yalnız CAM verilmeden (nocam) veya CAM=T10 ile çalışır (CAM=$CAM desteklenmiyor)"; exit 1 ;;
+        esac
+        UAV0_MODELS=$SIM_DIR/gz_models_tulpar/$UAV0_VARYANT
+        if [[ ! -f $UAV0_MODELS/tulpar/model.sdf ]]; then
+            echo "HATA: model yok: $UAV0_MODELS/tulpar/model.sdf (python3 -I gz_models_tulpar/uret_model.py)"; exit 1
+        fi
+        UAV0_PX4_ENV="PX4_GZ_MODELS=$UAV0_MODELS"   # yalnız uav0 örneği için; uav1 genel PX4_GZ_MODELS'i kullanır
+        ;;
+    *) echo "HATA: UAV0=$UAV0 tanınmıyor (advanced_plane | tulpar)"; exit 1 ;;
+esac
+export UAV0_MODEL=$UAV0   # arac_modelleri.py (qr_online, viz_trails, gz_gercek_poz, cam.sh ...) aynı seçimi görür
+CAM_BRIDGE_YAML=$SIM_DIR/camera_bridge.yaml
 CAM_SERVER_CONFIG=$SIM_DIR/server_nogst.config   # PX4 gz_bridge/server.config kopyası, GstCameraSystem çıkarılmış
 CAM_T_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir   # RPi GS Camera + 16 mm, 1456×1088, kamera dik aşağı
 CAM_T15_MODELS=$SIM_DIR/gz_models_cam_hw/T_nadir_15   # T_nadir ile aynı, update_rate 15
@@ -275,9 +303,30 @@ PX4_EXTRA_ENV=""
 if [[ ${SIM_EKF_DUZELT:-1} == 1 ]]; then
     PX4_EXTRA_ENV="$PX4_EXTRA_ENV PX4_PARAM_EKF2_GPS_DELAY=0 PX4_PARAM_EKF2_DECL_TYPE=3"
 fi
+# uav0 kalıcı parametreleri model değişince sıfırlanır: `param set-default` (airframe) kayıtlı değerleri ezmez, bir önceki
+# modelin ayarları (ör. Tulpar'ın FW_LAUN_DETCN_ON=1'i) advanced_plane'e sızardı (2026-11-22'de yaşandı).
+R0=$PX4_BUILD/rootfs/0
+if [[ -d $R0 ]]; then
+    onceki=$(cat "$R0/.arac_modeli" 2>/dev/null)
+    if [[ ${RESET_UAV0_PARAMS:-0} == 1 || ( -n $onceki && $onceki != "$UAV0" ) || ( -z $onceki && $UAV0 != advanced_plane ) ]]; then
+        if ls "$R0"/parameters*.bson >/dev/null 2>&1; then
+            yd=$SIM_DIR/yedek/rootfs0_params_$(date +%Y-%m-%d_%H%M%S)
+            mkdir -p "$yd" && cp -a "$R0"/parameters*.bson "$yd"/ && rm -f "$R0"/parameters*.bson
+            echo "uav0 parametreleri yedeklendi ve sıfırlandı (${onceki:-işaretsiz} → $UAV0): $yd"
+        fi
+    fi
+    echo "$UAV0" > "$R0/.arac_modeli"
+fi
+if [[ $UAV0 != advanced_plane ]]; then
+    # kamera köprüsü yaml'ı: uav0 gz adı seçili modele göre (varsayılan yolda dosya olduğu gibi kullanılır)
+    CAM_BRIDGE_YAML=/tmp/iha_camera_bridge.yaml
+    python3 "$SIM_DIR/arac_modelleri.py" yaml "$SIM_DIR/camera_bridge.yaml" "$CAM_BRIDGE_YAML"
+fi
 for i in 0 1; do
     echo "[$((i + 3))/4] PX4 instance $i başlatılıyor (konum ${UAV_POSES[$i]})..."
-    start_bg "cd $PX4_DIR && env $PX4_EXTRA_ENV PX4_SIM_MODEL=gz_advanced_plane PX4_SYS_AUTOSTART=4008 PX4_GZ_WORLD=$GZ_WORLD_NAME PX4_GZ_MODEL_POSE='${UAV_POSES[$i]}' $PX4_BUILD/bin/px4 -d -i $i 2>&1 | limit_log /tmp/px4_$i.log"
+    if [[ $i == 0 ]]; then inst_env=$UAV0_PX4_ENV; sim_model=$UAV0_SIM_MODEL; autostart=$UAV0_AUTOSTART
+    else inst_env=""; sim_model=gz_advanced_plane; autostart=4008; fi
+    start_bg "cd $PX4_DIR && env $PX4_EXTRA_ENV PX4_SIM_MODEL=$sim_model PX4_SYS_AUTOSTART=$autostart ${inst_env:+$inst_env }PX4_GZ_WORLD=$GZ_WORLD_NAME PX4_GZ_MODEL_POSE='${UAV_POSES[$i]}' $PX4_BUILD/bin/px4 -d -i $i 2>&1 | limit_log /tmp/px4_$i.log"
     wait_for /tmp/px4_$i.log "Startup script returned successfully" 60 \
         || echo "  UYARI: PX4-$i 60 sn içinde başlangıç betiğini bitirmedi"
 done
@@ -325,7 +374,7 @@ if [[ $LORA == 1 ]]; then
         ROS_SETUP="source $ROS_SETUP_FILE && source $ROS_WS/install/setup.bash"
         mkdir -p /tmp/qr_online_log
         start_bg "$ROS_SETUP && ros2 run ros_gz_bridge parameter_bridge --ros-args \
-            -p config_file:=$SIM_DIR/camera_bridge.yaml \
+            -p config_file:=$CAM_BRIDGE_YAML \
             -p qos_overrides./uav0/camera/image.publisher.reliability:=best_effort \
             -p qos_overrides./uav0/camera/image.publisher.depth:=5 \
             -p qos_overrides./uav0/camera/camera_info.publisher.reliability:=best_effort \
@@ -353,7 +402,7 @@ if [[ $ARUCO == 1 ]]; then
         ROS_SETUP="source $ROS_SETUP_FILE && source $ROS_WS/install/setup.bash"
         rm -rf /tmp/aruco_log && mkdir -p /tmp/aruco_log
         start_bg "$ROS_SETUP && ros2 run ros_gz_bridge parameter_bridge --ros-args \
-            -p config_file:=$SIM_DIR/camera_bridge.yaml \
+            -p config_file:=$CAM_BRIDGE_YAML \
             -p qos_overrides./uav0/camera/image.publisher.reliability:=best_effort \
             -p qos_overrides./uav0/camera/image.publisher.depth:=5 \
             -p qos_overrides./uav0/camera/camera_info.publisher.reliability:=best_effort \

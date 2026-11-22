@@ -24,6 +24,7 @@ from aruco_degerlendir import Gercek, dunya_orijini, oku_csv
 from bap_geo.aruco import MarkerDetector
 from bap_geo.geodesy import MapProjection
 from kapsama_analiz import tarama_penceresi, zemin_d
+from arac_modelleri import gz_ad, kamera_kol_frd
 
 
 def main():
@@ -41,7 +42,7 @@ def main():
     ref = json.load(open(os.path.join(L, "geo_ref.json")))
     ref = (ref["lat"], ref["lon"], ref["alt"])
     w0 = dunya_orijini(a.dunya)
-    gercek = Gercek(oku_csv(os.path.join(L, "gercek_poz.csv")), "advanced_plane_0", w0, ref)
+    gercek = Gercek(oku_csv(os.path.join(L, "gercek_poz.csv")), gz_ad(0), w0, ref)
     kam = kg.Kamera.json_oku(os.path.join(L, "kamera.json"))
     zd = zemin_d(w0, ref)
     lat, lon = MapProjection(w0[0], w0[1]).reproject(a.hedef_enu[1], a.hedef_enu[0])
@@ -87,7 +88,7 @@ def main():
         if gg is None:
             continue
         p, R_nb = gg
-        c = p + R_nb @ np.array([0.07, 0.0, 0.1])
+        c = p + R_nb @ np.array(kamera_kol_frd(0))
         h = zd - c[2]
         roll = math.degrees(math.atan2(R_nb[2, 1], R_nb[2, 2]))
         R_nc = R_nb @ kg.R_NADIR

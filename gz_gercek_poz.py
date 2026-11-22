@@ -18,6 +18,7 @@ import time
 from gz.msgs10.clock_pb2 import Clock
 from gz.msgs10.pose_v_pb2 import Pose_V
 from gz.transport13 import Node as GzNode
+from arac_modelleri import gz_ad
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--dunya", default="default")
     ap.add_argument("--hz", type=float, default=50.0)
-    ap.add_argument("--modeller", nargs="+", default=["advanced_plane_0", "advanced_plane_1"])
+    ap.add_argument("--modeller", nargs="+", default=[gz_ad(0), gz_ad(1)])
     a = ap.parse_args()
 
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
