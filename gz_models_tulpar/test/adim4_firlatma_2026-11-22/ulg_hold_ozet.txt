@@ -1,0 +1,10 @@
+fırlatma (motor>0,5): t0 = 62.9 s (log zamanı)
+     40 m'ye ulaşma:   6.4 s
+     80 m'ye ulaşma:  12.5 s
+    100 m'ye ulaşma:  15.6 s
+  tepe irtifa: 105.8 m (17.1 s)
+Hold: giriş 15.5 s, süre 151 s; merkez (12, 247) m (NED x,y)
+  yarıçap 80.1 m (std 0.2 m); yer hızı ort 15.2 min 14.4 max 16.8 m/s; irtifa ort 99.3 ± 0.3 m
+  hava hızı (sensör, gürültülü) ort 14.8 min -9.6 max 22.0 m/s
+failsafe bayrağı kalkan(ihmal edilenler hariç): yok
+mesajlar: []

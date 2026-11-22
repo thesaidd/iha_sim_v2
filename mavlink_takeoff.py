@@ -19,6 +19,7 @@ yerdeki aracı kaldırmak için ros_takeoff.py (DDS) kullanılır.
   python3 mavlink_takeoff.py --uav 0 1 --takeoff 0    # ikisine kalp atışı + parametre, yalnızca uav0 kalkar
   python3 mavlink_takeoff.py --uav 1 --params-only    # yalnızca SIM_ONLY_PARAMS yaz, kalkış yok
   python3 mavlink_takeoff.py --uav 0 1 --revert-sim-params   # SIM_ONLY_PARAMS'ı geri al
+  UAV0_MODEL=tulpar python3 mavlink_takeoff.py --uav 0 --el-firlatma --alt 100   # Tulpar el fırlatma (launch_all.sh UAV0=tulpar ile)
 
 Bağlantı: PX4 instance i'nin onboard MAVLink bağlantısı (PX4 → udp 14540+i, sysid i+1).
 14550'ye tüm araçlar birden yayın yaptığı için kullanılmaz.
@@ -36,6 +37,9 @@ import threading
 import time
 
 from pymavlink import mavutil
+
+import arac_modelleri
+import el_firlatma
 
 # YALNIZCA SİMÜLASYON — gerçek donanıma taşınmayacak.
 # isim: (simülasyon değeri, --revert-sim-params ile yazılacak PX4 varsayılanı)
@@ -82,6 +86,39 @@ UCUS_DINAMIGI_PARAMS = {
         "FW_T_SINK_MAX": (5.0, 2.7)},
 }
 
+def sim_params_for(uav_id):
+    """Araç modeline göre YALNIZCA-SİMÜLASYON parametreleri (isim: (sim değeri, geri alma değeri)).
+    advanced_plane (varsayılan) → SIM_ONLY_PARAMS, DEĞİŞMEDİ; tulpar → el_firlatma.TULPAR_SIM_ONLY (pist ayarları yok)."""
+    if arac_modelleri.model_adi(uav_id) == "tulpar":
+        return el_firlatma.TULPAR_SIM_ONLY
+    return SIM_ONLY_PARAMS
+
+
+def ucus_params_for(uav_id):
+    """Modele özgü fırlatma/uçuş parametreleri (yalnız değer; geri alma yok). advanced_plane → boş."""
+    if arac_modelleri.model_adi(uav_id) == "tulpar":
+        return el_firlatma.TULPAR_UCUS_PARAMS
+    return {}
+
+
+def el_firlat(v: "Vehicle", alt: float, circle_alt: float, hiz: float, gecikme: float) -> bool:
+    """Tulpar el fırlatma: gz yayıncıları hazırlanır → Takeoff + arm (launch-detect bekler) → `gecikme` sn sonra model
+    1,5 m'ye ışınlanır ve sim süresiyle ölçülen darbe uygulanır. Araç zaten havadaysa atlanır. Başarıda True."""
+    if v.armed and v.alt > 5.0:
+        v.log(f"Zaten havada, el fırlatma atlandı — {v.status_line()}")
+        return True
+    darbe = el_firlatma.Darbe(model=arac_modelleri.gz_ad(v.uav_id), v_atis=hiz)
+    darbe.hazirla()
+    if not take_off(v, alt, circle_alt):
+        return False
+    time.sleep(gecikme)
+    ok = darbe.isinla()
+    sim_sure, duvar_sure = darbe.at()
+    v.log(f"el fırlatma: ışınlama {'tamam' if ok else 'BAŞARISIZ'}, darbe a={hiz / darbe.t_atis:.1f} m/s² "
+          f"(hedef v={hiz:.1f} m/s), sim süresi {sim_sure:.3f} s (duvar {duvar_sure:.3f} s)")
+    return ok
+
+
 ONBOARD_PORT_BASE = 14540   # PX4 instance i → udp 14540+i
 LOITER_MODES = ("LOITER", "AUTO_LOITER", "HOLD")
 
@@ -110,6 +147,7 @@ class Vehicle:
     """Tek PX4 aracı: kalp atışı ve okuma iş parçacıkları, son durum alanları."""
 
     def __init__(self, uav_id: int):
+        self.uav_id = uav_id
         self.name = f"uav{uav_id}"
         self.sysid = uav_id + 1
         self.url = f"udpin:0.0.0.0:{ONBOARD_PORT_BASE + uav_id}"
@@ -276,6 +314,10 @@ def main():
     ap.add_argument("--ucus-dinamigi", action="store_true",
                     help="UCUS_DINAMIGI_PARAMS ayar değerlerini yaz (uav1 alçalma zarfı; dalis 12°). "
                          "Verilmezse geri alma değerleri yazılır")
+    ap.add_argument("--el-firlatma", action="store_true",
+                    help="Tulpar (UAV0_MODEL=tulpar): normal kalkış yerine el fırlatma (launch-detect + gz darbesi); yalnız --uav 0")
+    ap.add_argument("--firlatma-hiz", type=float, default=12.0, help="el fırlatma hedef hızı [m/s]")
+    ap.add_argument("--firlatma-gecikme", type=float, default=1.0, help="arm sonrası darbeye kadar bekleme [sn]")
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--params-only", action="store_true", help="Yalnızca SIM_ONLY_PARAMS yaz ve çık")
     mode.add_argument("--revert-sim-params", action="store_true", help="SIM_ONLY_PARAMS'ı varsayılana döndür ve çık")
@@ -291,6 +333,12 @@ def main():
     if not set(takeoff_ids) <= set(args.uav):
         ap.error("--takeoff: yalnızca --uav'da verilen araçlar")
 
+    if args.el_firlatma:
+        if takeoff_ids != [0] or args.uav != [0]:
+            ap.error("--el-firlatma yalnız --uav 0 ile (uav1'in el fırlatması yok)")
+        if arac_modelleri.model_adi(0) != "tulpar":
+            ap.error("--el-firlatma için UAV0_MODEL=tulpar gerekli (launch_all.sh yalnız kendi alt süreçlerine verir; bu betik ayrı kabukta çalışıyorsa: UAV0_MODEL=tulpar python3 mavlink_takeoff.py ...)")
+
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt))
 
     vehicles = []
@@ -305,10 +353,14 @@ def main():
 
     # Simülasyona özel parametreler (tek yer: SIM_ONLY_PARAMS)
     for v in vehicles:
-        for name, (sim_value, revert_value) in SIM_ONLY_PARAMS.items():
+        for name, (sim_value, revert_value) in sim_params_for(v.uav_id).items():
             target = revert_value if args.revert_sim_params else sim_value
             if not v.ensure_param(name, target):
                 return 1
+        if not args.revert_sim_params:   # modele özgü fırlatma/uçuş ayarları (advanced_plane: boş → davranış aynı)
+            for name, value in ucus_params_for(v.uav_id).items():
+                if not v.ensure_param(name, value):
+                    return 1
     # Uçuş dinamiği ayarları (SIM_ONLY_PARAMS'tan ayrı; yalnızca listelenen araç)
     for uav_id, v in zip(args.uav, vehicles):
         for name, (tuned_value, revert_value) in UCUS_DINAMIGI_PARAMS.get(uav_id, {}).items():
@@ -325,7 +377,11 @@ def main():
         if uav_id not in takeoff_ids:
             v.log("Kalkış yok (--takeoff dışında); yalnızca kalp atışı")
             continue
-        if not take_off(v, alt, args.circle_alt):
+        if args.el_firlatma:
+            ok = el_firlat(v, alt, args.circle_alt, args.firlatma_hiz, args.firlatma_gecikme)
+        else:
+            ok = take_off(v, alt, args.circle_alt)
+        if not ok:
             return 1
         flying.append(v)
 

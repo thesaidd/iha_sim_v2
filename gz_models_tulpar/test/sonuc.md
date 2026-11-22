@@ -108,3 +108,25 @@ Her adımdan sonra aynı sayılar beklenir; kötüleşme = dur.
 - **Uçuş yok:** Tulpar bu adımda yalnız yerde doğdu (z 0,5); fırlatma Adım 4. Tulpar kamera kolu (0,30; 0; 0) `arac_modelleri.py` içinde sabit (T10 modeliyle aynı).
 - `qr_online.py` venv gerektirir (`source ~/venv_iha/bin/activate`; numpy<2). İlk denemede venv'siz başlatıldı → `ImportError: numpy.core.multiarray` (bilinen ortam şartı, bu değişiklikle ilgisiz); venv ile düzeldi.
 - Not: `./launch_all.sh` çalıştıran komutun metninde `camera_bridge` gibi stop desenleri geçerse `pkill -f` çağıran kabuğu öldürür (bir kez yaşandı, exit 144).
+
+## Adım 4 — El fırlatma modülü + arena dünyasında 100 m Hold (2026-11-22) GEÇTİ
+**Değişenler:** yeni `el_firlatma.py` (darbe fiziği `hesapla()`, `Darbe` sınıfı: gz yayıncıları önceden kurulur, ışınlama, ApplyLinkWrench darbesi **sim saatiyle** ölçülür, CG z varyanta göre (nocam 0,0265 / T10 0,0244, çalışan modelden `gz topic -l` ile algılanır), Tulpar parametre tabloları `TULPAR_SIM_ONLY` ve `TULPAR_UCUS_PARAMS`); `mavlink_takeoff.py`: `--el-firlatma` (yalnız `--uav 0`, `UAV0_MODEL=tulpar` ister), `sim_params_for(uav_id)` ve `ucus_params_for(uav_id)` (modele göre tablo; Tulpar'a `RWTO_MAX_THR`/`FW_TKO_PITCH_MIN=20`/`FW_AIRSPD_TRIM=14` yazılmaz, `FD_ESCS_EN=0` yazılır), `el_firlat()`; yeni kuru test `el_firlatma_test.py` (28 doğrulama), `test/ulg_hold.py` (Hold analizi).
+**Ölçüt (a) varsayılan çağrı aynı:** `el_firlatma_test.py` taban commit `ee97a24`'teki `mavlink_takeoff.py` ile `SIM_ONLY_PARAMS` (7 parametre) ve `UCUS_DINAMIGI_PARAMS` tablolarını **birebir** karşılaştırır; `UAV0_MODEL`/`UAV1_MODEL` yokken `sim_params_for(0|1)` = `SIM_ONLY_PARAMS`, `ucus_params_for` boş; `UAV0_MODEL=tulpar` iken uav1 hâlâ advanced_plane tablosunu alır. **Sınır:** bu karşılaştırma tablo/fonksiyon düzeyinde; `mavlink_takeoff.py --uav 0 1` canlı çalıştırılmadı (advanced_plane iki araçlı kalkış bu adımda uçulmadı). Kuru testler 47/23/18/83/26 baz çizgisiyle aynı.
+**Ölçüt (b) arena dünyasında Tulpar → 100 m Hold** (`UAV0=tulpar CAM=T10 ./launch_all.sh` + `UAV0_MODEL=tulpar python3 mavlink_takeoff.py --uav 0 --el-firlatma --alt 100 --watch 60`; dünya `iha_arena`, uav1 `advanced_plane_1` yerde; kayıtlar `test/adim4_firlatma_2026-11-22/`, ulg commit'lenmez):
+| ölçüt | hedef | ölçülen |
+|---|---|---|
+| 100 m'ye ulaşma (motor açılışından) | < 40 s | **15,6 s** (40 m 6,4 s, 80 m 12,5 s; tepe 105,8 m @17,1 s) |
+| Hold yarıçapı | kaydedilir | **80,1 m** (std 0,2 m), süre 151 s |
+| Hold yer hızı | kaydedilir | ort **15,2** (14,4–16,8) m/s |
+| Hold irtifası | — | 99,3 ± 0,3 m |
+| RTF (150 sn pencere, 1 sn'lik) | kaydedilir | ort **0,96**, min 0,77, max 1,00 (n=29) |
+| failsafe | 0 | **yok** (`failsafe_flags` taraması boş, PX4 mesajı yok) |
+| uav1'e uzaklık | ≥ 40 m | ≥ 182 m yatay (Hold merkezi uav1'e 262 m, yarıçap 80) ✔ |
+- Darbe: hedef a = 40,0 m/s², sim süresi **0,300 s** (duvar 0,296 s, RTF ≈ 1 o an). IMU: gövde x ivmesi 20 m/s² üstüne çıkış **motor açılışından 0,436 s önce**, ilk dalga 0,296 s, tepe 41,6 m/s² → fırlatma algılaması darbenin ivmesiyle tetiklendi (eşik 20, 0,05 s + `FW_LAUN_MOT_DEL` 0,3 s + ~0,09 s gecikme); ışınlama kendi başına tetiklemedi.
+- Parametre yazımı: Tulpar tablosu ilk bağlantıda yazıldı (`ASPD_*`, `NAV_DLL_ACT`, `EKF2_IMU_CTRL`, `COM_DISARM_LAND` değişti; geri kalanı zaten ayarlıydı). `ensure_param` float parametrelerde `0.05 → 0.0500000007` gibi tam eşitlik karşılaştırmasıyla gereksiz yeniden yazıyor (zararsız, günlük gürültüsü; ortak fonksiyon değiştirilmedi).
+- Karşılaştırma: A5 (boş dünya, 40 m): 6,5 s'de 40 m; bugün arena + T10 modeli: 6,4 s'de 40 m (aynı); Hold yarıçapı 80 m PX4 varsayılanı; advanced_plane Hold (CLAUDE.md) yarıçap 80 m, hız ~15 m/s, RTF 0,967 — Tulpar RTF 0,96.
+**Kapsam/sınır (dürüst):**
+- Tek uçuş (1/1), tekrar yok; hava hızı sensörü (airspeed_validated) gürültülü (min −9,6, max 22,0 m/s; yer hızı güvenilir) — A5'teki aynı sim sorunu, SIM_ONLY önlemleri kapalı kontrolü bypass ediyor.
+- Fırlatma = ışınlama + darbe; gerçek el hareketi değil. Darbe `uav0` doğu yönünde (yaw-0 kısıtı).
+- `UAV0_MODEL=tulpar` ayrı kabukta elle verilmeli (launch_all.sh yalnız kendi alt süreçlerine verir); aksi halde `--el-firlatma` reddedilir (hata mesajı güncellendi).
+- Hold merkezi spawn noktasının ~247 m doğusunda (80 m yarıçap); arena direkleri (r 140 m) ve QR hedefiyle ilişkisi Adım 5'te planlanır (uav0 Hold'u şimdilik serbest).
