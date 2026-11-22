@@ -1,0 +1,4 @@
+tekrar1: TAMAM
+tekrar2: TAMAM
+tekrar3: TAMAM
+BITTI

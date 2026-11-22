@@ -1,0 +1,20 @@
+DALIŞ (gz gerçeği): hedefe en yakın 3B 14.30 m, yatay 0.62 m, irtifa 14.30 m (t_sim 447); node'un (PX4) durma 3B 19.9 m
+  DURMA anı (gz gerçeği; node yatay 12.72 m'ye indiğinde): 3B 20.17 m, yatay 12.66 m, irtifa 15.73 m
+  dip irtifa (gerçek, ±bölge) 14.2 m; tırmanış sonu 119.3 m
+AYRIM uav0–uav1 3B en küçük (ikisi havada): 300 m; dalış anında 301 m
+uav1 en yakın direk (yatay, havada): 47.4 m
+uav0 en yakın direk (tüm uçuş): 38.4 m
+KONUM KESTİRİMİ (zincirin kullandığı, ilk yayın): (-60.30, -60.30) → hata 0.42 m
+  qr_online yayın satırları: 17
+  tespit_kalkis_komutu_sn: 38.76
+  tespit_hareket_sn: 50.24
+  tespit_tirmanis_sonu_sn: 143.6
+  toplam_gorev_sn: 332.2
+  uav1 kalkış: teker kesme 8.37 s, yer koşusu 27.0 m, hat girişi yanal -0.03 m, irtifa 38.2 m
+  ölçülen dalış açısı 6.8° (plan 8.19°), iniş indi, boyuna 63.2 m, yanal -0.0 m
+uav0 ulg: süre 672 s; failsafe örnek 0/1346; nav_state kümesi [4, 14, 17]
+  accel_bias maks |.| 0.000
+  EKF reset sayacı (pos xy) 4
+uav1 ulg: süre 648 s; failsafe örnek 0/1294; nav_state kümesi [3, 4, 14, 17]
+  accel_bias maks |.| 0.000
+  EKF reset sayacı (pos xy) 4

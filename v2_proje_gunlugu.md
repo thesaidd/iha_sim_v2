@@ -8,6 +8,9 @@
 
 ## Kayıtlar
 
+### [2026-11-22 Tulpar - Adım 5.4b] - Zincir 3 kez tekrarlandı: 3/3 abortsuz; dalış gerçek 3B 20,07–20,25 m (4/4 bandın üstünde)
+5.4 ile aynı senaryo, her koşu temiz başlatma (`test/adim5_4_2026-11-22/tekrar1-3`). 3/3 zincir abortsuz, failsafe 0, RTF ≥ 0,998, konum hatası 0,30–0,42 m, tespit → Hold 141–144 s, ayrım ≥ 300 m, uav1 direk ≥ 47 m, iniş yanal ≤ 0,4 m. **Bulgu:** node PX4'e göre durma 3B 19,87–19,92 m (bantta) ama gz gerçeği 20,07–20,25 m → hedef bandı gerçek pozla 0/4 (sistematik ~0,3 m); neden incelenmedi, kod değişmedi. tekrar3'te tespit 9. hatta (komşu c=−70 hattı kaçtı), kalkış sonrası zincir aynı. Ayrıntı: `sonuc.md` Adım 5.4b.
+
 ### [2026-11-22 Tulpar - Adım 5.4] - Tulpar zinciri: tarama → LoRa → uav1 yerden kalkış → dalış → iniş, abortsuz (1 uçuş); dalış gerçek 3B 20,21 m
 Tulpar (uav0) el fırlatma → 100 m → `alan_tarama.py --ilk-hat -40 --koridor-yok`; uav1 (advanced_plane) uzak üste yerde. QR 3. hatta bulundu (ilk yayın hatası 0,50 m) → röle → uav1 kalkış (tespitten 37,6 s) → dalış → tırmanış → üsse dönüş → iniş. **Zincir abortsuz tamamlandı (1/1).** Dalış durması gerçek 3B **20,21 m** (node tahmini 19,87; hedef 19,8–20,0 → 0,21 m üstünde), durmadan sonra hedefin üstünden 14,5 m'de geçti; ayrım ≥ 300 m; uav1 direk ≥ 47,2 m; failsafe 0; iniş yanal −0,2 m, boyuna +67,2 m. **Tuzak:** `launch_all.sh`'ten önce ROS Jazzy kaynaklanırsa gz sunucusu çalışmıyor (PX4 "Waiting for Gazebo world"). Açık: tek uçuş, RTF sürekli ölçülmedi, `--koridor-yok` gerekli. Ayrıntı: `gz_models_tulpar/test/sonuc.md` Adım 5.4.
 

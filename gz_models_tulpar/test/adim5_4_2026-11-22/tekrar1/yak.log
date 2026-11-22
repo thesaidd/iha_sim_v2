@@ -1,0 +1,157 @@
+22:55:20  [uav1] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+22:55:20  [uav1] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+22:55:20  [uav1] FW_AIRSPD_TRIM = 14.0 (zaten ayarlı)
+22:55:20  [uav1] NAV_DLL_ACT = 0 (zaten ayarlı)
+22:55:21  [uav1] RWTO_MAX_THR: 0.8500000238418579 → 0.8500000238418579
+22:55:21  [uav1] FW_TKO_PITCH_MIN = 20.0 (zaten ayarlı)
+22:55:21  [uav1] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+22:55:21  [uav1] FW_T_SINK_R_SP = 4.0 (zaten ayarlı)
+22:55:21  [uav1] FW_T_SINK_MAX = 5.0 (zaten ayarlı)
+22:55:21  [uav1] FW_LND_USETER = 0 (zaten ayarlı)
+22:55:21  [uav1] MIS_TKO_LAND_REQ = 0 (zaten ayarlı)
+22:55:21  uav1 yerde hazır bekleniyor (arm=False, yerde=None)
+22:55:21  uav1 ÜSTE HAZIR: yerde, disarmed, yerel (0.0, 0.0); üs uav0 çerçevesinde (200, -950), pist yönü 90°; rota 91°
+22:55:21  uav1 üste (yerde); /hedef_konum_role bekleniyor (eşik 1 mesaj)
+23:00:13  uav0 canlı: kararlı Hold çemberi bekleniyor (≥ 8 sn kararlı, en fazla 240 sn); uav1 Hold'da
+23:00:13  uav0 Hold bekleniyor (uav1 yerde, disarmed)
+23:00:23  uav0 Hold bekleniyor (uav1 yerde, disarmed)
+23:00:33  uav0 Hold bekleniyor (uav1 yerde, disarmed)
+23:00:43  uav0 Hold bekleniyor (uav1 yerde, disarmed)
+23:00:50  uav0 hold: Hold merkezi (uav1 NED) (110, 960), irtifa 61 m; tespitten 37 sn sonra — plan buna göre kuruluyor
+23:00:50  hedef (uav1 NED) (-260.3, 889.7); dalış planı {"hedef": [-260.3, 889.7], "baslangic_yatay_m": 927.0, "gelis_yonu_deg": 108.7, "tercih_yon_deg": 108.7, "geo": {"durma_mesafesi_m": 20.0, "durma_irtifa_m": 15.0, "x_durma_m": 13.228756555322953, "aci_istenen_deg": 12.0, "aci_sinir_deg": 8.19, "aci_etkin_deg": 8.19, "aci_kirpildi": true, "egim": 0.14400000000000002, "alcalma_m_s": 2.16, "hat_uzunlugu_m": 250.0, "duz_giris_m": 75.0, "dalis_yatay_m": 161.77124344467705, "dalis_irtifa_kaybi_m": 23.3, "giris_irtifa_m": 38.295059056033494, "dalis_sn": 10.8, "hiz": 15.0, "irtifa_onalma_sn": 3.5, "min_irtifa_m": 8.0, "pullup_dip_tahmin_m": 11.8, "alcalma_siniri_etkin_m_s": 2.4, "uygun": true, "nedenler": []}, "uygun": true, "giris": "yer", "ara_noktalar": [], "yer": {"pist_yonu_deg": 90.0, "kalkis_mesafe_m": 120.0, "kalkis_irtifa_m": 25.0, "kalkis_sonu": [0.0, 120.0], "kalkis_sonu_hedef_m": 812.5, "inis": {"inis_yonu_deg": 90.0, "Td": [-0.0, -50.0], "G": [-0.0, -400.0], "Lc": [-80.0, -400.0], "yaricap": 80.0, "giris_irtifa_m": 25.0, "yaklasma_m": 350.0, "suzulme_deg": 4.09}}, "yon_deg": 98.7, "yon_sapma_deg": -10.0, "ilk_red": "hat ↔ direk_B (-1.6 m)", "giris_detay": {"s": -800.1, "x": -141.1, "s_otur": -516.8, "rota_farki_deg": 8.7}, "A": [-222.5, 642.5], "H": [-301.6, 630.5], "S": [-258.3, 876.6], "C": [-339.6, 1408.9], "cikis_m": 538.5, "gecis_m": 593.2, "en_kucuk_aciklik_m": {"direk_B": 1.1, "depo": 9.1, "direk_G": 23.2}, "uav0_en_kucuk_3b_m": 298.5, "donus": {"rota": [[-339.6, 1408.9], [-459.8, 1100.0], [-80.0, -400.0]], "uzunluk_m": 1878.8, "en_kucuk_m": 7.8}, "sure_sn": {"katilma": 39.5, "hat": 15.8, "dalis": 10.8, "tirmanma": 34.4, "donus": 125.3}}
+23:00:50  UYARI: istenen dalış açısı 12.0° → 8.19° (alçalma sınırı 2.4 m/s = min(PX4 4.0, süzülme 2.4) × pay 0.9, hız 15.0 m/s)
+23:00:52  iniş görevi yükleme: ✔ (MISSION_ACK ✔, sıra 0. öğede (toplam 2))
+23:00:52  KALKIŞ KOMUTU: tespitten 38.8 sn sonra; hat yönü 99° (pist 90°, sapma -10°)
+23:00:52  [uav1] MIS_TAKEOFF_ALT = 25.0 (zaten ayarlı)
+23:00:53  MIS_TAKEOFF_ALT = 25 m doğrulandı (1.5 sn bekleme sonrası)
+23:00:53  [uav1] MIS_TAKEOFF_ALT = 25.0 (zaten ayarlı)
+23:00:55  [uav1] PX4 [sev 6]: Armed by external command	
+23:00:56  [uav1] Deneme 1: NAV_TAKEOFF → MAV_RESULT_ACCEPTED, ARM → MAV_RESULT_ACCEPTED
+23:00:56  KALKIŞ komutu kabul edildi (arm + Takeoff, MIS_TAKEOFF_ALT 25 m; 3.8 sn)
+23:00:56  kalkış: irtifa  -0.0 m  yer_hızı  0.0 m/s  üsten     0 m  arm=True  yerde=True
+23:00:56  [uav1] PX4 [sev 6]: Using default takeoff altitude: 25.0 m	
+23:00:58  kalkış: irtifa  -0.0 m  yer_hızı  1.0 m/s  üsten     0 m  arm=True  yerde=True
+23:00:58  [uav1] PX4 [sev 6]: Takeoff detected	
+23:01:00  kalkış: irtifa   0.0 m  yer_hızı 15.5 m/s  üsten    15 m  arm=True  yerde=False
+23:01:00  TEKER KESME: komuttan 8.4 sn sonra, yer koşusu 27 m, yer hızı 21.4 m/s
+23:01:02  kalkış: irtifa  20.6 m  yer_hızı 24.7 m/s  üsten    58 m  arm=True  yerde=False
+23:01:02  KALKIŞ İRTİFASI geçildi: 24.3 m, üsten yatay 64 m, komuttan 9.9 sn, yer hızı 25.7 m/s, rota 86°
+23:01:02  hizalama: s=-856 m  x=-133.5 m  rota hatası=-12.6°  irtifa=24.3 m  bekleyen: uav0 öngörülen Hold çemberinde
+23:01:03  DO_SET_MODE → OFFBOARD (deneme 1): s=-823 m, x=-140.9 m, rota hatası=-12.6°, irtifa=40.9 m
+23:01:03  OFFBOARD ✔ (hizalama 2 sn): s=-823 m, x=-141.0 m, irtifa=41.0 m; hat yönü 99°
+23:01:03  hat: s= -822.3 m  x=-141.1 m  irtifa= 41.0 m (profil  38.3)  3B= 835.3 m  yer_hızı=20.4  vz=+2.9 m/s
+23:01:04  hat: s= -803.5 m  x=-143.5 m  irtifa= 40.4 m (profil  38.3)  3B= 817.2 m  yer_hızı=18.6  vz=-3.3 m/s
+23:01:05  hat: s= -785.3 m  x=-138.0 m  irtifa= 36.5 m (profil  38.3)  3B= 798.2 m  yer_hızı=19.7  vz=-3.5 m/s
+23:01:06  hat: s= -774.1 m  x=-122.3 m  irtifa= 34.5 m (profil  38.3)  3B= 784.5 m  yer_hızı=20.5  vz=-0.7 m/s
+23:01:07  hat: s= -772.2 m  x=-102.8 m  irtifa= 35.6 m (profil  38.3)  3B= 779.8 m  yer_hızı=18.4  vz=+2.7 m/s
+23:01:08  hat: s= -772.0 m  x=-85.5 m  irtifa= 38.4 m (profil  38.3)  3B= 777.7 m  yer_hızı=15.5  vz=+1.9 m/s
+23:01:09  hat: s= -771.1 m  x=-70.8 m  irtifa= 39.2 m (profil  38.3)  3B= 775.3 m  yer_hızı=14.2  vz=-0.2 m/s
+23:01:10  hat: s= -769.7 m  x=-56.7 m  irtifa= 38.7 m (profil  38.3)  3B= 772.7 m  yer_hızı=14.2  vz=-0.7 m/s
+23:01:11  hat: s= -766.8 m  x=-43.1 m  irtifa= 38.4 m (profil  38.3)  3B= 769.0 m  yer_hızı=14.2  vz=-0.1 m/s
+23:01:12  hat: s= -761.4 m  x=-29.9 m  irtifa= 38.6 m (profil  38.3)  3B= 762.9 m  yer_hızı=13.8  vz=+0.2 m/s
+23:01:13  hat: s= -753.7 m  x=-18.8 m  irtifa= 38.8 m (profil  38.3)  3B= 754.9 m  yer_hızı=13.5  vz=-0.0 m/s
+23:01:14  hat: s= -743.5 m  x= -9.9 m  irtifa= 38.7 m (profil  38.3)  3B= 744.5 m  yer_hızı=13.5  vz=-0.2 m/s
+23:01:15  hat: s= -731.4 m  x= -3.9 m  irtifa= 38.6 m (profil  38.3)  3B= 732.4 m  yer_hızı=13.5  vz=-0.2 m/s
+23:01:16  hat: s= -718.3 m  x= -0.7 m  irtifa= 38.4 m (profil  38.3)  3B= 719.4 m  yer_hızı=13.6  vz=-0.3 m/s
+23:01:17  hat: s= -704.9 m  x= +0.5 m  irtifa= 38.2 m (profil  38.3)  3B= 705.9 m  yer_hızı=13.6  vz=-0.4 m/s
+23:01:18  hat: s= -691.3 m  x= +0.7 m  irtifa= 37.9 m (profil  38.3)  3B= 692.4 m  yer_hızı=13.7  vz=-0.3 m/s
+23:01:19  hat: s= -677.5 m  x= +0.4 m  irtifa= 37.7 m (profil  38.3)  3B= 678.5 m  yer_hızı=13.8  vz=-0.2 m/s
+23:01:20  hat: s= -663.7 m  x= +0.1 m  irtifa= 37.6 m (profil  38.3)  3B= 664.8 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:21  hat: s= -649.9 m  x= -0.1 m  irtifa= 37.6 m (profil  38.3)  3B= 651.0 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:22  hat: s= -636.2 m  x= -0.2 m  irtifa= 37.6 m (profil  38.3)  3B= 637.3 m  yer_hızı=13.7  vz=-0.1 m/s
+23:01:23  hat: s= -622.5 m  x= -0.2 m  irtifa= 37.5 m (profil  38.3)  3B= 623.6 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:24  hat: s= -608.8 m  x= -0.2 m  irtifa= 37.5 m (profil  38.3)  3B= 609.9 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:25  hat: s= -595.1 m  x= -0.2 m  irtifa= 37.5 m (profil  38.3)  3B= 596.2 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:26  hat: s= -581.4 m  x= -0.2 m  irtifa= 37.5 m (profil  38.3)  3B= 582.7 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:27  hat: s= -567.7 m  x= -0.1 m  irtifa= 37.6 m (profil  38.3)  3B= 569.0 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:28  hat: s= -554.0 m  x= -0.1 m  irtifa= 37.6 m (profil  38.3)  3B= 555.3 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:29  hat: s= -540.3 m  x= -0.1 m  irtifa= 37.6 m (profil  38.3)  3B= 541.6 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:30  hat: s= -526.7 m  x= -0.2 m  irtifa= 37.6 m (profil  38.3)  3B= 528.1 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:31  hat: s= -513.0 m  x= -0.1 m  irtifa= 37.7 m (profil  38.3)  3B= 514.4 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:32  hat: s= -499.5 m  x= -0.1 m  irtifa= 37.7 m (profil  38.3)  3B= 500.9 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:33  hat: s= -485.7 m  x= -0.2 m  irtifa= 37.7 m (profil  38.3)  3B= 487.2 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:34  hat: s= -472.0 m  x= -0.1 m  irtifa= 37.8 m (profil  38.3)  3B= 473.5 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:35  hat: s= -458.3 m  x= -0.1 m  irtifa= 37.8 m (profil  38.3)  3B= 459.8 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:36  hat: s= -444.6 m  x= -0.1 m  irtifa= 37.8 m (profil  38.3)  3B= 446.2 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:37  hat: s= -431.0 m  x= -0.1 m  irtifa= 37.9 m (profil  38.3)  3B= 432.7 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:38  hat: s= -417.3 m  x= -0.1 m  irtifa= 37.9 m (profil  38.3)  3B= 419.0 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:39  hat: s= -403.5 m  x= -0.1 m  irtifa= 37.9 m (profil  38.3)  3B= 405.3 m  yer_hızı=13.7  vz=-0.1 m/s
+23:01:40  hat: s= -390.1 m  x= -0.1 m  irtifa= 37.9 m (profil  38.3)  3B= 392.0 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:41  hat: s= -376.2 m  x= -0.0 m  irtifa= 38.0 m (profil  38.3)  3B= 378.1 m  yer_hızı=13.8  vz=+0.0 m/s
+23:01:42  hat: s= -362.5 m  x= -0.0 m  irtifa= 38.0 m (profil  38.3)  3B= 364.5 m  yer_hızı=13.7  vz=-0.0 m/s
+23:01:43  hat: s= -348.7 m  x= -0.0 m  irtifa= 38.0 m (profil  38.3)  3B= 350.7 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:44  hat: s= -334.9 m  x= -0.1 m  irtifa= 38.1 m (profil  38.3)  3B= 337.1 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:45  hat: s= -321.2 m  x= -0.1 m  irtifa= 38.1 m (profil  38.3)  3B= 323.5 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:46  hat: s= -307.5 m  x= -0.1 m  irtifa= 38.1 m (profil  38.3)  3B= 309.8 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:47  hat: s= -293.7 m  x= -0.0 m  irtifa= 38.1 m (profil  38.3)  3B= 296.2 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:48  hat: s= -280.3 m  x= -0.0 m  irtifa= 38.2 m (profil  38.3)  3B= 282.9 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:49  hat: s= -266.2 m  x= -0.0 m  irtifa= 38.2 m (profil  38.3)  3B= 268.9 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:50  hat: s= -252.8 m  x= -0.0 m  irtifa= 38.2 m (profil  38.3)  3B= 255.6 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:50  HAT GİRİŞİ (A): yanal -0.0 m, irtifa 38.2 m (giriş 38.3), rota hatası -0.1°
+23:01:51  hat: s= -238.7 m  x= -0.1 m  irtifa= 38.2 m (profil  38.3)  3B= 241.8 m  yer_hızı=13.8  vz=-0.0 m/s
+23:01:52  hat: s= -225.0 m  x= -0.0 m  irtifa= 38.2 m (profil  38.3)  3B= 228.2 m  yer_hızı=13.8  vz=-0.1 m/s
+23:01:53  hat: s= -211.5 m  x= -0.1 m  irtifa= 37.9 m (profil  38.3)  3B= 214.9 m  yer_hızı=13.5  vz=-0.8 m/s
+23:01:54  hat: s= -198.0 m  x= -0.0 m  irtifa= 36.9 m (profil  38.3)  3B= 201.4 m  yer_hızı=13.6  vz=-1.3 m/s
+23:01:55  hat: s= -184.6 m  x= -0.0 m  irtifa= 35.6 m (profil  38.3)  3B= 188.0 m  yer_hızı=13.8  vz=-1.3 m/s
+23:01:56  hat: s= -170.6 m  x= +0.0 m  irtifa= 34.3 m (profil  37.7)  3B= 174.0 m  yer_hızı=13.8  vz=-1.4 m/s
+23:01:57  hat: s= -157.2 m  x= +0.0 m  irtifa= 33.0 m (profil  35.7)  3B= 160.6 m  yer_hızı=13.8  vz=-1.5 m/s
+23:01:58  hat: s= -143.2 m  x= +0.0 m  irtifa= 31.5 m (profil  33.7)  3B= 146.7 m  yer_hızı=13.8  vz=-1.6 m/s
+23:01:59  hat: s= -129.4 m  x= -0.0 m  irtifa= 29.9 m (profil  31.7)  3B= 132.8 m  yer_hızı=13.9  vz=-1.7 m/s
+23:02:00  hat: s= -115.6 m  x= +0.0 m  irtifa= 28.3 m (profil  29.7)  3B= 119.0 m  yer_hızı=14.0  vz=-1.7 m/s
+23:02:01  hat: s= -101.7 m  x= +0.1 m  irtifa= 26.6 m (profil  27.7)  3B= 105.1 m  yer_hızı=14.0  vz=-1.7 m/s
+23:02:02  hat: s=  -87.7 m  x= +0.0 m  irtifa= 24.9 m (profil  25.7)  3B=  91.2 m  yer_hızı=14.0  vz=-1.8 m/s
+23:02:03  hat: s=  -74.1 m  x= +0.1 m  irtifa= 23.2 m (profil  23.8)  3B=  77.6 m  yer_hızı=14.1  vz=-1.8 m/s
+23:02:04  hat: s=  -60.1 m  x= +0.1 m  irtifa= 21.4 m (profil  21.7)  3B=  63.8 m  yer_hızı=14.2  vz=-1.9 m/s
+23:02:05  hat: s=  -45.7 m  x= +0.1 m  irtifa= 19.6 m (profil  19.7)  3B=  49.7 m  yer_hızı=14.2  vz=-1.8 m/s
+23:02:06  hat: s=  -31.3 m  x= +0.0 m  irtifa= 17.7 m (profil  17.6)  3B=  36.0 m  yer_hızı=14.3  vz=-1.8 m/s
+23:02:07  hat: s=  -17.0 m  x= +0.1 m  irtifa= 15.9 m (profil  15.5)  3B=  23.2 m  yer_hızı=14.4  vz=-1.9 m/s
+23:02:08  DURDU: 3B 19.9 m, yatay 12.7 m, irtifa 15.3 m (neden durma-mesafesi (3b)); dalış {'olculen_aci_deg': 6.8, 'irtifa_kaybi_m': 19.4, 'sure_sn': 11.6, 'en_buyuk_yanal_m': 0.1}; tırmanış → 120 m
+23:02:37  tırmanış tamam: irtifa 115.0 m (29.1 sn), dip 14.0 m; Hold veriliyor
+23:02:37  DÖNÜŞ bacağı 1/2: (-340, 1409) → (-460, 1100), yön 249°, 331 m, irtifa 120 m
+23:02:37  dönüş: bacak 1  s=   104/331 m  x= +59.6 m  rota hatası=-150.0°  irtifa=115.5 m
+23:02:42  dönüş: bacak 1  s=   109/331 m  x=  +6.3 m  rota hatası= -26.0°  irtifa=118.0 m
+23:02:47  dönüş: bacak 1  s=   177/331 m  x=  -0.8 m  rota hatası=  +1.5°  irtifa=119.0 m
+23:02:52  dönüş: bacak 1  s=   246/331 m  x=  -0.3 m  rota hatası=  -0.2°  irtifa=119.4 m
+23:02:57  DÖNÜŞ bacağı 2/2: (-460, 1100) → (-80, -400), yön 284°, 1547 m, irtifa 120 → 60 m (iniş deseni)
+23:02:57  dönüş: bacak 2  s=   -14/1547 m  x=  +9.7 m  rota hatası= -35.6°  irtifa=119.6 m
+23:03:02  dönüş: bacak 2  s=    53/1547 m  x=  -1.0 m  rota hatası=  +2.8°  irtifa=118.7 m
+23:03:07  dönüş: bacak 2  s=   122/1547 m  x=  -0.1 m  rota hatası=  -0.3°  irtifa=116.7 m
+23:03:12  dönüş: bacak 2  s=   191/1547 m  x=  -0.1 m  rota hatası=  -0.1°  irtifa=114.2 m
+23:03:17  dönüş: bacak 2  s=   260/1547 m  x=  -0.1 m  rota hatası=  -0.1°  irtifa=111.5 m
+23:03:22  dönüş: bacak 2  s=   329/1547 m  x=  -0.2 m  rota hatası=  -0.0°  irtifa=108.8 m
+23:03:27  dönüş: bacak 2  s=   399/1547 m  x=  -0.1 m  rota hatası=  -0.1°  irtifa=106.2 m
+23:03:32  dönüş: bacak 2  s=   468/1547 m  x=  -0.1 m  rota hatası=  +0.1°  irtifa=103.5 m
+23:03:37  dönüş: bacak 2  s=   538/1547 m  x=  -0.2 m  rota hatası=  -0.1°  irtifa=100.8 m
+23:03:42  dönüş: bacak 2  s=   607/1547 m  x=  -0.1 m  rota hatası=  -0.0°  irtifa= 98.1 m
+23:03:47  dönüş: bacak 2  s=   677/1547 m  x=  -0.1 m  rota hatası=  -0.0°  irtifa= 95.4 m
+23:03:52  dönüş: bacak 2  s=   746/1547 m  x=  -0.1 m  rota hatası=  +0.0°  irtifa= 92.7 m
+23:03:57  dönüş: bacak 2  s=   816/1547 m  x=  -0.1 m  rota hatası=  -0.2°  irtifa= 90.1 m
+23:04:02  dönüş: bacak 2  s=   886/1547 m  x=  -0.1 m  rota hatası=  -0.1°  irtifa= 87.5 m
+23:04:07  dönüş: bacak 2  s=   956/1547 m  x=  -0.2 m  rota hatası=  -0.1°  irtifa= 84.8 m
+23:04:12  dönüş: bacak 2  s=  1025/1547 m  x=  -0.1 m  rota hatası=  +0.0°  irtifa= 82.2 m
+23:04:17  dönüş: bacak 2  s=  1095/1547 m  x=  -0.2 m  rota hatası=  +0.1°  irtifa= 79.4 m
+23:04:22  dönüş: bacak 2  s=  1164/1547 m  x=  -0.1 m  rota hatası=  -0.0°  irtifa= 76.8 m
+23:04:27  dönüş: bacak 2  s=  1234/1547 m  x=  -0.1 m  rota hatası=  -0.1°  irtifa= 74.0 m
+23:04:32  GÖREV DEVRİ: iniş orbitine 250 m; AUTO_MISSION isteniyor (LOITER_TO_ALT (-80, -400) R 80 → 25 m → LAND (-0, -50), iniş yönü 90°)
+23:04:32  AUTO_MISSION ✔ — iniş deseni PX4'te
+23:04:32  [uav1] PX4 [sev 6]: Executing Mission	
+23:04:32  iniş: nav=AUTO_MISSION  (  -141,   -158)  irtifa= 71.6 m  yer_hızı=14.0  vz=-0.6  Td'ye   178 m
+23:04:37  iniş: nav=AUTO_MISSION  (  -124,   -227)  irtifa= 61.3 m  yer_hızı=15.1  vz=-2.6  Td'ye   216 m
+23:04:42  iniş: nav=AUTO_MISSION  (  -120,   -304)  irtifa= 47.0 m  yer_hızı=16.5  vz=-3.1  Td'ye   281 m
+23:04:47  iniş: nav=AUTO_MISSION  (  -156,   -377)  irtifa= 35.5 m  yer_hızı=15.5  vz=-1.6  Td'ye   363 m
+23:04:52  iniş: nav=AUTO_MISSION  (  -144,   -448)  irtifa= 29.1 m  yer_hızı=14.4  vz=-0.9  Td'ye   423 m
+23:04:57  iniş: nav=AUTO_MISSION  (   -83,   -480)  irtifa= 26.5 m  yer_hızı=14.3  vz=-0.3  Td'ye   438 m
+23:05:02  iniş: nav=AUTO_MISSION  (   -20,   -452)  irtifa= 25.6 m  yer_hızı=14.3  vz=-0.1  Td'ye   403 m
+23:05:07  iniş: nav=AUTO_MISSION  (     0,   -385)  irtifa= 25.3 m  yer_hızı=13.8  vz=-0.2  Td'ye   335 m
+23:05:12  iniş: nav=AUTO_MISSION  (     0,   -321)  irtifa= 22.6 m  yer_hızı=12.3  vz=-0.8  Td'ye   271 m
+23:05:17  iniş: nav=AUTO_MISSION  (     0,   -261)  irtifa= 18.7 m  yer_hızı=12.0  vz=-0.8  Td'ye   211 m
+23:05:22  iniş: nav=AUTO_MISSION  (     0,   -201)  irtifa= 14.6 m  yer_hızı=11.9  vz=-0.8  Td'ye   151 m
+23:05:27  iniş: nav=AUTO_MISSION  (     0,   -142)  irtifa= 10.5 m  yer_hızı=11.7  vz=-0.9  Td'ye    92 m
+23:05:32  iniş: nav=AUTO_MISSION  (     0,    -85)  irtifa=  6.5 m  yer_hızı=11.6  vz=-0.8  Td'ye    35 m
+23:05:37  iniş: nav=AUTO_MISSION  (     0,    -27)  irtifa=  2.4 m  yer_hızı=11.5  vz=-0.8  Td'ye    23 m
+23:05:42  iniş: nav=AUTO_MISSION  (     0,     13)  irtifa=  0.0 m  yer_hızı= 0.0  vz=-0.0  Td'ye    63 m
+23:05:43  YER ALGILANDI: Td'ye göre boyuna +63.2 m, yanal -0.0 m; yer hızı 0.0 m/s
+23:05:43  [uav1] PX4 [sev 6]: Landing detected	
+23:05:43  [uav1] PX4 [sev 6]: Mission finished, landed	
+23:05:45  DISARM ✔ (yer algılamadan 2.0 sn sonra); son konum (0, 13), üsse 13 m
+23:05:45  [uav1] PX4 [sev 6]: Disarmed by landing	

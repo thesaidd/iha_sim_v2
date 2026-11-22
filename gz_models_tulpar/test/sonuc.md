@@ -212,3 +212,26 @@ Yöntem: `UAV0=tulpar CAM=T10 LORA=1 UAV1_POSE=-950,200,0.5,0,0,0 IHA_UAV1_SPAWN
 | ulg failsafe | 0 | uav0 0/1476, uav1 0/1402 örnek; nav_state uav0 {4,14,17}, uav1 {3,4,14,17}; accel_bias 0 (EKF2_IMU_CTRL=5) |
 - **Karşılaştırma (advanced_plane, 2026-11-16 yerden kalkış):** dalış durması 3B 19,74–19,98 m, dip 13,4–13,8 m, açı 6,8°; burada 3B bandın hemen üstünde (gz 20,21 m), dip 14,2 m, açı 6,8°. Fark Tulpar'dan değil uav1 tarafının tek örneğinden de gelebilir; n=1.
 - **Sınırlar (dürüst):** tek uçuş/zincir, istatistik yok. RTF uçuş boyunca sürekli kaydedilmedi (`qr_watch` çalıştırılmadı): yalnız kalkıştan sonra 0,999 ve iniş sonrası 1,000 ölçüldü. `--koridor-yok` kullanıldı (uav1 uzak üste olduğu halde planlayıcı koridoru orijin pistine göre koruyor). PX4 EKF xy reset sayacı uav0'da 4, uav1'de 5 (başlangıçtaki değeri ayrıca doğrulanmadı). uav1'in dalıştan sonraki yolu hedefin hemen üstünden 14,5 m'de geçiyor (önceki uçuşlarda aynı ölçü çıkarılmadı). iz2.log boş: iz.csv yine yazıldı (PYTHONPATH gerekir).
+
+## Adım 5.4b — Zincir 3 kez tekrarlandı (2026-11-22, 5.4 ile aynı senaryo/komutlar, her koşu temiz başlatma) 3/3 ABORTSUZ; dalış gerçek 3B bandın (19,8–20,0) üstünde 4/4
+Betik `test/adim5_4_2026-11-22/{calistir,tekrar}.sh`; kayıtlar `tekrar1..3/` (ulg yok; gerçek poz 2 Hz); analiz `zincir_analiz.py`; RTF her ~30 sn örneklendi (`rtf_surekli.txt`). n = 4 zincir (5.4 + 3 tekrar), hepsi aynı hat/senaryo.
+| ölçüt | 5.4 | tekrar1 | tekrar2 | tekrar3 | özet (n=4) |
+|---|---|---|---|---|---|
+| zincir abortsuz | ✔ | ✔ | ✔ | ✔ | **4/4** |
+| dalış durması, gz gerçeği 3B [m] (hedef 19,8–20,0) | 20,21 | 20,17 | 20,25 | 20,07 | **ort 20,18 (20,07–20,25); bantta 0/4** |
+| dalış durması, node (PX4 tahmini) 3B [m] | 19,87 | 19,90 | 19,92 | 19,88 | 19,87–19,92 (bantta 4/4) |
+| hedef üstünden geçerken en yakın 3B [m] | 14,52 | 14,30 | 14,59 | 14,09 | 14,09–14,59 |
+| dip irtifa node / gz [m] | 14,2 / 14,4 | ~14,2 | ~14,5 | ~14,0 | ≈ 14,0–14,5 |
+| ilk yayın konum hatası [m] | 0,50 | 0,42 | 0,36 | 0,30 | medyan 0,39, maks 0,50 |
+| tespit hattı (uçuş sırası) | 3 | 3 | 3 | **9** (c=−55↑) | 3/4 komşu hat (c=−70), 1/4 gerçek hat |
+| tespit → kalkış komutu [s] | 37,6 | 38,8 | 37,5 | 38,1 | 37,5–38,8 |
+| tespit → uav1 harekete geçiş [s] | 49,1 | 50,2 | 49,0 | 49,5 | 49,0–50,2 |
+| tespit → tırmanış sonu (Hold) [s] | 141,1 | 143,6 | 141,2 | 141,9 | 141,1–143,6 |
+| iniş yanal / boyuna [m] | −0,2 / +67,2 | −0,0 / +63,2 | −0,4 / +62,1 | −0,2 / +63,9 | yanal ≤ 0,4; boyuna +62…+67 |
+| iki araç 3B ayrım (ikisi havada) [m] | 300 | 300 | 300 | 302 | ≥ 300 |
+| uav1 / uav0 en yakın direk [m] | 47,2 / 38,6 | 47,4 / 38,4 | 47,4 / 38,4 | 47,2 / 38,9 | uav1 ≥ 47,2; uav0 ≥ 38,4 |
+| failsafe (ulg, iki araç) | 0 | 0 | 0 | 0 | 0 |
+| RTF (etkin, 5 sn pencere) | — | min 0,998 ort 1,000 (22) | min 0,999 ort 1,000 (22) | min 0,999 ort 1,000 (34) | ≥ 0,998 |
+- **Bulgu 1 — gerçek ve tahmin arasında sistematik ~0,3 m fark:** node'un PX4 konumuna göre ölçtüğü durma 3B'si 19,87–19,92 m (bantta) ama gz gerçeğinde 20,07–20,25 m (bandın 0,07–0,25 m üstünde). Dalış hassasiyeti ölçütü gerçek poza göre karşılanmıyor; kod değişikliği YAPILMADI, neden incelenmedi (uav1 PX4 konum hatası / hedef kestirimi / durma tetiği 3B'ye göre gecikme adayları). Önceki advanced_plane ölçümlerinin (3B 19,74–19,98) hangi poza göre verildiği bu adımda doğrulanmadı.
+- **Bulgu 2 — tespit hattı değişken:** 4 zincirde 3'ünde QR yanal 10 m'deki komşu hatta (c=−70) kadraj kenarında bulundu (tarama 189 s), tekrar3'te o hat kaçtı, tespit 9. hatta (tarama 553 s, köprü kaybı %9,1: 821/9068 kare). Zincirin geri kalanı (kalkış → dalış) süre/ölçü olarak aynı kaldı (kalkıştan sonrası ±3 s). Tespit–tarama süresi yani değişken, zincir sonrası kısım tekrarlanabilir.
+- **Sınırlar (dürüst):** n=4, hepsi aynı senaryo/hedef/yön; gerçek uçuşta dağılım daha geniş olur. `--koridor-yok` yine kullanıldı. uav1 dalış sonrası hedefin üstünden 14,1–14,6 m'de geçiyor (4/4). PX4 EKF xy reset sayacı 4–5 (başlangıç değeri doğrulanmadı). iz2.log boş ama iz.csv yazıldı.
