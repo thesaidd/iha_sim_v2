@@ -1,0 +1,5 @@
+17:51:25 uav0 Hold
+17:54:15 geçiş 1 ψ 210 → çıkış 0
+17:56:45 geçiş 2 ψ 210 → çıkış 0
+17:59:14 geçiş 3 ψ 210 → çıkış 0
+18:06:40 gz sunucusu geçiş 4'te dondu (GPU=1 / D3D12; stats yok, kare sayacı durdu) → elle durduruldu

@@ -18,7 +18,7 @@ kullanıcı teyidi, dünya ve bapp `marker_size` zaten 2 m); 100 m arama irtifas
 | Statik köşe gürültüsü ölçümü | `gercekci_olcum.py`, `gercekci_olcum.json` |
 | PX4 − gerçek poz (uçuş boyu), rüzgâr | `poz_hatasi.py` |
 | H1/H2 çevrimdışı karşılaştırma (bapp `Geolocator`, kareler.csv) | `h1_h2.py` |
-| H2 geçiş uçuşu | `h2.sh` |
+| H2 geçiş uçuşu (+ `h2/`, donan ilk deneme `h2a_gpu_dondu/`) | `h2.sh` |
 | bapp kurulum notu (ekip arkadaşı: `bap_geo` yoksa analiz araçları çalışmıyordu) | `README.md` |
 
 PX4'e Tulpar airframe'i bu makinede de kuruldu (`px4_yamalar/README.md`: `4030_gz_tulpar` + CMakeLists yaması,
@@ -100,10 +100,39 @@ Notlar:
 | F1 | 12 | 0,87 | 0,92 | 0,89 |
 | F1b | 33 | 0,86 | 1,01 | 0,94 |
 | F2 (gerçekçi) | 21 | 1,65 | 1,35 | 1,49 |
+| H2 (gerçekçi, 8 geçiş + Hold) | 247 | 2,70 | 2,75 | 2,73 |
 
-## H2 (geçiş deseni)
+H1 bu verilerde **desteklenmiyor**: PnP ile füzyon ray-cast'ten belirgin iyi değil (fark ≤ 0,3 m, iki yönde de); hata
+PX4 pozundaki ortak biaslardan (GNSS, boresight, yaw) geliyor ve iki yöntem de bunlara muhtaç. bapp kararı (füzyon yalnız
+ray-cast, PnP tanı) değişmez.
 
-(h2.sh — aşağıda)
+## H2 (geçiş deseni) — `h2.sh`, GERCEKCI=1, CPU render (tek kamera, ~7 Hz)
+
+Tulpar 100 m'de hedef üstünden `qr_pass.py` geçişleri: ψ 210° ×3, 30°, 90°, 270° (6/6 tamam, abort yok). Her geçiş
+döngüsünde marker iki kez görülüyor (H hizalama bacağı + geçiş) → düz uçuşta (|roll| ≤ 10°) **8 geçiş grubu**, 229 kare;
+yer yönleri (PX4 yaw, rüzgâr yengeci dahil) 198°, 53°, 199°, 197°, 33°, 229°, 87°, 262°. Her küme bapp ray-cast füzyonuyla
+(bias tabanı yok) tek tahmine indirildi; hata gerçek hedefe yatay.
+
+| geçiş grubu (yön) | 198° | 53° | 199° | 197° | 33° | 229° | 87° | 262° |
+|---|---|---|---|---|---|---|---|---|
+| tek grup ray-cast hatası [m] | 5,72 | 1,34 | 4,58 | 4,13 | 0,55 | 2,92 | 1,30 | 1,90 |
+
+| küme | aynı yön (yayılım < 30°) | farklı yön (yayılım ≥ 90°) |
+|---|---|---|
+| 2 geçiş | medyan **4,64 m** (n = 4 küme) | medyan **2,59 m** (n = 15) |
+| 3 geçiş | 4,80 m (n = 1) | medyan **2,61 m** (n = 45) |
+| 4 geçiş (en dar / en geniş yayılım) | 4,38 m (16°) | 1,68 m (119°) |
+
+- Tüm uçuş (Hold dönüşleri dahil 244 gözlem) son rapor **2,70 m**, σ95 4,59 m; raporların %95'i σ95 içinde.
+  aruco_degerlendir'in saydığı "1 sahte tespit" gerçek marker: t 201,0 s, kenar 30 px, ray-cast gerçek pozla 1,38 m — gerçek
+  izdüşüm boresight'ı bilmediği için marker'ı kadraj dışı sanıyor (kadraj kenarı). Yanlış id yok.
+- PX4 bu uçuşta: yaw medyan 1,63°, %95 4,1° (ort. −1,5°, yöne bağlı −2,3…+0,3°), mutlak yatay 1,87 m (ort. N +1,51,
+  E +1,08), irtifa −0,54 m. Aynı yönlü geçişler aynı yaw/boresight hatasını tekrarlıyor; farklı yönler kısmen söndürüyor.
+- **Sonuç: H2 simde destekleniyor** (farklı yönlü kümeler aynı yönlülerin ~%55'i). Sınırlar: tek uçuş, kümeler aynı
+  GNSS/mag/boresight örneğini paylaşıyor (bağımsız değil; tek bir hata gerçekleşmesi), "aynı yön" yalnız 198° civarı;
+  GNSS biası (~1,9 m) yönle sönmediği için farklı yön kümesinin tabanı ~1,7–2,6 m.
+- İlk deneme (`h2a_gpu_dondu/`, `GPU=1`): gz sunucusu 4. geçişte dondu (stats yok, kare/poz sayaçları durdu, dmesg'de
+  dxg ioctl hataları) → elle durduruldu; ilk 3 geçişin verisi tutarlı (aynı yön 2 küme 2,09 m, farklı yön 1,57 m).
 
 ## Simin hâlâ iyimser / gerçekçi olmayan yanları
 
@@ -112,7 +141,8 @@ Notlar:
 - Rüzgâr hava hızı sensörüne yansımıyor (madde 4), türbülans / esinti yok; yan rüzgâr yerdeki uçakları döndürüyor (madde 3).
 - GNSS biası iki araçta bağımsız (gz her sensörde işareti ayrı çekiyor): gerçekte aynı uydular / iyonosfer → ortak kısım
   söner; sim bu açıdan **kötümser**.
-- IMU / baro / hava hızı biası, GNSS kesintisi, çok yol yok. Tek koşu (n = 1) — dağılım için tekrar gerekir.
+- IMU / baro / hava hızı biası, GNSS kesintisi, çok yol yok. Gerçekçi zincir tek koşu (F2, n = 1), nominal n = 2 (F1,
+  F1b); H2 tek uçuş — dağılım için tekrar gerekir.
 - Kare damgası = PX4 saati (`UXRCE_DDS_SYNCT=0`); gerçek uçakta saat eşlemesi ayrı hata kaynağı.
 
 ## Pi / GS kameraya geçince simden gelen girdiler (ölçülüp yerine yazılacak)

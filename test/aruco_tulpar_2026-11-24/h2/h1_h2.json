@@ -1,0 +1,132 @@
+[
+ {
+  "log": "h2",
+  "kare": 247,
+  "H1": {
+   "raycast": {
+    "son_hata_m": 2.701
+   },
+   "pnp": {
+    "son_hata_m": 2.753
+   },
+   "fuzyon": {
+    "son_hata_m": 2.733
+   },
+   "kare_basina": {
+    "raycast": {
+     "medyan": 2.886,
+     "p95": 5.809,
+     "n": 244
+    },
+    "pnp": {
+     "medyan": 2.594,
+     "p95": 5.884,
+     "n": 235
+    }
+   }
+  },
+  "H2_kare": 229,
+  "gecisler": [
+   {
+    "t0": 201.0,
+    "kare": 29,
+    "yon_deg": 198.2,
+    "raycast_hata_m": 5.72
+   },
+   {
+    "t0": 235.8,
+    "kare": 35,
+    "yon_deg": 53.0,
+    "raycast_hata_m": 1.344
+   },
+   {
+    "t0": 339.5,
+    "kare": 33,
+    "yon_deg": 198.9,
+    "raycast_hata_m": 4.579
+   },
+   {
+    "t0": 485.7,
+    "kare": 29,
+    "yon_deg": 196.6,
+    "raycast_hata_m": 4.131
+   },
+   {
+    "t0": 616.4,
+    "kare": 30,
+    "yon_deg": 33.0,
+    "raycast_hata_m": 0.548
+   },
+   {
+    "t0": 646.8,
+    "kare": 25,
+    "yon_deg": 229.1,
+    "raycast_hata_m": 2.919
+   },
+   {
+    "t0": 755.7,
+    "kare": 25,
+    "yon_deg": 86.8,
+    "raycast_hata_m": 1.299
+   },
+   {
+    "t0": 884.0,
+    "kare": 23,
+    "yon_deg": 261.5,
+    "raycast_hata_m": 1.897
+   }
+  ],
+  "H2": {
+   "tek_yon": {
+    "gecisler": [
+     0,
+     2,
+     3,
+     5
+    ],
+    "yon_yayilimi_deg": 16.4,
+    "raycast_fuzyon_hata_m": 4.384
+   },
+   "cok_yon": {
+    "gecisler": [
+     1,
+     5,
+     6,
+     7
+    ],
+    "yon_yayilimi_deg": 118.5,
+    "raycast_fuzyon_hata_m": 1.676
+   }
+  },
+  "H2_kumeler": {
+   "k2": {
+    "ayni_yon": {
+     "n_kume": 4,
+     "medyan_m": 4.642,
+     "ort_m": 3.825,
+     "maks_m": 5.116
+    },
+    "farkli_yon": {
+     "n_kume": 15,
+     "medyan_m": 2.585,
+     "ort_m": 2.575,
+     "maks_m": 5.72
+    }
+   },
+   "k3": {
+    "ayni_yon": {
+     "n_kume": 1,
+     "medyan_m": 4.797,
+     "ort_m": 4.797,
+     "maks_m": 4.797
+    },
+    "farkli_yon": {
+     "n_kume": 45,
+     "medyan_m": 2.605,
+     "ort_m": 2.657,
+     "maks_m": 4.425
+    }
+   }
+  }
+ }
+]

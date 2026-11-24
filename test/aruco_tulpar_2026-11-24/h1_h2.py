@@ -54,6 +54,9 @@ def main():
     ap.add_argument("log", nargs="+")
     ap.add_argument("--dunya", default=str(sr.SIM_ROOT / "gz_worlds/iha_arena_aruco.sdf"))
     ap.add_argument("--bosluk", type=float, default=5.0, help="geçiş ayırma boşluğu [s]")
+    ap.add_argument("--maks-roll", type=float, default=None,
+                    help="H2 geçişlerine yalnız |roll| ≤ bu değer [°] kareler (Hold dönüşündeki tespitleri ayıklar)")
+    ap.add_argument("--min-kare", type=int, default=3, help="geçiş sayılması için en az tespitli kare")
     ap.add_argument("--json", default=None)
     a = ap.parse_args()
     out = []
@@ -69,16 +72,20 @@ def main():
             r["H1"][ad] = {"son_hata_m": round(son, 3)}
             if ad == "fuzyon":
                 r["H1"]["kare_basina"] = {k: ist(v) for k, v in oe.items()}
-        # geçişler
-        t = np.array([fr["t_us"] * 1e-6 for fr in L.frames])
+        # geçişler (isteğe bağlı: yalnız düz uçuş kareleri)
+        secili = [i for i, fr in enumerate(L.frames)
+                  if a.maks_roll is None or abs(np.degrees(np.arctan2(fr["R"][2, 1], fr["R"][2, 2]))) <= a.maks_roll]
+        t = np.array([L.frames[i]["t_us"] * 1e-6 for i in secili])
         kes = np.where(np.diff(t) > a.bosluk)[0] + 1
-        gec = [list(g) for g in np.split(np.arange(len(t)), kes)] if len(t) else []
+        gec = [[secili[j] for j in g] for g in np.split(np.arange(len(t)), kes)] if len(t) else []
+        gec = [g for g in gec if len(g) >= a.min_kare]
+        r["H2_kare"] = sum(len(g) for g in gec)
         gecisler = []
         for g in gec:
             fr = [L.frames[i] for i in g]
             son, _ = calistir(L, cfgs["raycast"], fr)
             yaws = np.radians([yaw_deg(f["R"]) for f in fr])
-            gecisler.append({"t0": round(float(t[g[0]]), 1), "kare": len(g), "yon_deg": round(float(np.degrees(
+            gecisler.append({"t0": round(float(fr[0]["t_us"] * 1e-6), 1), "kare": len(g), "yon_deg": round(float(np.degrees(
                 np.arctan2(np.sin(yaws).mean(), np.cos(yaws).mean())) % 360), 1), "raycast_hata_m": round(son, 3)})
         r["gecisler"] = gecisler
         n = len(gec)
@@ -95,6 +102,25 @@ def main():
                 son, _ = calistir(L, cfgs["raycast"], fr)
                 r.setdefault("H2", {})[ad] = {"gecisler": list(c), "yon_yayilimi_deg": round(float(yay[kumeler.index(c)]), 1),
                                               "raycast_fuzyon_hata_m": round(son, 3)}
+        # tüm ikili / üçlü geçiş kümeleri: yön yayılımına göre sınıf (aynı yön < 30°, farklı ≥ 90°), sınıf başına hata
+        if n >= 2:
+            def fark2(i, j):
+                x = abs(gecisler[i]["yon_deg"] - gecisler[j]["yon_deg"]) % 360
+                return min(x, 360 - x)
+            for k in (2, 3):
+                if n < k:
+                    continue
+                sinif = {"ayni_yon": [], "farkli_yon": []}
+                for c in itertools.combinations(range(n), k):
+                    yay_c = max(fark2(i, j) for i, j in itertools.combinations(c, 2))
+                    ad = "ayni_yon" if yay_c < 30 else ("farkli_yon" if yay_c >= 90 else None)
+                    if ad is None:
+                        continue
+                    fr = [L.frames[i] for gi in c for i in gec[gi]]
+                    sinif[ad].append(calistir(L, cfgs["raycast"], fr)[0])
+                r.setdefault("H2_kumeler", {})[f"k{k}"] = {
+                    ad: ({"n_kume": len(v), "medyan_m": round(float(np.median(v)), 3), "ort_m": round(float(np.mean(v)), 3),
+                          "maks_m": round(float(np.max(v)), 3)} if v else None) for ad, v in sinif.items()}
         out.append(r)
         print(json.dumps(r, ensure_ascii=False))
     if a.json:
