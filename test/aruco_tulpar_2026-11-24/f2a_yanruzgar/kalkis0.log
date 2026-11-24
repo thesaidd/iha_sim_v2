@@ -1,0 +1,45 @@
+17:22:23  [uav0] Bağlanılıyor: udpin:0.0.0.0:14540 (sysid 1), GCS kalp atışı 1 Hz gönderiliyor
+17:22:24  [uav0] PX4 kalp atışı alındı — irtifa=    0.3 m  mod=LOITER       disarmed hava_hızı= 10.0 m/s  gz_RSS=476 MB
+17:22:24  [uav0] FD_ESCS_EN = 0 (zaten ayarlı)
+17:22:24  [uav0] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+17:22:24  [uav0] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+17:22:24  [uav0] NAV_DLL_ACT = 0 (zaten ayarlı)
+17:22:24  [uav0] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+17:22:24  [uav0] COM_DISARM_LAND = 10.0 (zaten ayarlı)
+17:22:24  [uav0] FW_LAUN_DETCN_ON = 1 (zaten ayarlı)
+17:22:24  [uav0] FW_LAUN_AC_THLD = 20.0 (zaten ayarlı)
+17:22:24  [uav0] FW_LAUN_AC_T: 0.05000000074505806 → 0.05000000074505806
+17:22:25  [uav0] FW_LAUN_MOT_DEL: 0.30000001192092896 → 0.30000001192092896
+17:22:25  [uav0] RWTO_TKOFF = 0 (zaten ayarlı)
+17:22:25  [uav0] FW_AIRSPD_TRIM = 15.0 (zaten ayarlı)
+17:22:25  [uav0] FW_AIRSPD_MIN = 11.0 (zaten ayarlı)
+17:22:25  [uav0] FW_AIRSPD_MAX = 24.0 (zaten ayarlı)
+17:22:25  [uav0] FW_THR_TRIM: 0.36000001430511475 → 0.36000001430511475
+17:22:25  [uav0] FW_THR_MAX: 0.8999999761581421 → 0.8999999761581421
+17:22:25  [uav0] FW_THR_MIN: 0.05000000074505806 → 0.05000000074505806
+17:22:25  [uav0] FW_PSP_OFF = -2.0 (zaten ayarlı)
+17:22:25  [uav0] FW_TKO_PITCH_MIN = 10.0 (zaten ayarlı)
+17:22:25  [uav0] FW_P_LIM_MAX = 22.0 (zaten ayarlı)
+17:22:25  [uav0] FW_PR_I: 0.10000000149011612 → 0.10000000149011612
+17:22:25  [uav0] FW_RR_I: 0.05000000074505806 → 0.05000000074505806
+17:22:26  [uav0] FW_RR_P: 0.07999999821186066 → 0.07999999821186066
+17:22:26  [uav0] FW_RR_FF: 0.11999999731779099 → 0.11999999731779099
+17:22:26  [uav0] FW_R_LIM = 35.0 (zaten ayarlı)
+17:22:28  [uav0] MIS_TAKEOFF_ALT = 100.0 (zaten ayarlı)
+17:22:31  [uav0] PX4 [sev 6]: Armed by external command	
+17:22:31  [uav0] Deneme 1: NAV_TAKEOFF → MAV_RESULT_ACCEPTED, ARM → MAV_RESULT_ACCEPTED
+17:22:31  [uav0] PX4 [sev 6]: Using default takeoff altitude: 100.0 m	
+17:22:32  [uav0] PX4 [sev 6]: Takeoff detected	
+17:22:32  [uav0] el fırlatma: ışınlama tamam, darbe a=40.0 m/s² (hedef v=12.0 m/s), sim süresi 0.300 s (duvar 0.333 s)
+17:22:32  [uav0] irtifa=    0.0 m  mod=TAKEOFF      ARMED    hava_hızı= -6.1 m/s  gz_RSS=513 MB
+17:22:40  [uav0] irtifa=   23.9 m  mod=TAKEOFF      ARMED    hava_hızı= 18.6 m/s  gz_RSS=513 MB
+17:22:45  [uav0] irtifa=   53.9 m  mod=TAKEOFF      ARMED    hava_hızı= 17.4 m/s  gz_RSS=518 MB
+17:22:50  [uav0] irtifa=   84.1 m  mod=TAKEOFF      ARMED    hava_hızı= 18.8 m/s  gz_RSS=518 MB
+17:22:55  [uav0] irtifa=  106.1 m  mod=LOITER       ARMED    hava_hızı= 16.9 m/s  gz_RSS=523 MB
+17:22:55  Turlama başladı (23 sn sonra) — 3000 sn izleniyor
+17:23:00  [uav0] irtifa=   97.9 m  mod=LOITER       ARMED    hava_hızı= 17.6 m/s  gz_RSS=527 MB
+17:23:05  [uav0] irtifa=   97.7 m  mod=LOITER       ARMED    hava_hızı=  9.4 m/s  gz_RSS=527 MB
+17:23:13  [uav0] irtifa=   99.1 m  mod=LOITER       ARMED    hava_hızı= 17.6 m/s  gz_RSS=532 MB
+17:23:18  [uav0] irtifa=   98.0 m  mod=LOITER       ARMED    hava_hızı= 16.6 m/s  gz_RSS=532 MB
+17:23:23  [uav0] irtifa=   98.7 m  mod=LOITER       ARMED    hava_hızı= 16.8 m/s  gz_RSS=537 MB
+17:23:28  Durduruldu — kalp atışı kesildi

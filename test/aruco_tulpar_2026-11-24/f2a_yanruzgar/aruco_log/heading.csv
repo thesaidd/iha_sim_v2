@@ -1,0 +1,13 @@
+wall_s,durum,n,delta_deg,sigma_deg,en_kotu_deg,ruzgar_n,ruzgar_e,tas_olcek,nedenler,sigma_yaw_bias_deg
+1795530148.7879364,unobservable,4,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530155.9384806,unobservable,9,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530158.7607458,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530163.7601867,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530168.760225,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530173.7607646,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530178.760121,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530183.7604427,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530191.146073,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530193.7600625,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530198.759846,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,
+1795530203.7603528,unobservable,1,nan,nan,nan,nan,nan,1.0,few_samples,

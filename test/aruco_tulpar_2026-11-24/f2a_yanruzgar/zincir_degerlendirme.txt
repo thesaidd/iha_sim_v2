@@ -1,0 +1,20 @@
+{
+ "en_yakin_3b_m": 927.21,
+ "o_anda_yatay_m": 927.21,
+ "o_anda_irtifa_m": 0.1,
+ "t_sim": 29.77,
+ "en_yakin_yatay_m": 927.21,
+ "yatay_en_yakinda_irtifa_m": 0.1,
+ "sonuc": null,
+ "durma_nedeni": null,
+ "durma": null,
+ "kamikaze_okuma_ozet": {
+  "n": 0,
+  "ilk": null,
+  "son": null,
+  "kenar_max_px": 0.0
+ },
+ "kamikaze_okuma": {
+  "tespitli_kare": 0
+ }
+}

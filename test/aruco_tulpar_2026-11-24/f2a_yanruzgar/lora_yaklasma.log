@@ -1,0 +1,14 @@
+17:22:25  [uav1] ASPD_DO_CHECKS = 0 (zaten ayarlı)
+17:22:25  [uav1] ASPD_SCALE_APPLY = 0 (zaten ayarlı)
+17:22:26  [uav1] FW_AIRSPD_TRIM = 14.0 (zaten ayarlı)
+17:22:26  [uav1] NAV_DLL_ACT = 0 (zaten ayarlı)
+17:22:26  [uav1] RWTO_MAX_THR: 0.8500000238418579 → 0.8500000238418579
+17:22:26  [uav1] FW_TKO_PITCH_MIN = 20.0 (zaten ayarlı)
+17:22:26  [uav1] EKF2_IMU_CTRL = 5 (zaten ayarlı)
+17:22:26  [uav1] FW_T_SINK_R_SP = 4.0 (zaten ayarlı)
+17:22:26  [uav1] FW_T_SINK_MAX = 5.0 (zaten ayarlı)
+17:22:26  [uav1] FW_LND_USETER = 0 (zaten ayarlı)
+17:22:26  [uav1] MIS_TKO_LAND_REQ = 0 (zaten ayarlı)
+17:22:26  uav1 yerde hazır bekleniyor (arm=False, yerde=None)
+17:22:26  uav1 ÜSTE HAZIR: yerde, disarmed, yerel (0.2, 0.0); üs uav0 çerçevesinde (200, -950), pist yönü 90°; rota 103°
+17:22:26  HATA: araç yönü (103°) pist yönünden (90°) > 10° farklı — UAV1_POSE yaw ile --pist-yonu uyuşmuyor

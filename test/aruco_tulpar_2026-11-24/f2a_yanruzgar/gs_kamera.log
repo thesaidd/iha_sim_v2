@@ -1,0 +1,7 @@
+[INFO] [1795530144.222769075] [gs_kamera]: gerçekçilik: distorsiyon [-0.15, 0.06, 0.0, 0.0, 0.0], boresight [0.5, 0.5, 0.3]° (bapp'e verilmez), bulanıklık σ 1.0 px, shot 8.0 read 3.0 DN; boş kadraj %5.50; harita 552 ms
+[INFO] [1795530155.957202369] [gs_kamera]: 47 kare; işlem 23.8 ms medyan, 40.5 ms en çok
+[INFO] [1795530164.224173621] [gs_kamera]: 115 kare; işlem 23.3 ms medyan, 28.2 ms en çok
+[INFO] [1795530174.223893776] [gs_kamera]: 193 kare; işlem 23.4 ms medyan, 28.4 ms en çok
+[INFO] [1795530184.223917300] [gs_kamera]: 280 kare; işlem 24.6 ms medyan, 27.5 ms en çok
+[INFO] [1795530194.223945167] [gs_kamera]: 336 kare; işlem 24.4 ms medyan, 27.1 ms en çok
+[INFO] [1795530204.223746974] [gs_kamera]: 416 kare; işlem 24.7 ms medyan, 26.7 ms en çok

@@ -57,8 +57,11 @@
 #                                                 (kalibrasyon/w_nadir_10_gercekci.json) verilir, boresight VERİLMEZ,
 #                              GERCEKCI_GNSS=1    NavSat biası/gezinmesi/gürültüsü (gercekci_model.py; GERCEKCI_GNSS_ARGS),
 #                              GERCEKCI_MAG=1     magnetometre sert demir kalıntısı (yöne bağlı yaw hatası),
-#                              GERCEKCI_RUZGAR="vx vy"  dünya rüzgârı ENU [m/s] (varsayılan "3 3": güneybatıdan ~4,2 m/s);
-#                                                 "0 0" kapatır. Dünya kopyası gz_worlds/.gercekci_<dünya>.sdf.
+#                              GERCEKCI_RUZGAR="vx vy"  dünya rüzgârı ENU [m/s] (varsayılan "-4 0": DOĞUDAN 4 m/s, pist/fırlatma
+#                                                 yönüne karşı); "0 0" kapatır. Dünya kopyası gz_worlds/.gercekci_<dünya>.sdf.
+#                                                 DİKKAT: gz LiftDrag rüzgârı yerdeki uçağa da uygular — yan rüzgâr yerdeki
+#                                                 uçakları rüzgâra döndürür (2026-11-24 F2a: "3 3" ile uav1 −14,6°, uav0 −7,2°
+#                                                 döndü → uav1 "pist yönü" denetimi kalkışı reddetti). Pist eksenine paralel tut.
 #                              Alt düğmeler GERCEKCI=1'de varsayılan 1; tek tek 0 verilebilir ya da GERCEKCI olmadan açılabilir.
 #                              Model kopyaları /tmp/iha_gercekci/ (kaynak modellere dokunulmaz). bapp raporlanan σ'sı için
 #                              sim bias σ'ları VERİLMEZ (bapp gerçek uçak varsayılanları; yalnız --heading-beta0-deg).
@@ -101,13 +104,14 @@ NOCAM_MODELS=$SIM_DIR/gz_models_nocam
 UAV0=${UAV0:-advanced_plane}
 UAV0_SIM_MODEL=gz_advanced_plane; UAV0_AUTOSTART=4008; UAV0_PX4_ENV=""
 # ARUCO=1: aşağı bakan kameranın gövde (FRD) konumu [m] (arac_modelleri.kamera_kol_frd) ve düz uçuş yan kayması β₀ [°]
-# (yaw izleyicisi, yalnız tanı). advanced_plane 2,7° (2026-11-20 ölçümü); Tulpar ölçülmedi → TULPAR_BETA0 (varsayılan 0).
+# (yaw izleyicisi, yalnız tanı). advanced_plane 2,7° (2026-11-20 ölçümü); Tulpar 4,4° (2026-11-24 F1, bapp heading_check:
+# δ_hava +4,39 ± 0,42°, gerçek yaw hatası medyan 0,4°) → TULPAR_BETA0 ile değiştirilebilir.
 UAV0_T_BODY_CAM="0.07 0 0.1"; UAV0_BETA0=2.7
 case $UAV0 in
     advanced_plane) ;;
     tulpar)
         UAV0_SIM_MODEL=gz_tulpar; UAV0_AUTOSTART=4030
-        UAV0_T_BODY_CAM="0.30 0 0"; UAV0_BETA0=${TULPAR_BETA0:-0}
+        UAV0_T_BODY_CAM="0.30 0 0"; UAV0_BETA0=${TULPAR_BETA0:-4.4}
         case ${CAM:-} in
             "") UAV0_VARYANT=nocam ;;
             T10) UAV0_VARYANT=T10 ;;
@@ -135,7 +139,7 @@ PY_BAPP=${PY_BAPP:-$BAPP/.venv-ros/bin/python}         # OpenCV 5 + bap_geo (ARU
 # --heading-beta0-deg: advanced_plane düz uçuş yan kayması (bapp scripts/heading_check.py), yaw izleyicisi yalnız tanı.
 GERCEKCI=${GERCEKCI:-0}
 GERCEKCI_KAMERA=${GERCEKCI_KAMERA:-$GERCEKCI}; GERCEKCI_GNSS=${GERCEKCI_GNSS:-$GERCEKCI}; GERCEKCI_MAG=${GERCEKCI_MAG:-$GERCEKCI}
-if [[ $GERCEKCI == 1 ]]; then GERCEKCI_RUZGAR=${GERCEKCI_RUZGAR:-3 3}; else GERCEKCI_RUZGAR=${GERCEKCI_RUZGAR:-0 0}; fi
+if [[ $GERCEKCI == 1 ]]; then GERCEKCI_RUZGAR=${GERCEKCI_RUZGAR:--4 0}; else GERCEKCI_RUZGAR=${GERCEKCI_RUZGAR:-0 0}; fi
 ARUCO_KAMERA_JSON=$SIM_DIR/kalibrasyon/w_nadir_10_sim.json
 if [[ $GERCEKCI_KAMERA == 1 ]]; then
     ARUCO_KAMERA_JSON=$SIM_DIR/kalibrasyon/w_nadir_10_gercekci.json

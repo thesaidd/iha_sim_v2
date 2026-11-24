@@ -46,7 +46,6 @@ sleep 5
 rm -rf aruco_log aruco_log_uav1; cp -r /tmp/aruco_log /tmp/aruco_log_uav1 . ; cp /tmp/lora_yaklasma_sonuc.jsonl sonuc.jsonl 2>/dev/null
 cp /tmp/{aruco_geolocator,aruco_geolocator_uav1,gs_kamera,gs_kamera_uav1,lora_relay,lora_yaklasma,px4_0,px4_1}.log . 2>/dev/null
 kill $(pgrep -f "[g]z_gercek_poz.py") 2>/dev/null
-cp aruco_log/gercek_poz.csv . 2>/dev/null
 (cd $SIM && ./launch_all.sh stop) > kapatma.log 2>&1
 R=$HOME/PX4-Autopilot/build/px4_sitl_default/rootfs
 cp "$(ls -t $R/0/log/*/*.ulg | head -1)" uav0.ulg 2>/dev/null

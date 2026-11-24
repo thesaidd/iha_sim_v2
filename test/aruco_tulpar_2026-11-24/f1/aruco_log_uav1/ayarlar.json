@@ -1,0 +1,57 @@
+{
+ "image": "/uav1/camera/image_gs",
+ "camera_info": "/uav1/camera/camera_info_gs",
+ "camera_json": "/home/bap/sim/iha_sim_v2/kalibrasyon/w_nadir_10_sim.json",
+ "fmu": "/px4_1/fmu",
+ "att_topic": "vehicle_attitude",
+ "lpos_topic": "vehicle_local_position_v1",
+ "marker_id": 0,
+ "marker_size": 2.0,
+ "mount_deg": [
+  75.0,
+  0.0,
+  0.0
+ ],
+ "t_body_cam": [
+  0.5,
+  0.0,
+  0.0
+ ],
+ "clock": "sim",
+ "clock_offset_s": 0.0,
+ "image_clock": "monotonic",
+ "agent_clock": "realtime",
+ "alis_latency_ms": 0.0,
+ "ts_max_rtt_ms": 10.0,
+ "clock_sample_hz": 2.0,
+ "timesync_topic": "timesync_status",
+ "timing_ref": "exposure_mid",
+ "exposure_us": 0.0,
+ "ground_alt": null,
+ "report_hz": 1.0,
+ "json_topic": "/bap/uav1/okuma",
+ "report_topic": "/bap/uav1/hedef_rapor",
+ "pose_wait_s": 0.3,
+ "min_side_px": 0.0,
+ "corner_sensor": "color",
+ "inward_bias_px": null,
+ "border_margin_px": 0.0,
+ "methods": [
+  "raycast"
+ ],
+ "diag_methods": [
+  "pnp"
+ ],
+ "sigma_gnss_bias_m": 0.3,
+ "sigma_att_bias_deg": 0.3,
+ "sigma_yaw_bias_deg": 0.5,
+ "sigma_hag_bias_m": 0.1,
+ "heading_izle": true,
+ "airspeed_topic": "airspeed_validated_v1",
+ "wind_topic": "wind",
+ "heading_beta0_deg": 0.0,
+ "heading_beta_sigma_deg": 1.0,
+ "heading_to_sigma": false,
+ "log": "/tmp/aruco_log_uav1",
+ "node_name": "aruco_geolocator_uav1"
+}

@@ -2,7 +2,9 @@
 """poz_hatasi.py — PX4 kestirimi − gz gerçeği (uçuş boyunca): yaw, roll, pitch, mutlak yatay konum; rüzgâr etkisi.
 
 Girdi: <koşu>/uav0.ulg (PX4 günlüğü), <koşu>/gercek_poz.csv (gz_gercek_poz.py: t_sim, ad, ENU konum, FLU→ENU kuaterniyon).
-PX4 SITL zamanı gz sim saatidir (µs) → eşleşme t_ulg = t_sim (aynı saat; F1'de doğrulandı: düz uçuşta yaw farkı ~0).
+PX4 SITL zamanı gz sim saatidir (µs), ama gz_gercek_poz.py damgası ile arada küçük bir kayma olabiliyor (GPU'lu koşularda
+−60…−80 ms: Hold'daki ~11°/s dönüşte ~0,8° sahte yaw hatası) → kayma dt, yaw RMS'sini en küçükleyen değer olarak (±0,3 s)
+kestirilip tüm karşılaştırmalara uygulanır ve yazılır.
 Mutlak konum: vehicle_global_position enlem/boylam ↔ gerçek ENU'nun dünya <spherical_coordinates>'ıyla enlem/boylamı
 (GNSS biası buraya düşer; EKF yerel konumu origin'le birlikte kaydığından sabit biası GÖSTERMEZ).
 Rüzgâr: gerçek yer hızı ↔ PX4 airspeed_validated (gerçek TAS) farkı + PX4 wind kestirimi.
@@ -51,7 +53,10 @@ def main():
     ap.add_argument("--dunya", default=os.path.join(SIM, "gz_worlds/iha_arena_aruco.sdf"))
     ap.add_argument("--json", default=None)
     a = ap.parse_args()
-    rows = [r for r in csv.DictReader(open(os.path.join(a.kosu, "gercek_poz.csv"))) if r["ad"] == a.model]
+    gp_csv = os.path.join(a.kosu, "gercek_poz.csv")
+    if not os.path.exists(gp_csv):
+        gp_csv = os.path.join(a.kosu, "aruco_log", "gercek_poz.csv")
+    rows = [r for r in csv.DictReader(open(gp_csv)) if r["ad"] == a.model]
     tg = np.array([float(r["t_sim"]) for r in rows])
     P = np.array([[float(r[k]) for k in ("x_e", "y_n", "z_u")] for r in rows])
     Q = np.array([[float(r[k]) for k in ("qw", "qx", "qy", "qz")] for r in rows])
@@ -63,9 +68,16 @@ def main():
     att = d["vehicle_attitude"]
     ta = att["timestamp_sample"] * 1e-6 if "timestamp_sample" in att else att["timestamp"] * 1e-6
     pr, pp, py = q2rpy(att["q[0]"], att["q[1]"], att["q[2]"], att["q[3]"])
+    gy_u = np.unwrap(g_yaw)
+
+    def yaw_rms(dt):
+        mm = (np.interp(ta + dt, tg, P[:, 2]) > a.min_irtifa) & (ta + dt > tg[0]) & (ta + dt < tg[-1])
+        return float(np.sqrt(np.mean(wrap(py[mm] - np.interp(ta[mm] + dt, tg, gy_u)) ** 2)))
+    dt = min(np.arange(-0.3, 0.301, 0.01), key=yaw_rms)
+    ta = ta + dt
     alt_g = np.interp(ta, tg, P[:, 2])
     m = (alt_g > a.min_irtifa) & (ta > tg[0]) & (ta < tg[-1])
-    sonuc = {"kosu": os.path.basename(os.path.abspath(a.kosu))}
+    sonuc = {"kosu": os.path.basename(os.path.abspath(a.kosu)), "zaman_kaymasi_s": round(float(dt), 3)}
     e_yaw = np.degrees(wrap(py[m] - np.interp(ta[m], tg, np.unwrap(g_yaw))))
     e_roll = np.degrees(pr[m] - np.interp(ta[m], tg, g_roll))
     e_pitch = np.degrees(pp[m] - np.interp(ta[m], tg, g_pitch))
@@ -79,13 +91,23 @@ def main():
     # mutlak yatay konum
     gp = d.get("vehicle_global_position")
     if gp is not None:
-        tp = gp["timestamp_sample"] * 1e-6 if "timestamp_sample" in gp else gp["timestamp"] * 1e-6
+        tp0 = gp["timestamp_sample"] * 1e-6 if "timestamp_sample" in gp else gp["timestamp"] * 1e-6
         w0 = dunya_orijini(a.dunya)
         mp = MapProjection(w0[0], w0[1])
-        n_p, e_p = mp.project(gp["lat"], gp["lon"])
-        mm = (np.interp(tp, tg, P[:, 2]) > a.min_irtifa) & (tp > tg[0]) & (tp < tg[-1])
-        en = np.asarray(n_p)[mm] - np.interp(tp[mm], tg, P[:, 1])
-        ee = np.asarray(e_p)[mm] - np.interp(tp[mm], tg, P[:, 0])
+        ne = np.array([mp.project(la, lo) for la, lo in zip(gp["lat"], gp["lon"])])
+        n_p, e_p = ne[:, 0], ne[:, 1]
+
+        def konum_hata(dtp):
+            tp = tp0 + dtp
+            mm = (np.interp(tp, tg, P[:, 2]) > a.min_irtifa) & (tp > tg[0]) & (tp < tg[-1])
+            en = n_p[mm] - np.interp(tp[mm], tg, P[:, 1])
+            ee = e_p[mm] - np.interp(tp[mm], tg, P[:, 0])
+            return en, ee, mm, tp
+        # konum için ayrı kayma: ORTALAMADAN arındırılmış hata RMS'si en küçük (sabit GNSS biası kaymayı etkilemesin)
+        dtp = min(np.arange(-0.3, 0.301, 0.01), key=lambda x: float(np.sqrt(np.mean(
+            (lambda r: (r[0] - r[0].mean()) ** 2 + (r[1] - r[1].mean()) ** 2)(konum_hata(x))))))
+        en, ee, mm, tp = konum_hata(dtp)
+        sonuc["konum_zaman_kaymasi_s"] = round(float(dtp), 3)
         sonuc["mutlak_yatay_m"] = {**ist(np.hypot(en, ee)), "ort_N": round(float(en.mean()), 3), "ort_E": round(float(ee.mean()), 3)}
         h_p = gp["alt"][mm] - w0[2]
         sonuc["irtifa_m"] = {**ist(h_p - np.interp(tp[mm], tg, P[:, 2])), "ort_isaretli": round(float((h_p - np.interp(tp[mm], tg, P[:, 2])).mean()), 3)}

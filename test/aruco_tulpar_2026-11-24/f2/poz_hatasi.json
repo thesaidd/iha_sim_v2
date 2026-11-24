@@ -1,0 +1,61 @@
+{
+ "kosu": "f2",
+ "zaman_kaymasi_s": -0.07,
+ "yaw_deg": {
+  "medyan": 0.597,
+  "p95": 2.998,
+  "maks": 5.286,
+  "n": 133367,
+  "ort_isaretli": -0.519
+ },
+ "roll_deg": {
+  "medyan": 0.393,
+  "p95": 1.268,
+  "maks": 4.433,
+  "n": 133367,
+  "ort_isaretli": 0.031
+ },
+ "pitch_deg": {
+  "medyan": 0.395,
+  "p95": 1.371,
+  "maks": 2.961,
+  "n": 133367,
+  "ort_isaretli": 0.08
+ },
+ "yaw_hatasi_yon_sektor": {
+  "000": 0.03,
+  "045": -0.61,
+  "090": -0.72,
+  "135": -0.96,
+  "180": -0.59,
+  "225": -0.36,
+  "270": -0.13,
+  "315": -0.5
+ },
+ "konum_zaman_kaymasi_s": 0.0,
+ "mutlak_yatay_m": {
+  "medyan": 2.051,
+  "p95": 2.257,
+  "maks": 2.327,
+  "n": 66693,
+  "ort_N": 1.482,
+  "ort_E": 1.213
+ },
+ "irtifa_m": {
+  "medyan": 1.606,
+  "p95": 1.68,
+  "maks": 1.726,
+  "n": 66693,
+  "ort_isaretli": 1.606
+ },
+ "gercek_yer_hizi_m_s": {
+  "p05": 13.42,
+  "medyan": 15.05,
+  "p95": 18.05
+ },
+ "px4_ruzgar_m_s": {
+  "N_medyan": -0.09,
+  "E_medyan": -0.26,
+  "n": 66767
+ }
+}

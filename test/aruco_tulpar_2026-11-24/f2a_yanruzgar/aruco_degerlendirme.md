@@ -1,0 +1,27 @@
+# ArUco simülasyon değerlendirmesi — /home/bap/sim/iha_sim_v2/test/aruco_tulpar_2026-11-24/f2/aruco_log
+
+- Gerçek hedef: ENU (-60.0, -60.0) → (47.3974315, 8.5453666); geolocator NED (-61.02, -61.10, -1.72); EKF origin 47.3979803, 8.5461784, -1.70 m
+- Kare: 348 işlenen, 0 beklenen (marker tam görüntüde), 0 tespitli; sahte tespit (beklenmezken): 0
+- Zaman hizası: PX4–gerçek yatay konum farkını en küçükleyen gecikme +nan ms (medyan fark nan m); 0 ms civarı → kare/PX4 saatleri aynı
+
+## Tespit oranı (beklenen karelerde)
+
+| kenar px | irtifa m | beklenen | tespit | oran |
+|---|---|---|---|---|
+
+## Kare başına hata (yatay, m)
+
+- ray-cast: —
+- PnP: —
+- ray-cast GERÇEK pozla (tespit+kamera modeli): —
+- PnP GERÇEK pozla: —
+- köşe hatası (gerçek izdüşüme göre, RMS px): —
+
+## PX4 poz hatası (tespitli karelerde)
+
+- yatay konum: — m
+- düşey (D): — m
+- |roll|: —°
+- |pitch|: —°
+- |yaw|: —°
+

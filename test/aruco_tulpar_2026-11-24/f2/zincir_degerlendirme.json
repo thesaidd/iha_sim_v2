@@ -1,0 +1,65 @@
+{
+ "en_yakin_3b_m": 12.02,
+ "o_anda_yatay_m": 1.83,
+ "o_anda_irtifa_m": 11.88,
+ "t_sim": 363.2,
+ "en_yakin_yatay_m": 1.75,
+ "yatay_en_yakinda_irtifa_m": 11.91,
+ "sonuc": "indi",
+ "durma_nedeni": "durma-mesafesi (3b)",
+ "durma": {
+  "3b_m": 19.74,
+  "yatay_m": 15.39,
+  "irtifa_m": 12.37,
+  "s_m": -15.4,
+  "x_m": 0.12
+ },
+ "kullanilan_rapor": {
+  "marker_id": 0,
+  "n_obs": 21,
+  "sigma_n": 1.95,
+  "sigma_e": 1.93,
+  "sayac": 5
+ },
+ "rapor_hedef_hatasi_m": {
+  "kuzey": 0.22,
+  "dogu": 1.63,
+  "yatay": 1.65
+ },
+ "plan_hedefi_hatasi_m": 1.64,
+ "kamikaze_okuma_ozet": {
+  "n": 17,
+  "ilk": {
+   "t_sim": 359.8,
+   "mesafe_3b_m": 48.0,
+   "irtifa_m": 16.4,
+   "kenar_px": 25.65,
+   "id": "ARUCO-0",
+   "kestirim_hedef_farki_m": 3.57,
+   "n_obs": 1
+  },
+  "son": {
+   "t_sim": 361.8,
+   "mesafe_3b_m": 23.1,
+   "irtifa_m": 12.9,
+   "kenar_px": 90.43,
+   "id": "ARUCO-0",
+   "kestirim_hedef_farki_m": 2.7,
+   "n_obs": 17
+  },
+  "kenar_max_px": 90.43
+ },
+ "kamikaze_okuma": {
+  "tespitli_kare": 17,
+  "ilk_okuma_gercek_3b_m": 48.6,
+  "son_okuma_gercek_3b_m": 23.6,
+  "kenar_px_aralik": [
+   25.6,
+   90.4
+  ],
+  "id": [
+   0
+  ],
+  "kamikaze_kestirim_hatasi_m": 1.96
+ }
+}

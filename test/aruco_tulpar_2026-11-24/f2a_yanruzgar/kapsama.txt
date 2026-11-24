@@ -1,0 +1,1 @@
+/home/bap/sim/iha_sim_v2/test/aruco_tulpar_2026-11-24/f2/tarama.log: 'OFFBOARD ✔' / 'TARAMA DURDU' satırı yok
