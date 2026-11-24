@@ -26,7 +26,9 @@ PX4'e Tulpar airframe'i bu makinede de kuruldu (`px4_yamalar/README.md`: `4030_g
 
 **Varsayılan yollar değişmedi:** gerçekçilik bayrakları verilmezse `launch_all.sh`'in ürettiği değerler (advanced_plane
 `--t-body-cam 0.07 0 0.1`, `--heading-beta0-deg 2.7`, sim kalibrasyonu, GS_ARGS boş, dünya/model kopyası yok) eskisiyle
-aynı (değişken açılımı denetlendi); kuru testler baz çizgisiyle aynı: alan_tarama 47, qr_pass 23, ayrim 18, yer_gorevi 83,
+aynı: aynı makinede eski (`d47f82a`) ve yeni `launch_all.sh` ile varsayılan başlatma gz 64 / ROS 132 topic, topic listesi
+özeti birebir aynı; `CAM=W10 ARUCO=1 YAKLASMA=1` yolunda düğüm komut satırları (geolocator ×2, gs_kamera ×2, lora_relay,
+lora_yaklasma) birebir aynı. Kuru testler baz çizgisiyle aynı: alan_tarama 47, qr_pass 23, ayrim 18, yer_gorevi 83,
 lora_tarama_zincir 26, lora_dalis ✔, kamera_geometri 20, gs_kamera 6/6 (3 yeni geometri testi), el_firlatma 29.
 Tulpar W10 başlatması: gz topic 69, `/uav0/camera/camera_info_gs` fx **1739,14** (W_nadir_10: 1739,13), marker kenarı
 uçuşta 33–35 px (teori 100 m'de 34,8).
