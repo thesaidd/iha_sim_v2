@@ -82,7 +82,7 @@ fx, fz, ty = el_firlatma.hesapla(12.0, 0.30, math.radians(10.0))
 ok(abs(fx - 90.6) < 0.1 and abs(fz - 38.5) < 0.1 and abs(ty - 2.54) < 0.01, "A5'te uçan değerler (Fx 90,6 / Fz 38,5 / Ty 2,54)")
 d = el_firlatma.Darbe(v_atis=12.0)
 ok((d.fx, d.fz, d.ty) == (fx, fz, ty) and d.model == "tulpar_0", "Darbe sınıfı hesapla ile aynı kuvvetleri üretir, model tulpar_0")
-for varyant in ("nocam", "T10"):
+for varyant in ("nocam", "T10", "W10"):
     sdf = open(os.path.join(HERE, "gz_models_tulpar", varyant, "tulpar", "model.sdf"), encoding="utf-8").read()
     kutle = float(re.search(r"<inertial>\s*<pose>[^<]*</pose>\s*<mass>([0-9.e+-]+)</mass>", sdf).group(1))
     cgz = float(re.search(r"<inertial>\s*<pose>\S+ \S+ (\S+) [^<]*</pose>\s*<mass>", sdf).group(1))

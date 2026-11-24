@@ -50,12 +50,25 @@
 #                              uav1 lora_yaklasma.py --girdi paket (enlem/boylam → kendi EKF origin'i). PX4'e
 #                              UXRCE_DDS_SYNCT=0 verilir (damgalar sim saatinde kalsın; kare damgasıyla aynı saat).
 #                              Ek argümanlar: ARUCO_ARGS (geolocator), LORA_ARGS (röle), YAKLASMA_ARGS.
+#   GERCEKCI=1 (ARUCO=1 ile) → simin iyimser yanlarını kapatan hata kaynakları (2026-11-24; varsayılan KAPALI, değerler
+#                              VARSAYIM — gerçek donanımda ölçülüp güncellenecek; test/aruco_tulpar_2026-11-24/sonuc.md):
+#                              GERCEKCI_KAMERA=1  gs_kamera --gercekci (6 mm fıçı distorsiyonu, boresight 0,5/0,5/0,3°,
+#                                                 bulanıklık σ 1 px, shot 8 / read 3 DN); bapp'e distorsiyonlu kalibrasyon
+#                                                 (kalibrasyon/w_nadir_10_gercekci.json) verilir, boresight VERİLMEZ,
+#                              GERCEKCI_GNSS=1    NavSat biası/gezinmesi/gürültüsü (gercekci_model.py; GERCEKCI_GNSS_ARGS),
+#                              GERCEKCI_MAG=1     magnetometre sert demir kalıntısı (yöne bağlı yaw hatası),
+#                              GERCEKCI_RUZGAR="vx vy"  dünya rüzgârı ENU [m/s] (varsayılan "3 3": güneybatıdan ~4,2 m/s);
+#                                                 "0 0" kapatır. Dünya kopyası gz_worlds/.gercekci_<dünya>.sdf.
+#                              Alt düğmeler GERCEKCI=1'de varsayılan 1; tek tek 0 verilebilir ya da GERCEKCI olmadan açılabilir.
+#                              Model kopyaları /tmp/iha_gercekci/ (kaynak modellere dokunulmaz). bapp raporlanan σ'sı için
+#                              sim bias σ'ları VERİLMEZ (bapp gerçek uçak varsayılanları; yalnız --heading-beta0-deg).
 #   GPU=1 ./launch_all.sh    → WSLg'de Windows GPU'su (Mesa D3D12; GPU_ADI=NVIDIA|AMD); varsayılan yazılım render.
 #   Birleştirilebilir:  GUI=1 VIZ=1 WORLD=iha_arena ./launch_all.sh
 #   ./launch_all.sh stop     → hepsini durdur
 #
 #   UAV0=tulpar ./launch_all.sh        → uav0 (tarama+tespit) Tulpar (gz_models_tulpar, PX4 4030); uav1 advanced_plane kalır.
-#                              CAM verilmezse nocam/tulpar, CAM=T10 ile T10/tulpar (aşağı bakan 16 mm kamera); CAM=1/T/T15/W10 desteklenmez.
+#                              CAM verilmezse nocam/tulpar, CAM=T10 ile T10/tulpar (aşağı bakan 16 mm kamera), CAM=W10 ile
+#                              W10/tulpar (BAP 6 mm; ARUCO=1 ile bapp zinciri, kamera kolu 0,30 0 0); CAM=1/T/T15 desteklenmez.
 #                              UAV0 verilmezse (veya advanced_plane) davranış eskisiyle BİREBİR aynıdır (Adım 3, 2026-11-22).
 #                              uav0'ın kalıcı PX4 parametreleri (rootfs/0/parameters*.bson) model değişince yedeklenip sıfırlanır
 #                              (yedek/rootfs0_params_<tarih>/); işaret dosyası rootfs/0/.arac_modeli. RESET_UAV0_PARAMS=1 zorlar.
@@ -87,14 +100,19 @@ NOCAM_MODELS=$SIM_DIR/gz_models_nocam
 # Araç modelleri (arac_modelleri.py ile aynı kural): UAV0=advanced_plane (varsayılan) | tulpar. uav1 her zaman advanced_plane.
 UAV0=${UAV0:-advanced_plane}
 UAV0_SIM_MODEL=gz_advanced_plane; UAV0_AUTOSTART=4008; UAV0_PX4_ENV=""
+# ARUCO=1: aşağı bakan kameranın gövde (FRD) konumu [m] (arac_modelleri.kamera_kol_frd) ve düz uçuş yan kayması β₀ [°]
+# (yaw izleyicisi, yalnız tanı). advanced_plane 2,7° (2026-11-20 ölçümü); Tulpar ölçülmedi → TULPAR_BETA0 (varsayılan 0).
+UAV0_T_BODY_CAM="0.07 0 0.1"; UAV0_BETA0=2.7
 case $UAV0 in
     advanced_plane) ;;
     tulpar)
         UAV0_SIM_MODEL=gz_tulpar; UAV0_AUTOSTART=4030
+        UAV0_T_BODY_CAM="0.30 0 0"; UAV0_BETA0=${TULPAR_BETA0:-0}
         case ${CAM:-} in
             "") UAV0_VARYANT=nocam ;;
             T10) UAV0_VARYANT=T10 ;;
-            *) echo "HATA: UAV0=tulpar yalnız CAM verilmeden (nocam) veya CAM=T10 ile çalışır (CAM=$CAM desteklenmiyor)"; exit 1 ;;
+            W10) UAV0_VARYANT=W10 ;;   # BAP 6 mm (ARUCO=1); uav1 W_nadir_10 advanced_plane'i (kamikaze kamerası) kullanır
+            *) echo "HATA: UAV0=tulpar yalnız CAM verilmeden (nocam), CAM=T10 veya CAM=W10 ile çalışır (CAM=$CAM desteklenmiyor)"; exit 1 ;;
         esac
         UAV0_MODELS=$SIM_DIR/gz_models_tulpar/$UAV0_VARYANT
         if [[ ! -f $UAV0_MODELS/tulpar/model.sdf ]]; then
@@ -115,7 +133,18 @@ PY_BAPP=${PY_BAPP:-$BAPP/.venv-ros/bin/python}         # OpenCV 5 + bap_geo (ARU
 # Raporlanan σ95'in ortak bias tabanı (bapp GeolocatorConfig.sigma_*_bias): bapp varsayılanı GERÇEK uçak (GNSS 1,5 m,
 # yaw 2° …) → simde ~5 m σ95. Sim değerleri 6 sim koşusunun PX4 − gerçek poz biasından (bapp scripts/sim_replay.py, 2026-11-20);
 # --heading-beta0-deg: advanced_plane düz uçuş yan kayması (bapp scripts/heading_check.py), yaw izleyicisi yalnız tanı.
-SIM_BIAS_ARGS=${SIM_BIAS_ARGS:---sigma-gnss-bias-m 0.3 --sigma-att-bias-deg 0.3 --sigma-yaw-bias-deg 0.5 --sigma-hag-bias-m 0.1 --heading-beta0-deg 2.7}
+GERCEKCI=${GERCEKCI:-0}
+GERCEKCI_KAMERA=${GERCEKCI_KAMERA:-$GERCEKCI}; GERCEKCI_GNSS=${GERCEKCI_GNSS:-$GERCEKCI}; GERCEKCI_MAG=${GERCEKCI_MAG:-$GERCEKCI}
+if [[ $GERCEKCI == 1 ]]; then GERCEKCI_RUZGAR=${GERCEKCI_RUZGAR:-3 3}; else GERCEKCI_RUZGAR=${GERCEKCI_RUZGAR:-0 0}; fi
+ARUCO_KAMERA_JSON=$SIM_DIR/kalibrasyon/w_nadir_10_sim.json
+if [[ $GERCEKCI_KAMERA == 1 ]]; then
+    ARUCO_KAMERA_JSON=$SIM_DIR/kalibrasyon/w_nadir_10_gercekci.json
+    GS_ARGS="--gercekci ${GS_ARGS:-}"
+fi
+if [[ $GERCEKCI == 1 ]]; then
+    SIM_BIAS_ARGS=${SIM_BIAS_ARGS:---heading-beta0-deg $UAV0_BETA0}   # bapp gerçek uçak bias σ'ları (σ95 ~5 m)
+fi
+SIM_BIAS_ARGS=${SIM_BIAS_ARGS:---sigma-gnss-bias-m 0.3 --sigma-att-bias-deg 0.3 --sigma-yaw-bias-deg 0.5 --sigma-hag-bias-m 0.1 --heading-beta0-deg $UAV0_BETA0}
 ARENA_WORLDS=$SIM_DIR/gz_worlds
 VIZ_SCRIPT=$SIM_DIR/viz_trails.py
 PGID_FILE=/tmp/iha_sim.pgids
@@ -252,6 +281,20 @@ else
     echo "Model: kamerasız kopya — $PX4_GZ_MODELS"
 fi
 
+# GERCEKCI_GNSS / GERCEKCI_MAG: seçili model klasörlerinin sensör gürültülü kopyaları (kaynak modeller değişmez)
+if [[ $GERCEKCI_GNSS == 1 || $GERCEKCI_MAG == 1 ]]; then
+    gm_args="${GERCEKCI_GNSS_ARGS:-}"
+    [[ $GERCEKCI_GNSS != 1 ]] && gm_args="$gm_args --gnss-yok"
+    [[ $GERCEKCI_MAG != 1 ]] && gm_args="$gm_args --mag-yok"
+    rm -rf /tmp/iha_gercekci && mkdir -p /tmp/iha_gercekci
+    python3 "$SIM_DIR/gercekci_model.py" "$PX4_GZ_MODELS" /tmp/iha_gercekci/genel $gm_args || exit 1
+    export PX4_GZ_MODELS=/tmp/iha_gercekci/genel
+    if [[ -n ${UAV0_MODELS:-} ]]; then
+        python3 "$SIM_DIR/gercekci_model.py" "$UAV0_MODELS" /tmp/iha_gercekci/uav0 $gm_args || exit 1
+        UAV0_PX4_ENV="PX4_GZ_MODELS=/tmp/iha_gercekci/uav0"
+    fi
+    echo "Gerçekçilik: GNSS $GERCEKCI_GNSS, mag $GERCEKCI_MAG → modeller /tmp/iha_gercekci/ ($gm_args)"
+fi
 if [[ -n $WORLD && $WORLD != default ]]; then
     WORLD_FILE=$ARENA_WORLDS/$WORLD.sdf
     if [[ ! -f $WORLD_FILE ]]; then
@@ -262,6 +305,21 @@ if [[ -n $WORLD && $WORLD != default ]]; then
     export PX4_GZ_NO_FOLLOW=1   # px4-rc.gzsim pencere kamerasını uçağa kilitlemesin
 else
     WORLD_FILE=$PX4_GZ_WORLDS/default.sdf
+fi
+# GERCEKCI_RUZGAR: dünyaya sabit rüzgâr (<wind>; gz LiftDrag/AdvancedLiftDrag bağıl hava hızını buna göre hesaplar).
+# Kopya aynı klasörde (dokular göreli yolla bulunsun), gizli dosya; kaynak dünya değişmez.
+if [[ $GERCEKCI_RUZGAR != "0 0" ]]; then
+    read -r rz_x rz_y <<< "$GERCEKCI_RUZGAR"
+    rz_file=$(dirname "$WORLD_FILE")/.gercekci_$(basename "$WORLD_FILE")
+    python3 - "$WORLD_FILE" "$rz_file" "$rz_x" "$rz_y" <<'PYEOF' || exit 1
+import re, sys
+src, dst, vx, vy = sys.argv[1:5]
+w = re.sub(r"<wind>.*?</wind>", "", open(src, encoding="utf-8").read(), flags=re.S)
+w = re.sub(r'(<world name="[^"]*">)', rf"\1\n    <wind><linear_velocity>{vx} {vy} 0</linear_velocity></wind>", w, count=1)
+open(dst, "w", encoding="utf-8").write(w)
+PYEOF
+    WORLD_FILE=$rz_file
+    echo "Gerçekçilik: rüzgâr ENU ($rz_x, $rz_y) m/s"
 fi
 GZ_WORLD_NAME=$(sed -n 's/.*<world name="\([^"]*\)".*/\1/p' "$WORLD_FILE" | head -1)
 echo "Dünya: $WORLD_FILE (ad: $GZ_WORLD_NAME)"
@@ -409,7 +467,7 @@ if [[ $ARUCO == 1 ]]; then
             -p qos_overrides./uav0/camera/camera_info.publisher.depth:=5 2>&1 | limit_log /tmp/kopru.log"
         start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u gs_kamera.py ${GS_ARGS:-} 2>&1 | limit_log /tmp/gs_kamera.log"
         start_bg "$ROS_SETUP && $PY_BAPP -u $BAPP/bap_ros/aruco_geolocator_node.py --log /tmp/aruco_log \
-            --t-body-cam 0.07 0 0.1 ${ARUCO_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json $SIM_BIAS_ARGS} 2>&1 | limit_log /tmp/aruco_geolocator.log"
+            --t-body-cam $UAV0_T_BODY_CAM ${ARUCO_ARGS:---corner-sensor color --camera-json $ARUCO_KAMERA_JSON $SIM_BIAS_ARGS} 2>&1 | limit_log /tmp/aruco_geolocator.log"
         start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u lora_relay.py --mod paket ${LORA_ARGS:-} 2>&1 | limit_log /tmp/lora_relay.log"
         echo "      loglar /tmp/{kopru,gs_kamera,aruco_geolocator,lora_relay}.log, kare günlüğü /tmp/aruco_log/"
         if [[ $YAKLASMA == 1 ]]; then
@@ -424,11 +482,11 @@ if [[ $ARUCO == 1 ]]; then
                 -p qos_overrides./uav1/camera/camera_info.publisher.depth:=5 2>&1 | limit_log /tmp/kopru_uav1.log"
             start_bg "$ROS_SETUP && cd $SIM_DIR && $PY_BAPP -u gs_kamera.py --giris /uav1/camera/image \
                 --info /uav1/camera/camera_info --cikis /uav1/camera/image_gs --info-cikis /uav1/camera/camera_info_gs \
-                --ad gs_kamera_uav1 2>&1 | limit_log /tmp/gs_kamera_uav1.log"
+                --ad gs_kamera_uav1 ${GS_ARGS:-} 2>&1 | limit_log /tmp/gs_kamera_uav1.log"
             start_bg "$ROS_SETUP && $PY_BAPP -u $BAPP/bap_ros/aruco_geolocator_node.py --log /tmp/aruco_log_uav1 \
                 --image /uav1/camera/image_gs --camera-info /uav1/camera/camera_info_gs --fmu /px4_1/fmu \
                 --mount-deg 75 0 0 --t-body-cam 0.5 0 0 --report-topic /bap/uav1/hedef_rapor --json-topic /bap/uav1/okuma \
-                ${ARUCO_UAV1_ARGS:---corner-sensor color --camera-json $SIM_DIR/kalibrasyon/w_nadir_10_sim.json $SIM_BIAS_ARGS} \
+                ${ARUCO_UAV1_ARGS:---corner-sensor color --camera-json $ARUCO_KAMERA_JSON $SIM_BIAS_ARGS} \
                 --node-name aruco_geolocator_uav1 2>&1 | limit_log /tmp/aruco_geolocator_uav1.log"
             echo "      + uav1 kamera (ileri 15° aşağı) → gs_kamera → aruco_geolocator (uav1); log /tmp/aruco_geolocator_uav1.log"
             start_bg "$ROS_SETUP && cd $SIM_DIR && BAPP=$BAPP $PY_BAPP -u lora_yaklasma.py --uav 1 --girdi paket \

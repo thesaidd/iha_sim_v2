@@ -21,7 +21,8 @@ import time
 KUTLE = 2.3           # kg
 CG_Z = 0.0265         # m, CG'nin base_link orijininden yukarı ofseti (nocam, kam)
 # Varyanta göre CG z: T10'da kamera kütlesi (0,12 kg, z=0) CG'yi 2 mm aşağı çeker (uret_model.py çıktısı)
-CG_Z_VARYANT = {"nocam": 0.0265, "T10": 0.0244}
+# W10 (BAP 6 mm) kamerası T10 ile aynı kütle/konumda → aynı CG; varyant_algila() kameralı modeli "T10" sayar (aynı değer).
+CG_Z_VARYANT = {"nocam": 0.0265, "T10": 0.0244, "W10": 0.0244}
 G = 9.81
 
 # --- parametre tabloları: isim: (fırlatma/sim değeri, --revert-sim-params ile yazılacak PX4 varsayılanı) ---

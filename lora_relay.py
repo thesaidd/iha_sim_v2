@@ -31,7 +31,7 @@ Paket modu (--mod paket; bapp aruco_geolocator ile, 2026-11-20):
 Kullanım:
   source /opt/ros/jazzy/setup.bash && source ~/ros2_ws/install/setup.bash
   python3 lora_relay.py [--gecikme-ort 50] [--gecikme-yari 20] [--kayip-orani 3] [--seed N] [--stat-sn 10]
-  python3 lora_relay.py --mod paket [--sf 7 --bw 125 --cr 1] [--duty 10] [--kayip-orani 3]
+  python3 lora_relay.py --mod paket [--sf 7 --bw 125 --cr 1] [--duty 1] [--kayip-orani 3]   (868 MHz g1: duty %1)
 """
 import argparse
 import json
@@ -221,7 +221,11 @@ def main():
     ap.add_argument("--cr", type=int, default=1, choices=(1, 2, 3, 4), help="kodlama oranı 4/(4+cr)")
     ap.add_argument("--preamble", type=int, default=8)
     ap.add_argument("--cerceve-bayt", type=int, default=4, help="adres + uygulama CRC'si [bayt]")
-    ap.add_argument("--duty", type=float, default=10.0, help="görev döngüsü sınırı [%%] (433 MHz ISM tipik %%10)")
+    # BAP donanımı (2026-11-24): Waveshare SX1262 868 MHz LoRa HAT (UART). Kanal 850,125 + CH MHz → 868,125 MHz ETSI EN 300 220
+    # g1 alt bandı (868,0–868,6 MHz): duty %1, ≤ 25 mW ERP (HAT 22 dBm verebilir; uçakta 13–14 dBm'e indirilmeli). Paket
+    # başına ToA·99 kapalı kalmak temkinli uygulama (ETSI sınırı saatlik toplamdır). SF/BW HAT'in "hava hızı"ndan gelir,
+    # ölçülmedi → --sf/--bw ile değiştirilebilir. Eski varsayılan %10 (433 MHz) için --duty 10.
+    ap.add_argument("--duty", type=float, default=1.0, help="görev döngüsü sınırı [%%] (868 MHz g1 alt bandı %%1)")
     ap.add_argument("--isleme-ms", type=float, default=8.0, help="UART/MCU işleme gecikmesi ort. [ms]")
     ap.add_argument("--isleme-sigma", type=float, default=3.0)
     args = ap.parse_args()

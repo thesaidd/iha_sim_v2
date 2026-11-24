@@ -32,6 +32,32 @@ GOR=1 bash test/aruco_2026-11-20/zincir.sh <çıktı>  # aynısı görsel: Gazeb
 ```
 PX4'e `px4_yamalar/gz_bridge_magnetometre.patch` uygulanmış olmalı.
 
+### bapp kurulumu (ArUco zinciri ve `bap_geo` kullanan analiz araçları için)
+
+`ARUCO=1`, `gs_kamera.py`, `aruco_degerlendir.py`, `zincir_degerlendir.py`, `kapsama_analiz.py`, `mozaik.py`,
+`lora_yaklasma.py --girdi paket` bapp deposunun `bap_geo` paketini kullanır (bulunamazsa bu araçlar çalışmaz — 2026-11-22
+Tulpar testlerinde `kapsama_analiz`/`aruco_degerlendir` bu yüzden atlanmıştı). Bir kez:
+
+```bash
+git clone https://github.com/muhammetgumus55/aruco-geolocalization.git ~/bapp     # başka yere: BAPP=<yol> ver
+cd ~/bapp && python3 -m venv --system-site-packages .venv-ros                       # rclpy/px4_msgs sistemden gelir
+.venv-ros/bin/pip install --no-deps opencv-contrib-python==5.0.0.93                # numpy sistemde yoksa: pip install numpy
+source /opt/ros/jazzy/setup.bash && source ~/ros2_ws/install/setup.bash
+.venv-ros/bin/python -c "import sys; sys.path.insert(0, '.'); import bap_geo.aruco, rclpy, px4_msgs; print('tamam')"
+.venv-ros/bin/python -m pytest -q                                                   # bapp testleri (isteğe bağlı)
+```
+`bap_geo` pip ile kurulmaz: araçlar `BAPP` (varsayılan `~/bapp`) yolunu `sys.path`'e ekler; `launch_all.sh` düğümleri
+`$BAPP/.venv-ros/bin/python` (`PY_BAPP`) ile başlatır. Analiz araçlarını da bu yorumlayıcıyla çalıştırın:
+`~/bapp/.venv-ros/bin/python aruco_degerlendir.py …`.
+
+### Tulpar + BAP kamerası + ArUco (2026-11-24)
+
+`UAV0=tulpar CAM=W10 ARUCO=1 YAKLASMA=1 ./launch_all.sh` — Tulpar'a 6 mm GS kamerası (`gz_models_tulpar/W10`, T10 ile aynı
+kütle/konum). Uçtan uca: `bash test/aruco_tulpar_2026-11-24/zincir.sh <çıktı>` (el fırlatma → 100 m → B1 taraması → bapp →
+LoRa paket (868 MHz g1, duty %1) → uav1 yerden kalkış → dalış). `GERCEKCI=1` ile distorsiyon, boresight, bulanıklık, GNSS
+biası, magnetometre biası ve rüzgâr açılır (`launch_all.sh` başı). Sonuçlar: `test/aruco_tulpar_2026-11-24/sonuc.md`.
+PX4'te Tulpar airframe'i kurulu olmalı (`px4_yamalar/README.md`, "Tulpar airframe'i").
+
 ## Yığın
 
 > **Tek sürüm kararı (2026-11-21):** proje Ubuntu 24.04 + ROS 2 Jazzy üzerinde birleşir (Harmonic'in resmî eşi, destek 2029;

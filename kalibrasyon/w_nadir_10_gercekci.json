@@ -1,0 +1,32 @@
+{
+  "K": [
+    [
+      1738.9531775112432,
+      0.0,
+      727.7431129752661
+    ],
+    [
+      0.0,
+      1738.9349230678872,
+      542.7256516183442
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "dist": [
+    -0.15,
+    0.06,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "width": 1456,
+  "height": 1088,
+  "hfov_deg": 45.43253163840247,
+  "rms_px": null,
+  "n_views": 0,
+  "source": "SENTETİK (2026-11-24): K = w_nadir_10_sim.json (gz iğne deliği ChArUco kalibrasyonu), dist = gs_kamera.GERCEKCI_DISTORSIYON (VARSAYIM; gs_kamera --gercekci bu distorsiyonu uygular). Kalibrasyon hatası yok sayılmıştır (iyimser)."
+}
